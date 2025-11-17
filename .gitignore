@@ -1,0 +1,36 @@
+# Submodule contents - ignore files but track submodule folders
+clients/app/*
+clients/cli/*
+clients/web-page/*
+server/*
+docs/*
+testing/*
+
+# Allow submodule .git directories
+!clients/app/.git
+!clients/cli/.git
+!clients/web-page/.git
+!server/.git
+!docs/.git
+!testing/.git
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary and log files
+*.tmp
+*.temp
+*.log

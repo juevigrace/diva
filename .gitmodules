@@ -1,0 +1,31 @@
+# Applications
+[submodule "clients/app"]
+    path = clients/app
+    url = https://github.com/JueViGrace/diva-app.git
+	branch = master
+[submodule "clients/web-page"]
+    path = clients/web-page
+    url = https://github.com/JueViGrace/diva-web-page.git
+	branch = master
+[submodule "clients/cli"]
+    path = clients/cli
+    url = https://github.com/JueViGrace/diva-cli.git
+	branch = master
+
+# Servers
+[submodule "server"]
+	path = server
+	url = https://github.com/user/diva-server.git
+	branch = master
+
+# Documentation
+[submodule "docs"]
+	path = docs
+	url = https://github.com/JueViGrace/diva-docs.git
+	branch = master
+
+# Testing
+[submodule "testing"]
+	path = testing
+	url = https://github.com/JueViGrace/diva-testing.git
+	branch = master
