@@ -41,5 +41,5 @@ Contributions are welcome! Please read the contributing guidelines in each subpr
 
 ## Author
 
-JueViGrace
+juevigrace
 
