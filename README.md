@@ -6,11 +6,14 @@ A multi-platform application framework consisting of client applications, server
 
 Diva is a comprehensive software ecosystem that includes:
 
-- **Client Applications**: Cross-platform mobile and desktop apps
-- **Web Interface**: Modern TypeScript-based web application
+- **Client Applications**: Cross-platform mobile and desktop apps with Compose UI
+  - **composeApp**: Main Kotlin Multiplatform application
+  - **iosApp**: Native iOS application
+  - **webApp**: Web application
+- **Project Pages**: Main website showcasing projects and containing documentation
 - **CLI Tools**: Command-line utilities for development and deployment
 - **Server**: Backend services and API
-- **Framework**: Shared libraries and components
+- **Framework**: Shared Kotlin libraries and components
 
 ## Project Structure
 
@@ -18,12 +21,17 @@ Diva is a comprehensive software ecosystem that includes:
 diva/
 ├── clients/
 │   ├── app/          # Kotlin Multiplatform application
-│   ├── cli/          # Go command-line interface
-│   └── web-page/     # TypeScript web application
+│   │   └── apps/
+│   │       ├── composeApp/    # Main Compose application
+│   │       ├── iosApp/        # iOS application
+│   │       └── webApp/        # Web application
+│   └── pages/         # Main project website and documentation
+│       └── docs/      # Documentation (moved from root)
+├── cli/              # Go command-line interface
 ├── server/           # Go backend server
-├── docs/             # Documentation
 ├── testing/          # Testing suite
-└── LICENSE
+├── framework-kt/     # Kotlin framework
+├── LICENSE
 └── README.md
 ```
 
