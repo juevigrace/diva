@@ -7,32 +7,45 @@ A multi-platform application framework consisting of client applications, server
 Diva is a comprehensive software ecosystem that includes:
 
 - **Client Applications**: Cross-platform mobile and desktop apps with Compose UI
-  - **composeApp**: Main Kotlin Multiplatform application
-  - **iosApp**: Native iOS application
-  - **webApp**: Web application
-- **Project Pages**: Main website showcasing projects and containing documentation
+  - **app**: Main Kotlin Multiplatform application with Android, iOS, Desktop, and Web targets
+  - **pages**: Project website and documentation pages
 - **CLI Tools**: Command-line utilities for development and deployment
 - **Server**: Backend services and API
 - **Framework**: Shared Kotlin libraries and components
+- **Testing**: Comprehensive testing suite
 
 ## Project Structure
 
 ```
 diva/
-├── clients/
-│   ├── app/          # Kotlin Multiplatform application
-│   │   └── apps/
-│   │       ├── composeApp/    # Main Compose application
-│   │       ├── iosApp/        # iOS application
-│   │       └── webApp/        # Web application
-│   └── pages/         # Main project website and documentation
-│       └── docs/      # Documentation (moved from root)
-├── cli/              # Go command-line interface
-├── server/           # Go backend server
+├── app/              # Kotlin Multiplatform application
+│   ├── apps/
+│   │   ├── androidApp/    # Android application
+│   │   ├── desktopApp/    # Desktop application
+│   │   ├── iosApp/        # iOS application
+│   │   ├── sharedUI/      # Shared UI components
+│   │   └── webApp/        # Web application
+│   ├── build-logic/       # Build configuration
+│   ├── core/             # Core modules
+│   │   ├── database/      # Database module
+│   │   └── types/         # Type definitions
+│   └── gradle/           # Gradle wrapper and configuration
+├── cli/              # Command-line interface
+├── pages/            # Project website and documentation
+│   ├── docs-page/    # Documentation pages
+│   └── landing-page/ # Landing page
+├── server/           # Backend server
 ├── testing/          # Testing suite
 ├── framework-kt/     # Kotlin framework
+│   ├── build-logic/  # Build configuration
+│   ├── core/         # Core framework modules
+│   ├── database/     # Database components
+│   ├── di/           # Dependency injection
+│   ├── network-client/ # Network client
+│   └── ui/           # UI components
 ├── LICENSE
-└── README.md
+├── README.md
+└── .gitmodules       # Git submodule configuration
 ```
 
 ## Getting Started
