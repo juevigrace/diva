@@ -1,19 +1,19 @@
 # Applications
 [submodule "app"]
-	path = app
-	url = https://github.com/JueViGrace/diva-app.git
+    path = app
+    url = https://github.com/JueViGrace/diva-app.git
     branch = master
 [submodule "examples"]
-	path = examples
-	url = https://github.com/JueViGrace/diva-app.git
+    path = examples
+    url = https://github.com/JueViGrace/diva-examples.git
     branch = master
 [submodule "cli"]
-	path = cli
-	url = https://github.com/JueViGrace/diva-cli.git
+    path = cli
+    url = https://github.com/JueViGrace/diva-cli.git
     branch = master
 [submodule "pages"]
-	path = pages
-	url = https://github.com/JueViGrace/diva-pages.git
+    path = pages
+    url = https://github.com/JueViGrace/diva-pages.git
     branch = master
 
 # Servers
