@@ -1,4 +1,12 @@
 # Applications
+[submodule "app"]
+	path = app
+	url = https://github.com/JueViGrace/diva-app-template.git
+    branch = master
+[submodule "examples"]
+	path = examples
+	url = https://github.com/JueViGrace/diva-app.git
+    branch = master
 [submodule "cli"]
 	path = cli
 	url = https://github.com/JueViGrace/diva-cli.git
@@ -25,6 +33,3 @@
     path = framework-kt
     url = https://github.com/JueViGrace/diva-framework-kt.git
     branch = master
-[submodule "examples"]
-	path = examples
-	url = https://github.com/JueViGrace/diva-app.git
