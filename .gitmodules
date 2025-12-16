@@ -1,7 +1,7 @@
 # Applications
 [submodule "app"]
 	path = app
-	url = https://github.com/JueViGrace/diva-app-template.git
+	url = https://github.com/JueViGrace/diva-app.git
     branch = master
 [submodule "examples"]
 	path = examples
