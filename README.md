@@ -35,7 +35,6 @@ diva/
 │   ├── docs-page/    # Documentation pages
 │   └── landing-page/ # Landing page
 ├── server/           # Backend server
-├── testing/          # Testing suite
 ├── framework-kt/     # Kotlin framework
 │   ├── build-logic/  # Build configuration
 │   ├── core/         # Core framework modules
@@ -63,4 +62,3 @@ Contributions are welcome! Please read the contributing guidelines in each subpr
 ## Author
 
 juevigrace
-

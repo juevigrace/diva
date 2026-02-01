@@ -22,12 +22,6 @@
     url = https://github.com/JueViGrace/diva-server.git
     branch = master
 
-# Documentation
-[submodule "testing"]
-    path = testing
-    url = https://github.com/JueViGrace/diva-testing.git
-    branch = master
-
 # Framework
 [submodule "framework-kt"]
     path = framework-kt
