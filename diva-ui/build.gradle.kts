@@ -32,6 +32,7 @@ kotlin {
             api(libs.material3.adaptive)
             api(libs.material3.adaptive.layout)
             api(libs.material3.adaptive.nav3)
+            api(libs.material3.window.size)
 
             api(libs.nav3.ui)
 
@@ -41,6 +42,12 @@ kotlin {
             api(libs.lifecycle.viewmodel.savedstate)
             api(libs.lifecycle.viewmodel.compose)
             api(libs.lifecycle.viewmodel.nav3)
+
+            // SavedState
+            api(libs.savedstate.compose)
+
+            // Window
+            api(libs.window.core)
         }
 
         jvmMain.dependencies {

@@ -5,7 +5,7 @@ plugins {
 }
 
 kotlin {
-    js(IR) {
+    js {
         outputModuleName = project.name
         browser()
         binaries.library()

@@ -12,6 +12,7 @@ kotlin {
             api(libs.kotlinx.coroutines.core)
             api(libs.kotlinx.datetime)
             api(libs.kotlin.reflect)
+            api(libs.savedstate)
         }
 
         jvmMain.dependencies {
