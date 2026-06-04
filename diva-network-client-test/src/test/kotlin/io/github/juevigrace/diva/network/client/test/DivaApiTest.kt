@@ -8,7 +8,7 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
@@ -28,13 +28,13 @@ class DivaApiTest {
     private val api = DivaApi(client)
 
     @Test
-    fun `ping should return success`() = runTest {
+    fun `ping should return success`() = runBlocking {
         val result = api.ping()
         assertTrue(result.isSuccess)
     }
 
     @Test
-    fun `ping should return failure on server error`() = runTest {
+    fun `ping should return failure on server error`() = runBlocking {
         val result = api.ping()
         if (result.isFailure) {
             assertTrue(result.exceptionOrNull() != null)
@@ -42,13 +42,13 @@ class DivaApiTest {
     }
 
     @Test
-    fun `postUser should return success`() = runTest {
+    fun `postUser should return success`() = runBlocking {
         val result = api.postUser()
         assertTrue(result.isSuccess)
     }
 
     @Test
-    fun `postUser should return failure on server error`() = runTest {
+    fun `postUser should return failure on server error`() = runBlocking {
         val result = api.postUser()
         if (result.isFailure) {
             assertTrue(result.exceptionOrNull() != null)
