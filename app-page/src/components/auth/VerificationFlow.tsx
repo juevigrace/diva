@@ -1,9 +1,10 @@
-import { useState, useRef, type FormEvent } from 'react';
+import { useState, useRef, useEffect, type FormEvent } from 'react';
 import { Button } from 'diva-ui/components/button';
 import { Input } from 'diva-ui/components/input';
 import { toast } from 'diva-ui/components/sonner';
 import { Loader2 } from 'lucide-react';
 import { useT } from '@lib/i18n/useT';
+import { ActionType } from 'diva-types/verification/enums';
 
 interface VerificationFlowProps {
   action: string;
@@ -22,18 +23,15 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
   const [newPassword, setNewPassword] = useState('');
   const tokenInputs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const isPasswordReset = action === 'PASSWORD_RESET';
+  const isPasswordReset = action === ActionType.PASSWORD_RESET;
 
-  const handleRequestCode = async (e: FormEvent) => {
-    e.preventDefault();
+  const requestCode = async (emailToUse: string) => {
     setError('');
-    setLoading(true);
-
     try {
       const res = await fetch('/api/verification/request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, action }),
+        body: JSON.stringify({ email: emailToUse, action }),
       });
 
       if (res.ok) {
@@ -42,15 +40,46 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
         setStep('verify');
         toast.success(t('verification.codeSent'));
         setTimeout(() => tokenInputs.current[0]?.focus(), 100);
+        return true;
       } else {
         const json = await res.json();
         setError(json.message || t('verification.failedToSendCode'));
+        return false;
       }
     } catch {
       setError(t('auth.networkError'));
+      return false;
     }
+  };
+
+  const handleRequestCode = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    await requestCode(email);
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (action !== ActionType.USER_VERIFICATION || email) return;
+
+    const autoRequest = async () => {
+      setLoading(true);
+      try {
+        const userRes = await fetch('/api/user/me');
+        if (!userRes.ok) throw new Error();
+        const userData = await userRes.json();
+        const userEmail = userData.email || '';
+        if (!userEmail) throw new Error();
+        setEmail(userEmail);
+        await requestCode(userEmail);
+      } catch {
+        setError(t('verification.failedToSendCode'));
+      }
+      setLoading(false);
+    };
+
+    autoRequest();
+  }, []);
 
   const handleTokenChange = (index: number, value: string) => {
     if (value.length > 1) {
@@ -117,7 +146,7 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
       const res = await fetch('/api/auth/forgot/password/confirm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: actionId, device: 'web' }),
+        body: JSON.stringify({ id: actionId, device: navigator.platform || 'web' }),
       });
 
       if (res.ok) {
@@ -155,7 +184,7 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
         await fetch('/api/auth/signOut', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ device: 'web', user_agent: navigator.userAgent }),
+          body: JSON.stringify({ device: navigator.platform || 'web', user_agent: navigator.userAgent }),
         }).catch(() => {});
         setStep('complete');
       } else {

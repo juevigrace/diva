@@ -45,7 +45,7 @@ export default function SignInForm({ lang = 'en' }: SignInFormProps) {
       const res = await fetch('/api/auth/signIn', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, device: navigator.platform || 'web' }),
       });
 
       if (res.ok) {
