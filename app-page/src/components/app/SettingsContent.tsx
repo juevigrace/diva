@@ -38,7 +38,9 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
       return;
     }
 
-    if (language !== (preferences?.language || 'en')) {
+    const langChanged = language !== (preferences?.language || 'en');
+
+    if (langChanged) {
       changeLanguage(language);
     }
 
@@ -52,6 +54,7 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
         const json = await res.json();
         setPreferences(json);
         showStatus(setPrefStatus, setPrefError, t('settings.preferencesSaved'), false);
+        if (langChanged) setTimeout(() => window.location.reload(), 300);
       } else {
         const json = await res.json();
         showStatus(setPrefStatus, setPrefError, json.message || t('settings.failedSavePreferences'), true);
@@ -66,6 +69,7 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
         const json = await res.json();
         setPreferences(json);
         showStatus(setPrefStatus, setPrefError, t('settings.preferencesCreated'), false);
+        if (langChanged) setTimeout(() => window.location.reload(), 300);
       } else {
         const json = await res.json();
         showStatus(setPrefStatus, setPrefError, json.message || t('settings.failedCreatePreferences'), true);

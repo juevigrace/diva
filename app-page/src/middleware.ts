@@ -7,6 +7,7 @@ declare global {
   namespace App {
     interface SessionData {
       auth?: SessionResponse;
+      userLang?: string;
     }
     interface Locals {
       session?: {
@@ -62,25 +63,42 @@ async function fetchUserRole(userId: string, token: string): Promise<{ role: str
   };
 }
 
+async function fetchUserLanguage(userId: string, token: string): Promise<string | null> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/user/${userId}/preferences`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    const prefs = json?.data;
+    if (Array.isArray(prefs) && prefs.length > 0) {
+      const lang = prefs[0]?.language;
+      if (lang === 'en' || lang === 'es') return lang;
+    }
+  } catch {}
+  return null;
+}
+
 export const onRequest = defineMiddleware(async (context, next) => {
   if (context.session) {
     let auth = await context.session.get<SessionResponse | null>('auth');
 
 	if (auth) {
-	  try {
-	    const pingResult = await context.callAction(actions.auth.ping, {});
-	    if (!pingResult.data?.ok) {
-	      try {
-	        const { data: refreshed } = await context.callAction(actions.auth.refresh, {});
-	        auth = refreshed;
-	      } catch {
-	        await context.session?.set('auth', undefined);
-	        auth = null;
-	      }
-	    }
-	  } catch {
+	  const now = Date.now();
+	  const buffer = 60_000;
+	  const expiresAt = auth.access_expires_at;
+
+	  if (expiresAt <= now) {
 	    await context.session?.set('auth', undefined);
 	    auth = null;
+	  } else if (expiresAt <= now + buffer) {
+	    try {
+	      const { data: refreshed } = await context.callAction(actions.auth.refresh, {});
+	      auth = refreshed;
+	    } catch {
+	      await context.session?.set('auth', undefined);
+	      auth = null;
+	    }
 	  }
 	}
 
@@ -124,6 +142,19 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const acceptLang = context.request.headers.get('accept-language') || '';
   const preferredLang = acceptLang.split(',')[0]?.split('-')[0] || 'en';
   context.locals.lang = preferredLang === 'es' ? 'es' : 'en';
+
+  if (context.locals.session) {
+    let userLang = await context.session?.get<string>('userLang');
+    if (!userLang) {
+      userLang = await fetchUserLanguage(context.locals.session.userId, context.locals.session.accessToken);
+      if (userLang) {
+        await context.session?.set('userLang', userLang);
+      }
+    }
+    if (userLang) {
+      context.locals.lang = userLang;
+    }
+  }
 
   return next();
 });
