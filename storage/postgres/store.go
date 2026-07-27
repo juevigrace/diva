@@ -2,9 +2,12 @@ package postgres
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/juevigrace/diva-server/pkg/errs"
 	"github.com/juevigrace/diva-server/storage"
 	pg "github.com/juevigrace/diva-server/storage/postgres/db"
 )
@@ -18,6 +21,22 @@ func NewUserStore(q *pg.Queries) *UserStore {
 }
 
 func (s *UserStore) CreateUser(ctx context.Context, arg *storage.CreateUserParams) error {
+	_, err := s.q.GetUserByUsername(ctx, arg.Username)
+	if err == nil {
+		return errs.ErrUserExists
+	}
+	if !errors.Is(err, pgx.ErrNoRows) {
+		return err
+	}
+
+	_, err = s.q.GetUserByEmail(ctx, arg.Email)
+	if err == nil {
+		return errs.ErrUserExists
+	}
+	if !errors.Is(err, pgx.ErrNoRows) {
+		return err
+	}
+
 	params := CreateUserParamsFromStorage(arg)
 	return s.q.CreateUser(ctx, *params)
 }

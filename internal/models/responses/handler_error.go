@@ -28,7 +28,8 @@ func HandleReqError(w http.ResponseWriter, err error) {
 		WriteJSON(w, RespondNotFound(nil, err.Error()))
 	case errors.Is(err, errs.ErrUsernameTaken),
 		errors.Is(err, errs.ErrEmailTaken),
-		errors.Is(err, errs.ErrSamePassword):
+		errors.Is(err, errs.ErrSamePassword),
+		errors.Is(err, errs.ErrUserExists):
 		WriteJSON(w, RespondConflict(nil, err.Error()))
 	default:
 		WriteJSON(w, RespondBadRequest(nil, err.Error()))

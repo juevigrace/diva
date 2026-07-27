@@ -20,6 +20,7 @@ var (
 
 var (
 	ErrUserNotFound       = errors.New("user not found")
+	ErrUserExists         = errors.New("user already exists")
 	ErrUsernameTaken      = errors.New("username already taken")
 	ErrEmailTaken         = errors.New("email already taken")
 	ErrInvalidCredentials = errors.New("invalid credentials")
