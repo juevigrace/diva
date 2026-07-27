@@ -129,7 +129,7 @@ func (h *UserHandler) getByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if session.User.Role == models.ROLE_USER {
+	if session.User.Role == models.ROLE_USER && session.User.ID != uid {
 		dbUser.Email = ""
 		dbUser.PhoneNumber = ""
 	}
