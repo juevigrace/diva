@@ -7,19 +7,19 @@ import (
 )
 
 type Session struct {
-	ID              uuid.UUID
-	User            User
-	AccessToken     string
-	RefreshToken    string
-	Device          string
-	IpAddress       string
-	UserAgent       string
-	Status          SessionStatus
-	Type            SessionType
-	AccessExpiresAt int64
+	ID               uuid.UUID
+	User             User
+	AccessToken      string
+	RefreshToken     string
+	Device           Device
+	IpAddress        string
+	UserAgent        string
+	Status           SessionStatus
+	Type             SessionType
+	AccessExpiresAt  int64
 	RefreshExpiresAt int64
-	CreatedAt       int64
-	UpdatedAt       int64
+	CreatedAt        int64
+	UpdatedAt        int64
 }
 
 func (s *Session) Response() *responses.SessionResponse {
@@ -30,7 +30,7 @@ func (s *Session) Response() *responses.SessionResponse {
 		RefreshToken:     s.RefreshToken,
 		Status:           s.Status.String(),
 		Type:             s.Type.String(),
-		Device:           s.Device,
+		DeviceId:         s.Device.ID.String(),
 		Ip:               s.IpAddress,
 		Agent:            s.UserAgent,
 		AccessExpiresAt:  s.AccessExpiresAt,
@@ -42,45 +42,45 @@ func (s *Session) Response() *responses.SessionResponse {
 
 func (s *Session) DBCreate() *storage.CreateSessionParams {
 	return &storage.CreateSessionParams{
-		ID:              s.ID,
-		UserID:          s.User.ID,
-		AccessToken:     s.AccessToken,
-		RefreshToken:    s.RefreshToken,
-		Status:          s.Status.ToDB(),
-		Type:            s.Type.ToDB(),
-		Device:          s.Device,
-		IpAddress:       s.IpAddress,
-		UserAgent:       s.UserAgent,
-		AccessExpiresAt: s.AccessExpiresAt,
+		ID:               s.ID,
+		UserID:           s.User.ID,
+		AccessToken:      s.AccessToken,
+		RefreshToken:     s.RefreshToken,
+		DeviceID:         s.Device.ID,
+		Status:           s.Status.ToDB(),
+		Type:             s.Type.ToDB(),
+		IpAddress:        s.IpAddress,
+		UserAgent:        s.UserAgent,
+		AccessExpiresAt:  s.AccessExpiresAt,
 		RefreshExpiresAt: s.RefreshExpiresAt,
 	}
 }
 
 func (s *Session) DBUpdate() *storage.UpdateSessionParams {
 	return &storage.UpdateSessionParams{
-		AccessToken:     s.AccessToken,
-		RefreshToken:    s.RefreshToken,
-		IpAddress:       s.IpAddress,
-		AccessExpiresAt: s.AccessExpiresAt,
+		AccessToken:      s.AccessToken,
+		RefreshToken:     s.RefreshToken,
+		IpAddress:        s.IpAddress,
+		AccessExpiresAt:  s.AccessExpiresAt,
 		RefreshExpiresAt: s.RefreshExpiresAt,
-		ID:              s.ID,
+		ID:               s.ID,
 	}
 }
 
 func SessionFromDB(row *storage.DivaSession) *Session {
 	return &Session{
-		ID:              row.ID,
-		User:            User{ID: row.UserID},
-		AccessToken:     row.AccessToken,
-		RefreshToken:    row.RefreshToken,
-		Device:          row.Device,
-		IpAddress:       row.IpAddress,
-		UserAgent:       row.UserAgent,
-		Status:          SessionStatusFromDB(row.Status),
-		Type:            SessionTypeFromDB(row.Type),
-		AccessExpiresAt: row.AccessExpiresAt,
+		ID:               row.ID,
+		User:             User{ID: row.UserID},
+		AccessToken:      row.AccessToken,
+		RefreshToken:     row.RefreshToken,
+		Device:           Device{ID: row.DeviceID},
+		IpAddress:        row.IpAddress,
+		UserAgent:        row.UserAgent,
+		Status:           SessionStatusFromDB(row.Status),
+		Type:             SessionTypeFromDB(row.Type),
+		AccessExpiresAt:  row.AccessExpiresAt,
 		RefreshExpiresAt: row.RefreshExpiresAt,
-		CreatedAt:       row.CreatedAt,
-		UpdatedAt:       row.UpdatedAt,
+		CreatedAt:        row.CreatedAt,
+		UpdatedAt:        row.UpdatedAt,
 	}
 }

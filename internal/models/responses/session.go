@@ -8,7 +8,7 @@ type SessionResponse struct {
 	RefreshToken     string `json:"refresh_token"`
 	Status           string `json:"status"`
 	Type             string `json:"type"`
-	Device           string `json:"device"`
+	DeviceId         string `json:"device_id"`
 	Ip               string `json:"ip"`
 	Agent            string `json:"agent"`
 	AccessExpiresAt  int64  `json:"access_expires_at"`

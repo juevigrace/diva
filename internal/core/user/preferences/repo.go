@@ -48,10 +48,10 @@ func (s *UserPreferencesRepo) GetByID(ctx context.Context, id uuid.UUID) (*model
 	return models.UserPrefsFromDB(row), nil
 }
 
-func (s *UserPreferencesRepo) Create(ctx context.Context, session *models.Session, uid uuid.UUID, dto *dtos.CreateUserPreferencesDto) error {
+func (s *UserPreferencesRepo) Create(ctx context.Context, session *models.Session, uid uuid.UUID, deviceID uuid.UUID, dto *dtos.CreateUserPreferencesDto) error {
 	pref := &models.UserPreferences{
 		ID:                  uuid.New(),
-		Device:              dto.Device,
+		Device:              models.Device{ID: deviceID},
 		Theme:               models.ThemeFromString(dto.Theme),
 		OnboardingCompleted: dto.OnboardingCompleted,
 		Language:            dto.Language,

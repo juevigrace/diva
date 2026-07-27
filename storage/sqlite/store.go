@@ -199,6 +199,35 @@ func (s *PermissionStore) RestorePermission(ctx context.Context, id uuid.UUID) e
 	return s.q.RestorePermission(ctx, id.String())
 }
 
+type DeviceStore struct {
+	q *sqli.Queries
+}
+
+func NewDeviceStore(q *sqli.Queries) *DeviceStore {
+	return &DeviceStore{q: q}
+}
+
+func (s *DeviceStore) CreateDevice(ctx context.Context, arg *storage.CreateDeviceParams) error {
+	params := CreateDeviceParamsFromStorage(arg)
+	return s.q.CreateDevice(ctx, *params)
+}
+
+func (s *DeviceStore) GetDeviceByName(ctx context.Context, name string) (*storage.DivaDevice, error) {
+	d, err := s.q.GetDeviceByName(ctx, name)
+	if err != nil {
+		return nil, err
+	}
+	return DivaDeviceToStorage(&d), nil
+}
+
+func (s *DeviceStore) GetDeviceByID(ctx context.Context, id uuid.UUID) (*storage.DivaDevice, error) {
+	d, err := s.q.GetDeviceByID(ctx, id.String())
+	if err != nil {
+		return nil, err
+	}
+	return DivaDeviceToStorage(&d), nil
+}
+
 type SessionStore struct {
 	q *sqli.Queries
 }

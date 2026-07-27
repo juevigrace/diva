@@ -63,13 +63,22 @@ func DivaPermissionToStorage(src *sqli.DivaPermission) *storage.DivaPermission {
 	}
 }
 
+func DivaDeviceToStorage(src *sqli.DivaDevice) *storage.DivaDevice {
+	return &storage.DivaDevice{
+		ID:        sqliteToUUID(src.ID),
+		Name:      src.Name,
+		CreatedAt: src.CreatedAt.UnixMilli(),
+		UpdatedAt: src.UpdatedAt.UnixMilli(),
+	}
+}
+
 func DivaSessionToStorage(src *sqli.DivaSession) *storage.DivaSession {
 	return &storage.DivaSession{
 		ID:              sqliteToUUID(src.ID),
 		UserID:          sqliteToUUID(src.UserID),
 		AccessToken:     src.AccessToken,
 		RefreshToken:    src.RefreshToken,
-		Device:          src.Device,
+		DeviceID:        sqliteToUUID(src.DeviceID),
 		Type:            storage.SessionType(src.Type),
 		Status:          storage.SessionStatusType(src.Status),
 		IpAddress:       src.IpAddress,
@@ -108,7 +117,7 @@ func DivaUserPreferenceToStorage(src *sqli.DivaUserPreference) *storage.DivaUser
 	return &storage.DivaUserPreference{
 		ID:                  sqliteToUUID(src.ID),
 		UserID:              sqliteToUUID(src.UserID),
-		Device:              src.Device,
+		DeviceID:            sqliteToUUID(src.DeviceID),
 		Theme:               storage.ThemeType(src.Theme),
 		OnboardingCompleted: src.OnboardingCompleted,
 		Language:            src.Language,
@@ -168,13 +177,20 @@ func CreatePermissionParamsFromStorage(src *storage.CreatePermissionParams) *sql
 	}
 }
 
+func CreateDeviceParamsFromStorage(src *storage.CreateDeviceParams) *sqli.CreateDeviceParams {
+	return &sqli.CreateDeviceParams{
+		ID:   src.ID.String(),
+		Name: src.Name,
+	}
+}
+
 func CreateSessionParamsFromStorage(src *storage.CreateSessionParams) *sqli.CreateSessionParams {
 	return &sqli.CreateSessionParams{
 		ID:              src.ID.String(),
 		UserID:          src.UserID.String(),
 		AccessToken:     src.AccessToken,
 		RefreshToken:    src.RefreshToken,
-		Device:          src.Device,
+		DeviceID:        src.DeviceID.String(),
 		Type:            string(src.Type),
 		Status:          string(src.Status),
 		IpAddress:       src.IpAddress,
@@ -206,7 +222,7 @@ func CreateUserPreferencesParamsFromStorage(src *storage.CreateUserPreferencesPa
 	return &sqli.CreateUserPreferencesParams{
 		ID:                  src.ID.String(),
 		UserID:              src.UserID.String(),
-		Device:              src.Device,
+		DeviceID:            src.DeviceID.String(),
 		Theme:               string(src.Theme),
 		OnboardingCompleted: src.OnboardingCompleted,
 		Language:            src.Language,

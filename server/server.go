@@ -12,6 +12,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/juevigrace/diva-server/internal/core/auth"
 	"github.com/juevigrace/diva-server/internal/core/cleanup"
+	"github.com/juevigrace/diva-server/internal/core/device"
 	"github.com/juevigrace/diva-server/internal/core/permission"
 	"github.com/juevigrace/diva-server/internal/core/session"
 	"github.com/juevigrace/diva-server/internal/core/user"
@@ -89,6 +90,7 @@ func (s *Server) setupApi() {
 	apiLimiter := middlewares.NewRateLimiter(60, 1*time.Minute)
 
 	pModule := permission.NewPermissionModule(s.database.PermissionStore())
+	dRepo := device.NewDeviceRepo(s.database.DeviceStore())
 	sModule := session.NewSessionModule(s.database.SessionStore())
 	uModule := user.NewUserModule(
 		s.database.UserStore(),
@@ -103,7 +105,7 @@ func (s *Server) setupApi() {
 		s.files,
 	)
 	vModule := verification.NewVerificationModule(s.mail, s.database.UserVerificationStore(), uModule)
-	aModule := auth.NewAuthModule(pModule.Repo, sModule.Repo, uModule.URepo, vModule.Repo)
+	aModule := auth.NewAuthModule(pModule.Repo, sModule.Repo, uModule.URepo, vModule.Repo, dRepo)
 
 	s.cleanup = cleanup.NewCleanupService(
 		s.database.SessionStore(),
@@ -114,9 +116,6 @@ func (s *Server) setupApi() {
 
 	root := s.router.Route("/", func(root chi.Router) {
 		root.Use(apiLimiter.Middleware)
-		root.Get("/", func(w http.ResponseWriter, r *http.Request) {
-			// TODO: main page
-		})
 
 		root.Route("/api", func(api chi.Router) {
 			uModule.Routes(api)

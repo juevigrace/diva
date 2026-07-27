@@ -199,9 +199,9 @@ func (h *UserPreferencesHandler) createPreferences(w http.ResponseWriter, r *htt
 		return
 	}
 
-	dto.Device = session.Device
+	deviceID := session.Device.ID
 
-	if err = h.uprRepo.Create(r.Context(), rc.Session, uid, &dto); err != nil {
+	if err = h.uprRepo.Create(r.Context(), rc.Session, uid, deviceID, &dto); err != nil {
 		responses.HandleReqError(w, err)
 		return
 	}

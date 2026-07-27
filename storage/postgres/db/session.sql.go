@@ -29,7 +29,7 @@ insert into diva_session (
     user_id,
     access_token,
     refresh_token,
-    device,
+    device_id,
     status,
     type,
     ip_address,
@@ -56,7 +56,7 @@ type CreateSessionParams struct {
 	UserID           pgtype.UUID
 	AccessToken      string
 	RefreshToken     string
-	Device           string
+	DeviceID         pgtype.UUID
 	Status           SessionStatusType
 	Type             SessionType
 	IpAddress        string
@@ -71,7 +71,7 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) er
 		arg.UserID,
 		arg.AccessToken,
 		arg.RefreshToken,
-		arg.Device,
+		arg.DeviceID,
 		arg.Status,
 		arg.Type,
 		arg.IpAddress,
@@ -118,7 +118,7 @@ select
     s.user_id,
     s.access_token,
     s.refresh_token,
-    s.device,
+    s.device_id,
     s.type,
     s.status,
     s.ip_address,
@@ -139,7 +139,7 @@ func (q *Queries) GetSessionByID(ctx context.Context, id pgtype.UUID) (DivaSessi
 		&i.UserID,
 		&i.AccessToken,
 		&i.RefreshToken,
-		&i.Device,
+		&i.DeviceID,
 		&i.Type,
 		&i.Status,
 		&i.IpAddress,
@@ -158,7 +158,7 @@ select
     s.user_id,
     s.access_token,
     s.refresh_token,
-    s.device,
+    s.device_id,
     s.type,
     s.status,
     s.ip_address,
@@ -186,7 +186,7 @@ func (q *Queries) ListSessionsByUser(ctx context.Context, userID pgtype.UUID) ([
 			&i.UserID,
 			&i.AccessToken,
 			&i.RefreshToken,
-			&i.Device,
+			&i.DeviceID,
 			&i.Type,
 			&i.Status,
 			&i.IpAddress,

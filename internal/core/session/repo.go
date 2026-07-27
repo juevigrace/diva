@@ -7,7 +7,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/juevigrace/diva-server/internal/models"
-	"github.com/juevigrace/diva-server/internal/models/dtos"
 	"github.com/juevigrace/diva-server/pkg/jwt"
 	"github.com/juevigrace/diva-server/storage"
 )
@@ -44,7 +43,7 @@ func (s *SessionRepo) GetByID(ctx context.Context, sessionID uuid.UUID) (*models
 	return models.SessionFromDB(row), nil
 }
 
-func (s *SessionRepo) Create(ctx context.Context, userID uuid.UUID, sType models.SessionType, dto *dtos.SessionDataDto) (*models.Session, error) {
+func (s *SessionRepo) Create(ctx context.Context, userID uuid.UUID, deviceID uuid.UUID, sType models.SessionType, ipAddress string, userAgent string) (*models.Session, error) {
 	sessionID := uuid.New()
 	accessToken, err := jwt.CreateToken(sessionID, time.Duration(jwt.AccessExp)*time.Second)
 	if err != nil {
@@ -66,15 +65,15 @@ func (s *SessionRepo) Create(ctx context.Context, userID uuid.UUID, sType models
 	}
 
 	session := &models.Session{
-		ID:              sessionID,
-		User:            models.User{ID: userID},
-		AccessToken:     accessToken,
-		RefreshToken:    refreshToken,
-		Device:          dto.Device,
-		IpAddress:       dto.IpAddress,
-		UserAgent:       dto.UserAgent,
-		Status:          models.SESSION_ACTIVE,
-		Type:            sType,
+		ID:               sessionID,
+		User:             models.User{ID: userID},
+		AccessToken:      accessToken,
+		RefreshToken:     refreshToken,
+		Device:           models.Device{ID: deviceID},
+		IpAddress:        ipAddress,
+		UserAgent:        userAgent,
+		Status:           models.SESSION_ACTIVE,
+		Type:             sType,
 		AccessExpiresAt:  accessExpiration.UnixMilli(),
 		RefreshExpiresAt: refreshExpiration.UnixMilli(),
 	}
@@ -86,8 +85,8 @@ func (s *SessionRepo) Create(ctx context.Context, userID uuid.UUID, sType models
 	return s.GetByID(ctx, sessionID)
 }
 
-func (s *SessionRepo) CreateTemporal(ctx context.Context, userID uuid.UUID, dto *dtos.SessionDataDto) (*models.Session, error) {
-	return s.Create(ctx, userID, models.SESSION_TEMPORAL, dto)
+func (s *SessionRepo) CreateTemporal(ctx context.Context, userID uuid.UUID, deviceID uuid.UUID, ipAddress string, userAgent string) (*models.Session, error) {
+	return s.Create(ctx, userID, deviceID, models.SESSION_TEMPORAL, ipAddress, userAgent)
 }
 
 func (s *SessionRepo) Update(ctx context.Context, session *models.Session) (*models.Session, error) {

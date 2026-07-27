@@ -47,17 +47,26 @@ CREATE TABLE IF NOT EXISTS diva_user_permissions (
     FOREIGN KEY (user_id) REFERENCES diva_user(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS diva_devices (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS diva_user_preferences (
     id TEXT NOT NULL PRIMARY KEY,
     user_id TEXT NOT NULL,
-    device TEXT NOT NULL,
+    device_id TEXT NOT NULL,
     theme TEXT NOT NULL DEFAULT 'SYSTEM' CHECK (theme IN ('LIGHT', 'DARK', 'SYSTEM')),
     onboarding_completed BOOLEAN NOT NULL DEFAULT FALSE,
     language TEXT NOT NULL DEFAULT 'en',
     last_sync_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES diva_user(id) ON DELETE CASCADE
+    UNIQUE(user_id, device_id),
+    FOREIGN KEY (user_id) REFERENCES diva_user(id) ON DELETE CASCADE,
+    FOREIGN KEY (device_id) REFERENCES diva_devices(id)
 );
 -- +goose StatementEnd
 -- +goose Down
@@ -67,4 +76,5 @@ DROP TABLE IF EXISTS diva_user;
 DROP TABLE IF EXISTS diva_user_profile;
 DROP TABLE IF EXISTS diva_user_permissions;
 DROP TABLE IF EXISTS diva_user_preferences;
+DROP TABLE IF EXISTS diva_devices;
 -- +goose StatementEnd

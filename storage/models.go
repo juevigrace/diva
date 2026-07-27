@@ -73,12 +73,19 @@ type DivaPermission struct {
 	DeletedAt   *int64
 }
 
+type DivaDevice struct {
+	ID        uuid.UUID
+	Name      string
+	CreatedAt int64
+	UpdatedAt int64
+}
+
 type DivaSession struct {
 	ID              uuid.UUID
 	UserID          uuid.UUID
 	AccessToken     string
 	RefreshToken    string
-	Device          string
+	DeviceID        uuid.UUID
 	Type            SessionType
 	Status          SessionStatusType
 	IpAddress       string
@@ -111,7 +118,7 @@ type DivaUserProfile struct {
 type DivaUserPreference struct {
 	ID                  uuid.UUID
 	UserID              uuid.UUID
-	Device              string
+	DeviceID            uuid.UUID
 	Theme               ThemeType
 	OnboardingCompleted bool
 	Language            string

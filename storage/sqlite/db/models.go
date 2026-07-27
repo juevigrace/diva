@@ -23,6 +23,13 @@ type DivaActionVerification struct {
 	UsedAt    sql.NullTime
 }
 
+type DivaDevice struct {
+	ID        string
+	Name      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
 type DivaPermission struct {
 	ID          string
 	Name        string
@@ -39,7 +46,7 @@ type DivaSession struct {
 	UserID           string
 	AccessToken      string
 	RefreshToken     string
-	Device           string
+	DeviceID         string
 	Type             string
 	Status           string
 	IpAddress        string
@@ -75,7 +82,7 @@ type DivaUserPermission struct {
 type DivaUserPreference struct {
 	ID                  string
 	UserID              string
-	Device              string
+	DeviceID            string
 	Theme               string
 	OnboardingCompleted bool
 	Language            string

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"github.com/go-chi/chi/v5"
+	"github.com/juevigrace/diva-server/internal/core/device"
 	"github.com/juevigrace/diva-server/internal/core/permission"
 	"github.com/juevigrace/diva-server/internal/core/session"
 	"github.com/juevigrace/diva-server/internal/core/user"
@@ -21,8 +22,9 @@ func NewAuthModule(
 	sRepo *session.SessionRepo,
 	uRepo *user.UserRepo,
 	vRepo *verification.VerificationRepo,
+	dRepo *device.DeviceRepo,
 ) *AuthModule {
-	repo := NewAuthRepo(pRepo, sRepo, uRepo, vRepo)
+	repo := NewAuthRepo(pRepo, sRepo, uRepo, vRepo, dRepo)
 	return &AuthModule{
 		Handler:  NewAuthHandler(repo),
 		Repo:  repo,

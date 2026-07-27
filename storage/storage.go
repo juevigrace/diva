@@ -7,6 +7,7 @@ type Storage interface {
 	Health(ctx context.Context) HealthResult
 	UserStore() UserStore
 	PermissionStore() PermissionStore
+	DeviceStore() DeviceStore
 	SessionStore() SessionStore
 	UserStateStore() UserStateStore
 	UserProfileStore() UserProfileStore

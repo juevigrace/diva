@@ -38,6 +38,12 @@ type PermissionStore interface {
 	RestorePermission(ctx context.Context, id uuid.UUID) error
 }
 
+type DeviceStore interface {
+	CreateDevice(ctx context.Context, arg *CreateDeviceParams) error
+	GetDeviceByName(ctx context.Context, name string) (*DivaDevice, error)
+	GetDeviceByID(ctx context.Context, id uuid.UUID) (*DivaDevice, error)
+}
+
 type SessionStore interface {
 	CreateSession(ctx context.Context, arg *CreateSessionParams) error
 	GetSessionByID(ctx context.Context, id uuid.UUID) (*DivaSession, error)

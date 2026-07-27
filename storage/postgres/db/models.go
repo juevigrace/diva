@@ -283,6 +283,13 @@ type DivaActionVerification struct {
 	UsedAt    pgtype.Timestamptz
 }
 
+type DivaDevice struct {
+	ID        pgtype.UUID
+	Name      string
+	CreatedAt pgtype.Timestamptz
+	UpdatedAt pgtype.Timestamptz
+}
+
 type DivaPermission struct {
 	ID          pgtype.UUID
 	Name        string
@@ -299,7 +306,7 @@ type DivaSession struct {
 	UserID           pgtype.UUID
 	AccessToken      string
 	RefreshToken     string
-	Device           string
+	DeviceID         pgtype.UUID
 	Type             SessionType
 	Status           SessionStatusType
 	IpAddress        string
@@ -335,7 +342,7 @@ type DivaUserPermission struct {
 type DivaUserPreference struct {
 	ID                  pgtype.UUID
 	UserID              pgtype.UUID
-	Device              string
+	DeviceID            pgtype.UUID
 	Theme               ThemeType
 	OnboardingCompleted bool
 	Language            string

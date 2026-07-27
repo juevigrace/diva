@@ -9,6 +9,9 @@ import (
 	"github.com/juevigrace/diva-server/internal/core/permission"
 	"github.com/juevigrace/diva-server/internal/core/session"
 	"github.com/juevigrace/diva-server/internal/core/user"
+	"github.com/juevigrace/diva-server/internal/core/user/actions"
+	"github.com/juevigrace/diva-server/internal/core/user/permissions"
+	"github.com/juevigrace/diva-server/internal/core/user/profile"
 	"github.com/juevigrace/diva-server/internal/models"
 	"github.com/juevigrace/diva-server/internal/models/dtos"
 	"github.com/juevigrace/diva-server/server"
@@ -114,23 +117,16 @@ func main() {
 	serverConf := server.NewServerConfig().(*server.ServerConfig)
 	serverConf.LoadFromEnv()
 
-	pModule := permission.NewPermissionModule(database.PermissionStore())
-	sModule := session.NewSessionModule(database.SessionStore())
-
 	seedAllPermissions(context.Background(), database.PermissionStore())
 
-	uModule := user.NewUserModule(
-		database.UserStore(),
-		database.UserActionStore(),
-		database.UserPermissionStore(),
-		database.UserPreferenceStore(),
-		database.UserProfileStore(),
-		database.UserStateStore(),
-		pModule.Repo,
-		sModule.Repo,
-		sModule.Handler,
-		nil,
-	)
+	sRepo := session.NewSessionRepo(database.SessionStore())
+
+	uaRepo := actions.NewUserActionsRepo(database.UserActionStore())
+	upRepo := permissions.NewUserPermissionRepo(database.UserPermissionStore(), permission.NewPermissionRepo(database.PermissionStore()))
+	uproRepo := profile.NewUserProfileRepo(database.UserProfileStore(), upRepo)
+
+	usRepo := user.NewUserStateRepo(database.UserStateStore())
+	uRepo := user.NewUserRepo(database.UserStore(), sRepo, uaRepo, upRepo, uproRepo, usRepo)
 
 	userDto := dtos.CreateUserDto{
 		Email:    serverConf.RootEmail,
@@ -138,12 +134,12 @@ func main() {
 		Password: serverConf.RootPassword,
 	}
 
-	id, err := uModule.URepo.Create(context.Background(), &userDto)
+	id, err := uRepo.Create(context.Background(), &userDto)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err := uModule.URepo.UpdateRole(context.Background(), models.ROLE_ADMIN, id); err != nil {
+	if err := uRepo.UpdateRole(context.Background(), models.ROLE_ADMIN, id); err != nil {
 		log.Fatal(err)
 	}
 

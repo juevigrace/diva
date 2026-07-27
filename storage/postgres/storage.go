@@ -16,17 +16,18 @@ import (
 )
 
 type PGStorage struct {
-	pool               *pgxpool.Pool
-	queries            *pg.Queries
-	config             *PGConf
-	userStore          *UserStore
-	permissionStore    *PermissionStore
-	sessionStore       *SessionStore
-	userStateStore     *UserStateStore
-	userProfileStore   *UserProfileStore
-	userPreferenceStore *UserPreferenceStore
-	userPermissionStore *UserPermissionStore
-	userActionStore    *UserActionStore
+	pool                 *pgxpool.Pool
+	queries              *pg.Queries
+	config               *PGConf
+	userStore            *UserStore
+	permissionStore      *PermissionStore
+	deviceStore          *DeviceStore
+	sessionStore         *SessionStore
+	userStateStore       *UserStateStore
+	userProfileStore     *UserProfileStore
+	userPreferenceStore  *UserPreferenceStore
+	userPermissionStore  *UserPermissionStore
+	userActionStore      *UserActionStore
 	userVerificationStore *UserVerificationStore
 }
 
@@ -60,6 +61,7 @@ func (s *PGStorage) initialize() error {
 
 	s.userStore = NewUserStore(s.queries)
 	s.permissionStore = NewPermissionStore(s.queries)
+	s.deviceStore = NewDeviceStore(s.queries)
 	s.sessionStore = NewSessionStore(s.queries)
 	s.userStateStore = NewUserStateStore(s.queries)
 	s.userProfileStore = NewUserProfileStore(s.queries)
@@ -116,6 +118,7 @@ func (s *PGStorage) openConnection(ctx context.Context) error {
 
 func (s *PGStorage) UserStore() storage.UserStore               { return s.userStore }
 func (s *PGStorage) PermissionStore() storage.PermissionStore    { return s.permissionStore }
+func (s *PGStorage) DeviceStore() storage.DeviceStore            { return s.deviceStore }
 func (s *PGStorage) SessionStore() storage.SessionStore          { return s.sessionStore }
 func (s *PGStorage) UserStateStore() storage.UserStateStore      { return s.userStateStore }
 func (s *PGStorage) UserProfileStore() storage.UserProfileStore  { return s.userProfileStore }

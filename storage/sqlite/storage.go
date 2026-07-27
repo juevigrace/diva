@@ -16,17 +16,18 @@ import (
 )
 
 type SQLiteStorage struct {
-	db                 *sql.DB
-	queries            *sqli.Queries
-	config             *SQLiteConf
-	userStore          *UserStore
-	permissionStore    *PermissionStore
-	sessionStore       *SessionStore
-	userStateStore     *UserStateStore
-	userProfileStore   *UserProfileStore
+	db                  *sql.DB
+	queries             *sqli.Queries
+	config              *SQLiteConf
+	userStore           *UserStore
+	permissionStore     *PermissionStore
+	deviceStore         *DeviceStore
+	sessionStore        *SessionStore
+	userStateStore      *UserStateStore
+	userProfileStore    *UserProfileStore
 	userPreferenceStore *UserPreferenceStore
 	userPermissionStore *UserPermissionStore
-	userActionStore    *UserActionStore
+	userActionStore     *UserActionStore
 	userVerificationStore *UserVerificationStore
 }
 
@@ -60,6 +61,7 @@ func (s *SQLiteStorage) initialize() error {
 
 	s.userStore = NewUserStore(s.queries)
 	s.permissionStore = NewPermissionStore(s.queries)
+	s.deviceStore = NewDeviceStore(s.queries)
 	s.sessionStore = NewSessionStore(s.queries)
 	s.userStateStore = NewUserStateStore(s.queries)
 	s.userProfileStore = NewUserProfileStore(s.queries)
@@ -116,6 +118,7 @@ func (s *SQLiteStorage) openConnection(ctx context.Context) error {
 
 func (s *SQLiteStorage) UserStore() storage.UserStore               { return s.userStore }
 func (s *SQLiteStorage) PermissionStore() storage.PermissionStore    { return s.permissionStore }
+func (s *SQLiteStorage) DeviceStore() storage.DeviceStore            { return s.deviceStore }
 func (s *SQLiteStorage) SessionStore() storage.SessionStore          { return s.sessionStore }
 func (s *SQLiteStorage) UserStateStore() storage.UserStateStore      { return s.userStateStore }
 func (s *SQLiteStorage) UserProfileStore() storage.UserProfileStore  { return s.userProfileStore }

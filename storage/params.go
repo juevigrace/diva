@@ -18,12 +18,17 @@ type CreatePermissionParams struct {
 	RoleLevel   RoleType
 }
 
+type CreateDeviceParams struct {
+	ID   uuid.UUID
+	Name string
+}
+
 type CreateSessionParams struct {
 	ID              uuid.UUID
 	UserID          uuid.UUID
 	AccessToken     string
 	RefreshToken    string
-	Device          string
+	DeviceID        uuid.UUID
 	Type            SessionType
 	Status          SessionStatusType
 	IpAddress       string
@@ -43,7 +48,7 @@ type CreateUserPermissionParams struct {
 type CreateUserPreferencesParams struct {
 	ID                  uuid.UUID
 	UserID              uuid.UUID
-	Device              string
+	DeviceID            uuid.UUID
 	Theme               ThemeType
 	OnboardingCompleted bool
 	Language            string

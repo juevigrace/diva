@@ -66,13 +66,22 @@ func DivaPermissionToStorage(src *pg.DivaPermission) *storage.DivaPermission {
 	}
 }
 
+func DivaDeviceToStorage(src *pg.DivaDevice) *storage.DivaDevice {
+	return &storage.DivaDevice{
+		ID:        pgToUUID(src.ID),
+		Name:      src.Name,
+		CreatedAt: pgToTime(src.CreatedAt),
+		UpdatedAt: pgToTime(src.UpdatedAt),
+	}
+}
+
 func DivaSessionToStorage(src *pg.DivaSession) *storage.DivaSession {
 	return &storage.DivaSession{
 		ID:              pgToUUID(src.ID),
 		UserID:          pgToUUID(src.UserID),
 		AccessToken:     src.AccessToken,
 		RefreshToken:    src.RefreshToken,
-		Device:          src.Device,
+		DeviceID:        pgToUUID(src.DeviceID),
 		Type:            storage.SessionType(src.Type),
 		Status:          storage.SessionStatusType(src.Status),
 		IpAddress:       src.IpAddress,
@@ -111,7 +120,7 @@ func DivaUserPreferenceToStorage(src *pg.DivaUserPreference) *storage.DivaUserPr
 	return &storage.DivaUserPreference{
 		ID:                  pgToUUID(src.ID),
 		UserID:              pgToUUID(src.UserID),
-		Device:              src.Device,
+		DeviceID:            pgToUUID(src.DeviceID),
 		Theme:               storage.ThemeType(src.Theme),
 		OnboardingCompleted: src.OnboardingCompleted,
 		Language:            src.Language,
@@ -171,13 +180,20 @@ func CreatePermissionParamsFromStorage(src *storage.CreatePermissionParams) *pg.
 	}
 }
 
+func CreateDeviceParamsFromStorage(src *storage.CreateDeviceParams) *pg.CreateDeviceParams {
+	return &pg.CreateDeviceParams{
+		ID:   pgtype.UUID{Bytes: src.ID, Valid: true},
+		Name: src.Name,
+	}
+}
+
 func CreateSessionParamsFromStorage(src *storage.CreateSessionParams) *pg.CreateSessionParams {
 	return &pg.CreateSessionParams{
 		ID:              pgtype.UUID{Bytes: src.ID, Valid: true},
 		UserID:          pgtype.UUID{Bytes: src.UserID, Valid: true},
 		AccessToken:     src.AccessToken,
 		RefreshToken:    src.RefreshToken,
-		Device:          src.Device,
+		DeviceID:        pgtype.UUID{Bytes: src.DeviceID, Valid: true},
 		Type:            pg.SessionType(src.Type),
 		Status:          pg.SessionStatusType(src.Status),
 		IpAddress:       src.IpAddress,
@@ -209,7 +225,7 @@ func CreateUserPreferencesParamsFromStorage(src *storage.CreateUserPreferencesPa
 	return &pg.CreateUserPreferencesParams{
 		ID:                  pgtype.UUID{Bytes: src.ID, Valid: true},
 		UserID:              pgtype.UUID{Bytes: src.UserID, Valid: true},
-		Device:              src.Device,
+		DeviceID:            pgtype.UUID{Bytes: src.DeviceID, Valid: true},
 		Theme:               pg.ThemeType(src.Theme),
 		OnboardingCompleted: src.OnboardingCompleted,
 		Language:            src.Language,
