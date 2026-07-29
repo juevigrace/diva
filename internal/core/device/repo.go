@@ -42,3 +42,56 @@ func (r *DeviceRepo) GetByID(ctx context.Context, id uuid.UUID) (*models.Device,
 	}
 	return models.DeviceFromDB(row), nil
 }
+
+func (r *DeviceRepo) GetUserDevice(ctx context.Context, userID uuid.UUID, deviceID uuid.UUID) (*models.UserDevice, error) {
+	row, err := r.store.GetUserDevice(ctx, userID, deviceID)
+	if err != nil {
+		return nil, err
+	}
+	dev, err := r.GetByID(ctx, row.DeviceID)
+	if err != nil {
+		return nil, err
+	}
+	return models.UserDeviceFromDB(row, dev), nil
+}
+
+func (r *DeviceRepo) CreateUserDevice(ctx context.Context, userID uuid.UUID, deviceID uuid.UUID) error {
+	return r.store.CreateUserDevice(ctx, &storage.CreateUserDeviceParams{
+		UserID:   userID,
+		DeviceID: deviceID,
+	})
+}
+
+func (r *DeviceRepo) ListDevices(ctx context.Context) ([]*models.Device, error) {
+	rows, err := r.store.ListAllDevices(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	devices := make([]*models.Device, len(rows))
+	for i := range rows {
+		devices[i] = models.DeviceFromDB(&rows[i])
+	}
+	return devices, nil
+}
+
+func (r *DeviceRepo) ListUserDevices(ctx context.Context, userID uuid.UUID) ([]*models.UserDevice, error) {
+	rows, err := r.store.ListUserDevices(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	devices := make([]*models.UserDevice, len(rows))
+	for i, ud := range rows {
+		dev, err := r.GetByID(ctx, ud.DeviceID)
+		if err != nil {
+			return nil, err
+		}
+		devices[i] = models.UserDeviceFromDB(&ud, dev)
+	}
+	return devices, nil
+}
+
+func (r *DeviceRepo) DeleteUserDevice(ctx context.Context, userID uuid.UUID, deviceID uuid.UUID) error {
+	return r.store.DeleteUserDevice(ctx, userID, deviceID)
+}

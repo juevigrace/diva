@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
+	"github.com/juevigrace/diva-server/internal/core/device"
 	"github.com/juevigrace/diva-server/internal/core/permission"
 	"github.com/juevigrace/diva-server/internal/core/session"
 	"github.com/juevigrace/diva-server/internal/core/user/actions"
@@ -20,6 +21,8 @@ import (
 type UserModule struct {
 	sRepo    *session.SessionRepo
 	sHandler *session.SessionHandler
+
+	dHandler *device.DeviceHandler
 
 	uHandler    *UserHandler
 	uaHandler   *actions.UserActionsHandler
@@ -43,6 +46,7 @@ func NewUserModule(
 	pRepo *permission.PermissionRepo,
 	sRepo *session.SessionRepo,
 	sHandler *session.SessionHandler,
+	dHandler *device.DeviceHandler,
 	files *filehelper.FileHelper,
 ) *UserModule {
 	uaRepo := actions.NewUserActionsRepo(actionStore)
@@ -62,6 +66,7 @@ func NewUserModule(
 	return &UserModule{
 		sRepo:       sRepo,
 		sHandler:    sHandler,
+		dHandler:    dHandler,
 		uHandler:    uHandler,
 		uaHandler:   uaHandler,
 		upHandler:   upHandler,
@@ -109,8 +114,12 @@ func (m *UserModule) Routes(r chi.Router) {
 
 					sr.Group(func(admin chi.Router) {
 						admin.Use(middlewares.RequireRole(models.ROLE_ADMIN, models.ROLE_MODERATOR), middlewares.RequireVerified())
-						admin.With(middlewares.RequirePermission(models.PERMISSION_USERS_VERIFIED_WRITE)).Patch("/verified", m.uHandler.updateVerified)
-						admin.With(middlewares.RequirePermission(models.PERMISSION_USERS_WRITE)).Put("/", m.uHandler.updateStatus)
+						admin.With(
+							middlewares.RequirePermission(models.PERMISSION_USERS_VERIFIED_WRITE),
+						).Patch("/verified", m.uHandler.updateVerified)
+						admin.With(
+							middlewares.RequirePermission(models.PERMISSION_USERS_WRITE),
+						).Put("/", m.uHandler.updateStatus)
 					})
 				})
 
@@ -211,6 +220,7 @@ func (m *UserModule) Routes(r chi.Router) {
 					m.uprHandler.UserRoutes(restricted)
 					m.uproHandler.UserRoutes(restricted)
 					m.sHandler.UserRoutes(restricted)
+					m.dHandler.UserRoutes(restricted)
 				})
 			})
 

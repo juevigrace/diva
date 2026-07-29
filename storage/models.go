@@ -150,3 +150,10 @@ type DivaActionVerification struct {
 	ExpiresAt int64
 	UsedAt    *int64
 }
+
+type DivaUserDevice struct {
+	UserID    uuid.UUID
+	DeviceID  uuid.UUID
+	CreatedAt int64
+	UpdatedAt int64
+}

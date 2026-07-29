@@ -58,6 +58,12 @@ func (s *AuthRepo) SignUp(ctx context.Context, dto *dtos.SignUpDto) (*models.Ses
 		return nil, err
 	}
 
+	if _, err := s.dRepo.GetUserDevice(ctx, userID, dev.ID); err != nil {
+		if err := s.dRepo.CreateUserDevice(ctx, userID, dev.ID); err != nil {
+			return nil, err
+		}
+	}
+
 	session, err := s.sRepo.Create(ctx, userID, dev.ID, models.SESSION_NORMAL, dto.SessionData.IpAddress, dto.SessionData.UserAgent)
 	if err != nil {
 		return nil, err
@@ -79,6 +85,12 @@ func (s *AuthRepo) SignIn(ctx context.Context, dto *dtos.SignInDto) (*models.Ses
 	dev, err := s.resolveDevice(ctx, dto.SessionData.Device)
 	if err != nil {
 		return nil, err
+	}
+
+	if _, err := s.dRepo.GetUserDevice(ctx, user.ID, dev.ID); err != nil {
+		if err := s.dRepo.CreateUserDevice(ctx, user.ID, dev.ID); err != nil {
+			return nil, err
+		}
 	}
 
 	session, err := s.sRepo.Create(ctx, user.ID, dev.ID, models.SESSION_NORMAL, dto.SessionData.IpAddress, dto.SessionData.UserAgent)
@@ -117,6 +129,12 @@ func (s *AuthRepo) ForgotPasswordConfirm(ctx context.Context, actionID uuid.UUID
 	dev, err := s.resolveDevice(ctx, sd.Device)
 	if err != nil {
 		return nil, err
+	}
+
+	if _, err := s.dRepo.GetUserDevice(ctx, dbUV.Action.UserID, dev.ID); err != nil {
+		if err := s.dRepo.CreateUserDevice(ctx, dbUV.Action.UserID, dev.ID); err != nil {
+			return nil, err
+		}
 	}
 
 	session, err := s.sRepo.CreateTemporal(ctx, dbUV.Action.UserID, dev.ID, sd.IpAddress, sd.UserAgent)

@@ -66,6 +66,15 @@ func DivaPermissionToStorage(src *pg.DivaPermission) *storage.DivaPermission {
 	}
 }
 
+func DivaUserDeviceToStorage(src *pg.DivaUserDevice) *storage.DivaUserDevice {
+	return &storage.DivaUserDevice{
+		UserID:    pgToUUID(src.UserID),
+		DeviceID:  pgToUUID(src.DeviceID),
+		CreatedAt: pgToTime(src.CreatedAt),
+		UpdatedAt: pgToTime(src.UpdatedAt),
+	}
+}
+
 func DivaDeviceToStorage(src *pg.DivaDevice) *storage.DivaDevice {
 	return &storage.DivaDevice{
 		ID:        pgToUUID(src.ID),

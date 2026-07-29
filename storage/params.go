@@ -23,6 +23,11 @@ type CreateDeviceParams struct {
 	Name string
 }
 
+type CreateUserDeviceParams struct {
+	UserID   uuid.UUID
+	DeviceID uuid.UUID
+}
+
 type CreateSessionParams struct {
 	ID              uuid.UUID
 	UserID          uuid.UUID

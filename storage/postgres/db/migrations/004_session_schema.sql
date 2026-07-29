@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS diva_session (
     type session_type NOT NULL,
     status session_status_type NOT NULL,
     ip_address VARCHAR(45) NOT NULL DEFAULT '',
-    user_agent VARCHAR(255) NOT NULL DEFAULT '',
+    user_agent TEXT NOT NULL DEFAULT '',
     access_expires_at TIMESTAMPTZ NOT NULL,
     refresh_expires_at TIMESTAMPTZ NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

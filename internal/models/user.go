@@ -18,6 +18,7 @@ type User struct {
 	UpdatedAt    int64
 	DeletedAt    *int64
 	Profile      *UserProfile
+	Devices      []UserDevice
 	Actions      []UserAction
 	Permissions  map[PermissionAction]UserPermission
 	Preferences  UserPreferences

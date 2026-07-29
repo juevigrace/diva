@@ -69,6 +69,13 @@ type DivaUser struct {
 	DeletedAt    sql.NullTime
 }
 
+type DivaUserDevice struct {
+	UserID    string
+	DeviceID  string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
 type DivaUserPermission struct {
 	PermissionID string
 	UserID       string

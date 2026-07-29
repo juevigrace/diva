@@ -228,6 +228,55 @@ func (s *DeviceStore) GetDeviceByID(ctx context.Context, id uuid.UUID) (*storage
 	return DivaDeviceToStorage(&d), nil
 }
 
+func (s *DeviceStore) CreateUserDevice(ctx context.Context, arg *storage.CreateUserDeviceParams) error {
+	return s.q.CreateUserDevice(ctx, sqli.CreateUserDeviceParams{
+		UserID:   arg.UserID.String(),
+		DeviceID: arg.DeviceID.String(),
+	})
+}
+
+func (s *DeviceStore) GetUserDevice(ctx context.Context, userID uuid.UUID, deviceID uuid.UUID) (*storage.DivaUserDevice, error) {
+	row, err := s.q.GetUserDevice(ctx, sqli.GetUserDeviceParams{
+		UserID:   userID.String(),
+		DeviceID: deviceID.String(),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return DivaUserDeviceToStorage(&row), nil
+}
+
+func (s *DeviceStore) ListAllDevices(ctx context.Context) ([]storage.DivaDevice, error) {
+	rows, err := s.q.ListAllDevices(ctx)
+	if err != nil {
+		return nil, err
+	}
+	items := make([]storage.DivaDevice, len(rows))
+	for i := range rows {
+		items[i] = *DivaDeviceToStorage(&rows[i])
+	}
+	return items, nil
+}
+
+func (s *DeviceStore) ListUserDevices(ctx context.Context, userID uuid.UUID) ([]storage.DivaUserDevice, error) {
+	rows, err := s.q.ListUserDevices(ctx, userID.String())
+	if err != nil {
+		return nil, err
+	}
+	items := make([]storage.DivaUserDevice, len(rows))
+	for i := range rows {
+		items[i] = *DivaUserDeviceToStorage(&rows[i])
+	}
+	return items, nil
+}
+
+func (s *DeviceStore) DeleteUserDevice(ctx context.Context, userID uuid.UUID, deviceID uuid.UUID) error {
+	return s.q.DeleteUserDevice(ctx, sqli.DeleteUserDeviceParams{
+		UserID:   userID.String(),
+		DeviceID: deviceID.String(),
+	})
+}
+
 type SessionStore struct {
 	q *sqli.Queries
 }

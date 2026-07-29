@@ -9,6 +9,46 @@ import (
 	"context"
 )
 
+const listAllDevices = `-- name: ListAllDevices :many
+;
+
+select
+    d.id,
+    d.name,
+    d.created_at,
+    d.updated_at
+from diva_devices d
+order by d.name asc
+`
+
+func (q *Queries) ListAllDevices(ctx context.Context) ([]DivaDevice, error) {
+	rows, err := q.db.QueryContext(ctx, listAllDevices)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []DivaDevice
+	for rows.Next() {
+		var i DivaDevice
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const createDevice = `-- name: CreateDevice :exec
 ;
 

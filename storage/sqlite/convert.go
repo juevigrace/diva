@@ -63,6 +63,15 @@ func DivaPermissionToStorage(src *sqli.DivaPermission) *storage.DivaPermission {
 	}
 }
 
+func DivaUserDeviceToStorage(src *sqli.DivaUserDevice) *storage.DivaUserDevice {
+	return &storage.DivaUserDevice{
+		UserID:    sqliteToUUID(src.UserID),
+		DeviceID:  sqliteToUUID(src.DeviceID),
+		CreatedAt: src.CreatedAt.UnixMilli(),
+		UpdatedAt: src.UpdatedAt.UnixMilli(),
+	}
+}
+
 func DivaDeviceToStorage(src *sqli.DivaDevice) *storage.DivaDevice {
 	return &storage.DivaDevice{
 		ID:        sqliteToUUID(src.ID),

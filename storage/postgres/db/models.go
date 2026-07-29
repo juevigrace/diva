@@ -329,6 +329,13 @@ type DivaUser struct {
 	DeletedAt    pgtype.Timestamptz
 }
 
+type DivaUserDevice struct {
+	UserID    pgtype.UUID
+	DeviceID  pgtype.UUID
+	CreatedAt pgtype.Timestamptz
+	UpdatedAt pgtype.Timestamptz
+}
+
 type DivaUserPermission struct {
 	PermissionID pgtype.UUID
 	UserID       pgtype.UUID

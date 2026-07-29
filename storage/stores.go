@@ -42,6 +42,11 @@ type DeviceStore interface {
 	CreateDevice(ctx context.Context, arg *CreateDeviceParams) error
 	GetDeviceByName(ctx context.Context, name string) (*DivaDevice, error)
 	GetDeviceByID(ctx context.Context, id uuid.UUID) (*DivaDevice, error)
+	ListAllDevices(ctx context.Context) ([]DivaDevice, error)
+	CreateUserDevice(ctx context.Context, arg *CreateUserDeviceParams) error
+	GetUserDevice(ctx context.Context, userID uuid.UUID, deviceID uuid.UUID) (*DivaUserDevice, error)
+	ListUserDevices(ctx context.Context, userID uuid.UUID) ([]DivaUserDevice, error)
+	DeleteUserDevice(ctx context.Context, userID uuid.UUID, deviceID uuid.UUID) error
 }
 
 type SessionStore interface {

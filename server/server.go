@@ -90,7 +90,7 @@ func (s *Server) setupApi() {
 	apiLimiter := middlewares.NewRateLimiter(60, 1*time.Minute)
 
 	pModule := permission.NewPermissionModule(s.database.PermissionStore())
-	dRepo := device.NewDeviceRepo(s.database.DeviceStore())
+	devModule := device.NewDeviceModule(s.database.DeviceStore())
 	sModule := session.NewSessionModule(s.database.SessionStore())
 	uModule := user.NewUserModule(
 		s.database.UserStore(),
@@ -102,10 +102,11 @@ func (s *Server) setupApi() {
 		pModule.Repo,
 		sModule.Repo,
 		sModule.Handler,
+		devModule.Handler,
 		s.files,
 	)
 	vModule := verification.NewVerificationModule(s.mail, s.database.UserVerificationStore(), uModule)
-	aModule := auth.NewAuthModule(pModule.Repo, sModule.Repo, uModule.URepo, vModule.Repo, dRepo)
+	aModule := auth.NewAuthModule(pModule.Repo, sModule.Repo, uModule.URepo, vModule.Repo, devModule.Repo)
 
 	s.cleanup = cleanup.NewCleanupService(
 		s.database.SessionStore(),
@@ -123,6 +124,7 @@ func (s *Server) setupApi() {
 			aModule.Routes(api)
 			pModule.Routes(api, sModule.Repo.GetByID, uModule.URepo.GetByID)
 			vModule.Routes(api)
+			devModule.Routes(api, sModule.Repo.GetByID, uModule.URepo.GetByID)
 		})
 	})
 
