@@ -26,7 +26,7 @@ export async function POST({ request, callAction }: import('astro').APIContext):
       body: {
         username: parsed.data.username,
         password: parsed.data.password,
-        session_data: { device: parsed.data.device || 'web', user_agent: request.headers.get('User-Agent') || 'web' },
+        session_data: { device: parsed.data.device || request.headers.get('User-Agent') || 'web', user_agent: request.headers.get('User-Agent') || 'web' },
       },
     });
 

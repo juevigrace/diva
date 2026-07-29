@@ -81,7 +81,7 @@ export const server = {
       '/api/auth/signUp',
       (input, request) => ({
         user: { email: input.email, username: input.username, password: input.password },
-        session_data: { device: input.device || 'web', user_agent: input.user_agent || request.headers.get('User-Agent') || 'web' },
+        session_data: { device: input.device || request.headers.get('User-Agent') || 'web', user_agent: input.user_agent || request.headers.get('User-Agent') || 'web' },
       } as SignUpDto),
     ),
 
@@ -96,7 +96,7 @@ export const server = {
       (input, request) => ({
         username: input.username,
         password: input.password,
-        session_data: { device: input.device || 'web', user_agent: input.user_agent || request.headers.get('User-Agent') || 'web' },
+        session_data: { device: input.device || request.headers.get('User-Agent') || 'web', user_agent: input.user_agent || request.headers.get('User-Agent') || 'web' },
       } as SignInDto),
     ),
 
@@ -109,7 +109,7 @@ export const server = {
       '/api/auth/forgot/password/confirm',
       (input, request) => ({
         id: input.id,
-        session_data: { device: input.device || 'web', user_agent: input.user_agent || request.headers.get('User-Agent') || 'web' },
+        session_data: { device: input.device || request.headers.get('User-Agent') || 'web', user_agent: input.user_agent || request.headers.get('User-Agent') || 'web' },
       } as ForgotPasswordConfirmDto),
     ),
 

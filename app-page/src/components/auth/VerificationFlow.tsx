@@ -146,7 +146,7 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
       const res = await fetch('/api/auth/forgot/password/confirm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: actionId, device: navigator.platform || 'web' }),
+        body: JSON.stringify({ id: actionId, device: navigator.userAgent || 'web' }),
       });
 
       if (res.ok) {
@@ -184,7 +184,7 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
         await fetch('/api/auth/signOut', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ device: navigator.platform || 'web', user_agent: navigator.userAgent }),
+          body: JSON.stringify({ device: navigator.userAgent || 'web', user_agent: navigator.userAgent }),
         }).catch(() => {});
         setStep('complete');
       } else {

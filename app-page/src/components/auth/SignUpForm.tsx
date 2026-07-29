@@ -102,7 +102,7 @@ export default function SignUpForm({ lang = 'en' }: SignUpFormProps) {
       const res = await fetch('/api/auth/signUp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password, device: navigator.platform || 'web' }),
+        body: JSON.stringify({ username, email, password, device: navigator.userAgent || 'web' }),
       });
 
       if (res.ok) {
