@@ -110,6 +110,19 @@ func (m *UserModule) Routes(r chi.Router) {
 							}
 							return map[string]any{"uid": resid}, reqid == resid
 						},
+					)).Get("/", m.uHandler.getState)
+
+					sr.With(middlewares.RequireResourceOwner(
+						&middlewares.RequireOwnerParams{
+							UrlParams: []string{"uid"},
+						},
+						func(_ context.Context, reqid uuid.UUID, resParams []string) (map[string]any, bool) {
+							resid, err := uuid.Parse(resParams[0])
+							if err != nil {
+								return nil, false
+							}
+							return map[string]any{"uid": resid}, reqid == resid
+						},
 					)).Post("/ping", m.uHandler.pingStatus)
 
 					sr.Group(func(admin chi.Router) {

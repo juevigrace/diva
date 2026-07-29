@@ -354,6 +354,36 @@ func (h *UserHandler) updateStatus(w http.ResponseWriter, r *http.Request) {
 	responses.WriteJSON(w, responses.RespondAccepted(nil, "status updated"))
 }
 
+func (h *UserHandler) getState(w http.ResponseWriter, r *http.Request) {
+	rc, err := middlewares.GetRequestContext(r.Context())
+	if err != nil {
+		responses.WriteJSON(w, responses.RespondUnauthorized(nil, errs.ErrSessionNotFound.Error()))
+		return
+	}
+
+	uid, ok := rc.Cache["uid"].(uuid.UUID)
+	if !ok {
+		uid, err = middlewares.GetUUIDFromURL(r, "uid")
+		if err != nil {
+			responses.WriteJSON(w, responses.RespondBadRequest(nil, err.Error()))
+			return
+		}
+	}
+
+	state, err := h.usRepo.GetByUserID(r.Context(), uid)
+	if err != nil {
+		responses.HandleReqError(w, err)
+		return
+	}
+
+	if state == nil {
+		responses.WriteJSON(w, responses.RespondOk(nil, "user state retrieved"))
+		return
+	}
+
+	responses.WriteJSON(w, responses.RespondOk(state.Response(), "user state retrieved"))
+}
+
 func (h *UserHandler) pingStatus(w http.ResponseWriter, r *http.Request) {
 	rc, err := middlewares.GetRequestContext(r.Context())
 	if err != nil {

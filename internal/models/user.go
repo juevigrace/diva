@@ -264,6 +264,15 @@ func UserStateFromDB(row *storage.DivaUserState) *UserState {
 	}
 }
 
+func (us *UserState) Response() *responses.UserStateResponse {
+	return &responses.UserStateResponse{
+		Verified:     us.Verified,
+		Status:       us.Status.String(),
+		LastActiveAt: us.LastActiveAt,
+		UpdatedAt:    us.UpdatedAt,
+	}
+}
+
 func (us *UserState) DBCreate(userID uuid.UUID) *storage.CreateUserStateParams {
 	return &storage.CreateUserStateParams{
 		UserID:   userID,
