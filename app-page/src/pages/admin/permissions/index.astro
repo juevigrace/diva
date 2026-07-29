@@ -2,13 +2,11 @@
 import AppLayout from '@layouts/AppLayout.astro';
 import PermissionsManager from '@components/app/PermissionsManager';
 import { apiFetch } from '@api/lib/fetch';
-import { fetchCurrentUser } from '@api/lib/user';
 import { t } from '@lib/i18n/t';
+import type { SessionResponse } from 'diva-types/auth/responses';
 
-const { session } = Astro.locals;
-const uid = session!.userId;
-
-const { isVerified } = await fetchCurrentUser(uid, session!.accessToken);
+const { user, state } = Astro.locals;
+const auth = await Astro.session.get<SessionResponse>('auth');
 
 const url = new URL(Astro.request.url);
 const currentPage = parseInt(url.searchParams.get('page') || '1', 10);
@@ -18,18 +16,11 @@ let permissionsData: Record<string, any>[] = [];
 let totalItems = 0;
 let totalPages = 1;
 let loadError = false;
-let currentUserRole = '';
+let currentUserRole = user?.role || '';
 
-try {
-  const userRes = await apiFetch(`/api/user/${uid}`, { token: session!.accessToken });
-  if (userRes.ok) {
-    currentUserRole = userRes.json.data?.role || '';
-  }
-} catch (_) {}
-
-if (isVerified) {
+if (state?.verified && user) {
   try {
-    const res = await apiFetch(`/api/permissions/?page=${currentPage}&limit=${limit}`, { token: session!.accessToken });
+    const res = await apiFetch(`/api/permissions/?page=${currentPage}&limit=${limit}`, { token: auth!.access_token });
     if (res.ok) {
       permissionsData = res.json.data?.items || [];
       totalItems = res.json.data?.pagination_info?.total_items || 0;
@@ -55,7 +46,7 @@ if (isVerified) {
     initialTotalItems={totalItems}
     loadError={loadError}
     currentUserRole={currentUserRole}
-    isVerified={isVerified}
+    isVerified={state?.verified ?? false}
     lang={Astro.locals.lang}
     client:load
   />

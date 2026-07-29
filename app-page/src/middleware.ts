@@ -10,14 +10,29 @@ declare global {
       userLang?: string;
     }
     interface Locals {
-      session?: {
+      user: {
         userId: string;
-        sessionId: string;
-        accessToken: string;
-        status: string;
-        type: string;
+        username: string;
+        email: string;
+        phoneNumber: string | null;
         role: string;
-        isVerified: boolean;
+        createdAt: number;
+        updatedAt: number;
+        deletedAt: number | null;
+      } | null;
+      state: {
+        verified: boolean;
+        status: string;
+        lastActiveAt: number;
+        updatedAt: number;
+      } | null;
+      profile: {
+        firstName: string | null;
+        lastName: string | null;
+        birthDate: number | null;
+        alias: string | null;
+        avatar: string | null;
+        bio: string | null;
       } | null;
       lang: string;
     }
@@ -50,74 +65,91 @@ function isAdminRoute(pathname: string): boolean {
   return adminRoutes.some((route) => pathname === route || pathname.startsWith(route + '/'));
 }
 
-async function fetchUserRole(userId: string, token: string): Promise<{ role: string; isVerified: boolean }> {
-  const res = await fetch(`${API_BASE_URL}/api/user/${userId}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!res.ok) throw new Error('Unauthorized');
-  const json = await res.json();
-  const data = json?.data;
-  return {
-    role: data?.role || 'USER',
-    isVerified: data?.state?.verified ?? false,
-  };
-}
-
-async function fetchUserLanguage(userId: string, token: string): Promise<string | null> {
+async function fetchFromApi<T>(url: string, token: string): Promise<T | null> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/user/${userId}/preferences`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
     if (!res.ok) return null;
     const json = await res.json();
-    const prefs = json?.data;
-    if (Array.isArray(prefs) && prefs.length > 0) {
-      const lang = prefs[0]?.language;
-      if (lang === 'en' || lang === 'es') return lang;
-    }
-  } catch {}
-  return null;
+    return json?.data ?? null;
+  } catch {
+    return null;
+  }
 }
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  if (context.session) {
-    let auth = await context.session.get<SessionResponse | null>('auth');
+  if (!context.session) return next();
 
-	if (auth) {
-	  const now = Date.now();
-	  const buffer = 60_000;
-	  const expiresAt = auth.access_expires_at;
+  const auth = await context.session.get<SessionResponse | null>('auth');
 
-	  if (expiresAt <= now) {
-	    await context.session?.set('auth', undefined);
-	    auth = null;
-	  } else if (expiresAt <= now + buffer) {
-	    try {
-	      const { data: refreshed } = await context.callAction(actions.auth.refresh, {});
-	      auth = refreshed;
-	    } catch {
-	      await context.session?.set('auth', undefined);
-	      auth = null;
-	    }
-	  }
-	}
+  if (auth) {
+    const now = Date.now();
+    const buffer = 60_000;
+    const expiresAt = auth.access_expires_at;
 
-    if (auth) {
+    if (expiresAt <= now) {
+      await context.session?.set('auth', undefined);
+      return next();
+    }
+
+    if (expiresAt <= now + buffer) {
       try {
-        const { role, isVerified } = await fetchUserRole(auth.user_id, auth.access_token);
-        context.locals.session = {
-          userId: auth.user_id,
-          sessionId: auth.session_id,
-          accessToken: auth.access_token,
-          status: auth.status,
-          type: auth.type,
-          role,
-          isVerified,
-        };
+        const { data: refreshed } = await context.callAction(actions.auth.refresh, {});
+        if (refreshed) {
+          await context.session?.set('auth', refreshed);
+        }
       } catch {
         await context.session?.set('auth', undefined);
+        return next();
       }
     }
+
+    const [userData, stateData, profileData] = await Promise.all([
+      fetchFromApi<{
+        id: string; username: string; email: string; phone_number: string | null;
+        role: string; created_at: number; updated_at: number; deleted_at: number | null;
+      }>(`${API_BASE_URL}/api/user/${auth.user_id}`, auth.access_token),
+      fetchFromApi<{
+        verified: boolean; status: string; last_active_at: number; updated_at: number;
+      }>(`${API_BASE_URL}/api/user/${auth.user_id}/status`, auth.access_token),
+      fetchFromApi<{
+        first_name: string | null; last_name: string | null;
+        birth_date: number | null; alias: string | null;
+        avatar: string | null; bio: string | null;
+      }>(`${API_BASE_URL}/api/user/${auth.user_id}/profile`, auth.access_token),
+    ]);
+
+    context.locals.user = userData
+      ? {
+          userId: userData.id,
+          username: userData.username,
+          email: userData.email,
+          phoneNumber: userData.phone_number,
+          role: userData.role,
+          createdAt: userData.created_at,
+          updatedAt: userData.updated_at,
+          deletedAt: userData.deleted_at,
+        }
+      : null;
+
+    context.locals.state = stateData
+      ? {
+          verified: stateData.verified,
+          status: stateData.status,
+          lastActiveAt: stateData.last_active_at,
+          updatedAt: stateData.updated_at,
+        }
+      : null;
+
+    context.locals.profile = profileData
+      ? {
+          firstName: profileData.first_name,
+          lastName: profileData.last_name,
+          birthDate: profileData.birth_date,
+          alias: profileData.alias,
+          avatar: profileData.avatar,
+          bio: profileData.bio,
+        }
+      : null;
   }
 
   const { pathname } = context.url;
@@ -125,16 +157,16 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (
     context.request.method === 'GET' &&
     !isPublicRoute(pathname) &&
-    !context.locals.session
+    !context.locals.user
   ) {
     return context.redirect('/home');
   }
 
   if (
-    context.locals.session &&
+    context.locals.user &&
     isAdminRoute(pathname) &&
-    context.locals.session.role !== 'ADMIN' &&
-    context.locals.session.role !== 'MODERATOR'
+    context.locals.user.role !== 'ADMIN' &&
+    context.locals.user.role !== 'MODERATOR'
   ) {
     return context.redirect('/home');
   }
@@ -142,19 +174,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const acceptLang = context.request.headers.get('accept-language') || '';
   const preferredLang = acceptLang.split(',')[0]?.split('-')[0] || 'en';
   context.locals.lang = preferredLang === 'es' ? 'es' : 'en';
-
-  if (context.locals.session) {
-    let userLang = await context.session?.get<string>('userLang');
-    if (!userLang) {
-      userLang = await fetchUserLanguage(context.locals.session.userId, context.locals.session.accessToken);
-      if (userLang) {
-        await context.session?.set('userLang', userLang);
-      }
-    }
-    if (userLang) {
-      context.locals.lang = userLang;
-    }
-  }
 
   return next();
 });

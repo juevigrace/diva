@@ -5,10 +5,10 @@ import { t } from '@lib/i18n/t';
 import { sectionKey, itemKey } from '@lib/i18n/nav-keys';
 
 const currentPath = Astro.url.pathname;
-const { session } = Astro.locals;
+const { user, state } = Astro.locals;
 const lang = Astro.locals.lang;
 
-const isAdmin = session?.role === 'ADMIN' || session?.role === 'MODERATOR';
+const isAdmin = user?.role === 'ADMIN' || user?.role === 'MODERATOR';
 ---
 
 <aside
@@ -59,14 +59,14 @@ const isAdmin = session?.role === 'ADMIN' || session?.role === 'MODERATOR';
     }
   </nav>
   {
-    session && (
+    user && (
       <div class="border-border flex items-center gap-3 border-t p-4">
         <div class="bg-primary/10 text-primary flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold">
-          {(session.userId || 'U')[0].toUpperCase()}
+          {(user.userId || 'U')[0].toUpperCase()}
         </div>
         <div class="min-w-0 flex-1">
-          <p class="truncate text-sm font-medium">{session.type || 'User'}</p>
-          <p class="text-muted-foreground truncate text-xs">{session.status || 'Active'}</p>
+          <p class="truncate text-sm font-medium">{user.role || 'User'}</p>
+          <p class="text-muted-foreground truncate text-xs">{state?.status || 'Active'}</p>
         </div>
       </div>
     )

@@ -3,11 +3,10 @@ import AppLayout from '@layouts/AppLayout.astro';
 import UsersManager from '@components/app/UsersManager';
 import { apiFetch } from '@api/lib/fetch';
 import { t } from '@lib/i18n/t';
+import type { SessionResponse } from 'diva-types/auth/responses';
 
-const { session } = Astro.locals;
-const uid = session!.userId;
-const isVerified = session!.isVerified;
-const currentUserRole = session!.role;
+const { user, state } = Astro.locals;
+const auth = await Astro.session.get<SessionResponse>('auth');
 
 const url = new URL(Astro.request.url);
 const currentPage = parseInt(url.searchParams.get('page') || '1', 10);
@@ -18,9 +17,9 @@ let totalItems = 0;
 let totalPages = 1;
 let loadError = false;
 
-if (isVerified) {
+if (state?.verified && user) {
   try {
-    const res = await apiFetch(`/api/user/?page=${currentPage}&limit=${limit}`, { token: session!.accessToken });
+    const res = await apiFetch(`/api/user/?page=${currentPage}&limit=${limit}`, { token: auth!.access_token });
     if (res.ok) {
       usersData = res.json.data?.items || [];
       totalItems = res.json.data?.pagination_info?.total_items || 0;
@@ -45,8 +44,8 @@ if (isVerified) {
     initialTotalPages={totalPages}
     initialTotalItems={totalItems}
     loadError={loadError}
-    isVerified={isVerified}
-    currentUserRole={currentUserRole}
+    isVerified={state?.verified ?? false}
+    currentUserRole={user?.role || 'USER'}
     lang={Astro.locals.lang}
     client:load
   />

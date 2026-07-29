@@ -32,7 +32,10 @@ export async function POST({ request, callAction }: import('astro').APIContext):
       return json(res.json, res.status);
     }
 
-    await callAction(actions.session.saveSession, res.json.data);
+    const { error: saveError } = await callAction(actions.session.saveSession, res.json.data);
+    if (saveError) {
+      return json({ message: 'Failed to save session' }, 500);
+    }
 
     const isHtmx = request.headers.get('HX-Request') === 'true';
     if (isHtmx) {

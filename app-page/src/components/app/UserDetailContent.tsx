@@ -211,7 +211,7 @@ export default function UserDetailContent({ uid, user, profile, permissions: ini
                   {sessions.map((s: any) => (
                     <div key={s.session_id} className="border-border hover:bg-muted/50 flex items-center justify-between rounded-lg border p-3">
                       <div>
-                        <p className="text-sm font-medium">{s.device || 'Unknown device'}</p>
+                        <p className="text-sm font-medium">{s.device_id || 'Unknown device'}</p>
                         <p className="text-muted-foreground text-xs">
                           {s.ip || 'Unknown IP'}
                           {s.created_at ? ` · ${new Date(s.created_at).toLocaleDateString()}` : ''}

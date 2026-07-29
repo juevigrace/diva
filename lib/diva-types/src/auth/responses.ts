@@ -5,7 +5,7 @@ export type SessionResponse = {
   refresh_token: string;
   status: string;
   type: string;
-  device: string;
+  device_id: string;
   ip: string;
   agent: string;
   access_expires_at: number;

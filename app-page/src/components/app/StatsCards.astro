@@ -2,37 +2,42 @@
 import { apiFetch } from '@api/lib/fetch';
 import { t } from '@lib/i18n/t';
 
-const { session } = Astro.locals;
-const token = session?.accessToken;
+import type { SessionResponse } from 'diva-types/auth/responses';
+
+const { user, state } = Astro.locals;
+const auth = await Astro.session.get<SessionResponse>('auth');
+const token = auth?.access_token;
 
 let totalUsers = '—';
 let totalPages = 1;
 let totalSessions = '—';
 
-try {
-  if (token) {
-    const usersRes = await apiFetch('/api/user/?page=1&limit=100', { token });
-    if (usersRes.ok) {
-      const items = (usersRes.json.data?.items || []).filter((u: any) => !u.deleted_at);
-      totalUsers = String(items.length);
-      totalPages = usersRes.json.data?.pagination_info?.total_pages ?? 1;
+if (state?.verified) {
+  try {
+    if (token) {
+      const usersRes = await apiFetch('/api/user/?page=1&limit=100', { token });
+      if (usersRes.ok) {
+        const items = (usersRes.json.data?.items || []).filter((u: any) => !u.deleted_at);
+        totalUsers = String(items.length);
+        totalPages = usersRes.json.data?.pagination_info?.total_pages ?? 1;
+      }
     }
-  }
-} catch (_) {}
+  } catch (_) {}
 
-try {
-  if (token && session?.userId) {
-    const sessRes = await apiFetch(`/api/user/${session.userId}/sessions`, { token });
-    if (sessRes.ok) {
-      const allSessions = (sessRes.json.data as any[]) || [];
-      const now = Date.now();
-      totalSessions = String(allSessions.filter((s) =>
-        s.status?.toUpperCase() !== 'CLOSED' &&
-        (!s.access_expires_at || now <= s.access_expires_at)
-      ).length || '—');
+  try {
+    if (token && user) {
+      const sessRes = await apiFetch(`/api/user/${user.userId}/sessions`, { token });
+      if (sessRes.ok) {
+        const allSessions = (sessRes.json.data as any[]) || [];
+        const now = Date.now();
+        totalSessions = String(allSessions.filter((s) =>
+          s.status?.toUpperCase() !== 'CLOSED' &&
+          (!s.access_expires_at || now <= s.access_expires_at)
+        ).length || '—');
+      }
     }
-  }
-} catch (_) {}
+  } catch (_) {}
+}
 
 const stats = [
   { label: t('dashboard.activeUsers', Astro.locals.lang), value: totalUsers, href: '/users' },

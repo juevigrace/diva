@@ -3,6 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import node from '@astrojs/node';
+import db from '@astrojs/db';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
@@ -15,7 +16,7 @@ export default defineConfig({
     },
     ttl: 86400,
   },
-  integrations: [react(), sitemap({ namespaces: { news: false, image: false, video: false } })],
+  integrations: [react(), sitemap({ namespaces: { news: false, image: false, video: false } }), db()],
   env: {
     schema: {
       API_BASE_URL: {

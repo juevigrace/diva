@@ -38,7 +38,7 @@ export const server = {
         refresh_token: z.string(),
         status: z.string(),
         type: z.string(),
-        device: z.string(),
+        device_id: z.string(),
         ip: z.string(),
         agent: z.string(),
         access_expires_at: z.number(),
@@ -119,7 +119,7 @@ export const server = {
       handler: async (_, ctx) => {
         const session = await ctx.session?.get<SessionResponse>('auth');
         if (session) {
-          await apiFetch('/api/auth/signOut', { method: 'POST', body: { device: session.device, user_agent: session.agent }, token: session.access_token });
+          await apiFetch('/api/auth/signOut', { method: 'POST', body: { device: getDeviceLabel(session.agent), user_agent: session.agent }, token: session.access_token });
         }
         await ctx.session?.set('auth', undefined);
       },
@@ -144,7 +144,7 @@ export const server = {
         if (!session) {
           throw new ActionError({ code: 'NOT_FOUND', message: 'Session not found' });
         }
-        const res = await apiFetch<SessionResponse>('/api/auth/refresh', { method: 'POST', body: { device: session.device, user_agent: session.agent }, token: session.refresh_token });
+        const res = await apiFetch<SessionResponse>('/api/auth/refresh', { method: 'POST', body: { device: getDeviceLabel(session.agent), user_agent: session.agent }, token: session.refresh_token });
         if (!res.ok) {
           throw new ActionError({ code: 'BAD_REQUEST', message: res.json.message || 'Refresh failed' });
         }

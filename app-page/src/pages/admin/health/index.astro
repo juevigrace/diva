@@ -4,8 +4,7 @@ import HealthView from '@components/app/HealthView';
 
 import { t } from '@lib/i18n/t';
 
-const { session } = Astro.locals;
-const isVerified = session!.isVerified;
+const { state } = Astro.locals;
 ---
 
 <AppLayout
@@ -13,5 +12,5 @@ const isVerified = session!.isVerified;
   heading="System Health"
   description={t('page.health.desc', Astro.locals.lang)}
 >
-  <HealthView isVerified={isVerified} lang={Astro.locals.lang} client:load />
+  <HealthView isVerified={state?.verified ?? false} lang={Astro.locals.lang} client:load />
 </AppLayout>

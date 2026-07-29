@@ -5,8 +5,8 @@ import DataList from './DataList';
 import type { Column } from './DataList';
 
 interface DeviceData {
-  id: string;
-  name: string;
+  device_id: string;
+  device_name: string;
   created_at: number;
   updated_at: number;
 }
@@ -44,12 +44,26 @@ export default function DevicesManager({ uid, initialDevices, isVerified = true,
     setRefreshing(false);
   };
 
+  const deleteDevice = async (deviceId: string) => {
+    try {
+      const res = await fetch(`/api/user/${uid}/devices/${deviceId}`, { method: 'DELETE' });
+      if (res.ok) {
+        toast.success(t('devicesPage.deleted'));
+        setDevices((prev) => prev.filter((d) => d.device_id !== deviceId));
+      } else {
+        toast.error(t('devicesPage.failedDelete'));
+      }
+    } catch {
+      toast.error(t('devicesPage.failedDelete'));
+    }
+  };
+
   const deviceColumns: Column<DeviceData>[] = [
     {
       key: 'name',
       header: t('devicesPage.name') || 'Name',
       render: (d: DeviceData) => (
-        <span className="text-sm font-medium">{d.name || t('devicesPage.unknownDevice')}</span>
+        <span className="text-sm font-medium">{d.device_name || t('devicesPage.unknownDevice')}</span>
       ),
     },
     {
@@ -70,13 +84,25 @@ export default function DevicesManager({ uid, initialDevices, isVerified = true,
         </div>
       ),
     },
+    {
+      key: 'actions',
+      header: '',
+      render: (d: DeviceData) => (
+        <button
+          className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background hover:bg-destructive hover:text-destructive-foreground h-8 px-3"
+          onClick={() => deleteDevice(d.device_id)}
+        >
+          {t('devicesPage.delete')}
+        </button>
+      ),
+    },
   ];
 
   return (
     <DataList
       columns={deviceColumns}
       data={devices}
-      getId={(d: DeviceData) => d.id}
+      getId={(d: DeviceData) => d.device_id}
       selectable={false}
       emptyMessage={t('devicesPage.noDevices')}
       hasPermission={isVerified}

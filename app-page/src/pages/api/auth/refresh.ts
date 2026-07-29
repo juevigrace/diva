@@ -9,7 +9,10 @@ export async function POST(context: import('astro').APIContext): Promise<Respons
     const body = await context.request.json();
     const res = await apiFetch<SessionResponse>('/api/auth/refresh', { method: 'POST', body, token: session.access_token });
     if (!res.ok) return json(res.json, res.status);
-    await context.callAction(actions.session.saveSession, res.json.data);
+    const { error: saveError } = await context.callAction(actions.session.saveSession, res.json.data);
+    if (saveError) {
+      return json({ message: 'Failed to save session' }, 500);
+    }
     return json(res.json.data, res.status);
   } catch (e) {
     if (e instanceof Response) return e;

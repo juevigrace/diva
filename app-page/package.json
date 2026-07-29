@@ -7,14 +7,15 @@
     "bun": ">=1.2"
   },
   "scripts": {
-    "dev": "bun run astro dev --background",
-    "build": "bun run astro build",
+    "dev": "ASTRO_DATABASE_FILE=./.astro/data.db bun run astro dev --background",
+    "build": "ASTRO_DATABASE_FILE=./.astro/data.db bun run astro build",
     "preview": "bun run astro preview",
     "stop": "astro dev stop",
     "status": "astro dev status",
     "logs": "astro dev logs"
   },
   "dependencies": {
+    "@astrojs/db": "catalog:",
     "@astrojs/node": "catalog:",
     "@astrojs/react": "catalog:",
     "@astrojs/sitemap": "catalog:",

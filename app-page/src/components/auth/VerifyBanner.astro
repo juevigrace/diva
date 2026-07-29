@@ -1,9 +1,9 @@
 ---
 import { t } from '@lib/i18n/t';
 
-const { session } = Astro.locals;
+const { state } = Astro.locals;
 const lang = Astro.locals.lang;
-const show = !session?.isVerified && !Astro.url.searchParams.has('vb_dismiss');
+const show = !state?.verified && !Astro.url.searchParams.has('vb_dismiss');
 ---
 
 {

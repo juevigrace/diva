@@ -18,7 +18,7 @@ interface SessionData {
   session_id?: string;
   id?: string;
   type?: string;
-  device?: string;
+  device_id?: string;
   ip?: string;
   agent?: string;
   status?: string;
@@ -202,7 +202,7 @@ export default function SessionsManager({ uid, initialSessions, currentSessionId
         const sid = s.session_id || s.id || '';
         return (
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">{s.device || t('sessionsPage.unknownDevice')}</span>
+            <span className="text-sm font-medium">{s.device_id || t('sessionsPage.unknownDevice')}</span>
             {sid === currentSessionId && <Badge variant="outline" className="text-xs">{t('sessionsPage.current') || 'Current'}</Badge>}
           </div>
         );
