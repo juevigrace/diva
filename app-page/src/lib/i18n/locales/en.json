@@ -26,6 +26,7 @@
     "dashboard": "Dashboard",
     "users": "Users",
     "sessions": "Sessions",
+    "devices": "Devices",
     "auditLog": "Audit Log",
     "profile": "Profile",
     "settings": "Settings",
@@ -245,6 +246,17 @@
     "verifyToManage": "Verify email to manage",
     "confirmCloseDesc": "Are you sure you want to close this session? The device will be signed out immediately."
   },
+  "devicesPage": {
+    "title": "Devices",
+    "name": "Name",
+    "created": "Created",
+    "lastSeen": "Last seen",
+    "refresh": "Refresh",
+    "refreshing": "Refreshing...",
+    "noDevices": "No devices found.",
+    "unknownDevice": "Unknown device",
+    "failedFetch": "Failed to fetch devices"
+  },
   "landing": {
     "beta": "✨ Now in public beta",
     "heroTitle": "Build pages your users will love",
@@ -436,6 +448,7 @@
     "userDetail": { "title": "User — Diva", "desc": "User details and management." },
     "audit": { "title": "Audit Log — Diva", "desc": "System-wide audit trail of user actions." },
     "sessions": { "title": "Sessions — Diva", "desc": "Manage your active sessions across devices." },
+    "devices": { "title": "Devices — Diva", "desc": "Manage your registered devices." },
     "health": { "title": "Health — Diva", "desc": "Monitor the health and status of the Diva system." },
     "apiExplorer": { "title": "API Explorer — Diva", "desc": "Browse all backend API endpoints and their corresponding UI pages." },
     "permissions": { "title": "Permissions — Diva", "desc": "Manage permission definitions." },

@@ -26,6 +26,7 @@
     "dashboard": "Panel",
     "users": "Usuarios",
     "sessions": "Sesiones",
+    "devices": "Dispositivos",
     "auditLog": "Registro de Auditor\u00eda",
     "profile": "Perfil",
     "settings": "Ajustes",
@@ -245,6 +246,17 @@
     "verifyToManage": "Verifica el correo para gestionar",
     "confirmCloseDesc": "\u00bfEst\u00e1s seguro de cerrar esta sesi\u00f3n? El dispositivo se desconectar\u00e1 inmediatamente."
   },
+  "devicesPage": {
+    "title": "Dispositivos",
+    "name": "Nombre",
+    "created": "Creado",
+    "lastSeen": "\u00daltima vez visto",
+    "refresh": "Refrescar",
+    "refreshing": "Refrescando...",
+    "noDevices": "No se encontraron dispositivos.",
+    "unknownDevice": "Dispositivo desconocido",
+    "failedFetch": "Error al obtener dispositivos"
+  },
   "landing": {
     "beta": "✨ Ahora en beta pública",
     "heroTitle": "Crea páginas que tus usuarios amarán",
@@ -436,6 +448,7 @@
     "userDetail": { "title": "Usuario — Diva", "desc": "Detalles y gestión del usuario." },
     "audit": { "title": "Registro de Auditoría — Diva", "desc": "Rastro de auditoría de acciones de usuario en todo el sistema." },
     "sessions": { "title": "Sesiones — Diva", "desc": "Gestiona tus sesiones activas en todos los dispositivos." },
+    "devices": { "title": "Dispositivos — Diva", "desc": "Gestiona tus dispositivos registrados." },
     "health": { "title": "Estado — Diva", "desc": "Monitorea la salud y el estado del sistema Diva." },
     "apiExplorer": { "title": "Explorador API — Diva", "desc": "Explora todos los endpoints de la API del backend y sus páginas UI correspondientes." },
     "permissions": { "title": "Permisos — Diva", "desc": "Gestiona las definiciones de permisos." },

@@ -17,6 +17,7 @@ export const navItems: NavSection[] = [
       { href: '/', label: 'Dashboard', icon: 'dashboard' },
       { href: '/users', label: 'Users', icon: 'users' },
       { href: '/sessions', label: 'Sessions', icon: 'sessions' },
+      { href: '/devices', label: 'Devices', icon: 'devices' },
       { href: '/audit', label: 'Audit Log', icon: 'audit' },
     ],
   },

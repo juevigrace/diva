@@ -12,7 +12,8 @@
     "./permission/dtos": "./src/permission/dtos.ts",
     "./permission/responses": "./src/permission/responses.ts",
     "./verification/dtos": "./src/verification/dtos.ts",
-    "./verification/enums": "./src/verification/enums.ts"
+    "./verification/enums": "./src/verification/enums.ts",
+    "./device/responses": "./src/device/responses.ts"
   },
   "devDependencies": {
     "typescript": "catalog:"
