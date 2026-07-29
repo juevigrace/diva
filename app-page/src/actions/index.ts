@@ -1,6 +1,7 @@
 import { defineAction, ActionError } from 'astro:actions';
 import { z } from 'astro/zod';
 import { apiFetch } from '@api/lib/fetch';
+import { getDeviceLabel } from '@lib/device';
 import type { SessionResponse } from 'diva-types/auth/responses';
 import type { SignInDto, SignUpDto, ForgotPasswordConfirmDto } from 'diva-types/auth/dtos';
 
@@ -81,7 +82,7 @@ export const server = {
       '/api/auth/signUp',
       (input, request) => ({
         user: { email: input.email, username: input.username, password: input.password },
-        session_data: { device: input.device || request.headers.get('User-Agent') || 'web', user_agent: input.user_agent || request.headers.get('User-Agent') || 'web' },
+        session_data: { device: input.device || getDeviceLabel(request.headers.get('User-Agent') || 'web'), user_agent: input.user_agent || request.headers.get('User-Agent') || 'web' },
       } as SignUpDto),
     ),
 
@@ -96,7 +97,7 @@ export const server = {
       (input, request) => ({
         username: input.username,
         password: input.password,
-        session_data: { device: input.device || request.headers.get('User-Agent') || 'web', user_agent: input.user_agent || request.headers.get('User-Agent') || 'web' },
+        session_data: { device: input.device || getDeviceLabel(request.headers.get('User-Agent') || 'web'), user_agent: input.user_agent || request.headers.get('User-Agent') || 'web' },
       } as SignInDto),
     ),
 
@@ -109,7 +110,7 @@ export const server = {
       '/api/auth/forgot/password/confirm',
       (input, request) => ({
         id: input.id,
-        session_data: { device: input.device || request.headers.get('User-Agent') || 'web', user_agent: input.user_agent || request.headers.get('User-Agent') || 'web' },
+        session_data: { device: input.device || getDeviceLabel(request.headers.get('User-Agent') || 'web'), user_agent: input.user_agent || request.headers.get('User-Agent') || 'web' },
       } as ForgotPasswordConfirmDto),
     ),
 

@@ -5,6 +5,7 @@ import { Input } from 'diva-ui/components/input';
 import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { signUpInputSchema } from '@lib/schemas/auth';
 import { useT } from '@lib/i18n/useT';
+import { getDeviceLabel } from '@lib/device';
 
 interface AvailabilityState {
   status: 'idle' | 'checking' | 'available' | 'taken';
@@ -102,7 +103,7 @@ export default function SignUpForm({ lang = 'en' }: SignUpFormProps) {
       const res = await fetch('/api/auth/signUp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password, device: navigator.userAgent || 'web' }),
+        body: JSON.stringify({ username, email, password, device: getDeviceLabel(navigator.userAgent) }),
       });
 
       if (res.ok) {

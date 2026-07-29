@@ -2,6 +2,7 @@ import { actions } from 'astro:actions';
 import { json } from '@api/lib/response';
 import { apiFetch } from '@api/lib/fetch';
 import { forgotPasswordConfirmSchema } from '@lib/schemas/auth';
+import { getDeviceLabel } from '@lib/device';
 import type { SessionResponse } from 'diva-types/auth/responses';
 
 export async function POST({ request, callAction }: import('astro').APIContext): Promise<Response> {
@@ -16,7 +17,7 @@ export async function POST({ request, callAction }: import('astro').APIContext):
       method: 'POST',
       body: {
         id: parsed.data.id,
-        session_data: { device: parsed.data.device || request.headers.get('User-Agent') || 'web', user_agent: request.headers.get('User-Agent') || 'web' },
+        session_data: { device: parsed.data.device || getDeviceLabel(request.headers.get('User-Agent') || 'web'), user_agent: request.headers.get('User-Agent') || 'web' },
       },
     });
 

@@ -4,6 +4,7 @@ import { toast } from 'diva-ui/components/sonner';
 import { Input } from 'diva-ui/components/input';
 import { signInInputSchema } from '@lib/schemas/auth';
 import { useT } from '@lib/i18n/useT';
+import { getDeviceLabel } from '@lib/device';
 
 interface SignInFormProps {
   lang?: string;
@@ -45,7 +46,7 @@ export default function SignInForm({ lang = 'en' }: SignInFormProps) {
       const res = await fetch('/api/auth/signIn', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password, device: navigator.userAgent || 'web' }),
+        body: JSON.stringify({ username, password, device: getDeviceLabel(navigator.userAgent) }),
       });
 
       if (res.ok) {

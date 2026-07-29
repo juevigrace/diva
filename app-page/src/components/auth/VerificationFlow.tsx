@@ -4,6 +4,7 @@ import { Input } from 'diva-ui/components/input';
 import { toast } from 'diva-ui/components/sonner';
 import { Loader2 } from 'lucide-react';
 import { useT } from '@lib/i18n/useT';
+import { getDeviceLabel } from '@lib/device';
 import { ActionType } from 'diva-types/verification/enums';
 
 interface VerificationFlowProps {
@@ -146,7 +147,7 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
       const res = await fetch('/api/auth/forgot/password/confirm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: actionId, device: navigator.userAgent || 'web' }),
+        body: JSON.stringify({ id: actionId, device: getDeviceLabel(navigator.userAgent) }),
       });
 
       if (res.ok) {
@@ -184,7 +185,7 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
         await fetch('/api/auth/signOut', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ device: navigator.userAgent || 'web', user_agent: navigator.userAgent }),
+          body: JSON.stringify({ device: getDeviceLabel(navigator.userAgent), user_agent: navigator.userAgent }),
         }).catch(() => {});
         setStep('complete');
       } else {
