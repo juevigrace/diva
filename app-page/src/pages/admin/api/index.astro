@@ -61,9 +61,14 @@ const modules: { name: string; icon: string; endpoints: Endpoint[] }[] = [
     name: 'Session Management',
     icon: '⏱️',
     endpoints: [
+      { method: 'GET', path: '/api/sessions', description: 'List all sessions (admin)', ui: '/admin/sessions' },
       { method: 'GET', path: '/api/sessions/{sid}', description: 'Get session by ID', ui: '/sessions' },
-      { method: 'DELETE', path: '/api/sessions/{sid}', description: 'Delete/close a session', ui: '/sessions' },
-      { method: 'DELETE', path: '/api/sessions/expired', description: 'Clear all expired sessions', ui: '/sessions' },
+      { method: 'DELETE', path: '/api/sessions/{sid}/close', description: 'Close a session', ui: '/sessions' },
+      { method: 'DELETE', path: '/api/sessions/close', description: 'Close all expired sessions (admin)', ui: '/admin/sessions' },
+      { method: 'DELETE', path: '/api/sessions', description: 'Permanently purge soft-deleted sessions (admin)', ui: '/admin/sessions' },
+      { method: 'GET', path: '/api/user/{uid}/sessions', description: 'List user sessions', ui: '/sessions' },
+      { method: 'DELETE', path: '/api/user/{uid}/sessions', description: 'Clear closed session history', ui: '/sessions' },
+      { method: 'DELETE', path: '/api/user/{uid}/sessions/close', description: 'Force-close all sessions for a user (admin)', ui: '/users/[uid]' },
     ],
   },
   {

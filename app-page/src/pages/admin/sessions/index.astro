@@ -1,0 +1,72 @@
+---
+import AppLayout from '@layouts/AppLayout.astro';
+import { t } from '@lib/i18n/t';
+---
+
+<AppLayout
+  title={t('page.sessionAdmin.title', Astro.locals.lang)}
+  heading={t('admin.sessionAdmin', Astro.locals.lang)}
+  description={t('admin.sessionAdminDesc', Astro.locals.lang)}
+>
+  <div class="grid gap-6 md:grid-cols-2">
+    <div class="border-border bg-card rounded-xl border p-6 shadow-sm">
+      <h3 class="text-lg font-semibold">{t('admin.closeExpiredTitle', Astro.locals.lang)}</h3>
+      <p class="text-muted-foreground mt-1 text-sm">{t('admin.closeExpiredDesc', Astro.locals.lang)}</p>
+      <div class="mt-4">
+        <button
+          class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors"
+          id="close-expired-btn"
+        >
+          {t('admin.closeExpired', Astro.locals.lang)}
+        </button>
+      </div>
+    </div>
+
+    <div class="border-border bg-card rounded-xl border p-6 shadow-sm">
+      <h3 class="text-lg font-semibold">{t('admin.purgeSessionsTitle', Astro.locals.lang)}</h3>
+      <p class="text-muted-foreground mt-1 text-sm">{t('admin.purgeSessionsDesc', Astro.locals.lang)}</p>
+      <div class="mt-4">
+        <button
+          class="bg-destructive text-destructive-foreground hover:bg-destructive/90 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors"
+          id="purge-sessions-btn"
+        >
+          {t('admin.purgeSessions', Astro.locals.lang)}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-sessions-status" class="mt-4 text-sm"></div>
+</AppLayout>
+
+<script>
+  const closeBtn = document.getElementById('close-expired-btn');
+  const purgeBtn = document.getElementById('purge-sessions-btn');
+  const status = document.getElementById('admin-sessions-status');
+
+  async function post(path: string, successMsg: string, failMsg: string) {
+    if (!closeBtn || !purgeBtn || !status) return;
+    try {
+      const res = await fetch(path, { method: 'DELETE' });
+      if (res.ok) {
+        status.className = 'mt-4 text-sm text-green-600';
+        status.textContent = successMsg;
+      } else {
+        const j = await res.json();
+        status.className = 'mt-4 text-sm text-destructive';
+        status.textContent = j.message || failMsg;
+      }
+    } catch {
+      status.className = 'mt-4 text-sm text-destructive';
+      status.textContent = failMsg;
+    }
+  }
+
+  closeBtn?.addEventListener('click', () => {
+    post('/api/sessions/close', 'Expired sessions closed.', 'Failed to close expired sessions.');
+  });
+
+  purgeBtn?.addEventListener('click', () => {
+    post('/api/sessions', 'Sessions purged.', 'Failed to purge sessions.');
+  });
+</script>

@@ -12,6 +12,7 @@ export const itemKey: Record<string, string> = {
   Profile: 'profile',
   Settings: 'settings',
   Permissions: 'permissions',
+  'Session Admin': 'sessionAdmin',
   Health: 'health',
   'API Explorer': 'apiExplorer',
 };

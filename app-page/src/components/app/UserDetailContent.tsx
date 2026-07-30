@@ -49,6 +49,17 @@ export default function UserDetailContent({ uid, user, profile, permissions: ini
     }
   };
 
+  const closeAllSessions = async () => {
+    const res = await fetch(`/api/user/${uid}/sessions/close`, { method: 'DELETE' });
+    if (res.ok) {
+      const refetch = await fetch(`/api/user/${uid}/sessions`);
+      if (refetch.ok) {
+        const json = await refetch.json();
+        setSessions(json || []);
+      }
+    }
+  };
+
   if (!user) {
     return <p className="text-muted-foreground text-sm">{t('users.unknown')}</p>;
   }
@@ -209,6 +220,13 @@ export default function UserDetailContent({ uid, user, profile, permissions: ini
 
           {tab === 'sessions' && (
             <div>
+              {canManage && sessions && sessions.length > 0 && (
+                <div className="mb-4 flex justify-end">
+                  <Button type="button" variant="destructive" size="sm" onClick={closeAllSessions}>
+                    {t('users.closeAllSessions')}
+                  </Button>
+                </div>
+              )}
               {sessions && sessions.length > 0 ? (
                 <div className="space-y-2">
                   {sessions.map((s: any) => (

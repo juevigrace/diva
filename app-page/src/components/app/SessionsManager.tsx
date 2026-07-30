@@ -65,8 +65,6 @@ export default function SessionsManager({ uid, initialSessions, currentSessionId
     return grouped;
   }, [sessions]);
 
-  const expiredCount = groups.expired.length;
-
   const allSessions = useMemo(() => {
     const order: SessionGroup[] = ['active', 'expired', 'closed'];
     return order.flatMap((g) => groups[g]);
@@ -141,17 +139,17 @@ export default function SessionsManager({ uid, initialSessions, currentSessionId
     setLoading((prev) => ({ ...prev, [confirmSid]: false }));
   };
 
-  const clearExpired = async () => {
+  const clearHistory = async () => {
     try {
-      const res = await fetch('/api/sessions/expired', { method: 'DELETE' });
+      const res = await fetch(`/api/user/${uid}/sessions`, { method: 'DELETE' });
       if (res.ok) {
         await refetchSessions();
-        toast.success(t('sessionsPage.expiredCleared'));
+        toast.success(t('sessionsPage.historyCleared'));
       } else {
-        toast.error(t('sessionsPage.failedClearExpired'));
+        toast.error(t('sessionsPage.failedClearHistory'));
       }
     } catch {
-      toast.error(t('sessionsPage.failedClearExpired'));
+      toast.error(t('sessionsPage.failedClearHistory'));
     }
   };
 
@@ -288,11 +286,9 @@ export default function SessionsManager({ uid, initialSessions, currentSessionId
               <Button variant="outline" size="sm" onClick={refetchSessions} disabled={refreshing || !isVerified}>
                 {refreshing ? t('sessionsPage.refreshing') : t('sessionsPage.refresh')}
               </Button>
-              {expiredCount > 0 && (
-                <Button variant="outline" size="sm" onClick={clearExpired} disabled={!isVerified}>
-                  {t('sessionsPage.clearExpired')} {expiredCount}
-                </Button>
-              )}
+              <Button variant="outline" size="sm" onClick={clearHistory} disabled={!isVerified}>
+                {t('sessionsPage.clearHistory')}
+              </Button>
             </div>
           </div>
         }
