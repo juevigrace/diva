@@ -5,21 +5,18 @@ import { apiFetch } from '@api/lib/fetch';
 import { t } from '@lib/i18n/t';
 import type { SessionResponse } from 'diva-types/auth/responses';
 
-const { user, state } = Astro.locals;
 const auth = await Astro.session.get<SessionResponse>('auth');
 
 let devices: Record<string, any>[] | null = null;
 
-if (state?.verified && user) {
-  try {
-    const res = await apiFetch(`/api/user/${user.userId}/devices`, { token: auth!.access_token });
-    if (res.ok) {
-      devices = res.json.data;
-    }
-  } catch (_) {}
-}
+try {
+  const res = await apiFetch('/api/devices', { token: auth!.access_token });
+  if (res.ok) {
+    devices = res.json.data;
+  }
+} catch (_) {}
 ---
 
 <AppLayout title={t('page.devices.title', Astro.locals.lang)} heading="Devices" description={t('page.devices.desc', Astro.locals.lang)}>
-  <DevicesManager uid={user!.userId} initialDevices={devices} isVerified={state?.verified ?? false} lang={Astro.locals.lang} client:load />
+  <DevicesManager initialDevices={devices} lang={Astro.locals.lang} client:load />
 </AppLayout>

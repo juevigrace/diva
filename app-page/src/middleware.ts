@@ -59,7 +59,7 @@ function isPublicRoute(pathname: string): boolean {
   return publicRoutes.some((route) => pathname === route || pathname.startsWith(route + '/'));
 }
 
-const adminRoutes = ['/admin/permissions', '/admin/health', '/admin/api'];
+const adminRoutes = ['/admin/permissions', '/admin/health', '/admin/api', '/devices'];
 
 function isAdminRoute(pathname: string): boolean {
   return adminRoutes.some((route) => pathname === route || pathname.startsWith(route + '/'));
@@ -79,7 +79,7 @@ async function fetchFromApi<T>(url: string, token: string): Promise<T | null> {
 export const onRequest = defineMiddleware(async (context, next) => {
   if (!context.session) return next();
 
-  const auth = await context.session.get<SessionResponse | null>('auth');
+  let auth = await context.session.get<SessionResponse | null>('auth');
 
   if (auth) {
     const now = Date.now();
@@ -92,14 +92,13 @@ export const onRequest = defineMiddleware(async (context, next) => {
     }
 
     if (expiresAt <= now + buffer) {
-      try {
-        const { data: refreshed } = await context.callAction(actions.auth.refresh, {});
-        if (refreshed) {
-          await context.session?.set('auth', refreshed);
-        }
-      } catch {
+      const { data: refreshed, error } = await context.callAction(actions.auth.refresh, {});
+      if (error) {
         await context.session?.set('auth', undefined);
         return next();
+      }
+      if (refreshed) {
+        auth = refreshed;
       }
     }
 

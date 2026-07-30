@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from 'diva-ui/components/button';
 import { getUserInitials, showStatus } from '../../nav-items';
 import GrantPermissionForm from './GrantPermissionForm';
+import DevicesManager from './DevicesManager';
 import { useT } from '@lib/i18n/useT';
 
 interface UserDetailContentProps {
@@ -10,6 +11,7 @@ interface UserDetailContentProps {
   profile: Record<string, any> | null;
   permissions: Record<string, any>[] | null;
   sessions: Record<string, any>[] | null;
+  devices: Record<string, any>[] | null;
   actions: Record<string, any>[] | null;
   allPermissions: Record<string, any>[];
   currentUserRole: string;
@@ -17,9 +19,9 @@ interface UserDetailContentProps {
   lang?: string;
 }
 
-export default function UserDetailContent({ uid, user, profile, permissions: initialPermissions, sessions: initialSessions, actions, allPermissions, currentUserRole, isVerified = true, lang = 'en' }: UserDetailContentProps) {
+export default function UserDetailContent({ uid, user, profile, permissions: initialPermissions, sessions: initialSessions, devices: initialDevices, actions, allPermissions, currentUserRole, isVerified = true, lang = 'en' }: UserDetailContentProps) {
   const t = useT(lang);
-  const [tab, setTab] = useState<'profile' | 'permissions' | 'sessions' | 'activity'>('profile');
+  const [tab, setTab] = useState<'profile' | 'permissions' | 'sessions' | 'devices' | 'activity'>('profile');
   const [permStatus, setPermStatus] = useState('');
   const [permStatusError, setPermStatusError] = useState(false);
   const [permissions, setPermissions] = useState(initialPermissions);
@@ -57,6 +59,7 @@ export default function UserDetailContent({ uid, user, profile, permissions: ini
     { key: 'profile', label: t('users.profile') },
     { key: 'permissions', label: t('users.permissions') },
     { key: 'sessions', label: t('users.sessions') },
+    { key: 'devices', label: t('users.devices') },
     { key: 'activity', label: t('users.activity') },
   ] as const;
 
@@ -234,6 +237,10 @@ export default function UserDetailContent({ uid, user, profile, permissions: ini
                 <p className="text-muted-foreground py-4 text-center text-sm">{t('users.noSessions')}</p>
               )}
             </div>
+          )}
+
+          {tab === 'devices' && (
+            <DevicesManager uid={uid} initialDevices={initialDevices} isVerified={isVerified} lang={lang} />
           )}
 
           {tab === 'activity' && (

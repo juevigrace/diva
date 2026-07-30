@@ -16,6 +16,7 @@ let user: Record<string, any> | null = null;
 let profile: Record<string, any> | null = null;
 let permissions: Record<string, any>[] | null = null;
 let sessions: Record<string, any>[] | null = null;
+let devices: Record<string, any>[] | null = null;
 let actions: Record<string, any>[] | null = null;
 let allPermissions: Record<string, any>[] = [];
 
@@ -45,6 +46,11 @@ if (isVerified) {
   } catch (_) {}
 
   try {
+    const devRes = await apiFetch(`/api/user/${uid}/devices`, { token: auth!.access_token });
+    if (devRes.ok) { devices = devRes.json.data; }
+  } catch (_) {}
+
+  try {
     const actRes = await apiFetch(`/api/user/${uid}/actions/`, { token: auth!.access_token });
     if (actRes.ok) { actions = actRes.json.data; }
   } catch (_) {}
@@ -62,6 +68,7 @@ if (isVerified) {
     profile={profile}
     permissions={permissions}
     sessions={sessions}
+    devices={devices}
     actions={actions}
     allPermissions={allPermissions}
     currentUserRole={currentUserRole}

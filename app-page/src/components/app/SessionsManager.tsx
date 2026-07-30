@@ -40,16 +40,12 @@ function formatDate(ts?: number) {
   return new Date(ts).toLocaleString();
 }
 
-function isExpired(s: SessionData): boolean {
-  if (!s.access_expires_at) return false;
-  return Date.now() > s.access_expires_at;
-}
-
 type SessionGroup = 'active' | 'expired' | 'closed';
 
 function sessionGroup(s: SessionData): SessionGroup {
-  if (s.status?.toUpperCase() === 'CLOSED') return 'closed';
-  if (isExpired(s)) return 'expired';
+  const status = s.status?.toUpperCase();
+  if (status === 'CLOSED') return 'closed';
+  if (status === 'EXPIRED') return 'expired';
   return 'active';
 }
 
@@ -149,7 +145,7 @@ export default function SessionsManager({ uid, initialSessions, currentSessionId
     try {
       const res = await fetch('/api/sessions/expired', { method: 'DELETE' });
       if (res.ok) {
-        setSessions((prev) => prev.filter((s) => !isExpired(s)));
+        await refetchSessions();
         toast.success(t('sessionsPage.expiredCleared'));
       } else {
         toast.error(t('sessionsPage.failedClearExpired'));

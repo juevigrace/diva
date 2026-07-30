@@ -210,6 +210,7 @@
     "grantPermission": "Conceder Permiso",
     "revoke": "Revocar",
     "close": "Cerrar",
+    "devices": "Dispositivos",
     "noPermissions": "No hay permisos asignados.",
     "noSessions": "No se encontraron sesiones.",
     "noActivity": "No hay actividad registrada.",
@@ -255,6 +256,9 @@
     "refreshing": "Refrescando...",
     "noDevices": "No se encontraron dispositivos.",
     "unknownDevice": "Dispositivo desconocido",
+    "delete": "Eliminar",
+    "deleted": "Dispositivo eliminado.",
+    "failedDelete": "Error al eliminar el dispositivo",
     "failedFetch": "Error al obtener dispositivos"
   },
   "landing": {

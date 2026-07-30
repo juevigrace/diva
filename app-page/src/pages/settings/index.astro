@@ -27,5 +27,5 @@ const preferences = preferencesList && preferencesList.length > 0 ? preferencesL
   heading="Settings"
   description={t('page.settings.desc', Astro.locals.lang)}
 >
-  <SettingsContent uid={user!.userId} initialPreferences={preferences} isVerified={state?.verified ?? false} lang={Astro.locals.lang} client:load />
+  {user && <SettingsContent uid={user.userId} initialPreferences={preferences} isVerified={state?.verified ?? false} lang={Astro.locals.lang} client:load />}
 </AppLayout>

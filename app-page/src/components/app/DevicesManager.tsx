@@ -7,12 +7,13 @@ import type { Column } from './DataList';
 interface DeviceData {
   device_id: string;
   device_name: string;
+  user_id?: string;
   created_at: number;
   updated_at: number;
 }
 
 interface DevicesManagerProps {
-  uid: string;
+  uid?: string;
   initialDevices: DeviceData[] | null;
   isVerified?: boolean;
   lang?: string;
@@ -28,10 +29,12 @@ export default function DevicesManager({ uid, initialDevices, isVerified = true,
   const [devices, setDevices] = useState<DeviceData[]>(initialDevices || []);
   const [refreshing, setRefreshing] = useState(false);
 
+  const basePath = uid ? `/api/user/${uid}/devices` : '/api/devices';
+
   const refetchDevices = async () => {
     setRefreshing(true);
     try {
-      const res = await fetch(`/api/user/${uid}/devices`);
+      const res = await fetch(basePath);
       if (res.ok) {
         const json = await res.json();
         setDevices(json.data || []);
@@ -44,9 +47,12 @@ export default function DevicesManager({ uid, initialDevices, isVerified = true,
     setRefreshing(false);
   };
 
-  const deleteDevice = async (deviceId: string) => {
+  const deleteDevice = async (deviceId: string, device?: DeviceData) => {
+    const deletePath = uid
+      ? `/api/user/${uid}/devices/${deviceId}`
+      : `/api/user/${device?.user_id}/devices/${deviceId}`;
     try {
-      const res = await fetch(`/api/user/${uid}/devices/${deviceId}`, { method: 'DELETE' });
+      const res = await fetch(deletePath, { method: 'DELETE' });
       if (res.ok) {
         toast.success(t('devicesPage.deleted'));
         setDevices((prev) => prev.filter((d) => d.device_id !== deviceId));
@@ -90,7 +96,7 @@ export default function DevicesManager({ uid, initialDevices, isVerified = true,
       render: (d: DeviceData) => (
         <button
           className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background hover:bg-destructive hover:text-destructive-foreground h-8 px-3"
-          onClick={() => deleteDevice(d.device_id)}
+          onClick={() => deleteDevice(d.device_id, d)}
         >
           {t('devicesPage.delete')}
         </button>

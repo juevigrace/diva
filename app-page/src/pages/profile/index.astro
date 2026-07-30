@@ -25,5 +25,5 @@ if (state?.verified && user) {
   heading="Profile"
   description={t('page.profile.desc', Astro.locals.lang)}
 >
-  <ProfileForms uid={user!.userId} user={user} profile={profile} isVerified={state?.verified ?? false} lang={Astro.locals.lang} client:load />
+  {user && <ProfileForms uid={user.userId} user={user} profile={profile} isVerified={state?.verified ?? false} lang={Astro.locals.lang} client:load />}
 </AppLayout>

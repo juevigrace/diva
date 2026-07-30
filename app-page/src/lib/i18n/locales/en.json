@@ -210,6 +210,7 @@
     "grantPermission": "Grant Permission",
     "revoke": "Revoke",
     "close": "Close",
+    "devices": "Devices",
     "noPermissions": "No permissions assigned.",
     "noSessions": "No sessions found.",
     "noActivity": "No activity recorded.",
@@ -255,6 +256,9 @@
     "refreshing": "Refreshing...",
     "noDevices": "No devices found.",
     "unknownDevice": "Unknown device",
+    "delete": "Remove",
+    "deleted": "Device deleted.",
+    "failedDelete": "Failed to delete device",
     "failedFetch": "Failed to fetch devices"
   },
   "landing": {

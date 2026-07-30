@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { z } from 'zod';
 import { Button } from 'diva-ui/components/button';
 import { toast } from 'diva-ui/components/sonner';
-import { showStatus } from '../../nav-items';
 import { changeLanguage } from '@lib/i18n/config';
 import { useT } from '@lib/i18n/useT';
 
@@ -24,17 +23,13 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
   const [preferences, setPreferences] = useState(initialPreferences);
   const [theme, setTheme] = useState(preferences?.theme || 'SYSTEM');
   const [language, setLanguage] = useState(preferences?.language || 'en');
-  const [prefStatus, setPrefStatus] = useState('');
-  const [prefError, setPrefError] = useState(false);
-  const [dangerStatus, setDangerStatus] = useState('');
-  const [dangerError, setDangerError] = useState(false);
 
   const handlePreferencesSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const parsed = preferencesSchema.safeParse({ theme, language });
     if (!parsed.success) {
-      showStatus(setPrefStatus, setPrefError, parsed.error.issues[0].message, true);
+      toast.error(parsed.error.issues[0].message);
       return;
     }
 
@@ -51,13 +46,17 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
         body: JSON.stringify({ theme, language }),
       });
       if (res.ok) {
-        const json = await res.json();
-        setPreferences(json);
-        showStatus(setPrefStatus, setPrefError, t('settings.preferencesSaved'), false);
+        const refetchRes = await fetch(`/api/user/${uid}/preferences`);
+        if (refetchRes.ok) {
+          const refetchJson = await refetchRes.json();
+          const prefs = Array.isArray(refetchJson) ? refetchJson : (refetchJson?.data || []);
+          setPreferences(prefs.length > 0 ? prefs[0] : { theme, language });
+        }
+        toast.success(t('settings.preferencesSaved'));
         if (langChanged) setTimeout(() => window.location.reload(), 300);
       } else {
         const json = await res.json();
-        showStatus(setPrefStatus, setPrefError, json.message || t('settings.failedSavePreferences'), true);
+        toast.error(json.message || t('settings.failedSavePreferences'));
       }
     } else {
       const res = await fetch(`/api/user/${uid}/preferences`, {
@@ -66,13 +65,17 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
         body: JSON.stringify({ theme, language, onboarding_completed: true }),
       });
       if (res.ok) {
-        const json = await res.json();
-        setPreferences(json);
-        showStatus(setPrefStatus, setPrefError, t('settings.preferencesCreated'), false);
+        const refetchRes = await fetch(`/api/user/${uid}/preferences`);
+        if (refetchRes.ok) {
+          const refetchJson = await refetchRes.json();
+          const prefs = Array.isArray(refetchJson) ? refetchJson : (refetchJson?.data || []);
+          setPreferences(prefs.length > 0 ? prefs[0] : { theme, language });
+        }
+        toast.success(t('settings.preferencesCreated'));
         if (langChanged) setTimeout(() => window.location.reload(), 300);
       } else {
         const json = await res.json();
-        showStatus(setPrefStatus, setPrefError, json.message || t('settings.failedCreatePreferences'), true);
+        toast.error(json.message || t('settings.failedCreatePreferences'));
       }
     }
   };
@@ -81,11 +84,11 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
     if (!confirm(t('settings.deleteAccountConfirm'))) return;
     const res = await fetch(`/api/user/${uid}/forever`, { method: 'DELETE' });
     if (res.ok) {
-      showStatus(setDangerStatus, setDangerError, t('settings.accountDeleted'), false);
+      toast.success(t('settings.accountDeleted'));
       setTimeout(() => { window.location.href = '/home'; }, 1500);
     } else {
       const json = await res.json();
-      showStatus(setDangerStatus, setDangerError, json.message || t('settings.failedDeleteAccount'), true);
+      toast.error(json.message || t('settings.failedDeleteAccount'));
     }
   };
 
@@ -131,7 +134,6 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
           </div>
           <div className="flex items-center gap-3">
             <Button type="submit" disabled={!isVerified}>{preferences ? t('settings.savePreferences') : t('settings.createPreferences')}</Button>
-            <span className={`text-xs ${prefError ? 'text-destructive' : 'text-muted-foreground'}`}>{prefStatus}</span>
           </div>
         </form>
       </div>
@@ -146,7 +148,6 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
           </div>
           <Button type="button" variant="destructive" size="sm" onClick={deleteAccount} disabled={!isVerified}>{t('common.delete')}</Button>
         </div>
-        <span className={`text-xs ${dangerError ? 'text-destructive' : 'text-muted-foreground'}`}>{dangerStatus}</span>
       </div>
     </div>
   );
