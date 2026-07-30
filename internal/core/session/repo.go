@@ -2,7 +2,6 @@ package session
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -19,6 +18,19 @@ func NewSessionRepo(store storage.SessionStore) *SessionRepo {
 	return &SessionRepo{
 		store: store,
 	}
+}
+
+func (s *SessionRepo) ListAll(ctx context.Context) ([]*models.Session, error) {
+	rows, err := s.store.ListSessions(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	sessions := make([]*models.Session, len(rows))
+	for i := range rows {
+		sessions[i] = models.SessionFromDB(&rows[i])
+	}
+	return sessions, nil
 }
 
 func (s *SessionRepo) GetByUser(ctx context.Context, userID uuid.UUID) ([]*models.Session, error) {
@@ -137,34 +149,18 @@ func (s *SessionRepo) Close(ctx context.Context, sessionID uuid.UUID) error {
 	return s.UpdateStatus(ctx, models.SESSION_CLOSED, sessionID)
 }
 
-func (s *SessionRepo) Delete(ctx context.Context, sessionID uuid.UUID) error {
-	return s.store.DeleteSession(ctx, sessionID)
-}
-
-func (s *SessionRepo) DeleteByUser(ctx context.Context, userID uuid.UUID) error {
-	return s.store.DeleteSessionsByUser(ctx, userID)
-}
-
-func (s *SessionRepo) DeleteExpired(ctx context.Context) error {
-	return s.store.DeleteExpiredSessions(ctx)
+func (s *SessionRepo) SoftDelete(ctx context.Context, sessionID uuid.UUID) error {
+	return s.store.SoftDeleteSession(ctx, sessionID)
 }
 
 func (s *SessionRepo) CloseAllByUser(ctx context.Context, userID uuid.UUID) error {
-	sessions, err := s.GetByUser(ctx, userID)
-	if err != nil {
-		return err
-	}
+	return s.store.CloseAllByUser(ctx, userID)
+}
 
-	errs := make([]error, len(sessions))
-	for i, session := range sessions {
-		if err := s.Close(ctx, session.ID); err != nil {
-			errs[i] = err
-		}
-	}
+func (s *SessionRepo) CloseExpired(ctx context.Context) error {
+	return s.store.CloseExpiredSessions(ctx)
+}
 
-	if len(errs) > 0 {
-		return errors.Join(errs...)
-	}
-
-	return nil
+func (s *SessionRepo) DeleteSessionsForever(ctx context.Context) error {
+	return s.store.DeleteSessionsForever(ctx)
 }

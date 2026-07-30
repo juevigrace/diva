@@ -85,3 +85,7 @@ func (s *UserActionsRepo) Delete(ctx context.Context, id uuid.UUID) error {
 func (s *UserActionsRepo) DeleteByUser(ctx context.Context, userID uuid.UUID) error {
 	return s.store.DeleteUserActionByUser(ctx, userID)
 }
+
+func (s *UserActionsRepo) DeleteExpired(ctx context.Context) error {
+	return s.store.DeleteExpiredActions(ctx)
+}

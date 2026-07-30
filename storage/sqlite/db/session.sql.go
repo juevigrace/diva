@@ -10,9 +10,21 @@ import (
 	"time"
 )
 
-const closeExpiredSessions = `-- name: CloseExpiredSessions :exec
+const closeAllByUser = `-- name: CloseAllByUser :exec
 ;
 
+update diva_session set
+    status = 'CLOSED',
+    updated_at = CURRENT_TIMESTAMP
+where user_id = ? and status = 'ACTIVE'
+`
+
+func (q *Queries) CloseAllByUser(ctx context.Context, userID string) error {
+	_, err := q.db.ExecContext(ctx, closeAllByUser, userID)
+	return err
+}
+
+const closeExpiredSessions = `-- name: CloseExpiredSessions :exec
 update diva_session set
     status = 'CLOSED',
     updated_at = CURRENT_TIMESTAMP
@@ -85,37 +97,15 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) er
 	return err
 }
 
-const deleteExpiredSessions = `-- name: DeleteExpiredSessions :exec
+const deleteSessionsForever = `-- name: DeleteSessionsForever :exec
 ;
 
 delete from diva_session
-where refresh_expires_at < CURRENT_TIMESTAMP
+where deleted_at is not null
 `
 
-func (q *Queries) DeleteExpiredSessions(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, deleteExpiredSessions)
-	return err
-}
-
-const deleteSession = `-- name: DeleteSession :exec
-delete from diva_session
-where id = ?
-`
-
-func (q *Queries) DeleteSession(ctx context.Context, id string) error {
-	_, err := q.db.ExecContext(ctx, deleteSession, id)
-	return err
-}
-
-const deleteSessionsByUser = `-- name: DeleteSessionsByUser :exec
-;
-
-delete from diva_session
-where user_id = ?
-`
-
-func (q *Queries) DeleteSessionsByUser(ctx context.Context, userID string) error {
-	_, err := q.db.ExecContext(ctx, deleteSessionsByUser, userID)
+func (q *Queries) DeleteSessionsForever(ctx context.Context) error {
+	_, err := q.db.ExecContext(ctx, deleteSessionsForever)
 	return err
 }
 
@@ -133,7 +123,8 @@ select
     s.access_expires_at,
     s.refresh_expires_at,
     s.created_at,
-    s.updated_at
+    s.updated_at,
+    s.deleted_at
 from diva_session s
 where s.id = ?
 `
@@ -155,8 +146,69 @@ func (q *Queries) GetSessionByID(ctx context.Context, id string) (DivaSession, e
 		&i.RefreshExpiresAt,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+		&i.DeletedAt,
 	)
 	return i, err
+}
+
+const listSessions = `-- name: ListSessions :many
+;
+
+select
+    s.id,
+    s.user_id,
+    s.access_token,
+    s.refresh_token,
+    s.device_id,
+    s.type,
+    s.status,
+    s.ip_address,
+    s.user_agent,
+    s.access_expires_at,
+    s.refresh_expires_at,
+    s.created_at,
+    s.updated_at,
+    s.deleted_at
+from diva_session s
+order by created_at desc
+`
+
+func (q *Queries) ListSessions(ctx context.Context) ([]DivaSession, error) {
+	rows, err := q.db.QueryContext(ctx, listSessions)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []DivaSession
+	for rows.Next() {
+		var i DivaSession
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.AccessToken,
+			&i.RefreshToken,
+			&i.DeviceID,
+			&i.Type,
+			&i.Status,
+			&i.IpAddress,
+			&i.UserAgent,
+			&i.AccessExpiresAt,
+			&i.RefreshExpiresAt,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.DeletedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const listSessionsByUser = `-- name: ListSessionsByUser :many
@@ -175,9 +227,10 @@ select
     s.access_expires_at,
     s.refresh_expires_at,
     s.created_at,
-    s.updated_at
+    s.updated_at,
+    s.deleted_at
 from diva_session s
-where s.user_id = ?
+where s.user_id = ? and deleted_at is null
 order by created_at desc
 `
 
@@ -204,6 +257,7 @@ func (q *Queries) ListSessionsByUser(ctx context.Context, userID string) ([]Diva
 			&i.RefreshExpiresAt,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+			&i.DeletedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -216,6 +270,19 @@ func (q *Queries) ListSessionsByUser(ctx context.Context, userID string) ([]Diva
 		return nil, err
 	}
 	return items, nil
+}
+
+const softDeleteSession = `-- name: SoftDeleteSession :exec
+;
+
+update diva_session set
+    deleted_at = CURRENT_TIMESTAMP
+where id = ?
+`
+
+func (q *Queries) SoftDeleteSession(ctx context.Context, id string) error {
+	_, err := q.db.ExecContext(ctx, softDeleteSession, id)
+	return err
 }
 
 const updateSession = `-- name: UpdateSession :exec

@@ -96,6 +96,7 @@ func DivaSessionToStorage(src *sqli.DivaSession) *storage.DivaSession {
 		RefreshExpiresAt: src.RefreshExpiresAt.UnixMilli(),
 		CreatedAt:       src.CreatedAt.UnixMilli(),
 		UpdatedAt:       src.UpdatedAt.UnixMilli(),
+		DeletedAt:       sqlNullTimeToTimePtr(src.DeletedAt),
 	}
 }
 

@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS diva_session (
     refresh_expires_at TIMESTAMPTZ NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ,
     FOREIGN KEY (user_id) REFERENCES diva_user(id) ON DELETE CASCADE,
     FOREIGN KEY (device_id) REFERENCES diva_devices(id)
 );

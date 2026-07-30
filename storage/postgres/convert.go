@@ -99,6 +99,7 @@ func DivaSessionToStorage(src *pg.DivaSession) *storage.DivaSession {
 		RefreshExpiresAt: pgToTime(src.RefreshExpiresAt),
 		CreatedAt:       pgToTime(src.CreatedAt),
 		UpdatedAt:       pgToTime(src.UpdatedAt),
+		DeletedAt:       pgToTimePtr(src.DeletedAt),
 	}
 }
 

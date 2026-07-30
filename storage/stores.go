@@ -51,14 +51,17 @@ type DeviceStore interface {
 
 type SessionStore interface {
 	CreateSession(ctx context.Context, arg *CreateSessionParams) error
+	ListSessions(ctx context.Context) ([]DivaSession, error)
 	GetSessionByID(ctx context.Context, id uuid.UUID) (*DivaSession, error)
-	ListSessionsByUser(ctx context.Context, userID uuid.UUID) ([]DivaSession, error)
 	UpdateSession(ctx context.Context, arg *UpdateSessionParams) error
 	UpdateSessionStatus(ctx context.Context, arg *UpdateSessionStatusParams) error
-	DeleteSession(ctx context.Context, id uuid.UUID) error
-	DeleteSessionsByUser(ctx context.Context, userID uuid.UUID) error
-	DeleteExpiredSessions(ctx context.Context) error
 	CloseExpiredSessions(ctx context.Context) error
+	SoftDeleteSession(ctx context.Context, id uuid.UUID) error
+	// deletes soft deleted
+	DeleteSessionsForever(ctx context.Context) error
+
+	ListSessionsByUser(ctx context.Context, userID uuid.UUID) ([]DivaSession, error)
+	CloseAllByUser(ctx context.Context, userID uuid.UUID) error
 }
 
 type UserStateStore interface {

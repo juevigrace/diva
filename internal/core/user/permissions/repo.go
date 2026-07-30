@@ -128,3 +128,7 @@ func (s *UserPermissionRepo) Delete(ctx context.Context, uid, pid uuid.UUID) err
 		UserID:       uid,
 	})
 }
+
+func (s *UserPermissionRepo) DeleteExpired(ctx context.Context) error {
+	return s.store.DeleteExpiredUserPermissions(ctx)
+}

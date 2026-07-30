@@ -299,6 +299,18 @@ func (s *SessionStore) GetSessionByID(ctx context.Context, id uuid.UUID) (*stora
 	return DivaSessionToStorage(&ss), nil
 }
 
+func (s *SessionStore) ListSessions(ctx context.Context) ([]storage.DivaSession, error) {
+	rows, err := s.q.ListSessions(ctx)
+	if err != nil {
+		return nil, err
+	}
+	sessions := make([]storage.DivaSession, len(rows))
+	for i := range rows {
+		sessions[i] = *DivaSessionToStorage(&rows[i])
+	}
+	return sessions, nil
+}
+
 func (s *SessionStore) ListSessionsByUser(ctx context.Context, userID uuid.UUID) ([]storage.DivaSession, error) {
 	rows, err := s.q.ListSessionsByUser(ctx, pgtype.UUID{Bytes: userID, Valid: true})
 	if err != nil {
@@ -321,20 +333,20 @@ func (s *SessionStore) UpdateSessionStatus(ctx context.Context, arg *storage.Upd
 	return s.q.UpdateSessionStatus(ctx, *params)
 }
 
-func (s *SessionStore) DeleteSession(ctx context.Context, id uuid.UUID) error {
-	return s.q.DeleteSession(ctx, pgtype.UUID{Bytes: id, Valid: true})
-}
-
-func (s *SessionStore) DeleteSessionsByUser(ctx context.Context, userID uuid.UUID) error {
-	return s.q.DeleteSessionsByUser(ctx, pgtype.UUID{Bytes: userID, Valid: true})
-}
-
-func (s *SessionStore) DeleteExpiredSessions(ctx context.Context) error {
-	return s.q.DeleteExpiredSessions(ctx)
-}
-
 func (s *SessionStore) CloseExpiredSessions(ctx context.Context) error {
 	return s.q.CloseExpiredSessions(ctx)
+}
+
+func (s *SessionStore) SoftDeleteSession(ctx context.Context, id uuid.UUID) error {
+	return s.q.SoftDeleteSession(ctx, pgtype.UUID{Bytes: id, Valid: true})
+}
+
+func (s *SessionStore) DeleteSessionsForever(ctx context.Context) error {
+	return s.q.DeleteSessionsForever(ctx)
+}
+
+func (s *SessionStore) CloseAllByUser(ctx context.Context, userID uuid.UUID) error {
+	return s.q.CloseAllByUser(ctx, pgtype.UUID{Bytes: userID, Valid: true})
 }
 
 type UserStateStore struct {

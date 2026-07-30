@@ -94,6 +94,7 @@ type DivaSession struct {
 	RefreshExpiresAt int64
 	CreatedAt       int64
 	UpdatedAt       int64
+	DeletedAt       *int64
 }
 
 type DivaUserState struct {

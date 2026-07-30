@@ -109,9 +109,9 @@ func (s *Server) setupApi() {
 	aModule := auth.NewAuthModule(pModule.Repo, sModule.Repo, uModule.URepo, vModule.Repo, devModule.Repo)
 
 	s.cleanup = cleanup.NewCleanupService(
-		s.database.SessionStore(),
-		s.database.UserPermissionStore(),
-		s.database.UserActionStore(),
+		sModule.Repo,
+		uModule.UPRepo,
+		uModule.UARepo,
 	)
 	s.cleanup.Start()
 

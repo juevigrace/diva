@@ -315,6 +315,7 @@ type DivaSession struct {
 	RefreshExpiresAt pgtype.Timestamptz
 	CreatedAt        pgtype.Timestamptz
 	UpdatedAt        pgtype.Timestamptz
+	DeletedAt        pgtype.Timestamptz
 }
 
 type DivaUser struct {

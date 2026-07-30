@@ -55,6 +55,7 @@ type DivaSession struct {
 	RefreshExpiresAt time.Time
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
+	DeletedAt        sql.NullTime
 }
 
 type DivaUser struct {

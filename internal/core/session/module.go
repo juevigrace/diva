@@ -27,6 +27,14 @@ func (m *SessionModule) Routes(r chi.Router, uCall middlewares.UserCall) {
 	r.Route("/sessions", func(s chi.Router) {
 		s.Use(middlewares.RequiresSession(m.Repo.GetByID, uCall), middlewares.RequireVerified())
 
+		// Admin routes before {sid} to avoid parameter capture conflicts
+		s.Group(func(admin chi.Router) {
+			admin.Use(middlewares.RequireRole(models.ROLE_ADMIN, models.ROLE_MODERATOR))
+			admin.Get("/", m.Handler.listAll)
+			admin.Delete("/close", m.Handler.closeExpired)
+			admin.Delete("/", m.Handler.deleteSessionsForever)
+		})
+
 		s.Route("/{sid}", func(sid chi.Router) {
 			sid.With(middlewares.RequireResourceOwner(
 				&middlewares.RequireOwnerParams{
@@ -67,12 +75,7 @@ func (m *SessionModule) Routes(r chi.Router, uCall middlewares.UserCall) {
 					}
 					return map[string]any{"sid": dbSession}, true
 				},
-			)).Delete("/", m.Handler.close)
-		})
-
-		s.Group(func(admin chi.Router) {
-			admin.Use(middlewares.RequireRole(models.ROLE_ADMIN, models.ROLE_MODERATOR))
-			admin.Delete("/expired", m.Handler.deleteExpired)
+			)).Delete("/close", m.Handler.close)
 		})
 	})
 }

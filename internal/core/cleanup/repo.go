@@ -5,28 +5,30 @@ import (
 	"log"
 	"time"
 
-	"github.com/juevigrace/diva-server/storage"
+	"github.com/juevigrace/diva-server/internal/core/session"
+	"github.com/juevigrace/diva-server/internal/core/user/actions"
+	"github.com/juevigrace/diva-server/internal/core/user/permissions"
 )
 
 type CleanupService struct {
-	sessionStore    storage.SessionStore
-	permissionStore storage.UserPermissionStore
-	actionStore     storage.UserActionStore
-	interval        time.Duration
-	stopCh          chan struct{}
+	sessionRepo  *session.SessionRepo
+	permRepo     *permissions.UserPermissionRepo
+	actionRepo   *actions.UserActionsRepo
+	interval     time.Duration
+	stopCh       chan struct{}
 }
 
 func NewCleanupService(
-	sessionStore storage.SessionStore,
-	permissionStore storage.UserPermissionStore,
-	actionStore storage.UserActionStore,
+	sessionRepo *session.SessionRepo,
+	permRepo *permissions.UserPermissionRepo,
+	actionRepo *actions.UserActionsRepo,
 ) *CleanupService {
 	return &CleanupService{
-		sessionStore:    sessionStore,
-		permissionStore: permissionStore,
-		actionStore:     actionStore,
-		interval:        15 * time.Minute,
-		stopCh:          make(chan struct{}),
+		sessionRepo: sessionRepo,
+		permRepo:    permRepo,
+		actionRepo:  actionRepo,
+		interval:    15 * time.Minute,
+		stopCh:      make(chan struct{}),
 	}
 }
 
@@ -57,15 +59,15 @@ func (s *CleanupService) Stop() {
 func (s *CleanupService) run() {
 	ctx := context.Background()
 
-	if err := s.sessionStore.CloseExpiredSessions(ctx); err != nil {
+	if err := s.sessionRepo.CloseExpired(ctx); err != nil {
 		log.Printf("cleanup: close expired sessions: %v", err)
 	}
 
-	if err := s.permissionStore.DeleteExpiredUserPermissions(ctx); err != nil {
+	if err := s.permRepo.DeleteExpired(ctx); err != nil {
 		log.Printf("cleanup: delete expired user permissions: %v", err)
 	}
 
-	if err := s.actionStore.DeleteExpiredActions(ctx); err != nil {
+	if err := s.actionRepo.DeleteExpired(ctx); err != nil {
 		log.Printf("cleanup: delete expired actions: %v", err)
 	}
 }
