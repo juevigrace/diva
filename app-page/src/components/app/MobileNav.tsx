@@ -8,7 +8,8 @@ import {
   SheetTitle,
   SheetClose,
 } from 'diva-ui/components/sheet';
-import { navItems, isActive } from '../../nav-items';
+import { getVisibleNavItems } from '../../nav-items';
+import { isActive } from '@lib/ui';
 import SidebarIcon from '@components/app/SidebarIcon';
 
 interface MobileNavProps {
@@ -43,16 +44,14 @@ export default function MobileNav({ currentPath, isAdmin = false, lang = 'en' }:
           </SheetClose>
         </SheetHeader>
         <nav className="flex-1 overflow-y-auto p-4">
-          {navItems.map((section) => {
-            const visibleItems = section.items.filter((item) => !item.adminOnly || isAdmin);
-            if (visibleItems.length === 0) return null;
+          {getVisibleNavItems(isAdmin).map((section) => {
             return (
             <div key={section.section} className="mb-6">
               <h4 className="text-muted-foreground mb-2 px-3 text-xs font-semibold tracking-wider uppercase">
                 {t('nav.' + (sectionKey[section.section] || section.section.toLowerCase()))}
               </h4>
               <ul className="space-y-1">
-                {visibleItems.map((item) => {
+                {section.items.map((item) => {
                   const active = isActive(item.href, currentPath);
                   return (
                     <li key={item.href}>

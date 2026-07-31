@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from 'diva-ui/components/button';
-import { getUserInitials, showStatus } from '../../nav-items';
+import { getUserInitials, showStatus } from '@lib/ui';
 import GrantPermissionForm from './GrantPermissionForm';
 import DevicesManager from './DevicesManager';
 import { useT } from '@lib/i18n/useT';

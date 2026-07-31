@@ -1,5 +1,6 @@
 ---
-import { navItems, isActive } from '../../nav-items';
+import { getVisibleNavItems } from '../../nav-items';
+import { isActive } from '@lib/ui';
 import SidebarIcon from '@components/app/SidebarIcon.astro';
 import { t } from '@lib/i18n/t';
 import { sectionKey, itemKey } from '@lib/i18n/nav-keys';
@@ -9,6 +10,7 @@ const { user, state } = Astro.locals;
 const lang = Astro.locals.lang;
 
 const isAdmin = user?.role === 'ADMIN' || user?.role === 'MODERATOR';
+const visibleNavItems = getVisibleNavItems(isAdmin);
 ---
 
 <aside
@@ -23,9 +25,7 @@ const isAdmin = user?.role === 'ADMIN' || user?.role === 'MODERATOR';
   </div>
   <nav class="flex-1 overflow-y-auto p-4">
     {
-      navItems.map((section) => {
-        const visibleItems = section.items.filter((item) => !item.adminOnly || isAdmin);
-        if (visibleItems.length === 0) return null;
+      visibleNavItems.map((section) => {
         const sk = sectionKey[section.section] || section.section.toLowerCase();
         return (
           <div class="mb-6">
@@ -33,7 +33,7 @@ const isAdmin = user?.role === 'ADMIN' || user?.role === 'MODERATOR';
               {t(`nav.${sk}`, lang)}
             </h4>
             <ul class="space-y-1">
-              {visibleItems.map((item) => {
+              {section.items.map((item) => {
                 const active = isActive(item.href, currentPath);
                 const ik = itemKey[item.label] || item.label.toLowerCase().replace(/\s+/g, '');
                 return (

@@ -120,7 +120,7 @@ const modules: { name: string; icon: string; endpoints: Endpoint[] }[] = [
 
 <AppLayout
   title={t('page.apiExplorer.title', Astro.locals.lang)}
-  heading="API Explorer"
+  heading={t('nav.apiExplorer', Astro.locals.lang)}
   description={t('page.apiExplorer.desc', Astro.locals.lang)}
 >
   <div class="space-y-8">

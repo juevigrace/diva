@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { z } from 'zod';
 import { Button } from 'diva-ui/components/button';
 import { toast } from 'diva-ui/components/sonner';
-import { changeLanguage } from '@lib/i18n/config';
 import { useT } from '@lib/i18n/useT';
 
 const preferencesSchema = z.object({
@@ -34,10 +33,6 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
     }
 
     const langChanged = language !== (preferences?.language || 'en');
-
-    if (langChanged) {
-      changeLanguage(language);
-    }
 
     if (preferences) {
       const res = await fetch(`/api/preferences/${preferences.id}`, {

@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { Button } from 'diva-ui/components/button';
 import { useT } from '@lib/i18n/useT';
+import OtpInput, { type OtpInputHandle } from './OtpInput';
 
 interface InlineVerificationProps {
   action: string;
@@ -17,7 +18,7 @@ export default function InlineVerification({ action, email, onVerified, onCancel
   const [token, setToken] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const tokenInputs = useRef<(HTMLInputElement | null)[]>([]);
+  const otpRef = useRef<OtpInputHandle>(null);
 
   const handleRequestCode = async () => {
     setError('');
@@ -32,7 +33,7 @@ export default function InlineVerification({ action, email, onVerified, onCancel
         const json = await res.json();
         setActionId(json.id || json.data?.id || '');
         setStep('verify');
-        setTimeout(() => tokenInputs.current[0]?.focus(), 100);
+        setTimeout(() => otpRef.current?.focusFirst(), 100);
       } else {
         const json = await res.json();
         setError(json.message || t('verification.failedToSendCode'));
@@ -41,33 +42,6 @@ export default function InlineVerification({ action, email, onVerified, onCancel
       setError(t('auth.networkError'));
     }
     setLoading(false);
-  };
-
-  const handleTokenChange = (index: number, value: string) => {
-    if (value.length > 1) {
-      const digits = value.replace(/\D/g, '').split('').slice(0, 6);
-      const newToken = [...token];
-      digits.forEach((d, i) => {
-        if (index + i < 6) newToken[index + i] = d;
-      });
-      setToken(newToken);
-      const nextIndex = Math.min(index + digits.length, 5);
-      tokenInputs.current[nextIndex]?.focus();
-      return;
-    }
-    const digit = value.replace(/\D/g, '');
-    const newToken = [...token];
-    newToken[index] = digit;
-    setToken(newToken);
-    if (digit && index < 5) {
-      tokenInputs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleTokenKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !token[index] && index > 0) {
-      tokenInputs.current[index - 1]?.focus();
-    }
   };
 
   const tokenComplete = token.every((d) => d !== '');
@@ -116,22 +90,7 @@ export default function InlineVerification({ action, email, onVerified, onCancel
         <p className="text-sm text-muted-foreground">
           {t('verification.enterCode')} <strong>{email}</strong>.
         </p>
-      <div className="flex justify-center gap-2">
-        {token.map((digit, i) => (
-          <input
-            key={i}
-            ref={(el) => { tokenInputs.current[i] = el; }}
-            type="text"
-            inputMode="numeric"
-            maxLength={6}
-            className="border-input bg-background focus-visible:ring-ring h-12 w-10 rounded-md border text-center text-lg font-bold shadow-sm focus-visible:ring-1 focus-visible:outline-none"
-            value={digit}
-            onChange={(e) => handleTokenChange(i, e.target.value)}
-            onKeyDown={(e) => handleTokenKeyDown(i, e)}
-            autoComplete="one-time-code"
-          />
-        ))}
-      </div>
+      <OtpInput ref={otpRef} value={token} onChange={setToken} />
       {error && <p className="text-destructive text-xs text-center">{error}</p>}
       <div className="flex gap-2">
         <Button type="button" size="sm" disabled={loading || !tokenComplete} onClick={handleVerify}>

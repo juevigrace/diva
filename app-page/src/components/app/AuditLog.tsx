@@ -17,35 +17,34 @@ interface ActionData {
 }
 
 interface AuditLogProps {
+  uid: string;
   isVerified?: boolean;
   lang?: string;
 }
 
-export default function AuditLog({ isVerified = true, lang = 'en' }: AuditLogProps) {
+export default function AuditLog({ uid, isVerified = true, lang = 'en' }: AuditLogProps) {
   const t = useT(lang);
   const [actions, setActions] = useState<ActionData[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
   const limit = 20;
 
   const fetchActions = useCallback(async () => {
     setLoading(true);
     try {
-      const params = new URLSearchParams({ page: String(page), limit: String(limit) });
-      const res = await fetch(`/api/user/?${params}`);
+      const res = await fetch(`/api/user/${uid}/actions/`);
       if (res.ok) {
         const json = await res.json();
-        const items = json.data?.items || [];
+        const items = Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
         setActions(items);
-        setTotalPages(json.data?.pagination_info?.total_pages || 1);
+        setPage(1);
       }
     } catch {
       toast.error(t('common.error'));
     }
     setLoading(false);
-  }, [page]);
+  }, [uid]);
 
   useEffect(() => {
     if (isVerified) {
@@ -63,6 +62,10 @@ export default function AuditLog({ isVerified = true, lang = 'en' }: AuditLogPro
       )
     : actions;
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / limit));
+  const currentPage = Math.min(page, totalPages);
+  const visible = filtered.slice((currentPage - 1) * limit, currentPage * limit);
+
   return (
     <div className="space-y-6">
       <Card>
@@ -71,7 +74,10 @@ export default function AuditLog({ isVerified = true, lang = 'en' }: AuditLogPro
           <Input
             placeholder={t('common.search')}
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
             className="max-w-xs"
           />
         </CardHeader>
@@ -82,11 +88,11 @@ export default function AuditLog({ isVerified = true, lang = 'en' }: AuditLogPro
                 <div key={i} className="bg-muted h-12 animate-pulse rounded-md" />
               ))}
             </div>
-          ) : filtered.length === 0 ? (
+          ) : visible.length === 0 ? (
             <p className="text-muted-foreground py-8 text-center text-sm">{t('audit.noEntries')}</p>
           ) : (
             <div className="divide-y">
-              {filtered.map((a) => {
+              {visible.map((a) => {
                 const aid = a.id || a.action_id || '';
                 return (
                   <div key={aid} className="flex items-center justify-between py-3">
@@ -115,13 +121,13 @@ export default function AuditLog({ isVerified = true, lang = 'en' }: AuditLogPro
           {totalPages > 1 && (
             <div className="mt-4 flex items-center justify-between">
               <p className="text-muted-foreground text-sm">
-                    {t('common.pagination', { page: String(page), total: String(totalPages) })}
+                {t('common.pagination', { page: String(currentPage), total: String(totalPages) })}
               </p>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+                <Button variant="outline" size="sm" disabled={currentPage <= 1} onClick={() => setPage((p) => p - 1)}>
                   {t('docs.previous')}
                 </Button>
-                <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
+                <Button variant="outline" size="sm" disabled={currentPage >= totalPages} onClick={() => setPage((p) => p + 1)}>
                   {t('docs.next')}
                 </Button>
               </div>

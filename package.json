@@ -34,8 +34,6 @@
   },
   "workspaces": [
     "app-page",
-    "docs-page",
-    "landing-page",
     "lib/*"
   ]
 }

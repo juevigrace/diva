@@ -35,7 +35,7 @@ if (state?.verified && user) {
 
 <AppLayout
   title={t('page.users.title', Astro.locals.lang)}
-  heading="Users"
+  heading={t('nav.users', Astro.locals.lang)}
   description={t('page.users.desc', Astro.locals.lang)}
 >
   <UsersManager

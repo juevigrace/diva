@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { z } from 'zod';
 import { Button } from 'diva-ui/components/button';
-import { buildPageArray } from '../../nav-items';
+import { buildPageArray } from '@lib/ui';
 import PermissionLevelSelect from './PermissionLevelSelect';
 import { useT } from '@lib/i18n/useT';
 

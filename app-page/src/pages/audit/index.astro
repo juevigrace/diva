@@ -4,9 +4,9 @@ import AuditLog from '@components/app/AuditLog';
 
 import { t } from '@lib/i18n/t';
 
-const { state } = Astro.locals;
+const { user, state } = Astro.locals;
 ---
 
-<AppLayout title={t('page.audit.title', Astro.locals.lang)} heading="Audit Log" description={t('page.audit.desc', Astro.locals.lang)}>
-  <AuditLog isVerified={state?.verified ?? false} lang={Astro.locals.lang} client:load />
+<AppLayout title={t('page.audit.title', Astro.locals.lang)} heading={t('nav.auditLog', Astro.locals.lang)} description={t('page.audit.desc', Astro.locals.lang)}>
+  {user && <AuditLog uid={user.userId} isVerified={state?.verified ?? false} lang={Astro.locals.lang} client:load />}
 </AppLayout>

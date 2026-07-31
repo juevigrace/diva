@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 import { useT } from '@lib/i18n/useT';
 import { getDeviceLabel } from '@lib/device';
 import { ActionType } from 'diva-types/verification/enums';
+import OtpInput, { type OtpInputHandle } from './OtpInput';
 
 interface VerificationFlowProps {
   action: string;
@@ -22,7 +23,7 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const tokenInputs = useRef<(HTMLInputElement | null)[]>([]);
+  const otpRef = useRef<OtpInputHandle>(null);
 
   const isPasswordReset = action === ActionType.PASSWORD_RESET;
 
@@ -40,7 +41,7 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
         setActionId(json.id || json.data?.id || '');
         setStep('verify');
         toast.success(t('verification.codeSent'));
-        setTimeout(() => tokenInputs.current[0]?.focus(), 100);
+        setTimeout(() => otpRef.current?.focusFirst(), 100);
         return true;
       } else {
         const json = await res.json();
@@ -81,35 +82,6 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
 
     autoRequest();
   }, []);
-
-  const handleTokenChange = (index: number, value: string) => {
-    if (value.length > 1) {
-      const digits = value.replace(/\D/g, '').split('').slice(0, 6);
-      const newToken = [...token];
-      digits.forEach((d, i) => {
-        if (index + i < 6) newToken[index + i] = d;
-      });
-      setToken(newToken);
-      const nextIndex = Math.min(index + digits.length, 5);
-      tokenInputs.current[nextIndex]?.focus();
-      return;
-    }
-
-    const digit = value.replace(/\D/g, '');
-    const newToken = [...token];
-    newToken[index] = digit;
-    setToken(newToken);
-
-    if (digit && index < 5) {
-      tokenInputs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleTokenKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !token[index] && index > 0) {
-      tokenInputs.current[index - 1]?.focus();
-    }
-  };
 
   const tokenComplete = token.every((d) => d !== '');
 
@@ -286,7 +258,7 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
             {isPasswordReset ? t('verification.resetPassword') : t('verification.verifyEmailTitle')}
           </h1>
           <p className="text-muted-foreground mt-2 text-sm">
-            {isPasswordReset ? t('verification.enterCode') : t('verification.enterCode')}
+            {t('verification.enterCode')}
           </p>
         </div>
 
@@ -334,21 +306,8 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
         <div className="space-y-5">
           <div>
             <label className="text-sm leading-none font-medium">{t('verification.codePlaceholder')}</label>
-            <div className="mt-3 flex justify-center gap-2">
-              {token.map((digit, i) => (
-                <input
-                  key={i}
-                  ref={(el) => { tokenInputs.current[i] = el; }}
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={6}
-                  className="border-input bg-background focus-visible:ring-ring h-12 w-10 rounded-md border text-center text-lg font-bold shadow-sm focus-visible:ring-1 focus-visible:outline-none"
-                  value={digit}
-                  onChange={(e) => handleTokenChange(i, e.target.value)}
-                  onKeyDown={(e) => handleTokenKeyDown(i, e)}
-                  autoComplete="one-time-code"
-                />
-              ))}
+            <div className="mt-3">
+              <OtpInput ref={otpRef} value={token} onChange={setToken} />
             </div>
           </div>
           {error && <p className="text-destructive text-sm text-center">{error}</p>}

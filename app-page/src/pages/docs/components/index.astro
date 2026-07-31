@@ -3,23 +3,24 @@ import DocsLayout from '@layouts/DocsLayout.astro';
 import TocSidebar from '@components/docs/TocSidebar.astro';
 import CodeBlock from '@components/docs/CodeBlock.astro';
 import { t } from '@lib/i18n/t';
+
+const lang = Astro.locals.lang;
 ---
 
 <DocsLayout
-  title={t('page.components.title', Astro.locals.lang)}
-  description={t('page.components.desc', Astro.locals.lang)}
+  title={t('page.components.title', lang)}
+  description={t('page.components.desc', lang)}
 >
   <div class="flex">
     <main class="max-w-3xl min-w-0 flex-1">
-      <h1 id="overview" class="text-4xl font-bold tracking-tight">{t('docs.components', Astro.locals.lang)}</h1>
+      <h1 id="overview" class="text-4xl font-bold tracking-tight">{t('docs.components', lang)}</h1>
       <p class="text-muted-foreground mt-4 text-lg">
-        Diva Pages ships with 20+ shadcn/ui components, all built with Radix UI primitives and
-        Tailwind CSS v4.
+        {t('docs.compIntro', lang)}
       </p>
 
-      <h2 id="button" class="mt-12 text-2xl font-bold tracking-tight">Button</h2>
+      <h2 id="button" class="mt-12 text-2xl font-bold tracking-tight">{t('docs.button', lang)}</h2>
       <p class="text-muted-foreground mt-4 leading-relaxed">
-        A versatile button component with multiple variants and sizes.
+        {t('docs.buttonDesc', lang)}
       </p>
       <div class="mt-4">
         <CodeBlock
@@ -35,9 +36,9 @@ import { t } from '@lib/i18n/t';
         />
       </div>
 
-      <h2 id="card" class="mt-12 text-2xl font-bold tracking-tight">Card</h2>
+      <h2 id="card" class="mt-12 text-2xl font-bold tracking-tight">{t('docs.card', lang)}</h2>
       <p class="text-muted-foreground mt-4 leading-relaxed">
-        A container component for grouping related content.
+        {t('docs.cardDesc', lang)}
       </p>
       <div class="mt-4">
         <CodeBlock
@@ -59,9 +60,9 @@ import { t } from '@lib/i18n/t';
         />
       </div>
 
-      <h2 id="forms" class="mt-12 text-2xl font-bold tracking-tight">Forms</h2>
+      <h2 id="forms" class="mt-12 text-2xl font-bold tracking-tight">{t('docs.forms', lang)}</h2>
       <p class="text-muted-foreground mt-4 leading-relaxed">
-        Input, Textarea, Label, Checkbox, Switch, and Select — everything you need for forms.
+        {t('docs.formsDesc', lang)}
       </p>
       <div class="mt-4">
         <CodeBlock
@@ -78,24 +79,24 @@ import { Switch } from 'diva-ui/components/switch'
         />
       </div>
 
-      <h2 id="navigation" class="mt-12 text-2xl font-bold tracking-tight">Navigation</h2>
+      <h2 id="navigation" class="mt-12 text-2xl font-bold tracking-tight">{t('docs.navigation', lang)}</h2>
       <p class="text-muted-foreground mt-4 leading-relaxed">
-        NavigationMenu, Tabs, DropdownMenu, and Command palette for navigation patterns.
+        {t('docs.navigationDesc', lang)}
       </p>
 
-      <h2 id="overlay" class="mt-12 text-2xl font-bold tracking-tight">Overlays</h2>
+      <h2 id="overlay" class="mt-12 text-2xl font-bold tracking-tight">{t('docs.overlays', lang)}</h2>
       <p class="text-muted-foreground mt-4 leading-relaxed">
-        Dialog, Sheet, Popover, and Tooltip for overlay and disclosure patterns.
+        {t('docs.overlaysDesc', lang)}
       </p>
     </main>
-    <TocSidebar lang={Astro.locals.lang}
+    <TocSidebar lang={lang}
       headings={[
-        { id: 'overview', label: 'Overview', level: 1 },
-        { id: 'button', label: 'Button', level: 2 },
-        { id: 'card', label: 'Card', level: 2 },
-        { id: 'forms', label: 'Forms', level: 2 },
-        { id: 'navigation', label: 'Navigation', level: 2 },
-        { id: 'overlay', label: 'Overlays', level: 2 },
+        { id: 'overview', label: t('docs.overview', lang), level: 1 },
+        { id: 'button', label: t('docs.button', lang), level: 2 },
+        { id: 'card', label: t('docs.card', lang), level: 2 },
+        { id: 'forms', label: t('docs.forms', lang), level: 2 },
+        { id: 'navigation', label: t('docs.navigation', lang), level: 2 },
+        { id: 'overlay', label: t('docs.overlays', lang), level: 2 },
       ]}
     />
   </div>

@@ -22,3 +22,17 @@ export const docSectionKey: Record<string, string> = {
   Components: 'components',
   'API Reference': 'api',
 };
+
+export const pathKey: Record<string, string> = {
+  '/': 'dashboard',
+  '/users': 'users',
+  '/sessions': 'sessions',
+  '/devices': 'devices',
+  '/audit': 'auditLog',
+  '/profile': 'profile',
+  '/settings': 'settings',
+  '/admin/permissions': 'permissions',
+  '/admin/sessions': 'sessionAdmin',
+  '/admin/health': 'health',
+  '/admin/api': 'apiExplorer',
+};

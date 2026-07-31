@@ -1,16 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from 'diva-ui/components/button';
 import { toast } from 'diva-ui/components/sonner';
 import { Input } from 'diva-ui/components/input';
 import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { signUpInputSchema } from '@lib/schemas/auth';
 import { useT } from '@lib/i18n/useT';
+import { useFieldErrors } from '@lib/hooks/useFieldErrors';
+import { useAvailabilityCheck, type AvailabilityState } from '@lib/hooks/useAvailabilityCheck';
 import { getDeviceLabel } from '@lib/device';
-
-interface AvailabilityState {
-  status: 'idle' | 'checking' | 'available' | 'taken';
-  message: string;
-}
 
 interface SignUpFormProps {
   lang?: string;
@@ -22,65 +19,20 @@ export default function SignUpForm({ lang = 'en' }: SignUpFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [usernameAvail, setUsernameAvail] = useState<AvailabilityState>({ status: 'idle', message: '' });
-  const [emailAvail, setEmailAvail] = useState<AvailabilityState>({ status: 'idle', message: '' });
+  const { fieldErrors, setFieldErrors, clearFieldError, setFromZod, setFromApi } = useFieldErrors();
 
-  const clearFieldError = (field: string) => {
-    setFieldErrors((prev) => {
-      const next = { ...prev };
-      delete next[field];
-      return next;
-    });
-  };
-
-  useEffect(() => {
-    if (username.length < 3) {
-      setUsernameAvail({ status: 'idle', message: '' });
-      return;
-    }
-
-    const timer = setTimeout(async () => {
-      setUsernameAvail({ status: 'checking', message: '' });
-      try {
-        const res = await fetch(`/api/user/check/username/${encodeURIComponent(username)}`);
-        const json = await res.json();
-        if (res.ok) {
-          setUsernameAvail({ status: 'available', message: '' });
-        } else {
-          setUsernameAvail({ status: 'taken', message: json.message || t('auth.usernameTaken') });
-        }
-      } catch {
-        setUsernameAvail({ status: 'idle', message: '' });
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [username]);
-
-  useEffect(() => {
-    if (!email.includes('@')) {
-      setEmailAvail({ status: 'idle', message: '' });
-      return;
-    }
-
-    const timer = setTimeout(async () => {
-      setEmailAvail({ status: 'checking', message: '' });
-      try {
-        const res = await fetch(`/api/user/check/email/${encodeURIComponent(email)}`);
-        const json = await res.json();
-        if (res.ok) {
-          setEmailAvail({ status: 'available', message: '' });
-        } else {
-          setEmailAvail({ status: 'taken', message: json.message || t('auth.emailTaken') });
-        }
-      } catch {
-        setEmailAvail({ status: 'idle', message: '' });
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [email]);
+  const usernameAvail: AvailabilityState = useAvailabilityCheck(
+    username,
+    (v) => v.length >= 3,
+    (v) => `/api/user/check/username/${encodeURIComponent(v)}`,
+    t('auth.usernameTaken'),
+  );
+  const emailAvail: AvailabilityState = useAvailabilityCheck(
+    email,
+    (v) => v.includes('@'),
+    (v) => `/api/user/check/email/${encodeURIComponent(v)}`,
+    t('auth.emailTaken'),
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,12 +40,7 @@ export default function SignUpForm({ lang = 'en' }: SignUpFormProps) {
 
     const parsed = signUpInputSchema.safeParse({ username, email, password });
     if (!parsed.success) {
-      const fields = parsed.error.flatten().fieldErrors;
-      const errors: Record<string, string> = {};
-      for (const [key, msgs] of Object.entries(fields)) {
-        if (msgs && msgs.length > 0) errors[key] = msgs[0];
-      }
-      setFieldErrors(errors);
+      setFromZod(parsed.error);
       return;
     }
 
@@ -114,11 +61,7 @@ export default function SignUpForm({ lang = 'en' }: SignUpFormProps) {
       const json = await res.json();
 
       if (res.status === 400 && json.fields) {
-        const errors: Record<string, string> = {};
-        for (const [key, msgs] of Object.entries(json.fields)) {
-          if (Array.isArray(msgs) && msgs.length > 0) errors[key] = msgs[0];
-        }
-        setFieldErrors(errors);
+        setFromApi(json.fields);
         return;
       }
 

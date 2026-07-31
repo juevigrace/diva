@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { z } from 'zod';
 import { Button } from 'diva-ui/components/button';
-import { showStatus } from '../../nav-items';
+import { showStatus } from '@lib/ui';
 import { useT } from '@lib/i18n/useT';
 
 const grantSchema = z.object({

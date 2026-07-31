@@ -3,14 +3,12 @@
   "tasks": {
     "dev": {
       "cache": false,
-      "persistent": true,
-      "env": ["ASTRO_DATABASE_FILE"]
+      "persistent": true
     },
 
     "build": {
       "outputs": ["dist/**", ".astro/**"],
-      "dependsOn": ["^build"],
-      "env": ["ASTRO_DATABASE_FILE"]
+      "dependsOn": ["^build"]
     },
     "preview": {
       "cache": false

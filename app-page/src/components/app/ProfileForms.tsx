@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { z } from 'zod';
 import { Button } from 'diva-ui/components/button';
-import { getUserInitials, showStatus } from '../../nav-items';
+import { getUserInitials, showStatus } from '@lib/ui';
 import InlineVerification from '../auth/InlineVerification';
 import { useT } from '@lib/i18n/useT';
 

@@ -4,6 +4,7 @@ import { toast } from 'diva-ui/components/sonner';
 import { Input } from 'diva-ui/components/input';
 import { signInInputSchema } from '@lib/schemas/auth';
 import { useT } from '@lib/i18n/useT';
+import { useFieldErrors } from '@lib/hooks/useFieldErrors';
 import { getDeviceLabel } from '@lib/device';
 
 interface SignInFormProps {
@@ -15,15 +16,7 @@ export default function SignInForm({ lang = 'en' }: SignInFormProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-
-  const clearFieldError = (field: string) => {
-    setFieldErrors((prev) => {
-      const next = { ...prev };
-      delete next[field];
-      return next;
-    });
-  };
+  const { fieldErrors, setFieldErrors, clearFieldError, setFromZod, setFromApi } = useFieldErrors();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,12 +24,7 @@ export default function SignInForm({ lang = 'en' }: SignInFormProps) {
 
     const parsed = signInInputSchema.safeParse({ username, password });
     if (!parsed.success) {
-      const fields = parsed.error.flatten().fieldErrors;
-      const errors: Record<string, string> = {};
-      for (const [key, msgs] of Object.entries(fields)) {
-        if (msgs && msgs.length > 0) errors[key] = msgs[0];
-      }
-      setFieldErrors(errors);
+      setFromZod(parsed.error);
       return;
     }
 
@@ -57,11 +45,7 @@ export default function SignInForm({ lang = 'en' }: SignInFormProps) {
       const json = await res.json();
 
       if (res.status === 400 && json.fields) {
-        const errors: Record<string, string> = {};
-        for (const [key, msgs] of Object.entries(json.fields)) {
-          if (Array.isArray(msgs) && msgs.length > 0) errors[key] = msgs[0];
-        }
-        setFieldErrors(errors);
+        setFromApi(json.fields);
         return;
       }
 

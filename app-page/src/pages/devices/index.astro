@@ -17,6 +17,6 @@ try {
 } catch (_) {}
 ---
 
-<AppLayout title={t('page.devices.title', Astro.locals.lang)} heading="Devices" description={t('page.devices.desc', Astro.locals.lang)}>
+<AppLayout title={t('page.devices.title', Astro.locals.lang)} heading={t('nav.devices', Astro.locals.lang)} description={t('page.devices.desc', Astro.locals.lang)}>
   <DevicesManager initialDevices={devices} lang={Astro.locals.lang} client:load />
 </AppLayout>

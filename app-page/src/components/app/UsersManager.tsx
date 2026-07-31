@@ -9,7 +9,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from 'diva-ui/components/dialog';
-import { getUserInitials, buildPageArray } from '../../nav-items';
+import { getUserInitials, buildPageArray } from '@lib/ui';
 import { useT } from '@lib/i18n/useT';
 import DataList from './DataList';
 import type { Column } from './DataList';

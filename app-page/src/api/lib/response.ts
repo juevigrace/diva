@@ -33,6 +33,29 @@ export function apiRoute(handler: (ctx: APIContext, session: SessionResponse) =>
   };
 }
 
+export function apiHandler(handler: (ctx: APIContext) => Promise<Response>) {
+  return async (ctx: APIContext): Promise<Response> => {
+    try {
+      return await handler(ctx);
+    } catch (e) {
+      if (e instanceof Response) return e;
+      return json({ message: `${e}` }, 500);
+    }
+  };
+}
+
+export async function saveSessionAndRespond(
+  ctx: APIContext,
+  res: { ok: boolean; status: number; json: APIResponse<SessionResponse> },
+) {
+  if (!res.ok) return json(res.json, res.status);
+  const { error: saveError } = await ctx.callAction(actions.session.saveSession, res.json.data);
+  if (saveError) {
+    return json({ message: 'Failed to save session' }, 500);
+  }
+  return json(res.json.data, res.status);
+}
+
 export function jsonResponse(res: { ok: boolean; status: number; json: APIResponse<unknown> }) {
   if (!res.ok) return json(res.json, res.status);
   return json(res.json.data ?? null, res.status);

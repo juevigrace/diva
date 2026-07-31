@@ -1,7 +1,9 @@
-import { initI18n } from './config';
-import { useTranslation } from 'react-i18next';
+import { useMemo } from 'react';
+import { t, type TParams } from './t';
 
 export function useT(lang: string) {
-  initI18n(lang);
-  return useTranslation().t;
+  return useMemo(
+    () => (key: string, params?: TParams) => t(key, lang, params),
+    [lang],
+  );
 }

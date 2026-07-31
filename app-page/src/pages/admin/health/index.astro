@@ -9,7 +9,7 @@ const { state } = Astro.locals;
 
 <AppLayout
   title={t('page.health.title', Astro.locals.lang)}
-  heading="System Health"
+  heading={t('nav.health', Astro.locals.lang)}
   description={t('page.health.desc', Astro.locals.lang)}
 >
   <HealthView isVerified={state?.verified ?? false} lang={Astro.locals.lang} client:load />

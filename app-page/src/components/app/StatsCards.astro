@@ -15,10 +15,9 @@ let totalSessions = '—';
 if (state?.verified) {
   try {
     if (token) {
-      const usersRes = await apiFetch('/api/user/?page=1&limit=100', { token });
+      const usersRes = await apiFetch('/api/user/?page=1&limit=1', { token });
       if (usersRes.ok) {
-        const items = (usersRes.json.data?.items || []).filter((u: any) => !u.deleted_at);
-        totalUsers = String(items.length);
+        totalUsers = String(usersRes.json.data?.pagination_info?.total_items ?? '—');
         totalPages = usersRes.json.data?.pagination_info?.total_pages ?? 1;
       }
     }

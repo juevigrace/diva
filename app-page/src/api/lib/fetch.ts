@@ -25,6 +25,13 @@ export async function apiFetch<T>(endpoint: string, options: FetchOptions = {}):
   }
   const res = await fetch(`${API_BASE_URL}${endpoint}`, init);
   const text = await res.text();
-  const json = text ? (JSON.parse(text) as APIResponse<T>) : ({} as APIResponse<T>);
+  let json: APIResponse<T> = {} as APIResponse<T>;
+  if (text) {
+    try {
+      json = JSON.parse(text) as APIResponse<T>;
+    } catch {
+      json = { data: null as T, message: text, time: Date.now() };
+    }
+  }
   return { status: res.status, ok: res.ok, json };
 }

@@ -7,15 +7,14 @@
     "bun": ">=1.2"
   },
   "scripts": {
-    "dev": "ASTRO_DATABASE_FILE=./.astro/data.db bun run astro dev --background",
-    "build": "ASTRO_DATABASE_FILE=./.astro/data.db bun run astro build",
+    "dev": "bun run astro dev --background",
+    "build": "bun run astro build",
     "preview": "bun run astro preview",
     "stop": "astro dev stop",
     "status": "astro dev status",
     "logs": "astro dev logs"
   },
   "dependencies": {
-    "@astrojs/db": "catalog:",
     "@astrojs/node": "catalog:",
     "@astrojs/react": "catalog:",
     "@astrojs/sitemap": "catalog:",
@@ -23,11 +22,9 @@
     "astro": "catalog:",
     "diva-types": "workspace:*",
     "diva-ui": "workspace:*",
-    "i18next": "^26.3.6",
     "lucide-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-i18next": "^17.0.10",
     "zod": "catalog:"
   },
   "devDependencies": {

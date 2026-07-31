@@ -1,5 +1,6 @@
 import { apiRoute, json } from '@api/lib/response';
 import { apiFetch } from '@api/lib/fetch';
+import { batchOperate } from '@api/lib/batch';
 
 export const POST = apiRoute(async (ctx, session) => {
   const { user_ids } = await ctx.request.json();
@@ -7,26 +8,8 @@ export const POST = apiRoute(async (ctx, session) => {
     return json({ message: 'user_ids must be a non-empty array' }, 400);
   }
 
-  const results = await Promise.allSettled(
-    user_ids.map((uid: string) =>
-      apiFetch(`/api/user/${uid}`, {
-        method: 'DELETE',
-        token: session.access_token,
-      }),
-    ),
+  const data = await batchOperate(user_ids, (uid) =>
+    apiFetch(`/api/user/${uid}`, { method: 'DELETE', token: session.access_token }),
   );
-
-  const succeeded: string[] = [];
-  const failed: { id: string; error: string }[] = [];
-  for (let i = 0; i < results.length; i++) {
-    const r = results[i];
-    if (r.status === 'fulfilled' && r.value.ok) {
-      succeeded.push(user_ids[i]);
-    } else {
-      const msg = r.status === 'fulfilled' ? r.value.json.message || 'request failed' : r.reason?.message || 'unknown error';
-      failed.push({ id: user_ids[i], error: msg });
-    }
-  }
-
-  return json({ data: { succeeded, failed } });
+  return json({ data });
 });

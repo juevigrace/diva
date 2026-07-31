@@ -3,30 +3,36 @@ import DocsLayout from '@layouts/DocsLayout.astro';
 import TocSidebar from '@components/docs/TocSidebar.astro';
 import CodeBlock from '@components/docs/CodeBlock.astro';
 import { t } from '@lib/i18n/t';
+
+const lang = Astro.locals.lang;
+const nextStepsBody = t('docs.gsNextStepsBody', lang, { link: '' }).replace(
+  '{link}',
+  `<a href="/docs/components" class="text-primary hover:text-primary/80 underline underline-offset-4">${t('docs.components', lang)}</a>`,
+);
 ---
 
 <DocsLayout
-  title={t('page.gettingStarted.title', Astro.locals.lang)}
-  description={t('page.gettingStarted.desc', Astro.locals.lang)}
+  title={t('page.gettingStarted.title', lang)}
+  description={t('page.gettingStarted.desc', lang)}
 >
   <div class="flex">
     <main class="max-w-3xl min-w-0 flex-1">
-      <h1 id="introduction" class="text-4xl font-bold tracking-tight">{t('docs.gettingStarted', Astro.locals.lang)}</h1>
+      <h1 id="introduction" class="text-4xl font-bold tracking-tight">{t('docs.gettingStarted', lang)}</h1>
       <p class="text-muted-foreground mt-4 text-lg">
-        Learn how to set up Diva Pages in your project and start building.
+        {t('docs.gsIntro', lang)}
       </p>
 
-      <h2 id="installation" class="mt-12 text-2xl font-bold tracking-tight">Installation</h2>
+      <h2 id="installation" class="mt-12 text-2xl font-bold tracking-tight">{t('docs.installation', lang)}</h2>
       <p class="text-muted-foreground mt-4 leading-relaxed">
-        Diva Pages is available as a workspace package. Add it to your Astro project:
+        {t('docs.gsInstallBody', lang)}
       </p>
       <div class="mt-4">
         <CodeBlock code="bun add diva-ui@workspace:*" lang="bash" />
       </div>
 
-      <h3 id="quick-start" class="mt-8 text-xl font-semibold tracking-tight">Quick Start</h3>
+      <h3 id="quick-start" class="mt-8 text-xl font-semibold tracking-tight">{t('docs.quickStart', lang)}</h3>
       <p class="text-muted-foreground mt-3 leading-relaxed">
-        Once installed, import the Layout and start using components in your pages:
+        {t('docs.gsQuickStartBody', lang)}
       </p>
       <div class="mt-4">
         <CodeBlock
@@ -42,10 +48,10 @@ import Layout from '../layouts/Layout.astro';
       </div>
 
       <h3 id="project-structure" class="mt-8 text-xl font-semibold tracking-tight">
-        Project Structure
+        {t('docs.projectStructure', lang)}
       </h3>
       <p class="text-muted-foreground mt-3 leading-relaxed">
-        A typical Diva Pages project looks like this:
+        {t('docs.gsProjectStructureBody', lang)}
       </p>
       <div class="mt-4">
         <CodeBlock
@@ -60,21 +66,16 @@ import Layout from '../layouts/Layout.astro';
       </div>
 
       <div class="border-border bg-card mt-12 rounded-lg border p-6">
-        <p class="text-sm font-medium">💡 Next steps</p>
-        <p class="text-muted-foreground mt-2 text-sm">
-          Browse the <a
-            href="/docs/components"
-            class="text-primary hover:text-primary/80 underline underline-offset-4">Components</a
-          > guide to see what's available.
-        </p>
+        <p class="text-sm font-medium">💡 {t('docs.nextSteps', lang)}</p>
+        <p class="text-muted-foreground mt-2 text-sm" set:html={nextStepsBody} />
       </div>
     </main>
-    <TocSidebar lang={Astro.locals.lang}
+    <TocSidebar lang={lang}
       headings={[
-        { id: 'introduction', label: 'Introduction', level: 1 },
-        { id: 'installation', label: 'Installation', level: 2 },
-        { id: 'quick-start', label: 'Quick Start', level: 3 },
-        { id: 'project-structure', label: 'Project Structure', level: 3 },
+        { id: 'introduction', label: t('docs.gettingStarted', lang), level: 1 },
+        { id: 'installation', label: t('docs.installation', lang), level: 2 },
+        { id: 'quick-start', label: t('docs.quickStart', lang), level: 3 },
+        { id: 'project-structure', label: t('docs.projectStructure', lang), level: 3 },
       ]}
     />
   </div>

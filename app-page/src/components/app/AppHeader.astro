@@ -3,21 +3,11 @@ import ThemeToggle from '@components/app/ThemeToggle';
 import UserMenuContent from '@components/app/UserMenuContent';
 import MobileNav from '@components/app/MobileNav';
 import { t } from '@lib/i18n/t';
+import { pathKey } from '@lib/i18n/nav-keys';
 
 const currentPath = Astro.url.pathname;
 const { user } = Astro.locals;
 const lang = Astro.locals.lang;
-
-const breadcrumbKey: Record<string, string> = {
-  '/': 'dashboard',
-  '/users': 'users',
-  '/sessions': 'sessions',
-  '/audit': 'auditLog',
-  '/profile': 'profile',
-  '/settings': 'settings',
-  '/admin/permissions': 'permissions',
-  '/admin/api': 'apiExplorer',
-};
 
 function getBreadcrumbs(path: string): { label: string; href: string }[] {
   const crumbs: { label: string; href: string }[] = [];
@@ -25,7 +15,7 @@ function getBreadcrumbs(path: string): { label: string; href: string }[] {
   let accum = '';
   for (const seg of segments) {
     accum += '/' + seg;
-    const bk = breadcrumbKey[accum];
+    const bk = pathKey[accum];
     const label = bk ? t(`nav.${bk}`, lang) : seg.charAt(0).toUpperCase() + seg.slice(1);
     crumbs.push({ label, href: accum });
   }

@@ -9,7 +9,7 @@ const { user, state } = Astro.locals;
 
 <AppLayout
   title={t('page.dashboard.title', Astro.locals.lang)}
-  heading="Dashboard"
+  heading={t('nav.dashboard', Astro.locals.lang)}
   description={t('page.dashboard.desc', Astro.locals.lang)}
 >
   <StatsCards />
