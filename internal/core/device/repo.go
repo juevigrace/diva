@@ -2,9 +2,11 @@ package device
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
 	"github.com/juevigrace/diva-server/internal/models"
+	"github.com/juevigrace/diva-server/pkg/errs"
 	"github.com/juevigrace/diva-server/storage"
 )
 
@@ -25,6 +27,12 @@ func (r *DeviceRepo) GetByName(ctx context.Context, name string) (*models.Device
 }
 
 func (r *DeviceRepo) Create(ctx context.Context, name string) (*models.Device, error) {
+	if _, err := r.GetByName(ctx, name); err == nil {
+		return nil, errs.ErrDeviceNameTaken
+	} else if !errors.Is(err, errs.ErrDeviceNotFound) {
+		return nil, err
+	}
+
 	id := uuid.New()
 	if err := r.store.CreateDevice(ctx, &storage.CreateDeviceParams{
 		ID:   id,
@@ -56,6 +64,12 @@ func (r *DeviceRepo) GetUserDevice(ctx context.Context, userID uuid.UUID, device
 }
 
 func (r *DeviceRepo) CreateUserDevice(ctx context.Context, userID uuid.UUID, deviceID uuid.UUID) error {
+	if _, err := r.GetUserDevice(ctx, userID, deviceID); err == nil {
+		return errs.ErrUserDeviceExists
+	} else if !errors.Is(err, errs.ErrUserDeviceNotFound) {
+		return err
+	}
+
 	return r.store.CreateUserDevice(ctx, &storage.CreateUserDeviceParams{
 		UserID:   userID,
 		DeviceID: deviceID,

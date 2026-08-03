@@ -21,7 +21,7 @@ type User struct {
 	Devices      []UserDevice
 	Actions      []UserAction
 	Permissions  map[PermissionAction]UserPermission
-	Preferences  UserPreferences
+	Preferences  *UserPreferences
 }
 
 type UserState struct {
@@ -56,7 +56,6 @@ type UserPermission struct {
 type UserPreferences struct {
 	ID                  uuid.UUID
 	UserID              uuid.UUID
-	Device              Device
 	Theme               Theme
 	OnboardingCompleted bool
 	Language            string
@@ -161,7 +160,6 @@ func (up *UserPreferences) DBCreate(userID uuid.UUID) *storage.CreateUserPrefere
 	return &storage.CreateUserPreferencesParams{
 		ID:                  up.ID,
 		UserID:              userID,
-		DeviceID:            up.Device.ID,
 		Theme:               up.Theme.ToDB(),
 		OnboardingCompleted: up.OnboardingCompleted,
 		Language:            up.Language,
@@ -228,7 +226,6 @@ func UserPrefsFromDB(row *storage.DivaUserPreference) *UserPreferences {
 	return &UserPreferences{
 		ID:                  row.ID,
 		UserID:              row.UserID,
-		Device:              Device{ID: row.DeviceID},
 		Theme:               ThemeFromDB(row.Theme),
 		OnboardingCompleted: row.OnboardingCompleted,
 		Language:            row.Language,

@@ -29,16 +29,16 @@ type CreateUserDeviceParams struct {
 }
 
 type CreateSessionParams struct {
-	ID              uuid.UUID
-	UserID          uuid.UUID
-	AccessToken     string
-	RefreshToken    string
-	DeviceID        uuid.UUID
-	Type            SessionType
-	Status          SessionStatusType
-	IpAddress       string
-	UserAgent       string
-	AccessExpiresAt int64
+	ID               uuid.UUID
+	UserID           uuid.UUID
+	AccessToken      string
+	RefreshToken     string
+	DeviceID         uuid.UUID
+	Type             SessionType
+	Status           SessionStatusType
+	IpAddress        string
+	UserAgent        string
+	AccessExpiresAt  int64
 	RefreshExpiresAt int64
 }
 
@@ -53,7 +53,6 @@ type CreateUserPermissionParams struct {
 type CreateUserPreferencesParams struct {
 	ID                  uuid.UUID
 	UserID              uuid.UUID
-	DeviceID            uuid.UUID
 	Theme               ThemeType
 	OnboardingCompleted bool
 	Language            string
@@ -109,11 +108,11 @@ type UpdateUserProfileParams struct {
 }
 
 type UpdateSessionParams struct {
-	ID              uuid.UUID
-	AccessToken     string
-	RefreshToken    string
-	IpAddress       string
-	AccessExpiresAt int64
+	ID               uuid.UUID
+	AccessToken      string
+	RefreshToken     string
+	IpAddress        string
+	AccessExpiresAt  int64
 	RefreshExpiresAt int64
 }
 

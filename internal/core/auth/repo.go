@@ -48,6 +48,18 @@ func (s *AuthRepo) resolveDevice(ctx context.Context, name string) (*models.Devi
 }
 
 func (s *AuthRepo) SignUp(ctx context.Context, dto *dtos.SignUpDto) (*models.Session, error) {
+	if ok, err := s.uRepo.CheckUsernameAvailable(ctx, dto.User.Username); err != nil {
+		return nil, err
+	} else if !ok {
+		return nil, errs.ErrUsernameTaken
+	}
+
+	if ok, err := s.uRepo.CheckEmailAvailable(ctx, dto.User.Email); err != nil {
+		return nil, err
+	} else if !ok {
+		return nil, errs.ErrEmailTaken
+	}
+
 	userID, err := s.uRepo.Create(ctx, &dto.User)
 	if err != nil {
 		return nil, err
@@ -76,6 +88,10 @@ func (s *AuthRepo) SignIn(ctx context.Context, dto *dtos.SignInDto) (*models.Ses
 	user, err := s.uRepo.GetByUsernameOrEmail(ctx, dto.Username)
 	if err != nil {
 		return nil, errs.ErrInvalidCredentials
+	}
+
+	if user.DeletedAt != nil {
+		return nil, errs.ErrUserDeleted
 	}
 
 	if !bcrypt.ValidatePassword(dto.Password, user.PasswordHash) {

@@ -2,6 +2,7 @@ package permissions
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
 	"github.com/juevigrace/diva-server/internal/core/permission"
@@ -90,6 +91,12 @@ func (s *UserPermissionRepo) CreateByName(
 
 	if granter != nil && granter.Role < dbPerm.RoleLevel {
 		return errs.ErrPermissionDenied
+	}
+
+	if _, err := s.GetOneByPermID(ctx, grantedID, dbPerm.ID); err == nil {
+		return errs.ErrUserPermissionExists
+	} else if !errors.Is(err, errs.ErrUserPermissionNotFound) {
+		return err
 	}
 
 	var grantedBy *uuid.UUID

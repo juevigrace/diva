@@ -57,16 +57,14 @@ CREATE TABLE IF NOT EXISTS diva_devices (
 CREATE TABLE IF NOT EXISTS diva_user_preferences (
     id UUID NOT NULL PRIMARY KEY,
     user_id UUID NOT NULL,
-    device_id UUID NOT NULL,
     theme theme_type NOT NULL DEFAULT 'SYSTEM',
     onboarding_completed BOOLEAN NOT NULL DEFAULT FALSE,
     language VARCHAR(10) NOT NULL DEFAULT 'en',
     last_sync_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    UNIQUE(user_id, device_id),
-    FOREIGN KEY (user_id) REFERENCES diva_user(id) ON DELETE CASCADE,
-    FOREIGN KEY (device_id) REFERENCES diva_devices(id)
+    UNIQUE(user_id),
+    FOREIGN KEY (user_id) REFERENCES diva_user(id) ON DELETE CASCADE
 );
 -- +goose StatementEnd
 -- +goose Down

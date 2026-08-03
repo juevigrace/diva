@@ -81,20 +81,20 @@ type DivaDevice struct {
 }
 
 type DivaSession struct {
-	ID              uuid.UUID
-	UserID          uuid.UUID
-	AccessToken     string
-	RefreshToken    string
-	DeviceID        uuid.UUID
-	Type            SessionType
-	Status          SessionStatusType
-	IpAddress       string
-	UserAgent       string
-	AccessExpiresAt int64
+	ID               uuid.UUID
+	UserID           uuid.UUID
+	AccessToken      string
+	RefreshToken     string
+	DeviceID         uuid.UUID
+	Type             SessionType
+	Status           SessionStatusType
+	IpAddress        string
+	UserAgent        string
+	AccessExpiresAt  int64
 	RefreshExpiresAt int64
-	CreatedAt       int64
-	UpdatedAt       int64
-	DeletedAt       *int64
+	CreatedAt        int64
+	UpdatedAt        int64
+	DeletedAt        *int64
 }
 
 type DivaUserState struct {
@@ -119,7 +119,6 @@ type DivaUserProfile struct {
 type DivaUserPreference struct {
 	ID                  uuid.UUID
 	UserID              uuid.UUID
-	DeviceID            uuid.UUID
 	Theme               ThemeType
 	OnboardingCompleted bool
 	Language            string

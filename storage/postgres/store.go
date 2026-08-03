@@ -44,6 +44,9 @@ func (s *UserStore) CreateUser(ctx context.Context, arg *storage.CreateUserParam
 func (s *UserStore) GetUserByID(ctx context.Context, id uuid.UUID) (*storage.DivaUser, error) {
 	u, err := s.q.GetUserByID(ctx, pgtype.UUID{Bytes: id, Valid: true})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrUserNotFound
+		}
 		return nil, err
 	}
 	return DivaUserToStorage(&u), nil
@@ -52,6 +55,9 @@ func (s *UserStore) GetUserByID(ctx context.Context, id uuid.UUID) (*storage.Div
 func (s *UserStore) GetUserByEmail(ctx context.Context, email string) (*storage.DivaUser, error) {
 	u, err := s.q.GetUserByEmail(ctx, email)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrUserNotFound
+		}
 		return nil, err
 	}
 	return DivaUserToStorage(&u), nil
@@ -60,6 +66,9 @@ func (s *UserStore) GetUserByEmail(ctx context.Context, email string) (*storage.
 func (s *UserStore) GetUserByUsername(ctx context.Context, username string) (*storage.DivaUser, error) {
 	u, err := s.q.GetUserByUsername(ctx, username)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrUserNotFound
+		}
 		return nil, err
 	}
 	return DivaUserToStorage(&u), nil
@@ -68,6 +77,9 @@ func (s *UserStore) GetUserByUsername(ctx context.Context, username string) (*st
 func (s *UserStore) GetUserByUsernameOrEmail(ctx context.Context, identifier string) (*storage.DivaUser, error) {
 	u, err := s.q.GetUserByUsernameOrEmail(ctx, identifier)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrUserNotFound
+		}
 		return nil, err
 	}
 	return DivaUserToStorage(&u), nil
@@ -143,6 +155,9 @@ func (s *PermissionStore) CreatePermission(ctx context.Context, arg *storage.Cre
 func (s *PermissionStore) GetPermissionByID(ctx context.Context, id uuid.UUID) (*storage.DivaPermission, error) {
 	p, err := s.q.GetPermissionByID(ctx, pgtype.UUID{Bytes: id, Valid: true})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrPermissionNotFound
+		}
 		return nil, err
 	}
 	return DivaPermissionToStorage(&p), nil
@@ -151,6 +166,9 @@ func (s *PermissionStore) GetPermissionByID(ctx context.Context, id uuid.UUID) (
 func (s *PermissionStore) GetPermissionByName(ctx context.Context, action string) (*storage.DivaPermission, error) {
 	p, err := s.q.GetPermissionByName(ctx, action)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrPermissionNotFound
+		}
 		return nil, err
 	}
 	return DivaPermissionToStorage(&p), nil
@@ -216,6 +234,9 @@ func (s *DeviceStore) CreateDevice(ctx context.Context, arg *storage.CreateDevic
 func (s *DeviceStore) GetDeviceByName(ctx context.Context, name string) (*storage.DivaDevice, error) {
 	d, err := s.q.GetDeviceByName(ctx, name)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrDeviceNotFound
+		}
 		return nil, err
 	}
 	return DivaDeviceToStorage(&d), nil
@@ -224,6 +245,9 @@ func (s *DeviceStore) GetDeviceByName(ctx context.Context, name string) (*storag
 func (s *DeviceStore) GetDeviceByID(ctx context.Context, id uuid.UUID) (*storage.DivaDevice, error) {
 	d, err := s.q.GetDeviceByID(ctx, pgtype.UUID{Bytes: id, Valid: true})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrDeviceNotFound
+		}
 		return nil, err
 	}
 	return DivaDeviceToStorage(&d), nil
@@ -242,6 +266,9 @@ func (s *DeviceStore) GetUserDevice(ctx context.Context, userID uuid.UUID, devic
 		DeviceID: pgtype.UUID{Bytes: deviceID, Valid: true},
 	})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrUserDeviceNotFound
+		}
 		return nil, err
 	}
 	return DivaUserDeviceToStorage(&row), nil
@@ -294,6 +321,9 @@ func (s *SessionStore) CreateSession(ctx context.Context, arg *storage.CreateSes
 func (s *SessionStore) GetSessionByID(ctx context.Context, id uuid.UUID) (*storage.DivaSession, error) {
 	ss, err := s.q.GetSessionByID(ctx, pgtype.UUID{Bytes: id, Valid: true})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrSessionNotFound
+		}
 		return nil, err
 	}
 	return DivaSessionToStorage(&ss), nil
@@ -365,6 +395,9 @@ func (s *UserStateStore) CreateUserState(ctx context.Context, arg *storage.Creat
 func (s *UserStateStore) GetUserStateByUserID(ctx context.Context, userID uuid.UUID) (*storage.DivaUserState, error) {
 	us, err := s.q.GetUserStateByUserID(ctx, pgtype.UUID{Bytes: userID, Valid: true})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrUserStateNotFound
+		}
 		return nil, err
 	}
 	return DivaUserStateToStorage(&us), nil
@@ -400,6 +433,9 @@ func (s *UserProfileStore) CreateUserProfile(ctx context.Context, arg *storage.C
 func (s *UserProfileStore) GetUserProfileByUserID(ctx context.Context, userID uuid.UUID) (*storage.DivaUserProfile, error) {
 	p, err := s.q.GetUserProfileByUserID(ctx, pgtype.UUID{Bytes: userID, Valid: true})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrUserProfileNotFound
+		}
 		return nil, err
 	}
 	return DivaUserProfileToStorage(&p), nil
@@ -431,6 +467,9 @@ func (s *UserPreferenceStore) CreateUserPreferences(ctx context.Context, arg *st
 func (s *UserPreferenceStore) GetPreferencesByID(ctx context.Context, id uuid.UUID) (*storage.DivaUserPreference, error) {
 	p, err := s.q.GetPreferencesByID(ctx, pgtype.UUID{Bytes: id, Valid: true})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrUserPreferencesNotFound
+		}
 		return nil, err
 	}
 	return DivaUserPreferenceToStorage(&p), nil
@@ -470,6 +509,9 @@ func (s *UserPermissionStore) GetUserPermission(ctx context.Context, arg *storag
 	params := GetUserPermissionParamsFromStorage(arg)
 	p, err := s.q.GetUserPermission(ctx, *params)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrUserPermissionNotFound
+		}
 		return nil, err
 	}
 	return DivaUserPermissionToStorage(&p), nil
@@ -479,6 +521,9 @@ func (s *UserPermissionStore) GetUserPermissionByName(ctx context.Context, arg *
 	params := GetUserPermissionByNameParamsFromStorage(arg)
 	p, err := s.q.GetUserPermissionByName(ctx, *params)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrUserPermissionNotFound
+		}
 		return nil, err
 	}
 	return DivaUserPermissionToStorage(&p), nil
@@ -526,6 +571,9 @@ func (s *UserActionStore) CreateUserAction(ctx context.Context, arg *storage.Cre
 func (s *UserActionStore) GetUserActionByID(ctx context.Context, id uuid.UUID) (*storage.DivaAction, error) {
 	a, err := s.q.GetUserActionByID(ctx, pgtype.UUID{Bytes: id, Valid: true})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrActionNotFound
+		}
 		return nil, err
 	}
 	return DivaActionToStorage(&a), nil
@@ -535,6 +583,9 @@ func (s *UserActionStore) GetUserActionByUserAndName(ctx context.Context, arg *s
 	params := GetUserActionByUserAndNameParamsFromStorage(arg)
 	a, err := s.q.GetUserActionByUserAndName(ctx, *params)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrActionNotFound
+		}
 		return nil, err
 	}
 	return DivaActionToStorage(&a), nil
@@ -580,6 +631,9 @@ func (s *UserVerificationStore) CreateUserVerification(ctx context.Context, arg 
 func (s *UserVerificationStore) GetUserVerification(ctx context.Context, actionID uuid.UUID) (*storage.DivaActionVerification, error) {
 	v, err := s.q.GetUserVerification(ctx, pgtype.UUID{Bytes: actionID, Valid: true})
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errs.ErrVerificationNotFound
+		}
 		return nil, err
 	}
 	return DivaActionVerificationToStorage(&v), nil

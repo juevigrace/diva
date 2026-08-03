@@ -2,7 +2,6 @@
 select
     up.id as id,
     up.user_id,
-    up.device_id,
     up.theme,
     up.onboarding_completed,
     up.language,
@@ -17,7 +16,6 @@ where up.id = ?
 select
     up.id as id,
     up.user_id,
-    up.device_id,
     up.theme,
     up.onboarding_completed,
     up.language,
@@ -32,12 +30,10 @@ where up.user_id = ?
 insert into diva_user_preferences (
     id,
     user_id,
-    device_id,
     theme,
     onboarding_completed,
     language
 ) values (
-    ?,
     ?,
     ?,
     ?,

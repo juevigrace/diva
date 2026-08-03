@@ -2,14 +2,13 @@ package profile
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
 	"github.com/juevigrace/diva-server/internal/core/user/permissions"
 	"github.com/juevigrace/diva-server/internal/models"
 	"github.com/juevigrace/diva-server/internal/models/dtos"
+	"github.com/juevigrace/diva-server/pkg/errs"
 	"github.com/juevigrace/diva-server/storage"
 )
 
@@ -31,7 +30,7 @@ func NewUserProfileRepo(
 func (s *UserProfileRepo) GetByUserID(ctx context.Context, userID uuid.UUID) (*models.UserProfile, error) {
 	row, err := s.store.GetUserProfileByUserID(ctx, userID)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) || errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, errs.ErrUserProfileNotFound) {
 			return nil, nil
 		}
 		return nil, err

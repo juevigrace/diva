@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
 	"github.com/juevigrace/diva-server/internal/core/session"
 	"github.com/juevigrace/diva-server/internal/core/user/actions"
 	"github.com/juevigrace/diva-server/internal/core/user/permissions"
+	"github.com/juevigrace/diva-server/internal/core/user/preferences"
 	"github.com/juevigrace/diva-server/internal/core/user/profile"
 	"github.com/juevigrace/diva-server/internal/models"
 	"github.com/juevigrace/diva-server/internal/models/dtos"
@@ -23,6 +23,7 @@ type UserRepo struct {
 	sRepo    *session.SessionRepo
 	uaRepo   *actions.UserActionsRepo
 	upRepo   *permissions.UserPermissionRepo
+	uprRepo  *preferences.UserPreferencesRepo
 	uproRepo *profile.UserProfileRepo
 	usRepo   *UserStateRepo
 }
@@ -32,6 +33,7 @@ func NewUserRepo(
 	sRepo *session.SessionRepo,
 	uaRepo *actions.UserActionsRepo,
 	upRepo *permissions.UserPermissionRepo,
+	uprRepo *preferences.UserPreferencesRepo,
 	uproRepo *profile.UserProfileRepo,
 	usRepo *UserStateRepo,
 ) *UserRepo {
@@ -40,6 +42,7 @@ func NewUserRepo(
 		sRepo:    sRepo,
 		uaRepo:   uaRepo,
 		upRepo:   upRepo,
+		uprRepo:  uprRepo,
 		uproRepo: uproRepo,
 		usRepo:   usRepo,
 	}
@@ -73,9 +76,6 @@ func (s *UserRepo) GetAll(ctx context.Context, pagination *models.Pagination) ([
 func (s *UserRepo) GetByID(ctx context.Context, userID uuid.UUID) (*models.User, error) {
 	row, err := s.store.GetUserByID(ctx, userID)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errs.ErrUserNotFound
-		}
 		return nil, err
 	}
 
@@ -103,15 +103,18 @@ func (s *UserRepo) GetByID(ctx context.Context, userID uuid.UUID) (*models.User,
 	}
 	dbUser.State = dbState
 
+	dbPrefs, err := s.uprRepo.GetByUser(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	dbUser.Preferences = dbPrefs
+
 	return dbUser, nil
 }
 
 func (s *UserRepo) GetByUsername(ctx context.Context, username string) (*models.User, error) {
 	row, err := s.store.GetUserByUsername(ctx, username)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errs.ErrUserNotFound
-		}
 		return nil, err
 	}
 	return models.UserFromDB(row), nil
@@ -132,9 +135,6 @@ func (s *UserRepo) CheckUsernameAvailable(ctx context.Context, username string) 
 func (s *UserRepo) GetByEmail(ctx context.Context, email string) (*models.User, error) {
 	row, err := s.store.GetUserByEmail(ctx, email)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errs.ErrUserNotFound
-		}
 		return nil, err
 	}
 
@@ -156,9 +156,6 @@ func (s *UserRepo) CheckEmailAvailable(ctx context.Context, email string) (bool,
 func (s *UserRepo) GetByUsernameOrEmail(ctx context.Context, value string) (*models.User, error) {
 	row, err := s.store.GetUserByUsernameOrEmail(ctx, value)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errs.ErrUserNotFound
-		}
 		return nil, err
 	}
 
@@ -213,7 +210,7 @@ func (s *UserRepo) UpdatePasswordConfirm(ctx context.Context, aid, uid uuid.UUID
 
 	existing, err := s.upRepo.GetOneByName(ctx, uid, models.PERMISSION_USERS_PASSWORD_WRITE)
 	if err != nil {
-		if !errors.Is(err, pgx.ErrNoRows) {
+		if !errors.Is(err, errs.ErrUserPermissionNotFound) {
 			return err
 		}
 		if err := s.upRepo.CreateByName(ctx, models.PERMISSION_USERS_PASSWORD_WRITE, nil, true, &exp, uid); err != nil {
@@ -289,6 +286,14 @@ func (s *UserRepo) UpdatePhoneNumber(ctx context.Context, session *models.Sessio
 }
 
 func (s *UserRepo) UpdateUsername(ctx context.Context, session *models.Session, username string, uid uuid.UUID) error {
+	if existing, err := s.GetByUsername(ctx, username); err == nil {
+		if existing.ID != uid {
+			return errs.ErrUsernameTaken
+		}
+	} else if !errors.Is(err, errs.ErrUserNotFound) {
+		return err
+	}
+
 	if err := s.store.UpdateUsername(ctx, &storage.UpdateUsernameParams{
 		Username: username,
 		ID:       uid,
@@ -308,6 +313,14 @@ func (s *UserRepo) UpdateUsername(ctx context.Context, session *models.Session, 
 }
 
 func (s *UserRepo) UpdateEmail(ctx context.Context, session *models.Session, email string, uid uuid.UUID) error {
+	if existing, err := s.GetByEmail(ctx, email); err == nil {
+		if existing.ID != uid {
+			return errs.ErrEmailTaken
+		}
+	} else if !errors.Is(err, errs.ErrUserNotFound) {
+		return err
+	}
+
 	if err := s.store.UpdateEmail(ctx, &storage.UpdateEmailParams{
 		Email: email,
 		ID:    uid,
@@ -338,7 +351,29 @@ func (s *UserRepo) SoftDelete(ctx context.Context, userID uuid.UUID) error {
 		return err
 	}
 
-	return s.usRepo.UpdateStatus(ctx, models.USER_STATUS_INACTIVE, userID)
+	if err := s.usRepo.UpdateStatus(ctx, models.USER_STATUS_INACTIVE, userID); err != nil {
+		return err
+	}
+
+	if err := s.sRepo.CloseAllByUser(ctx, userID); err != nil {
+		return err
+	}
+
+	if err := s.uaRepo.DeleteByUser(ctx, userID); err != nil {
+		return err
+	}
+
+	perms, err := s.upRepo.GetByUser(ctx, userID)
+	if err != nil {
+		return err
+	}
+	for i := range perms {
+		if err := s.upRepo.Update(ctx, userID, perms[i].Permission.ID, false, nil); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (s *UserRepo) Delete(ctx context.Context, userID uuid.UUID) error {
@@ -346,6 +381,37 @@ func (s *UserRepo) Delete(ctx context.Context, userID uuid.UUID) error {
 }
 
 func (r *UserRepo) Restore(ctx context.Context, userID uuid.UUID) error {
+	dbUser, err := r.GetByID(ctx, userID)
+	if err != nil {
+		return err
+	}
+
+	perms := make([]models.PermissionAction, 0)
+
+	if dbUser.Profile == nil {
+		perms = append(perms, models.PERMISSION_USERS_PROFILE_WRITE)
+	}
+
+	if dbUser.Preferences == nil {
+		perms = append(perms, models.PERMISSION_USERS_PREFERENCES_WRITE)
+	}
+
+	for _, perm := range perms {
+		existing, err := r.upRepo.GetOneByName(ctx, userID, perm)
+		if err != nil {
+			if !errors.Is(err, errs.ErrUserPermissionNotFound) {
+				return err
+			}
+			if err := r.upRepo.CreateByName(ctx, perm, nil, true, nil, userID); err != nil {
+				return err
+			}
+		} else {
+			if err := r.upRepo.Update(ctx, userID, existing.Permission.ID, true, nil); err != nil {
+				return err
+			}
+		}
+	}
+
 	if err := r.store.RestoreUser(ctx, userID); err != nil {
 		return err
 	}

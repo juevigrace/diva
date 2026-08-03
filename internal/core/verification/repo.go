@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
 	"github.com/juevigrace/diva-server/internal/core/user"
 	"github.com/juevigrace/diva-server/internal/core/user/actions"
 	"github.com/juevigrace/diva-server/internal/core/user/permissions"
@@ -123,7 +122,7 @@ func (s *VerificationRepo) Generate(
 ) (*models.UserActionVerification, error) {
 	exists, err := s.GetByID(ctx, action.ID)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
+		if errors.Is(err, errs.ErrVerificationNotFound) {
 			token, err := otp.GenerateOTPCode()
 			if err != nil {
 				return nil, err
@@ -212,7 +211,7 @@ func (s *VerificationRepo) HandleVerified(ctx context.Context, va *models.UserAc
 		}
 
 		dbPerm, err := s.upRepo.GetOneByName(ctx, va.Action.UserID, permAction)
-		if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+		if err != nil && !errors.Is(err, errs.ErrUserPermissionNotFound) {
 			return err
 		}
 

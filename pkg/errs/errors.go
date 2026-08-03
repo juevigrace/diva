@@ -19,19 +19,38 @@ var (
 )
 
 var (
-	ErrUserNotFound       = errors.New("user not found")
-	ErrUserExists         = errors.New("user already exists")
-	ErrUsernameTaken      = errors.New("username already taken")
-	ErrEmailTaken         = errors.New("email already taken")
-	ErrInvalidCredentials = errors.New("invalid credentials")
-	ErrSamePassword       = errors.New("passwords are the same")
+	ErrUserNotFound            = errors.New("user not found")
+	ErrUserExists              = errors.New("user already exists")
+	ErrUsernameTaken           = errors.New("username already taken")
+	ErrEmailTaken              = errors.New("email already taken")
+	ErrUserDeleted             = errors.New("user was deleted")
+	ErrInvalidCredentials      = errors.New("invalid credentials")
+	ErrSamePassword            = errors.New("passwords are the same")
+	ErrUserStateNotFound       = errors.New("user state not found")
+	ErrUserProfileNotFound     = errors.New("user profile not found")
+	ErrUserPreferencesNotFound = errors.New("user preferences not found")
+	ErrUserPreferencesExists   = errors.New("preferences already created")
 )
 
 var (
-	ErrTokenExpired      = errors.New("token expired")
-	ErrTokenInvalid      = errors.New("token invalid")
-	ErrActionNotFound    = errors.New("action not found")
-	ErrActionNotVerified = errors.New("action not verified")
+	ErrDeviceNotFound     = errors.New("device not found")
+	ErrUserDeviceNotFound = errors.New("user device not found")
+	ErrDeviceNameTaken    = errors.New("device name already taken")
+	ErrUserDeviceExists   = errors.New("device already linked to user")
+)
+
+var (
+	ErrUserPermissionNotFound = errors.New("user permission not found")
+	ErrUserPermissionExists   = errors.New("user already has this permission granted")
+)
+
+var (
+	ErrTokenExpired         = errors.New("token expired")
+	ErrTokenInvalid         = errors.New("token invalid")
+	ErrActionNotFound       = errors.New("action not found")
+	ErrActionNotVerified    = errors.New("action not verified")
+	ErrActionExists         = errors.New("action already exists for user")
+	ErrVerificationNotFound = errors.New("verification not found")
 )
 
 var (

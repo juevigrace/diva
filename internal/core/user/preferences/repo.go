@@ -7,6 +7,7 @@ import (
 	"github.com/juevigrace/diva-server/internal/core/user/permissions"
 	"github.com/juevigrace/diva-server/internal/models"
 	"github.com/juevigrace/diva-server/internal/models/dtos"
+	"github.com/juevigrace/diva-server/pkg/errs"
 	"github.com/juevigrace/diva-server/storage"
 )
 
@@ -25,18 +26,17 @@ func NewUserPreferencesRepo(
 	}
 }
 
-func (s *UserPreferencesRepo) GetByUser(ctx context.Context, userID uuid.UUID) ([]*models.UserPreferences, error) {
+func (s *UserPreferencesRepo) GetByUser(ctx context.Context, userID uuid.UUID) (*models.UserPreferences, error) {
 	rows, err := s.store.GetPreferencesByUser(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
 
-	prefs := make([]*models.UserPreferences, len(rows))
-	for i := range rows {
-		prefs[i] = models.UserPrefsFromDB(&rows[i])
+	if len(rows) == 0 {
+		return nil, nil
 	}
 
-	return prefs, nil
+	return models.UserPrefsFromDB(&rows[0]), nil
 }
 
 func (s *UserPreferencesRepo) GetByID(ctx context.Context, id uuid.UUID) (*models.UserPreferences, error) {
@@ -48,10 +48,17 @@ func (s *UserPreferencesRepo) GetByID(ctx context.Context, id uuid.UUID) (*model
 	return models.UserPrefsFromDB(row), nil
 }
 
-func (s *UserPreferencesRepo) Create(ctx context.Context, session *models.Session, uid uuid.UUID, deviceID uuid.UUID, dto *dtos.CreateUserPreferencesDto) error {
+func (s *UserPreferencesRepo) Create(ctx context.Context, session *models.Session, uid uuid.UUID, dto *dtos.CreateUserPreferencesDto) error {
+	existing, err := s.GetByUser(ctx, uid)
+	if err != nil {
+		return err
+	}
+	if existing != nil {
+		return errs.ErrUserPreferencesExists
+	}
+
 	pref := &models.UserPreferences{
 		ID:                  uuid.New(),
-		Device:              models.Device{ID: deviceID},
 		Theme:               models.ThemeFromString(dto.Theme),
 		OnboardingCompleted: dto.OnboardingCompleted,
 		Language:            dto.Language,

@@ -90,7 +90,6 @@ type DivaUserPermission struct {
 type DivaUserPreference struct {
 	ID                  string
 	UserID              string
-	DeviceID            string
 	Theme               string
 	OnboardingCompleted bool
 	Language            string

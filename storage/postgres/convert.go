@@ -86,20 +86,20 @@ func DivaDeviceToStorage(src *pg.DivaDevice) *storage.DivaDevice {
 
 func DivaSessionToStorage(src *pg.DivaSession) *storage.DivaSession {
 	return &storage.DivaSession{
-		ID:              pgToUUID(src.ID),
-		UserID:          pgToUUID(src.UserID),
-		AccessToken:     src.AccessToken,
-		RefreshToken:    src.RefreshToken,
-		DeviceID:        pgToUUID(src.DeviceID),
-		Type:            storage.SessionType(src.Type),
-		Status:          storage.SessionStatusType(src.Status),
-		IpAddress:       src.IpAddress,
-		UserAgent:       src.UserAgent,
-		AccessExpiresAt: pgToTime(src.AccessExpiresAt),
+		ID:               pgToUUID(src.ID),
+		UserID:           pgToUUID(src.UserID),
+		AccessToken:      src.AccessToken,
+		RefreshToken:     src.RefreshToken,
+		DeviceID:         pgToUUID(src.DeviceID),
+		Type:             storage.SessionType(src.Type),
+		Status:           storage.SessionStatusType(src.Status),
+		IpAddress:        src.IpAddress,
+		UserAgent:        src.UserAgent,
+		AccessExpiresAt:  pgToTime(src.AccessExpiresAt),
 		RefreshExpiresAt: pgToTime(src.RefreshExpiresAt),
-		CreatedAt:       pgToTime(src.CreatedAt),
-		UpdatedAt:       pgToTime(src.UpdatedAt),
-		DeletedAt:       pgToTimePtr(src.DeletedAt),
+		CreatedAt:        pgToTime(src.CreatedAt),
+		UpdatedAt:        pgToTime(src.UpdatedAt),
+		DeletedAt:        pgToTimePtr(src.DeletedAt),
 	}
 }
 
@@ -130,7 +130,6 @@ func DivaUserPreferenceToStorage(src *pg.DivaUserPreference) *storage.DivaUserPr
 	return &storage.DivaUserPreference{
 		ID:                  pgToUUID(src.ID),
 		UserID:              pgToUUID(src.UserID),
-		DeviceID:            pgToUUID(src.DeviceID),
 		Theme:               storage.ThemeType(src.Theme),
 		OnboardingCompleted: src.OnboardingCompleted,
 		Language:            src.Language,
@@ -199,16 +198,16 @@ func CreateDeviceParamsFromStorage(src *storage.CreateDeviceParams) *pg.CreateDe
 
 func CreateSessionParamsFromStorage(src *storage.CreateSessionParams) *pg.CreateSessionParams {
 	return &pg.CreateSessionParams{
-		ID:              pgtype.UUID{Bytes: src.ID, Valid: true},
-		UserID:          pgtype.UUID{Bytes: src.UserID, Valid: true},
-		AccessToken:     src.AccessToken,
-		RefreshToken:    src.RefreshToken,
-		DeviceID:        pgtype.UUID{Bytes: src.DeviceID, Valid: true},
-		Type:            pg.SessionType(src.Type),
-		Status:          pg.SessionStatusType(src.Status),
-		IpAddress:       src.IpAddress,
-		UserAgent:       src.UserAgent,
-		AccessExpiresAt: pgtype.Timestamptz{Time: time.UnixMilli(src.AccessExpiresAt), Valid: true},
+		ID:               pgtype.UUID{Bytes: src.ID, Valid: true},
+		UserID:           pgtype.UUID{Bytes: src.UserID, Valid: true},
+		AccessToken:      src.AccessToken,
+		RefreshToken:     src.RefreshToken,
+		DeviceID:         pgtype.UUID{Bytes: src.DeviceID, Valid: true},
+		Type:             pg.SessionType(src.Type),
+		Status:           pg.SessionStatusType(src.Status),
+		IpAddress:        src.IpAddress,
+		UserAgent:        src.UserAgent,
+		AccessExpiresAt:  pgtype.Timestamptz{Time: time.UnixMilli(src.AccessExpiresAt), Valid: true},
 		RefreshExpiresAt: pgtype.Timestamptz{Time: time.UnixMilli(src.RefreshExpiresAt), Valid: true},
 	}
 }
@@ -235,7 +234,6 @@ func CreateUserPreferencesParamsFromStorage(src *storage.CreateUserPreferencesPa
 	return &pg.CreateUserPreferencesParams{
 		ID:                  pgtype.UUID{Bytes: src.ID, Valid: true},
 		UserID:              pgtype.UUID{Bytes: src.UserID, Valid: true},
-		DeviceID:            pgtype.UUID{Bytes: src.DeviceID, Valid: true},
 		Theme:               pg.ThemeType(src.Theme),
 		OnboardingCompleted: src.OnboardingCompleted,
 		Language:            src.Language,
@@ -319,11 +317,11 @@ func UpdateUserProfileParamsFromStorage(src *storage.UpdateUserProfileParams) *p
 
 func UpdateSessionParamsFromStorage(src *storage.UpdateSessionParams) *pg.UpdateSessionParams {
 	return &pg.UpdateSessionParams{
-		ID:              pgtype.UUID{Bytes: src.ID, Valid: true},
-		AccessToken:     src.AccessToken,
-		RefreshToken:    src.RefreshToken,
-		IpAddress:       src.IpAddress,
-		AccessExpiresAt: pgtype.Timestamptz{Time: time.UnixMilli(src.AccessExpiresAt), Valid: true},
+		ID:               pgtype.UUID{Bytes: src.ID, Valid: true},
+		AccessToken:      src.AccessToken,
+		RefreshToken:     src.RefreshToken,
+		IpAddress:        src.IpAddress,
+		AccessExpiresAt:  pgtype.Timestamptz{Time: time.UnixMilli(src.AccessExpiresAt), Valid: true},
 		RefreshExpiresAt: pgtype.Timestamptz{Time: time.UnixMilli(src.RefreshExpiresAt), Valid: true},
 	}
 }

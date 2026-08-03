@@ -5,7 +5,6 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
 	"github.com/juevigrace/diva-server/internal/models"
 	"github.com/juevigrace/diva-server/pkg/errs"
 	"github.com/juevigrace/diva-server/storage"
@@ -38,11 +37,7 @@ func (s *UserActionsRepo) GetAllByUser(ctx context.Context, userID uuid.UUID) ([
 func (s *UserActionsRepo) GetOneByID(ctx context.Context, id uuid.UUID) (*models.UserAction, error) {
 	row, err := s.store.GetUserActionByID(ctx, id)
 	if err != nil {
-		if ok := errors.Is(err, pgx.ErrNoRows); ok {
-			return nil, errs.ErrActionNotFound
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
 
 	return models.UserActionFromDB(row), nil
@@ -54,17 +49,19 @@ func (s *UserActionsRepo) GetOneByName(ctx context.Context, userID uuid.UUID, ac
 		Name:   action.String(),
 	})
 	if err != nil {
-		if ok := errors.Is(err, pgx.ErrNoRows); ok {
-			return nil, errs.ErrActionNotFound
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
 
 	return models.UserActionFromDB(row), nil
 }
 
 func (s *UserActionsRepo) Create(ctx context.Context, userID uuid.UUID, action models.Action) (*uuid.UUID, error) {
+	if _, err := s.GetOneByName(ctx, userID, action); err == nil {
+		return nil, errs.ErrActionExists
+	} else if !errors.Is(err, errs.ErrActionNotFound) {
+		return nil, err
+	}
+
 	params := &models.UserAction{
 		ID:     uuid.New(),
 		Name:   action,

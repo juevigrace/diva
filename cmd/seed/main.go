@@ -11,6 +11,7 @@ import (
 	"github.com/juevigrace/diva-server/internal/core/user"
 	"github.com/juevigrace/diva-server/internal/core/user/actions"
 	"github.com/juevigrace/diva-server/internal/core/user/permissions"
+	"github.com/juevigrace/diva-server/internal/core/user/preferences"
 	"github.com/juevigrace/diva-server/internal/core/user/profile"
 	"github.com/juevigrace/diva-server/internal/models"
 	"github.com/juevigrace/diva-server/internal/models/dtos"
@@ -122,10 +123,11 @@ func main() {
 
 	uaRepo := actions.NewUserActionsRepo(database.UserActionStore())
 	upRepo := permissions.NewUserPermissionRepo(database.UserPermissionStore(), permission.NewPermissionRepo(database.PermissionStore()))
+	uprRepo := preferences.NewUserPreferencesRepo(database.UserPreferenceStore(), upRepo)
 	uproRepo := profile.NewUserProfileRepo(database.UserProfileStore(), upRepo)
 
 	usRepo := user.NewUserStateRepo(database.UserStateStore())
-	uRepo := user.NewUserRepo(database.UserStore(), sRepo, uaRepo, upRepo, uproRepo, usRepo)
+	uRepo := user.NewUserRepo(database.UserStore(), sRepo, uaRepo, upRepo, uprRepo, uproRepo, usRepo)
 
 	userDto := dtos.CreateUserDto{
 		Email:    serverConf.RootEmail,

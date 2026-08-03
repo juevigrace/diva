@@ -52,6 +52,10 @@ func extractSession(r *http.Request, sessionCall SessionCall, userCall UserCall)
 		return nil, err
 	}
 
+	if user.DeletedAt != nil || user.State == nil || user.State.Status != models.USER_STATUS_ACTIVE {
+		return nil, errs.ErrNotAuthorized
+	}
+
 	session.User = *user
 
 	return session, nil

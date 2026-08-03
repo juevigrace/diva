@@ -60,7 +60,7 @@ func NewUserModule(
 	uproHandler := profile.NewUserProfileHandler(uproRepo, files)
 
 	usRepo := NewUserStateRepo(stateStore)
-	uRepo := NewUserRepo(userStore, sRepo, uaRepo, upRepo, uproRepo, usRepo)
+	uRepo := NewUserRepo(userStore, sRepo, uaRepo, upRepo, uprRepo, uproRepo, usRepo)
 	uHandler := NewUserHandler(uRepo, usRepo, uaRepo)
 
 	return &UserModule{
@@ -97,44 +97,6 @@ func (m *UserModule) Routes(r chi.Router) {
 
 			auth.Route("/{uid}", func(uid chi.Router) {
 				uid.Get("/", m.uHandler.getByID)
-
-				uid.Route("/status", func(sr chi.Router) {
-					sr.With(middlewares.RequireResourceOwner(
-						&middlewares.RequireOwnerParams{
-							UrlParams: []string{"uid"},
-						},
-						func(_ context.Context, reqid uuid.UUID, resParams []string) (map[string]any, bool) {
-							resid, err := uuid.Parse(resParams[0])
-							if err != nil {
-								return nil, false
-							}
-							return map[string]any{"uid": resid}, reqid == resid
-						},
-					)).Get("/", m.uHandler.getState)
-
-					sr.With(middlewares.RequireResourceOwner(
-						&middlewares.RequireOwnerParams{
-							UrlParams: []string{"uid"},
-						},
-						func(_ context.Context, reqid uuid.UUID, resParams []string) (map[string]any, bool) {
-							resid, err := uuid.Parse(resParams[0])
-							if err != nil {
-								return nil, false
-							}
-							return map[string]any{"uid": resid}, reqid == resid
-						},
-					)).Post("/ping", m.uHandler.pingStatus)
-
-					sr.Group(func(admin chi.Router) {
-						admin.Use(middlewares.RequireRole(models.ROLE_ADMIN, models.ROLE_MODERATOR), middlewares.RequireVerified())
-						admin.With(
-							middlewares.RequirePermission(models.PERMISSION_USERS_VERIFIED_WRITE),
-						).Patch("/verified", m.uHandler.updateVerified)
-						admin.With(
-							middlewares.RequirePermission(models.PERMISSION_USERS_WRITE),
-						).Put("/", m.uHandler.updateStatus)
-					})
-				})
 
 				uid.Group(func(restricted chi.Router) {
 					restricted.Use(middlewares.RequireVerified())
@@ -234,6 +196,44 @@ func (m *UserModule) Routes(r chi.Router) {
 					m.uproHandler.UserRoutes(restricted)
 					m.sHandler.UserRoutes(restricted)
 					m.dHandler.UserRoutes(restricted)
+				})
+
+				uid.Route("/status", func(sr chi.Router) {
+					sr.With(middlewares.RequireResourceOwner(
+						&middlewares.RequireOwnerParams{
+							UrlParams: []string{"uid"},
+						},
+						func(_ context.Context, reqid uuid.UUID, resParams []string) (map[string]any, bool) {
+							resid, err := uuid.Parse(resParams[0])
+							if err != nil {
+								return nil, false
+							}
+							return map[string]any{"uid": resid}, reqid == resid
+						},
+					)).Get("/", m.uHandler.getState)
+
+					sr.With(middlewares.RequireResourceOwner(
+						&middlewares.RequireOwnerParams{
+							UrlParams: []string{"uid"},
+						},
+						func(_ context.Context, reqid uuid.UUID, resParams []string) (map[string]any, bool) {
+							resid, err := uuid.Parse(resParams[0])
+							if err != nil {
+								return nil, false
+							}
+							return map[string]any{"uid": resid}, reqid == resid
+						},
+					)).Post("/ping", m.uHandler.pingStatus)
+
+					sr.Group(func(admin chi.Router) {
+						admin.Use(middlewares.RequireRole(models.ROLE_ADMIN, models.ROLE_MODERATOR), middlewares.RequireVerified())
+						admin.With(
+							middlewares.RequirePermission(models.PERMISSION_USERS_VERIFIED_WRITE),
+						).Patch("/verified", m.uHandler.updateVerified)
+						admin.With(
+							middlewares.RequirePermission(models.PERMISSION_USERS_WRITE),
+						).Put("/", m.uHandler.updateStatus)
+					})
 				})
 			})
 

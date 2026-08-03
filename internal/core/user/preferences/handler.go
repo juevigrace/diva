@@ -11,7 +11,6 @@ import (
 	"github.com/juevigrace/diva-server/internal/models"
 	"github.com/juevigrace/diva-server/internal/models/dtos"
 	"github.com/juevigrace/diva-server/internal/models/responses"
-	"github.com/juevigrace/diva-server/pkg/errs"
 )
 
 type UserPreferencesHandler struct {
@@ -140,12 +139,12 @@ func (h *UserPreferencesHandler) getByUser(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	res := make([]*responses.UserPreferencesResponse, len(prefs))
-	for i, p := range prefs {
-		res[i] = p.Response()
+	if prefs == nil {
+		responses.WriteJSON(w, responses.RespondOk(nil, "preferences retrieved"))
+		return
 	}
 
-	responses.WriteJSON(w, responses.RespondOk(res, "preferences retrieved"))
+	responses.WriteJSON(w, responses.RespondOk(prefs.Response(), "preferences retrieved"))
 }
 
 func (h *UserPreferencesHandler) getByID(w http.ResponseWriter, r *http.Request) {
@@ -188,20 +187,12 @@ func (h *UserPreferencesHandler) createPreferences(w http.ResponseWriter, r *htt
 		}
 	}
 
-	session, ok := middlewares.GetSessionFromContext(r.Context())
-	if !ok {
-		responses.WriteJSON(w, responses.RespondUnauthorized(nil, errs.ErrSessionNotFound.Error()))
-		return
-	}
-
 	var dto dtos.CreateUserPreferencesDto
 	if err = middlewares.ValidateBody(&dto, r); err != nil {
 		return
 	}
 
-	deviceID := session.Device.ID
-
-	if err = h.uprRepo.Create(r.Context(), rc.Session, uid, deviceID, &dto); err != nil {
+	if err = h.uprRepo.Create(r.Context(), rc.Session, uid, &dto); err != nil {
 		responses.HandleReqError(w, err)
 		return
 	}

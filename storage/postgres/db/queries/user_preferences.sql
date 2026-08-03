@@ -2,7 +2,6 @@
 select
     up.id as id,
     up.user_id,
-    up.device_id,
     up.theme,
     up.onboarding_completed,
     up.language,
@@ -17,7 +16,6 @@ where up.id = $1
 select
     up.id as id,
     up.user_id,
-    up.device_id,
     up.theme,
     up.onboarding_completed,
     up.language,
@@ -32,7 +30,6 @@ where up.user_id = $1
 insert into diva_user_preferences (
     id,
     user_id,
-    device_id,
     theme,
     onboarding_completed,
     language
@@ -41,8 +38,7 @@ insert into diva_user_preferences (
     $2,
     $3,
     $4,
-    $5,
-    $6
+    $5
 );
 
 -- name: UpdateUserPreferences :exec

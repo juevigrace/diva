@@ -83,20 +83,20 @@ func DivaDeviceToStorage(src *sqli.DivaDevice) *storage.DivaDevice {
 
 func DivaSessionToStorage(src *sqli.DivaSession) *storage.DivaSession {
 	return &storage.DivaSession{
-		ID:              sqliteToUUID(src.ID),
-		UserID:          sqliteToUUID(src.UserID),
-		AccessToken:     src.AccessToken,
-		RefreshToken:    src.RefreshToken,
-		DeviceID:        sqliteToUUID(src.DeviceID),
-		Type:            storage.SessionType(src.Type),
-		Status:          storage.SessionStatusType(src.Status),
-		IpAddress:       src.IpAddress,
-		UserAgent:       src.UserAgent,
-		AccessExpiresAt: src.AccessExpiresAt.UnixMilli(),
+		ID:               sqliteToUUID(src.ID),
+		UserID:           sqliteToUUID(src.UserID),
+		AccessToken:      src.AccessToken,
+		RefreshToken:     src.RefreshToken,
+		DeviceID:         sqliteToUUID(src.DeviceID),
+		Type:             storage.SessionType(src.Type),
+		Status:           storage.SessionStatusType(src.Status),
+		IpAddress:        src.IpAddress,
+		UserAgent:        src.UserAgent,
+		AccessExpiresAt:  src.AccessExpiresAt.UnixMilli(),
 		RefreshExpiresAt: src.RefreshExpiresAt.UnixMilli(),
-		CreatedAt:       src.CreatedAt.UnixMilli(),
-		UpdatedAt:       src.UpdatedAt.UnixMilli(),
-		DeletedAt:       sqlNullTimeToTimePtr(src.DeletedAt),
+		CreatedAt:        src.CreatedAt.UnixMilli(),
+		UpdatedAt:        src.UpdatedAt.UnixMilli(),
+		DeletedAt:        sqlNullTimeToTimePtr(src.DeletedAt),
 	}
 }
 
@@ -127,7 +127,6 @@ func DivaUserPreferenceToStorage(src *sqli.DivaUserPreference) *storage.DivaUser
 	return &storage.DivaUserPreference{
 		ID:                  sqliteToUUID(src.ID),
 		UserID:              sqliteToUUID(src.UserID),
-		DeviceID:            sqliteToUUID(src.DeviceID),
 		Theme:               storage.ThemeType(src.Theme),
 		OnboardingCompleted: src.OnboardingCompleted,
 		Language:            src.Language,
@@ -196,16 +195,16 @@ func CreateDeviceParamsFromStorage(src *storage.CreateDeviceParams) *sqli.Create
 
 func CreateSessionParamsFromStorage(src *storage.CreateSessionParams) *sqli.CreateSessionParams {
 	return &sqli.CreateSessionParams{
-		ID:              src.ID.String(),
-		UserID:          src.UserID.String(),
-		AccessToken:     src.AccessToken,
-		RefreshToken:    src.RefreshToken,
-		DeviceID:        src.DeviceID.String(),
-		Type:            string(src.Type),
-		Status:          string(src.Status),
-		IpAddress:       src.IpAddress,
-		UserAgent:       src.UserAgent,
-		AccessExpiresAt: time.UnixMilli(src.AccessExpiresAt),
+		ID:               src.ID.String(),
+		UserID:           src.UserID.String(),
+		AccessToken:      src.AccessToken,
+		RefreshToken:     src.RefreshToken,
+		DeviceID:         src.DeviceID.String(),
+		Type:             string(src.Type),
+		Status:           string(src.Status),
+		IpAddress:        src.IpAddress,
+		UserAgent:        src.UserAgent,
+		AccessExpiresAt:  time.UnixMilli(src.AccessExpiresAt),
 		RefreshExpiresAt: time.UnixMilli(src.RefreshExpiresAt),
 	}
 }
@@ -232,7 +231,6 @@ func CreateUserPreferencesParamsFromStorage(src *storage.CreateUserPreferencesPa
 	return &sqli.CreateUserPreferencesParams{
 		ID:                  src.ID.String(),
 		UserID:              src.UserID.String(),
-		DeviceID:            src.DeviceID.String(),
 		Theme:               string(src.Theme),
 		OnboardingCompleted: src.OnboardingCompleted,
 		Language:            src.Language,
@@ -316,11 +314,11 @@ func UpdateUserProfileParamsFromStorage(src *storage.UpdateUserProfileParams) *s
 
 func UpdateSessionParamsFromStorage(src *storage.UpdateSessionParams) *sqli.UpdateSessionParams {
 	return &sqli.UpdateSessionParams{
-		ID:              src.ID.String(),
-		AccessToken:     src.AccessToken,
-		RefreshToken:    src.RefreshToken,
-		IpAddress:       src.IpAddress,
-		AccessExpiresAt: time.UnixMilli(src.AccessExpiresAt),
+		ID:               src.ID.String(),
+		AccessToken:      src.AccessToken,
+		RefreshToken:     src.RefreshToken,
+		IpAddress:        src.IpAddress,
+		AccessExpiresAt:  time.UnixMilli(src.AccessExpiresAt),
 		RefreshExpiresAt: time.UnixMilli(src.RefreshExpiresAt),
 	}
 }

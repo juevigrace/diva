@@ -350,7 +350,6 @@ type DivaUserPermission struct {
 type DivaUserPreference struct {
 	ID                  pgtype.UUID
 	UserID              pgtype.UUID
-	DeviceID            pgtype.UUID
 	Theme               ThemeType
 	OnboardingCompleted bool
 	Language            string

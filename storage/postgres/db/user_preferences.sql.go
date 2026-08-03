@@ -15,7 +15,6 @@ const createUserPreferences = `-- name: CreateUserPreferences :exec
 insert into diva_user_preferences (
     id,
     user_id,
-    device_id,
     theme,
     onboarding_completed,
     language
@@ -24,15 +23,13 @@ insert into diva_user_preferences (
     $2,
     $3,
     $4,
-    $5,
-    $6
+    $5
 )
 `
 
 type CreateUserPreferencesParams struct {
 	ID                  pgtype.UUID
 	UserID              pgtype.UUID
-	DeviceID            pgtype.UUID
 	Theme               ThemeType
 	OnboardingCompleted bool
 	Language            string
@@ -42,7 +39,6 @@ func (q *Queries) CreateUserPreferences(ctx context.Context, arg CreateUserPrefe
 	_, err := q.db.Exec(ctx, createUserPreferences,
 		arg.ID,
 		arg.UserID,
-		arg.DeviceID,
 		arg.Theme,
 		arg.OnboardingCompleted,
 		arg.Language,
@@ -54,7 +50,6 @@ const getPreferencesByID = `-- name: GetPreferencesByID :one
 select
     up.id as id,
     up.user_id,
-    up.device_id,
     up.theme,
     up.onboarding_completed,
     up.language,
@@ -71,7 +66,6 @@ func (q *Queries) GetPreferencesByID(ctx context.Context, id pgtype.UUID) (DivaU
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
-		&i.DeviceID,
 		&i.Theme,
 		&i.OnboardingCompleted,
 		&i.Language,
@@ -86,7 +80,6 @@ const getPreferencesByUser = `-- name: GetPreferencesByUser :many
 select
     up.id as id,
     up.user_id,
-    up.device_id,
     up.theme,
     up.onboarding_completed,
     up.language,
@@ -109,7 +102,6 @@ func (q *Queries) GetPreferencesByUser(ctx context.Context, userID pgtype.UUID) 
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,
-			&i.DeviceID,
 			&i.Theme,
 			&i.OnboardingCompleted,
 			&i.Language,
