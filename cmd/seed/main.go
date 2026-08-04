@@ -77,6 +77,8 @@ func main() {
 	sqliteFlag := flag.Bool("sqlite", false, "Use SQLite (default)")
 	p := flag.Bool("p", false, "Use PostgreSQL")
 	postgresFlag := flag.Bool("postgres", false, "Use PostgreSQL")
+	u := flag.Bool("u", false, "Seed the root admin user")
+	envLocal := flag.Bool("env-local", false, "Load .env.local instead of .env")
 	flag.Parse()
 
 	useSQLite := *s || *sqliteFlag
@@ -92,6 +94,9 @@ func main() {
 	envFile := ".env"
 	if *dev {
 		envFile = ".env.dev"
+	}
+	if *envLocal {
+		envFile = ".env.local"
 	}
 
 	if err := godotenv.Load(envFile); err != nil {
@@ -129,20 +134,22 @@ func main() {
 	usRepo := user.NewUserStateRepo(database.UserStateStore())
 	uRepo := user.NewUserRepo(database.UserStore(), sRepo, uaRepo, upRepo, uprRepo, uproRepo, usRepo)
 
-	userDto := dtos.CreateUserDto{
-		Email:    serverConf.RootEmail,
-		Username: serverConf.RootUsername,
-		Password: serverConf.RootPassword,
-	}
+	if *u {
+		userDto := dtos.CreateUserDto{
+			Email:    serverConf.RootEmail,
+			Username: serverConf.RootUsername,
+			Password: serverConf.RootPassword,
+		}
 
-	id, err := uRepo.Create(context.Background(), &userDto)
-	if err != nil {
-		log.Fatal(err)
-	}
+		id, err := uRepo.Create(context.Background(), &userDto)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	if err := uRepo.UpdateRole(context.Background(), models.ROLE_ADMIN, id); err != nil {
-		log.Fatal(err)
-	}
+		if err := uRepo.UpdateRole(context.Background(), models.ROLE_ADMIN, id); err != nil {
+			log.Fatal(err)
+		}
 
-	log.Println(id)
+		log.Println(id)
+	}
 }

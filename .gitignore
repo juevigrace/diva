@@ -20,6 +20,7 @@ bin/
 
 .env
 .env.dev
+.env.local
 
 *templ.go
 
