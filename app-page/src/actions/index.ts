@@ -48,8 +48,7 @@ export const server = {
   },
 
   auth: {
-    refresh: defineAction({
-      accept: 'json',
+    refresh: defineAction({      accept: 'json',
       handler: async (_, ctx) => {
         const session = await ctx.session?.get<SessionResponse>('auth');
         if (!session) {
@@ -65,6 +64,16 @@ export const server = {
         }
         await ctx.session?.set('auth', res.json.data);
         return res.json.data;
+      },
+    }),
+  },
+
+  restore: {
+    saveEmail: defineAction({
+      accept: 'json',
+      input: z.object({ email: z.string() }),
+      handler: async (input, ctx) => {
+        await ctx.session?.set('restoreEmail', input.email);
       },
     }),
   },

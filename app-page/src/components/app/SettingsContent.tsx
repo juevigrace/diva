@@ -25,6 +25,7 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
 
   const handlePreferencesSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!preferences) return;
 
     const parsed = preferencesSchema.safeParse({ theme, language });
     if (!parsed.success) {
@@ -34,44 +35,23 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
 
     const langChanged = language !== (preferences?.language || 'en');
 
-    if (preferences) {
-      const res = await fetch(`/api/preferences/${preferences.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ theme, language }),
-      });
-      if (res.ok) {
-        const refetchRes = await fetch(`/api/user/${uid}/preferences`);
-        if (refetchRes.ok) {
-          const refetchJson = await refetchRes.json();
-          const prefs = Array.isArray(refetchJson) ? refetchJson : (refetchJson?.data || []);
-          setPreferences(prefs.length > 0 ? prefs[0] : { theme, language });
-        }
-        toast.success(t('settings.preferencesSaved'));
-        if (langChanged) setTimeout(() => window.location.reload(), 300);
-      } else {
-        const json = await res.json();
-        toast.error(json.message || t('settings.failedSavePreferences'));
+    const res = await fetch(`/api/preferences/${preferences.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme, language }),
+    });
+    if (res.ok) {
+      const refetchRes = await fetch(`/api/user/${uid}/preferences`);
+      if (refetchRes.ok) {
+        const refetchJson = await refetchRes.json();
+        const prefs = Array.isArray(refetchJson) ? refetchJson : (refetchJson?.data || []);
+        setPreferences(prefs.length > 0 ? prefs[0] : { theme, language });
       }
+      toast.success(t('settings.preferencesSaved'));
+      if (langChanged) setTimeout(() => window.location.reload(), 300);
     } else {
-      const res = await fetch(`/api/user/${uid}/preferences`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ theme, language, onboarding_completed: true }),
-      });
-      if (res.ok) {
-        const refetchRes = await fetch(`/api/user/${uid}/preferences`);
-        if (refetchRes.ok) {
-          const refetchJson = await refetchRes.json();
-          const prefs = Array.isArray(refetchJson) ? refetchJson : (refetchJson?.data || []);
-          setPreferences(prefs.length > 0 ? prefs[0] : { theme, language });
-        }
-        toast.success(t('settings.preferencesCreated'));
-        if (langChanged) setTimeout(() => window.location.reload(), 300);
-      } else {
-        const json = await res.json();
-        toast.error(json.message || t('settings.failedCreatePreferences'));
-      }
+      const json = await res.json();
+      toast.error(json.message || t('settings.failedSavePreferences'));
     }
   };
 
@@ -98,39 +78,51 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
       <div className="border-border bg-card rounded-xl border p-8 shadow-sm">
         <h3 className="text-lg font-semibold">{t('settings.preferences')}</h3>
         <p className="text-muted-foreground mt-1 text-sm">{t('settings.customizeExperience')}</p>
-        <form onSubmit={handlePreferencesSubmit} className="mt-6 space-y-5">
-          <div className="space-y-2">
-            <label className="text-sm leading-none font-medium" htmlFor="theme">{t('settings.theme')}</label>
-            <select
-              id="theme"
-              className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
-              value={theme}
-              onChange={(e) => setTheme(e.target.value)}
-            >
-              <option value="LIGHT">{t('settings.light')}</option>
-              <option value="DARK">{t('settings.dark')}</option>
-              <option value="SYSTEM">{t('settings.system')}</option>
-            </select>
+        {preferences ? (
+          <form onSubmit={handlePreferencesSubmit} className="mt-6 space-y-5">
+            <div className="space-y-2">
+              <label className="text-sm leading-none font-medium" htmlFor="theme">{t('settings.theme')}</label>
+              <select
+                id="theme"
+                className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
+                value={theme}
+                onChange={(e) => setTheme(e.target.value)}
+              >
+                <option value="LIGHT">{t('settings.light')}</option>
+                <option value="DARK">{t('settings.dark')}</option>
+                <option value="SYSTEM">{t('settings.system')}</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm leading-none font-medium" htmlFor="language">{t('settings.language')}</label>
+              <select
+                id="language"
+                className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+              >
+                <option value="en">{t('settings.english')}</option>
+                <option value="es">{t('settings.spanish')}</option>
+                <option value="fr">{t('settings.french')}</option>
+                <option value="de">{t('settings.german')}</option>
+                <option value="ja">{t('settings.japanese')}</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button type="submit" disabled={!isVerified}>{t('settings.savePreferences')}</Button>
+            </div>
+          </form>
+        ) : (
+          <div className="border-border mt-6 flex flex-col items-start gap-4 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-medium">{t('settings.preferencesLocked')}</p>
+              <p className="text-muted-foreground text-xs">{t('settings.completeOnboarding')}</p>
+            </div>
+            <a href="/onboarding">
+              <Button type="button" size="sm">{t('settings.completeOnboardingCta')}</Button>
+            </a>
           </div>
-          <div className="space-y-2">
-            <label className="text-sm leading-none font-medium" htmlFor="language">{t('settings.language')}</label>
-            <select
-              id="language"
-              className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-            >
-              <option value="en">{t('settings.english')}</option>
-              <option value="es">{t('settings.spanish')}</option>
-              <option value="fr">{t('settings.french')}</option>
-              <option value="de">{t('settings.german')}</option>
-              <option value="ja">{t('settings.japanese')}</option>
-            </select>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button type="submit" disabled={!isVerified}>{preferences ? t('settings.savePreferences') : t('settings.createPreferences')}</Button>
-          </div>
-        </form>
+        )}
       </div>
 
       <div className="border-destructive/20 bg-card rounded-xl border p-8 shadow-sm">

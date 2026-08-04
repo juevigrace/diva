@@ -49,6 +49,16 @@ export default function SignInForm({ lang = 'en' }: SignInFormProps) {
         return;
       }
 
+      if (res.status === 409 && json.message === 'user was deleted') {
+        await fetch('/api/restore/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: username }),
+        }).catch(() => {});
+        window.location.href = '/restore';
+        return;
+      }
+
       toast.error(json.message || t('auth.anErrorOccurred'));
     } catch {
       toast.error(t('auth.networkError'));

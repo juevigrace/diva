@@ -1,0 +1,11 @@
+---
+import AuthLayout from '@layouts/AuthLayout.astro';
+import RestoreForm from '@components/auth/RestoreForm';
+import { t } from '@lib/i18n/t';
+
+const email = (await Astro.session?.get('restoreEmail')) ?? Astro.url.searchParams.get('email') ?? '';
+---
+
+<AuthLayout title={t('page.restore.title', Astro.locals.lang)} description={t('page.restore.desc', Astro.locals.lang)}>
+  <RestoreForm email={email} lang={Astro.locals.lang} client:load />
+</AuthLayout>

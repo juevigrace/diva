@@ -1,0 +1,25 @@
+---
+import Layout from '@layouts/Layout.astro';
+import OnboardingFlow from '@components/onboarding/OnboardingFlow';
+import { t } from '@lib/i18n/t';
+
+const { user, state, profile, preferences } = Astro.locals;
+
+if (!user) {
+  return Astro.redirect('/home');
+}
+---
+
+<Layout title={t('page.onboarding.title', Astro.locals.lang)} description={t('page.onboarding.desc', Astro.locals.lang)}>
+  <div class="flex min-h-screen items-center justify-center px-4 py-8">
+    <OnboardingFlow
+      uid={user.userId}
+      email={user.email}
+      verified={state?.verified ?? false}
+      hasProfile={!!profile}
+      initialPreferences={preferences}
+      lang={Astro.locals.lang}
+      client:load
+    />
+  </div>
+</Layout>

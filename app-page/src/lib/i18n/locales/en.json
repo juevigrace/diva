@@ -17,6 +17,7 @@
     "back": "Back",
     "send": "Send",
     "retry": "Retry",
+    "continue": "Continue",
     "pagination": "Page {page} of {total}"
   },
   "nav": {
@@ -96,7 +97,11 @@
     "failedToSendCode": "Failed to send verification code",
     "yourEmail": "your email",
     "codePlaceholder": "Verification code",
-    "aCodeWillBeSent": "A verification code will be sent to"
+    "aCodeWillBeSent": "A verification code will be sent to",
+    "restoreAccount": "Restore your account",
+    "accountRestored": "Account restored",
+    "accountRestoredDesc": "Your account has been restored successfully. You can now sign in.",
+    "signInWithRestoredAccount": "Sign in with your restored account"
   },
   "profile": {
     "title": "Profile",
@@ -160,6 +165,9 @@
     "preferencesCreated": "Preferences created.",
     "failedSavePreferences": "Failed to save preferences",
     "failedCreatePreferences": "Failed to create preferences",
+    "preferencesLocked": "Preferences are locked",
+    "completeOnboarding": "Complete your onboarding to set your theme and language.",
+    "completeOnboardingCta": "Complete onboarding",
     "dangerZone": "Danger Zone",
     "irreversibleActions": "Irreversible actions for your account.",
     "deleteAccount": "Delete account",
@@ -447,7 +455,8 @@
   },
   "verifyBanner": {
     "unverified": "Your email is not verified.",
-    "verifyNow": "Verify now",
+    "incomplete": "Finish setting up your account.",
+    "continue": "Continue setup",
     "dismiss": "Dismiss"
   },
   "dashboard": {
@@ -471,6 +480,25 @@
     "signOut": "Sign out",
     "signIn": "Sign in"
   },
+  "onboarding": {
+    "stepVerify": "Verify",
+    "stepProfile": "Profile",
+    "stepPreferences": "Preferences",
+    "verifyTitle": "Verify your email",
+    "verifyDesc": "Before you continue, please verify your email address.",
+    "profileTitle": "Create your profile",
+    "profileDesc": "Tell us a bit about yourself.",
+    "preferencesTitle": "Set your preferences",
+    "preferencesDesc": "Choose how the app looks and reads for you.",
+    "finishSetup": "Finish setup",
+    "saving": "Saving...",
+    "doneTitle": "You're all set!",
+    "doneDesc": "Your account is ready to use.",
+    "goToDashboard": "Go to dashboard",
+    "skipForNow": "Skip for now",
+    "profileSaved": "Profile created.",
+    "verifyRequired": "Please verify your email to continue."
+  },
   "mobileNav": {
     "menu": "Menu",
     "openMenu": "Open navigation menu",
@@ -487,6 +515,8 @@
     "signUp": { "title": "Create Account — Diva", "desc": "Get started with your free Diva Pages account." },
     "forgotPassword": { "title": "Reset Password — Diva", "desc": "Reset your password" },
     "verify": { "title": "Verify — Diva", "desc": "Email verification" },
+    "onboarding": { "title": "Account Setup — Diva", "desc": "Finish setting up your Diva account." },
+    "restore": { "title": "Restore Account — Diva", "desc": "Restore your Diva Pages account." },
     "profile": { "title": "Profile — Diva", "desc": "Manage your Diva Pages profile and personal information." },
     "settings": { "title": "Settings — Diva", "desc": "Manage your Diva Pages workspace settings." },
     "users": { "title": "Users — Diva", "desc": "Manage your Diva Pages team members and their permissions." },

@@ -28,6 +28,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "catalog:"
+    "@astrojs/check": "^0.9.10",
+    "@tailwindcss/vite": "catalog:",
+    "typescript": "catalog:"
   }
 }

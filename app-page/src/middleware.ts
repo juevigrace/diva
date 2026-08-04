@@ -7,6 +7,7 @@ declare global {
   namespace App {
     interface SessionData {
       auth?: SessionResponse;
+      restoreEmail?: string;
       userLang?: string;
     }
     interface Locals {
@@ -34,6 +35,12 @@ declare global {
         avatar: string | null;
         bio: string | null;
       } | null;
+      preferences: {
+        id: string;
+        theme: string;
+        onboarding_completed: boolean;
+        language: string;
+      } | null;
       lang: string;
     }
   }
@@ -44,6 +51,7 @@ const publicRoutes = [
   '/signIn',
   '/signUp',
   '/verify',
+  '/restore',
   '/forgot-password',
   '/about',
   '/contact',
@@ -102,7 +110,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       }
     }
 
-    const [userData, stateData, profileData] = await Promise.all([
+    const [userData, stateData, profileData, preferencesData] = await Promise.all([
       fetchFromApi<{
         id: string; username: string; email: string; phone_number: string | null;
         role: string; created_at: number; updated_at: number; deleted_at: number | null;
@@ -115,6 +123,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
         birth_date: number | null; alias: string | null;
         avatar: string | null; bio: string | null;
       }>(`${API_BASE_URL}/api/user/${auth.user_id}/profile`, auth.access_token),
+      fetchFromApi<{
+        id: string; theme: string; onboarding_completed: boolean; language: string;
+      }>(`${API_BASE_URL}/api/user/${auth.user_id}/preferences`, auth.access_token),
     ]);
 
     context.locals.user = userData
@@ -147,6 +158,15 @@ export const onRequest = defineMiddleware(async (context, next) => {
           alias: profileData.alias,
           avatar: profileData.avatar,
           bio: profileData.bio,
+        }
+      : null;
+
+    context.locals.preferences = preferencesData
+      ? {
+          id: preferencesData.id,
+          theme: preferencesData.theme,
+          onboarding_completed: preferencesData.onboarding_completed,
+          language: preferencesData.language,
         }
       : null;
   }

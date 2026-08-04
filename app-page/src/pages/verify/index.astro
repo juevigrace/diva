@@ -3,7 +3,8 @@ import Layout from '@layouts/Layout.astro';
 import VerificationFlow from '@components/auth/VerificationFlow';
 
 const action = Astro.url.searchParams.get('action') || 'USER_VERIFICATION';
-const email = Astro.url.searchParams.get('email') || '';
+const email = (await Astro.session?.get('restoreEmail')) ?? Astro.url.searchParams.get('email') ?? '';
+await Astro.session?.set('restoreEmail', undefined);
 import { t } from '@lib/i18n/t';
 ---
 

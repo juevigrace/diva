@@ -16,7 +16,7 @@ interface VerificationFlowProps {
 
 export default function VerificationFlow({ action, email: initialEmail = '', lang = 'en' }: VerificationFlowProps) {
   const t = useT(lang);
-  const [step, setStep] = useState<'request' | 'verify' | 'verified' | 'confirming' | 'new_password' | 'complete'>(initialEmail ? 'verify' : 'request');
+  const [step, setStep] = useState<'request' | 'verify' | 'verified' | 'restored' | 'confirming' | 'new_password' | 'complete'>(initialEmail ? 'verify' : 'request');
   const [email, setEmail] = useState(initialEmail);
   const [actionId, setActionId] = useState('');
   const [token, setToken] = useState(['', '', '', '', '', '']);
@@ -26,6 +26,7 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
   const otpRef = useRef<OtpInputHandle>(null);
 
   const isPasswordReset = action === ActionType.PASSWORD_RESET;
+  const isUserRestore = action === ActionType.USER_RESTORE;
 
   const requestCode = async (emailToUse: string) => {
     setError('');
@@ -62,6 +63,11 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
   };
 
   useEffect(() => {
+    if (action === ActionType.USER_RESTORE) {
+      if (email) requestCode(email);
+      return;
+    }
+
     if (action !== ActionType.USER_VERIFICATION || email) return;
 
     const autoRequest = async () => {
@@ -101,6 +107,8 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
         if (isPasswordReset) {
           setStep('confirming');
           await handleForgotPasswordConfirm();
+        } else if (isUserRestore) {
+          setStep('restored');
         } else {
           setStep('verified');
         }
@@ -187,6 +195,23 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
     );
   }
 
+  if (step === 'restored') {
+    return (
+      <div className="mx-auto w-full max-w-md text-center">
+        <div className="bg-primary/10 text-primary mx-auto flex h-16 w-16 items-center justify-center rounded-2xl">
+          <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h1 className="mt-6 text-2xl font-bold">{t('verification.accountRestored')}</h1>
+        <p className="text-muted-foreground mt-2 text-sm">{t('verification.accountRestoredDesc')}</p>
+        <Button asChild className="mt-8">
+          <a href="/signIn">{t('verification.signInWithRestoredAccount')}</a>
+        </Button>
+      </div>
+    );
+  }
+
   if (step === 'complete') {
     return (
       <div className="mx-auto w-full max-w-md text-center">
@@ -255,7 +280,11 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
             <span className="text-primary-foreground text-xl font-bold">D</span>
           </div>
           <h1 className="mt-4 text-2xl font-bold tracking-tight">
-            {isPasswordReset ? t('verification.resetPassword') : t('verification.verifyEmailTitle')}
+            {isPasswordReset
+              ? t('verification.resetPassword')
+              : isUserRestore
+                ? t('verification.restoreAccount')
+                : t('verification.verifyEmailTitle')}
           </h1>
           <p className="text-muted-foreground mt-2 text-sm">
             {t('verification.enterCode')}

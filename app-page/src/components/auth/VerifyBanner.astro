@@ -1,9 +1,10 @@
 ---
 import { t } from '@lib/i18n/t';
 
-const { state } = Astro.locals;
+const { state, preferences } = Astro.locals;
 const lang = Astro.locals.lang;
-const show = !state?.verified && !Astro.url.searchParams.has('vb_dismiss');
+const incomplete = !state?.verified || !preferences?.onboarding_completed;
+const show = incomplete && !Astro.url.searchParams.has('ob_dismiss');
 ---
 
 {
@@ -15,14 +16,14 @@ const show = !state?.verified && !Astro.url.searchParams.has('vb_dismiss');
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
           </svg>
           <span class="text-amber-800 dark:text-amber-200">
-            {t('verifyBanner.unverified', lang)}{' '}
-            <a href="/verify" class="font-medium underline underline-offset-2 hover:no-underline">
-              {t('verifyBanner.verifyNow', lang)}
+            {!state?.verified ? t('verifyBanner.unverified', lang) : t('verifyBanner.incomplete', lang)}{' '}
+            <a href="/onboarding" class="font-medium underline underline-offset-2 hover:no-underline">
+              {t('verifyBanner.continue', lang)}
             </a>
           </span>
         </div>
         <a
-          href="?vb_dismiss=1"
+          href="?ob_dismiss=1"
           class="text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-200 shrink-0"
           aria-label={t('verifyBanner.dismiss', lang)}
         >

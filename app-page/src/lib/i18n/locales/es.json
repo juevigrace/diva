@@ -17,6 +17,7 @@
     "back": "Volver",
     "send": "Enviar",
     "retry": "Reintentar",
+    "continue": "Continuar",
     "pagination": "P\u00e1gina {page} de {total}"
   },
   "nav": {
@@ -96,7 +97,11 @@
     "failedToSendCode": "Error al enviar el c\u00f3digo de verificaci\u00f3n",
     "yourEmail": "tu correo",
     "codePlaceholder": "C\u00f3digo de verificaci\u00f3n",
-    "aCodeWillBeSent": "Se enviar\u00e1 un c\u00f3digo de verificaci\u00f3n a"
+    "aCodeWillBeSent": "Se enviar\u00e1 un c\u00f3digo de verificaci\u00f3n a",
+    "restoreAccount": "Restaura tu cuenta",
+    "accountRestored": "Cuenta restaurada",
+    "accountRestoredDesc": "Tu cuenta ha sido restaurada exitosamente. Ahora puedes iniciar sesi\u00f3n.",
+    "signInWithRestoredAccount": "Inicia sesi\u00f3n con tu cuenta restaurada"
   },
   "profile": {
     "title": "Perfil",
@@ -160,6 +165,9 @@
     "preferencesCreated": "Preferencias creadas.",
     "failedSavePreferences": "Error al guardar preferencias",
     "failedCreatePreferences": "Error al crear preferencias",
+    "preferencesLocked": "Preferencias bloqueadas",
+    "completeOnboarding": "Completa tu incorporaci\u00f3n para configurar tu tema e idioma.",
+    "completeOnboardingCta": "Completar incorporaci\u00f3n",
     "dangerZone": "Zona de Peligro",
     "irreversibleActions": "Acciones irreversibles para tu cuenta.",
     "deleteAccount": "Eliminar cuenta",
@@ -447,7 +455,8 @@
   },
   "verifyBanner": {
     "unverified": "Tu correo no est\u00e1 verificado.",
-    "verifyNow": "Verificar ahora",
+    "incomplete": "Termina de configurar tu cuenta.",
+    "continue": "Continuar configuraci\u00f3n",
     "dismiss": "Descartar"
   },
   "dashboard": {
@@ -471,6 +480,25 @@
     "signOut": "Cerrar sesi\u00f3n",
     "signIn": "Iniciar sesi\u00f3n"
   },
+  "onboarding": {
+    "stepVerify": "Verificar",
+    "stepProfile": "Perfil",
+    "stepPreferences": "Preferencias",
+    "verifyTitle": "Verifica tu correo",
+    "verifyDesc": "Antes de continuar, por favor verifica tu direcci\u00f3n de correo.",
+    "profileTitle": "Crea tu perfil",
+    "profileDesc": "Cu\u00e9ntanos un poco sobre ti.",
+    "preferencesTitle": "Configura tus preferencias",
+    "preferencesDesc": "Elige c\u00f3mo se ve y se lee la aplicaci\u00f3n para ti.",
+    "finishSetup": "Finalizar configuraci\u00f3n",
+    "saving": "Guardando...",
+    "doneTitle": "\u00a1Todo listo!",
+    "doneDesc": "Tu cuenta est\u00e1 lista para usarse.",
+    "goToDashboard": "Ir al panel",
+    "skipForNow": "Omitir por ahora",
+    "profileSaved": "Perfil creado.",
+    "verifyRequired": "Por favor verifica tu correo para continuar."
+  },
   "mobileNav": {
     "menu": "Men\u00fa",
     "openMenu": "Abrir men\u00fa de navegaci\u00f3n",
@@ -487,6 +515,8 @@
     "signUp": { "title": "Crear Cuenta — Diva", "desc": "Comienza con tu cuenta gratuita de Diva Pages." },
     "forgotPassword": { "title": "Restablecer Contraseña — Diva", "desc": "Restablece tu contraseña" },
     "verify": { "title": "Verificar — Diva", "desc": "Verificación de correo electrónico" },
+    "onboarding": { "title": "Configuración de cuenta — Diva", "desc": "Termina de configurar tu cuenta de Diva." },
+    "restore": { "title": "Restaurar Cuenta — Diva", "desc": "Restaura tu cuenta de Diva Pages." },
     "profile": { "title": "Perfil — Diva", "desc": "Gestiona tu perfil e información personal de Diva Pages." },
     "settings": { "title": "Ajustes — Diva", "desc": "Gestiona los ajustes de tu espacio de trabajo en Diva Pages." },
     "users": { "title": "Usuarios — Diva", "desc": "Gestiona los miembros de tu equipo y sus permisos en Diva Pages." },
