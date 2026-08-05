@@ -2,7 +2,7 @@ import { apiHandler, json, saveSessionAndRespond } from '@api/lib/response';
 import { apiFetch } from '@api/lib/fetch';
 import { signUpInputSchema } from '@lib/schemas/auth';
 import { getDeviceLabel } from '@lib/device';
-import type { SessionResponse } from 'diva-types/auth/responses';
+import type { SessionResponse } from 'diva-types/auth/responses/session';
 
 export const POST = apiHandler(async (ctx) => {
   const body = await ctx.request.json();

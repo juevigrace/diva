@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Button } from 'diva-ui/components/button';
 import { Input } from 'diva-ui/components/input';
 import { useT } from '@lib/i18n/useT';
-import { ActionType } from 'diva-types/verification/enums';
+import { Action } from 'diva-types/verification/enums/action_enum';
 
 interface RestoreFormProps {
   email?: string;
@@ -24,7 +24,7 @@ export default function RestoreForm({ email: initialEmail = '', lang = 'en' }: R
       const res = await fetch('/api/verification/request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, action: ActionType.USER_RESTORE }),
+        body: JSON.stringify({ email, action: Action.USER_RESTORE }),
       });
 
       if (res.ok) {
@@ -40,7 +40,7 @@ export default function RestoreForm({ email: initialEmail = '', lang = 'en' }: R
           saved = false;
         }
 
-        let url = `/verify?action=${encodeURIComponent(ActionType.USER_RESTORE)}`;
+        let url = `/verify?action=${encodeURIComponent(Action.USER_RESTORE)}`;
         if (!saved) url += `&email=${encodeURIComponent(email)}`;
         window.location.href = url;
         return;

@@ -3,16 +3,16 @@ import AppLayout from '@layouts/AppLayout.astro';
 import SettingsContent from '@components/app/SettingsContent';
 import { apiFetch } from '@api/lib/fetch';
 import { t } from '@lib/i18n/t';
-import type { SessionResponse } from 'diva-types/auth/responses';
+import type { SessionResponse } from 'diva-types/auth/responses/session';
 
-const { user, state, preferences: cachedPreferences } = Astro.locals;
+const { user, state, profile } = Astro.locals;
 const auth = await Astro.session.get<SessionResponse>('auth');
 
 let preferencesList: Record<string, any>[] | null = null;
 
 if (state?.verified && user) {
   try {
-    const prefRes = await apiFetch(`/api/user/${user.userId}/preferences`, { token: auth!.access_token });
+    const prefRes = await apiFetch(`/api/user/${user.id}/preferences`, { token: auth!.access_token });
     if (prefRes.ok) {
       preferencesList = prefRes.json.data;
     }
@@ -21,7 +21,8 @@ if (state?.verified && user) {
 
 const preferences = preferencesList && preferencesList.length > 0 ? preferencesList[0] : null;
 
-const canEdit = (state?.verified && cachedPreferences?.onboarding_completed) ?? false;
+const isVerified = !!state?.verified;
+const hasProfile = !!profile;
 ---
 
 <AppLayout
@@ -29,5 +30,5 @@ const canEdit = (state?.verified && cachedPreferences?.onboarding_completed) ?? 
   heading={t('nav.settings', Astro.locals.lang)}
   description={t('page.settings.desc', Astro.locals.lang)}
 >
-  {user && <SettingsContent uid={user.userId} initialPreferences={preferences} isVerified={canEdit} lang={Astro.locals.lang} client:load />}
+  {user && <SettingsContent uid={user.id} initialPreferences={preferences} hasProfile={hasProfile} isVerified={isVerified} lang={Astro.locals.lang} client:load />}
 </AppLayout>

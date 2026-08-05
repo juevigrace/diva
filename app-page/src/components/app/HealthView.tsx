@@ -103,7 +103,7 @@ export default function HealthView({ isVerified = true, lang = 'en' }: HealthVie
     return (
       <div className="border-border bg-card rounded-xl border p-8 text-center shadow-sm">
         <p className="text-muted-foreground text-sm">{t('admin.verifyToViewHealth')}</p>
-        <a href="/verify" class="mt-4 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90">{t('nav.verifyNow')}</a>
+        <a href="/onboarding" class="mt-4 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90">{t('nav.verifyNow')}</a>
       </div>
     );
   }

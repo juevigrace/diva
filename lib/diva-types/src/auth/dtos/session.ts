@@ -1,4 +1,4 @@
-import type { CreateUserDto } from '../user/dtos';
+import type { CreateUserDto } from '../../user/dtos/user';
 
 export type SessionDataDto = {
   device: string;

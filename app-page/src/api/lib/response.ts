@@ -1,7 +1,7 @@
 import { actions } from 'astro:actions';
 import type { APIContext } from 'astro';
-import type { SessionResponse } from 'diva-types/auth/responses';
-import type { APIResponse } from 'diva-types/common/api-response';
+import type { SessionResponse } from 'diva-types/auth/responses/session';
+import type { APIResponse } from 'diva-types/common/responses/api-response';
 
 export function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {

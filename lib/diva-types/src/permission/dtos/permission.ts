@@ -1,4 +1,4 @@
-import type { RoleType } from '../common/enums';
+import type { Role } from '../../common/enums/role_enum';
 
 export type UpdatePermissionDto = {
   name: string;
@@ -6,5 +6,5 @@ export type UpdatePermissionDto = {
 };
 
 export type UpdatePermissionRoleLevelDto = {
-  level: RoleType;
+  level: Role;
 };

@@ -236,7 +236,7 @@ export default function ProfileForms({ uid, user, profile, isVerified = true, la
     <div className="mx-auto max-w-3xl space-y-8">
       {!isVerified && (
         <div className="border-amber-200 bg-amber-50 dark:bg-amber-950/20 rounded-xl border p-4 text-center text-sm text-amber-800 dark:text-amber-200">
-          {t('profile.verifyToEdit')} <a href="/verify" class="underline font-medium">{t('nav.verifyNow')}</a>
+          {t('profile.verifyToEdit')} <a href="/onboarding" class="underline font-medium">{t('nav.verifyNow')}</a>
         </div>
       )}
 

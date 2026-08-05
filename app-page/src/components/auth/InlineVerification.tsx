@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from 'diva-ui/components/button';
 import { useT } from '@lib/i18n/useT';
 import OtpInput, { type OtpInputHandle } from './OtpInput';
@@ -8,10 +8,11 @@ interface InlineVerificationProps {
   email: string;
   onVerified: () => void;
   onCancel: () => void;
+  autoRequest?: boolean;
   lang?: string;
 }
 
-export default function InlineVerification({ action, email, onVerified, onCancel, lang = 'en' }: InlineVerificationProps) {
+export default function InlineVerification({ action, email, onVerified, onCancel, autoRequest = false, lang = 'en' }: InlineVerificationProps) {
   const t = useT(lang);
   const [step, setStep] = useState<'request' | 'verify'>('request');
   const [actionId, setActionId] = useState('');
@@ -19,6 +20,14 @@ export default function InlineVerification({ action, email, onVerified, onCancel
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const otpRef = useRef<OtpInputHandle>(null);
+  const autoRequested = useRef(false);
+
+  useEffect(() => {
+    if (!autoRequest || autoRequested.current) return;
+    autoRequested.current = true;
+    handleRequestCode();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleRequestCode = async () => {
     setError('');

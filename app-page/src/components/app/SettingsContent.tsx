@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { z } from 'zod';
 import { Button } from 'diva-ui/components/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from 'diva-ui/components/dialog';
 import { toast } from 'diva-ui/components/sonner';
 import { useT } from '@lib/i18n/useT';
 
@@ -12,11 +13,12 @@ const preferencesSchema = z.object({
 interface SettingsContentProps {
   uid: string;
   initialPreferences: Record<string, any> | null;
+  hasProfile?: boolean;
   isVerified?: boolean;
   lang?: string;
 }
 
-export default function SettingsContent({ uid, initialPreferences, isVerified = true, lang = 'en' }: SettingsContentProps) {
+export default function SettingsContent({ uid, initialPreferences, hasProfile = true, isVerified = true, lang = 'en' }: SettingsContentProps) {
   const t = useT(lang);
 
   const [preferences, setPreferences] = useState(initialPreferences);
@@ -25,7 +27,7 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
 
   const handlePreferencesSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!preferences) return;
+    if (!preferences && !hasProfile) return;
 
     const parsed = preferencesSchema.safeParse({ theme, language });
     if (!parsed.success) {
@@ -34,11 +36,13 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
     }
 
     const langChanged = language !== (preferences?.language || 'en');
+    const isCreate = !preferences;
+    const body = JSON.stringify(isCreate ? { theme, language, onboarding_completed: true } : { theme, language });
 
-    const res = await fetch(`/api/preferences/${preferences.id}`, {
-      method: 'PUT',
+    const res = await fetch(isCreate ? `/api/user/${uid}/preferences` : `/api/preferences/${preferences.id}`, {
+      method: isCreate ? 'POST' : 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ theme, language }),
+      body,
     });
     if (res.ok) {
       const refetchRes = await fetch(`/api/user/${uid}/preferences`);
@@ -47,17 +51,19 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
         const prefs = Array.isArray(refetchJson) ? refetchJson : (refetchJson?.data || []);
         setPreferences(prefs.length > 0 ? prefs[0] : { theme, language });
       }
-      toast.success(t('settings.preferencesSaved'));
+      toast.success(isCreate ? t('settings.preferencesCreated') : t('settings.preferencesSaved'));
       if (langChanged) setTimeout(() => window.location.reload(), 300);
     } else {
       const json = await res.json();
-      toast.error(json.message || t('settings.failedSavePreferences'));
+      toast.error(json.message || (isCreate ? t('settings.failedCreatePreferences') : t('settings.failedSavePreferences')));
     }
   };
 
-  const deleteAccount = async () => {
-    if (!confirm(t('settings.deleteAccountConfirm'))) return;
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const handleDeleteAccount = async () => {
     const res = await fetch(`/api/user/${uid}/forever`, { method: 'DELETE' });
+    setConfirmDelete(false);
     if (res.ok) {
       toast.success(t('settings.accountDeleted'));
       setTimeout(() => { window.location.href = '/home'; }, 1500);
@@ -71,14 +77,14 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
     <div className="mx-auto max-w-3xl space-y-8">
       {!isVerified && (
         <div className="border-amber-200 bg-amber-50 dark:bg-amber-950/20 rounded-xl border p-4 text-center text-sm text-amber-800 dark:text-amber-200">
-          {t('nav.verifyToManage')} <a href="/verify" class="underline font-medium">{t('nav.verifyNow')}</a>
+          {t('nav.verifyToManage')} <a href="/onboarding" class="underline font-medium">{t('nav.verifyNow')}</a>
         </div>
       )}
 
       <div className="border-border bg-card rounded-xl border p-8 shadow-sm">
         <h3 className="text-lg font-semibold">{t('settings.preferences')}</h3>
         <p className="text-muted-foreground mt-1 text-sm">{t('settings.customizeExperience')}</p>
-        {preferences ? (
+        {preferences || hasProfile ? (
           <form onSubmit={handlePreferencesSubmit} className="mt-6 space-y-5">
             <div className="space-y-2">
               <label className="text-sm leading-none font-medium" htmlFor="theme">{t('settings.theme')}</label>
@@ -111,17 +117,17 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
               </select>
             </div>
             <div className="flex items-center gap-3">
-              <Button type="submit" disabled={!isVerified}>{t('settings.savePreferences')}</Button>
+              <Button type="submit" disabled={!isVerified}>{preferences ? t('settings.savePreferences') : t('settings.createPreferences')}</Button>
             </div>
           </form>
         ) : (
           <div className="border-border mt-6 flex flex-col items-start gap-4 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-medium">{t('settings.preferencesLocked')}</p>
-              <p className="text-muted-foreground text-xs">{t('settings.completeOnboarding')}</p>
+              <p className="text-muted-foreground text-xs">{t('settings.createProfileFirst')}</p>
             </div>
-            <a href="/onboarding">
-              <Button type="button" size="sm">{t('settings.completeOnboardingCta')}</Button>
+            <a href="/profile">
+              <Button type="button" size="sm">{t('profile.createProfile')}</Button>
             </a>
           </div>
         )}
@@ -135,9 +141,24 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
             <p className="text-sm font-medium">{t('settings.deleteAccount')}</p>
             <p className="text-muted-foreground text-xs">{t('settings.deleteAccountDesc')}</p>
           </div>
-          <Button type="button" variant="destructive" size="sm" onClick={deleteAccount} disabled={!isVerified}>{t('common.delete')}</Button>
+          <Button type="button" variant="destructive" size="sm" onClick={() => setConfirmDelete(true)} disabled={!isVerified}>{t('common.delete')}</Button>
         </div>
       </div>
+
+      <Dialog open={confirmDelete} onOpenChange={(open) => { if (!open) setConfirmDelete(false); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('settings.deleteAccount')}</DialogTitle>
+            <DialogDescription>
+              {t('settings.deleteAccountConfirm')}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmDelete(false)}>{t('common.cancel')}</Button>
+            <Button variant="destructive" onClick={handleDeleteAccount}>{t('common.delete')}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

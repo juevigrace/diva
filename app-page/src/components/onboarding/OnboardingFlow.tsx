@@ -50,7 +50,7 @@ export default function OnboardingFlow({
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
-  const alreadyComplete = verified && hasProfile && initialPreferences?.onboarding_completed === true;
+  const alreadyComplete = verified && hasProfile && initialPreferences?.onboardingCompleted === true;
 
   const clearFieldError = (field: string) => {
     setFieldErrors((prev) => {
@@ -193,6 +193,7 @@ export default function OnboardingFlow({
               email={email}
               onVerified={() => setStep(hasProfile ? 'preferences' : 'profile')}
               onCancel={() => (window.location.href = '/')}
+              autoRequest
               lang={lang}
             />
           </div>

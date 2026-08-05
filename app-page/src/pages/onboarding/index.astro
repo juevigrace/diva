@@ -13,7 +13,7 @@ if (!user) {
 <Layout title={t('page.onboarding.title', Astro.locals.lang)} description={t('page.onboarding.desc', Astro.locals.lang)}>
   <div class="flex min-h-screen items-center justify-center px-4 py-8">
     <OnboardingFlow
-      uid={user.userId}
+      uid={user.id}
       email={user.email}
       verified={state?.verified ?? false}
       hasProfile={!!profile}

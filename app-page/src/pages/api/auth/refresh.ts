@@ -1,6 +1,6 @@
 import { apiRoute, saveSessionAndRespond } from '@api/lib/response';
 import { apiFetch } from '@api/lib/fetch';
-import type { SessionResponse } from 'diva-types/auth/responses';
+import type { SessionResponse } from 'diva-types/auth/responses/session';
 
 export const POST = apiRoute(async (ctx, session) => {
   const body = await ctx.request.json();

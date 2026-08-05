@@ -2,7 +2,7 @@ import { defineAction, ActionError } from 'astro:actions';
 import { z } from 'astro/zod';
 import { apiFetch } from '@api/lib/fetch';
 import { getDeviceLabel } from '@lib/device';
-import type { SessionResponse } from 'diva-types/auth/responses';
+import type { SessionResponse } from 'diva-types/auth/responses/session';
 
 export const server = {
   session: {

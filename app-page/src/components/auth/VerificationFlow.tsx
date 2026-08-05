@@ -5,7 +5,7 @@ import { toast } from 'diva-ui/components/sonner';
 import { Loader2 } from 'lucide-react';
 import { useT } from '@lib/i18n/useT';
 import { getDeviceLabel } from '@lib/device';
-import { ActionType } from 'diva-types/verification/enums';
+import { Action } from 'diva-types/verification/enums/action_enum';
 import OtpInput, { type OtpInputHandle } from './OtpInput';
 
 interface VerificationFlowProps {
@@ -25,8 +25,8 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
   const [newPassword, setNewPassword] = useState('');
   const otpRef = useRef<OtpInputHandle>(null);
 
-  const isPasswordReset = action === ActionType.PASSWORD_RESET;
-  const isUserRestore = action === ActionType.USER_RESTORE;
+  const isPasswordReset = action === Action.PASSWORD_RESET;
+  const isUserRestore = action === Action.USER_RESTORE;
 
   const requestCode = async (emailToUse: string) => {
     setError('');
@@ -63,12 +63,12 @@ export default function VerificationFlow({ action, email: initialEmail = '', lan
   };
 
   useEffect(() => {
-    if (action === ActionType.USER_RESTORE) {
+    if (action === Action.USER_RESTORE) {
       if (email) requestCode(email);
       return;
     }
 
-    if (action !== ActionType.USER_VERIFICATION || email) return;
+    if (action !== Action.USER_VERIFICATION || email) return;
 
     const autoRequest = async () => {
       setLoading(true);

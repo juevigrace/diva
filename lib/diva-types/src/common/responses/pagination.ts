@@ -1,9 +1,3 @@
-export type APIResponse<T = unknown> = {
-  data: T;
-  message: string;
-  time: number;
-};
-
 export type PaginationInfo = {
   page: number;
   limit: number;

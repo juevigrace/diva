@@ -4,10 +4,10 @@ import AuditLog from '@components/app/AuditLog';
 
 import { t } from '@lib/i18n/t';
 
-const { user, state, preferences } = Astro.locals;
-const canEdit = (state?.verified && preferences?.onboarding_completed) ?? false;
+const { user, state } = Astro.locals;
+const isVerified = !!state?.verified;
 ---
 
 <AppLayout title={t('page.audit.title', Astro.locals.lang)} heading={t('nav.auditLog', Astro.locals.lang)} description={t('page.audit.desc', Astro.locals.lang)}>
-  {user && <AuditLog uid={user.userId} isVerified={canEdit} lang={Astro.locals.lang} client:load />}
+  {user && <AuditLog uid={user.id} isVerified={isVerified} lang={Astro.locals.lang} client:load />}
 </AppLayout>

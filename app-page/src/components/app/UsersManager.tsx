@@ -489,57 +489,50 @@ export default function UsersManager({
         </DialogContent>
       </Dialog>
 
-      {showModal && (
-        <div className="bg-background/80 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
-          <div className="border-border bg-card mx-4 w-full max-w-md rounded-xl border p-8 shadow-2xl">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">{t('users.addUser')}</h3>
-              <Button type="button" variant="ghost" size="icon" onClick={() => setShowModal(false)}>
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </Button>
+      <Dialog open={showModal} onOpenChange={(open) => { if (!open) setShowModal(false); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('users.addUser')}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleCreate} className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm leading-none font-medium" htmlFor="new-email">{t('users.email')}</label>
+              <input
+                id="new-email"
+                type="email"
+                required
+                className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+              />
             </div>
-            <form onSubmit={handleCreate} className="mt-6 space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm leading-none font-medium" htmlFor="new-email">{t('users.email')}</label>
-                <input
-                  id="new-email"
-                  type="email"
-                  required
-                  className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
-                  value={newEmail}
-                  onChange={(e) => setNewEmail(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm leading-none font-medium" htmlFor="new-username">{t('auth.username')}</label>
-                <input
-                  id="new-username"
-                  required
-                  className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
-                  value={newUsername}
-                  onChange={(e) => setNewUsername(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm leading-none font-medium" htmlFor="new-password">{t('auth.password')}</label>
-                  <input
-                    id="new-password"
-                    type="password"
-                    required
-                    minLength={4}
-                  className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
-              </div>
-              <p className={`text-xs ${createError ? 'text-destructive' : 'text-muted-foreground'}`}>{createStatus}</p>
-              <Button type="submit" className="w-full">{t('users.createUser')}</Button>
-            </form>
-          </div>
-        </div>
-      )}
+            <div className="space-y-2">
+              <label className="text-sm leading-none font-medium" htmlFor="new-username">{t('auth.username')}</label>
+              <input
+                id="new-username"
+                required
+                className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm leading-none font-medium" htmlFor="new-password">{t('auth.password')}</label>
+              <input
+                id="new-password"
+                type="password"
+                required
+                minLength={4}
+                className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+            <p className={`text-xs ${createError ? 'text-destructive' : 'text-muted-foreground'}`}>{createStatus}</p>
+            <Button type="submit" className="w-full">{t('users.createUser')}</Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

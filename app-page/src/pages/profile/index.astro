@@ -3,23 +3,23 @@ import AppLayout from '@layouts/AppLayout.astro';
 import ProfileForms from '@components/app/ProfileForms';
 import { apiFetch } from '@api/lib/fetch';
 import { t } from '@lib/i18n/t';
-import type { SessionResponse } from 'diva-types/auth/responses';
+import type { SessionResponse } from 'diva-types/auth/responses/session';
 
-const { user, state, profile: cachedProfile, preferences } = Astro.locals;
+const { user, state, profile: cachedProfile } = Astro.locals;
 const auth = await Astro.session.get<SessionResponse>('auth');
 
 let profile: Record<string, any> | null = cachedProfile;
 
 if (state?.verified && user) {
   try {
-    const profileRes = await apiFetch(`/api/user/${user.userId}/profile`, { token: auth!.access_token });
+    const profileRes = await apiFetch(`/api/user/${user.id}/profile`, { token: auth!.access_token });
     if (profileRes.ok) {
       profile = profileRes.json.data;
     }
   } catch (_) {}
 }
 
-const canEdit = (state?.verified && preferences?.onboarding_completed) ?? false;
+const isVerified = !!state?.verified;
 ---
 
 <AppLayout
@@ -27,5 +27,5 @@ const canEdit = (state?.verified && preferences?.onboarding_completed) ?? false;
   heading={t('nav.profile', Astro.locals.lang)}
   description={t('page.profile.desc', Astro.locals.lang)}
 >
-  {user && <ProfileForms uid={user.userId} user={user} profile={profile} isVerified={canEdit} lang={Astro.locals.lang} client:load />}
+  {user && <ProfileForms uid={user.id} user={user} profile={profile} isVerified={isVerified} lang={Astro.locals.lang} client:load />}
 </AppLayout>

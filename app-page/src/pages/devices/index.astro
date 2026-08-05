@@ -3,7 +3,7 @@ import AppLayout from '@layouts/AppLayout.astro';
 import DevicesManager from '@components/app/DevicesManager';
 import { apiFetch } from '@api/lib/fetch';
 import { t } from '@lib/i18n/t';
-import type { SessionResponse } from 'diva-types/auth/responses';
+import type { SessionResponse } from 'diva-types/auth/responses/session';
 
 const auth = await Astro.session.get<SessionResponse>('auth');
 

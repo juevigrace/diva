@@ -1,5 +1,5 @@
 import { API_BASE_URL } from 'astro:env/server';
-import type { APIResponse } from 'diva-types/common/api-response';
+import type { APIResponse } from 'diva-types/common/responses/api-response';
 
 interface FetchOptions {
   method?: string;

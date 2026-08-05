@@ -1,7 +1,17 @@
 import { defineMiddleware } from 'astro:middleware';
 import { actions } from 'astro:actions';
 import { API_BASE_URL } from 'astro:env/server';
-import type { SessionResponse } from 'diva-types/auth/responses';
+import type { SessionResponse } from 'diva-types/auth/responses/session';
+import type { Role } from 'diva-types/common/enums/role_enum';
+import type { Theme } from 'diva-types/user/enums/theme_enum';
+import type { User } from 'diva-types/user/models/user';
+import type { UserPreferences } from 'diva-types/user/models/user_preferences';
+import type { UserProfile } from 'diva-types/user/models/user_profile';
+import type { UserState } from 'diva-types/user/models/user_state';
+import type { UserPreferencesResponse } from 'diva-types/user/responses/user_preferences';
+import type { UserProfileResponse } from 'diva-types/user/responses/user_profile';
+import type { UserStateResponse } from 'diva-types/user/responses/user_state';
+import type { UserResponse } from 'diva-types/user/responses/user';
 
 declare global {
   namespace App {
@@ -11,36 +21,10 @@ declare global {
       userLang?: string;
     }
     interface Locals {
-      user: {
-        userId: string;
-        username: string;
-        email: string;
-        phoneNumber: string | null;
-        role: string;
-        createdAt: number;
-        updatedAt: number;
-        deletedAt: number | null;
-      } | null;
-      state: {
-        verified: boolean;
-        status: string;
-        lastActiveAt: number;
-        updatedAt: number;
-      } | null;
-      profile: {
-        firstName: string | null;
-        lastName: string | null;
-        birthDate: number | null;
-        alias: string | null;
-        avatar: string | null;
-        bio: string | null;
-      } | null;
-      preferences: {
-        id: string;
-        theme: string;
-        onboarding_completed: boolean;
-        language: string;
-      } | null;
+      user: User | null;
+      state: UserState | null;
+      profile: UserProfile | null;
+      preferences: UserPreferences | null;
       lang: string;
     }
   }
@@ -111,30 +95,19 @@ export const onRequest = defineMiddleware(async (context, next) => {
     }
 
     const [userData, stateData, profileData, preferencesData] = await Promise.all([
-      fetchFromApi<{
-        id: string; username: string; email: string; phone_number: string | null;
-        role: string; created_at: number; updated_at: number; deleted_at: number | null;
-      }>(`${API_BASE_URL}/api/user/${auth.user_id}`, auth.access_token),
-      fetchFromApi<{
-        verified: boolean; status: string; last_active_at: number; updated_at: number;
-      }>(`${API_BASE_URL}/api/user/${auth.user_id}/status`, auth.access_token),
-      fetchFromApi<{
-        first_name: string | null; last_name: string | null;
-        birth_date: number | null; alias: string | null;
-        avatar: string | null; bio: string | null;
-      }>(`${API_BASE_URL}/api/user/${auth.user_id}/profile`, auth.access_token),
-      fetchFromApi<{
-        id: string; theme: string; onboarding_completed: boolean; language: string;
-      }>(`${API_BASE_URL}/api/user/${auth.user_id}/preferences`, auth.access_token),
+      fetchFromApi<UserResponse>(`${API_BASE_URL}/api/user/${auth.user_id}`, auth.access_token),
+      fetchFromApi<UserStateResponse>(`${API_BASE_URL}/api/user/${auth.user_id}/status`, auth.access_token),
+      fetchFromApi<UserProfileResponse>(`${API_BASE_URL}/api/user/${auth.user_id}/profile`, auth.access_token),
+      fetchFromApi<UserPreferencesResponse>(`${API_BASE_URL}/api/user/${auth.user_id}/preferences`, auth.access_token),
     ]);
 
     context.locals.user = userData
       ? {
-          userId: userData.id,
+          id: userData.id,
           username: userData.username,
           email: userData.email,
           phoneNumber: userData.phone_number,
-          role: userData.role,
+          role: userData.role as Role,
           createdAt: userData.created_at,
           updatedAt: userData.updated_at,
           deletedAt: userData.deleted_at,
@@ -164,8 +137,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
     context.locals.preferences = preferencesData
       ? {
           id: preferencesData.id,
-          theme: preferencesData.theme,
-          onboarding_completed: preferencesData.onboarding_completed,
+          theme: preferencesData.theme as Theme,
+          onboardingCompleted: preferencesData.onboarding_completed,
           language: preferencesData.language,
         }
       : null;

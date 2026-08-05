@@ -4,8 +4,8 @@ import HealthView from '@components/app/HealthView';
 
 import { t } from '@lib/i18n/t';
 
-const { state, preferences } = Astro.locals;
-const canEdit = (state?.verified && preferences?.onboarding_completed) ?? false;
+const { state } = Astro.locals;
+const isVerified = !!state?.verified;
 ---
 
 <AppLayout
@@ -13,5 +13,5 @@ const canEdit = (state?.verified && preferences?.onboarding_completed) ?? false;
   heading={t('nav.health', Astro.locals.lang)}
   description={t('page.health.desc', Astro.locals.lang)}
 >
-  <HealthView isVerified={canEdit} lang={Astro.locals.lang} client:load />
+  <HealthView isVerified={isVerified} lang={Astro.locals.lang} client:load />
 </AppLayout>
