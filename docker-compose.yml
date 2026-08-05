@@ -2,7 +2,6 @@ services:
   diva_server:
     image: diva_server:prod
     container_name: diva_server
-    env_file: ./.env
     build:
       context: .
       dockerfile: Dockerfile

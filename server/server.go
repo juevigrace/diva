@@ -131,8 +131,13 @@ func (s *Server) setupApi() {
 	root.With(
 		middlewares.RequiresSession(sModule.Repo.GetByID, uModule.URepo.GetByID),
 		middlewares.RequireRole(models.ROLE_MODERATOR, models.ROLE_ADMIN),
-	).Get("/health", func(w http.ResponseWriter, r *http.Request) {
+	).Get("/status", func(w http.ResponseWriter, r *http.Request) {
 		res := responses.RespondOk(s.database.Health(context.Background()), "Success")
+		responses.WriteJSON(w, res)
+	})
+
+	s.router.Get("/health", func(w http.ResponseWriter, r *http.Request) {
+		res := responses.RespondOk(map[string]string{"status": "ok"}, "OK")
 		responses.WriteJSON(w, res)
 	})
 

@@ -1,8 +1,10 @@
 # Production Dockerfile
 FROM golang:1.26.1-alpine AS build
 
-# Install build dependencies
-RUN apk add --no-cache curl libstdc++ libgcc
+# Build dependencies
+RUN apk add --no-cache make
+
+ENV CGO_ENABLED=0
 
 WORKDIR /app
 
@@ -17,16 +19,15 @@ COPY server ./server
 COPY storage ./storage
 COPY pkg ./pkg
 COPY Makefile ./
-COPY sqlc.yaml ./
 
 # Build the application
-RUN go build -tags postgres -o ./bin/diva-server ./cmd/server/
+RUN make build-postgres
 
 # Production stage
 FROM alpine:3.20.1 AS prod
 
 # Install runtime dependencies
-RUN apk --no-cache add ca-certificates tzdata
+RUN apk --no-cache add curl ca-certificates
 
 WORKDIR /app
 
@@ -35,10 +36,7 @@ RUN addgroup -g 1001 -S diva && \
     adduser -u 1001 -S diva -G diva
 
 # Copy binary from build stage
-COPY --from=build /app/bin/diva-server /app/bin/diva-server
-
-# Change ownership to non-root user
-RUN chown -R diva:diva /app
+COPY --from=build --chown=diva:diva /app/bin/diva-server /app/bin/diva-server
 
 USER diva
 

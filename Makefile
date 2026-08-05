@@ -5,6 +5,7 @@
 BINARY_DIR = ./bin
 SERVER_BINARY = $(BINARY_DIR)/diva-server
 SERVER_MAIN = ./cmd/server/
+LDFLAGS ?= -s -w
 
 .PHONY: help build run test itest clean watch sqlc sqlc-install dev-build dev-up dev-down dev-logs dev-shell prod-build prod-up prod-down prod-logs prod-shell db-shell-dev db-shell-prod rebuild ps
 
@@ -48,13 +49,13 @@ all: build test
 build:
 	@echo "Building server$(if $(BUILD_TAGS), ($(BUILD_TAGS)))..."
 	@mkdir -p $(BINARY_DIR)
-	@go build $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -o $(SERVER_BINARY) $(SERVER_MAIN)
+	@go build $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -trimpath -ldflags "$(LDFLAGS)" -o $(SERVER_BINARY) $(SERVER_MAIN)
 	@echo "Server built: $(SERVER_BINARY)"
 
 build-postgres:
 	@echo "Building server (postgres)..."
 	@mkdir -p $(BINARY_DIR)
-	@go build -tags postgres -o $(SERVER_BINARY) $(SERVER_MAIN)
+	@go build -tags postgres -trimpath -ldflags "$(LDFLAGS)" -o $(SERVER_BINARY) $(SERVER_MAIN)
 	@echo "Server built: $(SERVER_BINARY)"
 
 # Run targets
@@ -100,7 +101,7 @@ clean:
 	@rm -rf $(BINARY_DIR)
 	@echo "Cleaning Docker resources..."
 	@docker compose -p diva-dev -f docker-compose.dev.yml --env-file .env.dev down -v --remove-orphans 2>/dev/null || true
-	@docker compose -p diva-prod -f docker-compose.yml down -v --remove-orphans 2>/dev/null || true
+	@docker compose -p diva-prod -f docker-compose.yml --env-file .env down -v --remove-orphans 2>/dev/null || true
 	@docker system prune -f
 	@echo "Clean completed!"
 
@@ -139,7 +140,7 @@ db-shell-dev:
 
 db-shell-prod:
 	@echo "Accessing prod database shell..."
-	@docker compose -p diva-prod -f docker-compose.yml exec diva_db psql -U ${DB_USER} -d ${DB_NAME}
+	@docker compose -p diva-prod -f docker-compose.yml --env-file .env exec diva_db psql -U ${DB_USER} -d ${DB_NAME}
 
 # Development Commands
 dev-build:
@@ -166,21 +167,21 @@ dev-shell:
 # Production Commands
 prod-build:
 	@echo "Building production image..."
-	@docker compose -p diva-prod -f docker-compose.yml build
+	@docker compose -p diva-prod -f docker-compose.yml --env-file .env build
 
 prod-up:
 	@echo "Starting production environment..."
-	@docker compose -p diva-prod -f docker-compose.yml up -d --build
+	@docker compose -p diva-prod -f docker-compose.yml --env-file .env up -d --build
 	@echo "Production environment started!"
 
 prod-down:
 	@echo "Stopping production environment..."
-	@docker compose -p diva-prod -f docker-compose.yml down
+	@docker compose -p diva-prod -f docker-compose.yml --env-file .env down
 
 prod-logs:
 	@echo "Following production logs..."
-	@docker compose -p diva-prod -f docker-compose.yml logs -f
+	@docker compose -p diva-prod -f docker-compose.yml --env-file .env logs -f
 
 prod-shell:
 	@echo "Accessing production container shell..."
-	@docker compose -p diva-prod -f docker-compose.yml exec diva_server sh
+	@docker compose -p diva-prod -f docker-compose.yml --env-file .env exec diva_server sh
