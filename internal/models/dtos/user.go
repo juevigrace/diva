@@ -6,22 +6,6 @@ type CreateUserDto struct {
 	Password string `json:"password" validate:"required,min=4,max=255"`
 }
 
-type CreateProfileDto struct {
-	FirstName string `json:"first_name" validate:"required,max=255"`
-	LastName  string `json:"last_name" validate:"required,max=255"`
-	Alias     string `json:"alias" validate:"required,max=255"`
-	Bio       string `json:"bio" validate:"omitempty,max=255"`
-	BirthDate int64  `json:"birth_date" validate:"required,gt=0"`
-}
-
-type UpdateProfileDto struct {
-	FirstName string `json:"first_name" validate:"required,max=255"`
-	LastName  string `json:"last_name" validate:"required,max=255"`
-	Alias     string `json:"alias" validate:"required,max=255"`
-	Bio       string `json:"bio" validate:"omitempty,max=255"`
-	BirthDate int64  `json:"birth_date" validate:"required,gt=0"`
-}
-
 type UpdateUsernameDto struct {
 	Username string `json:"username" validate:"required,min=3,max=50"`
 }
@@ -40,34 +24,4 @@ type UpdateEmailDto struct {
 
 type UpdateRole struct {
 	Role string `json:"role" validate:"required,oneof=USER MODERATOR ADMIN"`
-}
-
-type UpdateVerified struct {
-	Verified bool `json:"verified" validate:"required"`
-}
-
-type UpdateUserStatus struct {
-	Status string `json:"status" validate:"required,oneof=ACTIVE SUSPENDED INACTIVE"`
-}
-
-type CreateUserPermissionDto struct {
-	PermissionAction string `json:"permission_action" validate:"required,max=255"`
-	Granted          bool   `json:"granted" validate:"required"`
-	ExpiresAt        *int64 `json:"expires_at"`
-}
-
-type UpdateUserPermissionDto struct {
-	Granted   bool   `json:"granted" validate:"required"`
-	ExpiresAt *int64 `json:"expires_at"`
-}
-
-type CreateUserPreferencesDto struct {
-	Theme               string `json:"theme" validate:"required,oneof=LIGHT DARK SYSTEM"`
-	OnboardingCompleted bool   `json:"onboarding_completed" validate:"required"`
-	Language            string `json:"language" validate:"required,max=10"`
-}
-
-type UpdateUserPreferencesDto struct {
-	Theme    string `json:"theme" validate:"required,oneof=LIGHT DARK SYSTEM"`
-	Language string `json:"language" validate:"required,max=10"`
 }
