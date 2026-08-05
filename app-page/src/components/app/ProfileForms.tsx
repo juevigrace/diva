@@ -254,15 +254,25 @@ export default function ProfileForms({ uid, user, profile, isVerified = true, la
               </p>
             )}
           </div>
-          <label>
-            <input type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
-            <Button type="button" variant="outline" size="sm" disabled={!isVerified} onClick={() => {
-              const input = document.querySelector<HTMLInputElement>('input[accept="image/*"]');
-              input?.click();
-            }}>
+          <div>
+            <input
+              id="avatar-input"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              disabled={!isVerified}
+              onChange={handleAvatarChange}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={!isVerified}
+              onClick={() => document.getElementById('avatar-input')?.click()}
+            >
               {t('profile.changePhoto')}
             </Button>
-          </label>
+          </div>
         </div>
       </div>
 
@@ -274,7 +284,7 @@ export default function ProfileForms({ uid, user, profile, isVerified = true, la
               <label className="text-sm leading-none font-medium" htmlFor="first-name">{t('profile.firstName')}</label>
               <input
                 id="first-name"
-                readOnly={!isVerified}
+                disabled={!isVerified}
                 className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
                 value={firstName}
                 onChange={(e) => { setFirstName(e.target.value); clearFieldError('first_name'); }}
@@ -285,7 +295,7 @@ export default function ProfileForms({ uid, user, profile, isVerified = true, la
               <label className="text-sm leading-none font-medium" htmlFor="last-name">{t('profile.lastName')}</label>
               <input
                 id="last-name"
-                readOnly={!isVerified}
+                disabled={!isVerified}
                 className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
                 value={lastName}
                 onChange={(e) => { setLastName(e.target.value); clearFieldError('last_name'); }}
@@ -297,7 +307,7 @@ export default function ProfileForms({ uid, user, profile, isVerified = true, la
             <label className="text-sm leading-none font-medium" htmlFor="alias">{t('profile.displayAlias')}</label>
               <input
                 id="alias"
-                readOnly={!isVerified}
+                disabled={!isVerified}
                 className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
                 value={alias}
                 onChange={(e) => { setAlias(e.target.value); clearFieldError('alias'); }}
@@ -309,7 +319,7 @@ export default function ProfileForms({ uid, user, profile, isVerified = true, la
             <textarea
               id="bio"
               rows={3}
-              readOnly={!isVerified}
+              disabled={!isVerified}
               className="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
               value={bio}
               onChange={(e) => { setBio(e.target.value); clearFieldError('bio'); }}
@@ -321,7 +331,7 @@ export default function ProfileForms({ uid, user, profile, isVerified = true, la
               <input
                 id="birth-date"
                 type="date"
-                readOnly={!isVerified}
+                disabled={!isVerified}
                 className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
                 value={birthDate}
                 onChange={(e) => { setBirthDate(e.target.value); clearFieldError('birth_date'); }}
@@ -346,7 +356,7 @@ export default function ProfileForms({ uid, user, profile, isVerified = true, la
               <input
                 id="email"
                 type="email"
-                readOnly={!isVerified || verifyingField !== null}
+                disabled={!isVerified || verifyingField !== null}
                 className="border-input bg-background focus-visible:ring-ring flex h-10 flex-1 rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -373,7 +383,7 @@ export default function ProfileForms({ uid, user, profile, isVerified = true, la
               <input
                 id="phone"
                 type="tel"
-                readOnly={!isVerified || verifyingField !== null}
+                disabled={!isVerified || verifyingField !== null}
                 className="border-input bg-background focus-visible:ring-ring flex h-10 flex-1 rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -405,7 +415,7 @@ export default function ProfileForms({ uid, user, profile, isVerified = true, la
             <div className="flex gap-3">
               <input
                 id="username"
-                readOnly={!isVerified || verifyingField !== null}
+                disabled={!isVerified || verifyingField !== null}
                 className="border-input bg-background focus-visible:ring-ring flex h-10 flex-1 rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -433,7 +443,7 @@ export default function ProfileForms({ uid, user, profile, isVerified = true, la
                 id="new-password"
                 type="password"
                 placeholder="New password"
-                readOnly={!isVerified || verifyingField !== null}
+                disabled={!isVerified || verifyingField !== null}
                 className="border-input bg-background focus-visible:ring-ring flex h-10 flex-1 rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}

@@ -86,6 +86,7 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
                 id="theme"
                 className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
                 value={theme}
+                disabled={!isVerified}
                 onChange={(e) => setTheme(e.target.value)}
               >
                 <option value="LIGHT">{t('settings.light')}</option>
@@ -99,6 +100,7 @@ export default function SettingsContent({ uid, initialPreferences, isVerified = 
                 id="language"
                 className="border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none"
                 value={language}
+                disabled={!isVerified}
                 onChange={(e) => setLanguage(e.target.value)}
               >
                 <option value="en">{t('settings.english')}</option>

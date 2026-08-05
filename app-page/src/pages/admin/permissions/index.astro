@@ -5,7 +5,7 @@ import { apiFetch } from '@api/lib/fetch';
 import { t } from '@lib/i18n/t';
 import type { SessionResponse } from 'diva-types/auth/responses';
 
-const { user, state } = Astro.locals;
+const { user, state, preferences } = Astro.locals;
 const auth = await Astro.session.get<SessionResponse>('auth');
 
 const url = new URL(Astro.request.url);
@@ -32,6 +32,8 @@ if (state?.verified && user) {
     loadError = true;
   }
 }
+
+const canEdit = (state?.verified && preferences?.onboarding_completed) ?? false;
 ---
 
 <AppLayout
@@ -46,7 +48,7 @@ if (state?.verified && user) {
     initialTotalItems={totalItems}
     loadError={loadError}
     currentUserRole={currentUserRole}
-    isVerified={state?.verified ?? false}
+    isVerified={canEdit}
     lang={Astro.locals.lang}
     client:load
   />

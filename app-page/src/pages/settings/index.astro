@@ -5,7 +5,7 @@ import { apiFetch } from '@api/lib/fetch';
 import { t } from '@lib/i18n/t';
 import type { SessionResponse } from 'diva-types/auth/responses';
 
-const { user, state } = Astro.locals;
+const { user, state, preferences: cachedPreferences } = Astro.locals;
 const auth = await Astro.session.get<SessionResponse>('auth');
 
 let preferencesList: Record<string, any>[] | null = null;
@@ -20,6 +20,8 @@ if (state?.verified && user) {
 }
 
 const preferences = preferencesList && preferencesList.length > 0 ? preferencesList[0] : null;
+
+const canEdit = (state?.verified && cachedPreferences?.onboarding_completed) ?? false;
 ---
 
 <AppLayout
@@ -27,5 +29,5 @@ const preferences = preferencesList && preferencesList.length > 0 ? preferencesL
   heading={t('nav.settings', Astro.locals.lang)}
   description={t('page.settings.desc', Astro.locals.lang)}
 >
-  {user && <SettingsContent uid={user.userId} initialPreferences={preferences} isVerified={state?.verified ?? false} lang={Astro.locals.lang} client:load />}
+  {user && <SettingsContent uid={user.userId} initialPreferences={preferences} isVerified={canEdit} lang={Astro.locals.lang} client:load />}
 </AppLayout>

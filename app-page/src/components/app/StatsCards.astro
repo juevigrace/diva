@@ -42,20 +42,29 @@ const stats = [
   { label: t('dashboard.activeUsers', Astro.locals.lang), value: totalUsers, href: '/users' },
   { label: t('dashboard.usersPerPage', Astro.locals.lang), value: String(totalPages), href: '/users' },
   { label: t('dashboard.activeSessions', Astro.locals.lang), value: totalSessions, href: '/sessions' },
-  { label: t('dashboard.systemStatus', Astro.locals.lang), value: t('dashboard.online', Astro.locals.lang), href: '/admin/api' },
+  { label: t('dashboard.systemStatus', Astro.locals.lang), value: t('dashboard.online', Astro.locals.lang) },
 ];
 ---
 
 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-  {stats.map((stat) => (
-    <a
-      href={stat.href}
-      class="border-border bg-card hover:bg-accent/50 rounded-xl border p-6 shadow-sm transition-colors"
-    >
-      <p class="text-muted-foreground text-sm">{stat.label}</p>
-      <div class="mt-2 flex items-baseline gap-2">
-        <p class="text-3xl font-bold">{stat.value}</p>
+  {stats.map((stat) =>
+    stat.href ? (
+      <a
+        href={stat.href}
+        class="border-border bg-card hover:bg-accent/50 rounded-xl border p-6 shadow-sm transition-colors"
+      >
+        <p class="text-muted-foreground text-sm">{stat.label}</p>
+        <div class="mt-2 flex items-baseline gap-2">
+          <p class="text-3xl font-bold">{stat.value}</p>
+        </div>
+      </a>
+    ) : (
+      <div class="border-border bg-card rounded-xl border p-6 shadow-sm">
+        <p class="text-muted-foreground text-sm">{stat.label}</p>
+        <div class="mt-2 flex items-baseline gap-2">
+          <p class="text-3xl font-bold">{stat.value}</p>
+        </div>
       </div>
-    </a>
-  ))}
+    )
+  )}
 </div>

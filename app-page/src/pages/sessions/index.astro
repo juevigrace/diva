@@ -5,7 +5,7 @@ import { apiFetch } from '@api/lib/fetch';
 import { t } from '@lib/i18n/t';
 import type { SessionResponse } from 'diva-types/auth/responses';
 
-const { user, state } = Astro.locals;
+const { user, state, preferences } = Astro.locals;
 const auth = await Astro.session.get<SessionResponse>('auth');
 
 let sessions: Record<string, any>[] | null = null;
@@ -18,8 +18,10 @@ if (state?.verified && user) {
     }
   } catch (_) {}
 }
+
+const canEdit = (state?.verified && preferences?.onboarding_completed) ?? false;
 ---
 
 <AppLayout title={t('page.sessions.title', Astro.locals.lang)} heading={t('nav.sessions', Astro.locals.lang)} description={t('page.sessions.desc', Astro.locals.lang)}>
-  {user && auth && <SessionsManager uid={user.userId} initialSessions={sessions} currentSessionId={auth.session_id} isVerified={state?.verified ?? false} lang={Astro.locals.lang} client:load />}
+  {user && auth && <SessionsManager uid={user.userId} initialSessions={sessions} currentSessionId={auth.session_id} isVerified={canEdit} lang={Astro.locals.lang} client:load />}
 </AppLayout>

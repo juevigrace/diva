@@ -5,12 +5,13 @@ import { apiFetch } from '@api/lib/fetch';
 import { t } from '@lib/i18n/t';
 import type { SessionResponse } from 'diva-types/auth/responses';
 
-const { user: currentUser, state } = Astro.locals;
+const { user: currentUser, state, preferences } = Astro.locals;
 const auth = await Astro.session.get<SessionResponse>('auth');
 const { uid } = Astro.params;
 
 const currentUserRole = currentUser?.role || '';
 const isVerified = state?.verified ?? false;
+const canEdit = isVerified && (preferences?.onboarding_completed ?? false);
 
 let user: Record<string, any> | null = null;
 let profile: Record<string, any> | null = null;
@@ -72,7 +73,7 @@ if (isVerified) {
     actions={actions}
     allPermissions={allPermissions}
     currentUserRole={currentUserRole}
-    isVerified={isVerified}
+    isVerified={canEdit}
     lang={Astro.locals.lang}
     client:load
   />
