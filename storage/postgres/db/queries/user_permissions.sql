@@ -8,7 +8,7 @@ select
     up.expires_at,
     up.updated_at
 from diva_user_permissions up
-where up.user_id = $1 and up.granted = true
+where up.user_id = $1
 ;
 
 -- name: GetUserPermission :one

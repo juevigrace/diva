@@ -155,7 +155,7 @@ select
     up.expires_at,
     up.updated_at
 from diva_user_permissions up
-where up.user_id = ? and up.granted = true
+where up.user_id = ?
 `
 
 func (q *Queries) GetUserPermissions(ctx context.Context, userID string) ([]DivaUserPermission, error) {
