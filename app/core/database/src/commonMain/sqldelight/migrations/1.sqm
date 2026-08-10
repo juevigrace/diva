@@ -1,0 +1,84 @@
+import com.diva.models.Theme;
+import com.diva.models.actions.Actions;
+import com.diva.models.roles.Role;
+import com.diva.models.session.SessionStatus;
+import com.diva.models.session.SessionType;
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS diva_user(
+    id TEXT NOT NULL PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
+    username TEXT NOT NULL UNIQUE,
+    birth_date INTEGER NOT NULL,
+    phone_number TEXT NOT NULL,
+    alias TEXT NOT NULL,
+    avatar TEXT NOT NULL DEFAULT '',
+    bio TEXT NOT NULL DEFAULT '',
+    user_verified INTEGER AS Boolean NOT NULL DEFAULT 0,
+    role TEXT AS Role NOT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    deleted_at INTEGER DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS diva_user_pending_actions(
+    id TEXT NOT NULL PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    action_name TEXT AS Actions NOT NULL,
+    UNIQUE(user_id, action_name),
+    FOREIGN KEY(user_id) REFERENCES diva_user(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS diva_user_preferences(
+    id TEXT NOT NULL PRIMARY KEY,
+    user_id TEXT DEFAULT NULL UNIQUE,
+    theme TEXT AS Theme NOT NULL DEFAULT 'SYSTEM',
+    onboarding_completed INTEGER AS Boolean NOT NULL DEFAULT 0,
+    language TEXT NOT NULL DEFAULT 'en',
+    last_sync_at INTEGER DEFAULT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    FOREIGN KEY(user_id) REFERENCES diva_user(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS diva_session(
+    id TEXT NOT NULL PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    access_token TEXT NOT NULL,
+    refresh_token TEXT NOT NULL,
+    device TEXT NOT NULL DEFAULT '',
+    is_current INTEGER AS Boolean NOT NULL DEFAULT 0,
+    type TEXT AS SessionType NOT NULL,
+    status TEXT AS SessionStatus NOT NULL,
+    ip_address TEXT NOT NULL DEFAULT '',
+    user_agent TEXT NOT NULL DEFAULT '',
+    expires_at INTEGER NOT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    FOREIGN KEY(user_id) REFERENCES diva_user(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS diva_permissions(
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    description TEXT NOT NULL DEFAULT '',
+    role_level TEXT AS Role NOT NULL,
+    resource TEXT NOT NULL,
+    action TEXT NOT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    deleted_at INTEGER DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS diva_user_permissions(
+    permission_id TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    granted_by TEXT DEFAULT NULL,
+    granted INTEGER AS Boolean NOT NULL DEFAULT 0,
+    granted_at INTEGER DEFAULT NULL,
+    expires_at INTEGER DEFAULT NULL,
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    PRIMARY KEY (permission_id, user_id),
+    FOREIGN KEY (granted_by) REFERENCES diva_user(id),
+    FOREIGN KEY (user_id) REFERENCES diva_user(id) ON DELETE CASCADE
+);
