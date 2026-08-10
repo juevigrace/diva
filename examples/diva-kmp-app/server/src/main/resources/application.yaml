@@ -1,0 +1,31 @@
+ktor:
+    development: ${?KTOR_DEV:true}
+    environment: ${?KTOR_ENV:dev}
+    application:
+        modules:
+            - com.diva.server.ApplicationKt.module
+    deployment:
+        port: ${PORT:8080}
+        domain: ${DOMAIN:localhost}
+        watch:
+          - classes
+          - resources
+database:
+    host: ${DB_HOST:localhost}
+    port: ${DB_PORT:5432}
+    user: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+    name: ${DB_NAME:diva}
+    schema: ${DB_SCHEMA:public}
+jwt:
+    secret: ${JWT_SECRET:supersecret}
+    issuer: ${JWT_ISSUER:diva}
+    audience: ${JWT_AUDIENCE:diva}
+    realm: ${JWT_REALM:diva}
+mail:
+    apiKey: ${RESEND_API_KEY:}
+    fromEmail: ${RESEND_FROM_EMAIL:}
+root:
+    username: ${ROOT_USERNAME:admin}
+    email: ${ROOT_EMAIL:admin@localhost}
+    password: ${ROOT_PASSWORD:admin}

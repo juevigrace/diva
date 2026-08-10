@@ -1,0 +1,58 @@
+count:
+SELECT COUNT(*)
+FROM diva_chat
+WHERE deleted_at IS NULL;
+
+insert:
+INSERT INTO diva_chat (id, created_by, chat_type, name, description, avatar)
+VALUES (?, ?, ?, ?, ?, ?);
+
+update:
+UPDATE diva_chat 
+SET name = ?, description = ?, avatar = ?, updated_at = NOW()
+WHERE id = ? AND deleted_at IS NULL;
+
+delete:
+UPDATE diva_chat 
+SET deleted_at = NOW() 
+WHERE id = ? AND deleted_at IS NULL;
+
+findOneById:
+SELECT 
+  diva_chat.id,
+  diva_chat.chat_type AS chatType,
+  diva_chat.name,
+  diva_chat.description,
+  diva_chat.avatar,
+  diva_chat.created_by AS createdBy,
+  diva_chat.created_at AS createdAt,
+  diva_chat.updated_at AS updatedAt,
+  diva_chat.deleted_at AS deletedAt
+FROM diva_chat
+LEFT JOIN diva_chat_participant
+ON diva_chat.id = diva_chat_participant.chat_id
+LEFT JOIN diva_user
+ON diva_chat_participant.user_id = diva_user.id
+LEFT JOIN diva_media
+ON diva_chat.avatar = diva_media.id
+LEFT JOIN diva_media_tag
+ON diva_media.id = diva_media_tag.media_id
+LEFT JOIN diva_tag
+ON diva_media_tag.tag_id = diva_tag.id
+WHERE diva_chat.id = ? AND diva_chat.deleted_at IS NULL;
+
+findAll:
+SELECT 
+  id,
+  chat_type AS chatType,
+  name,
+  description,
+  avatar,
+  created_by AS createdBy,
+  created_at AS createdAt,
+  updated_at AS updatedAt,
+  deleted_at AS deletedAt
+FROM diva_chat
+WHERE deleted_at IS NULL
+ORDER BY created_at DESC
+LIMIT ? OFFSET ?;

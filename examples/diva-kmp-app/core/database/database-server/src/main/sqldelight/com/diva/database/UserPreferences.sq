@@ -1,0 +1,8 @@
+insert:
+INSERT INTO diva_user_preferences (id, user_id, theme, onboarding_completed, language, created_at, updated_at)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+update:
+UPDATE diva_user_preferences 
+SET theme = ?, onboarding_completed = ?, language = ?, last_sync_at = NOW(), updated_at = ?
+WHERE id = ?;

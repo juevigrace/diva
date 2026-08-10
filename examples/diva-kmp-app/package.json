@@ -1,0 +1,15 @@
+{
+  "name": "diva-app",
+  "version": "1.0.0",
+  "private": true,
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": ["diva-app-types"]
+    }
+  },
+  "scripts": {
+    "build": "cd apps/webApp && pnpm build",
+    "dev": "cd apps/webApp && pnpm dev",
+    "prod": "cd apps/webApp && pnpm prod"
+  }
+}

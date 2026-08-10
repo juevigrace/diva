@@ -1,0 +1,7 @@
+insert:
+INSERT INTO diva_message_media (message_id, media_id)
+VALUES (?, ?);
+
+delete:
+DELETE FROM diva_message_media 
+WHERE message_id = ? AND media_id = ?;

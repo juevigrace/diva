@@ -1,0 +1,39 @@
+findOneByToken:
+SELECT
+    user_id AS userId,
+    token,
+    expires_at AS expiresAt,
+    created_at AS createdAt,
+    used_at AS usedAt
+FROM diva_email_verification_tokens
+WHERE token = ?;
+
+findOneByUserId:
+SELECT
+    user_id AS userId,
+    token,
+    expires_at AS expiresAt,
+    created_at AS createdAt,
+    used_at AS usedAt
+FROM diva_email_verification_tokens
+WHERE user_id = ?;
+
+insert:
+INSERT INTO diva_email_verification_tokens(
+    user_id,
+    token,
+    expires_at
+) VALUES (?, ?, ?);
+
+update:
+UPDATE diva_email_verification_tokens
+SET used_at = NOW()
+WHERE user_id = ?;
+
+deleteByToken:
+DELETE FROM diva_email_verification_tokens
+WHERE token = ?;
+
+delete:
+DELETE FROM diva_email_verification_tokens
+WHERE user_id = ?;

@@ -1,0 +1,62 @@
+# Build directories
+**/build/
+build/
+!.src/**/build/
+
+# Gradle
+.gradle/
+gradlew
+gradlew.bat
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Logs and temp files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Environment files
+.env
+.env.prod
+.env.dev
+local.properties
+
+# Kotlin/JS store
+kotlin-js-store/
+node_modules/
+
+# Docker files
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Other cache files
+.mtjs/
+.metals/
+.bloop/
+.cxx/
+
+# Capture files
+captures/
+.externalNativeBuild/

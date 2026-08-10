@@ -1,0 +1,26 @@
+plugins {
+    id("divabuild.library-ui")
+    id("divabuild.serialization")
+}
+
+kotlin {
+    sourceSets {
+        androidMain.dependencies {
+            implementation(libs.koin.android)
+        }
+
+        commonMain.dependencies {
+            implementation(projects.core.database.databaseClient)
+
+            implementation(projects.core.models)
+            implementation(projects.core.resources)
+            implementation(projects.core.ui)
+
+            implementation(projects.features.session.sessionClient)
+
+            implementation(libs.diva.network.client)
+
+            implementation(libs.koin.core)
+        }
+    }
+}

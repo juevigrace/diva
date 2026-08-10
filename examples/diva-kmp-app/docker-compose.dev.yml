@@ -1,0 +1,65 @@
+services:
+  diva_server_dev:
+    image: diva_server:dev
+    container_name: diva_server_dev
+    env_file:
+      - ./.env.dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["java", "-jar", "./bin/diva-server.jar"]
+    restart: unless-stopped
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      KTOR_ENV: development
+      KTOR_DEV: true
+      DOMAIN: ${DOMAIN}
+      PORT: ${PORT}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SCHEMA: ${DB_SCHEMA}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_AUDIENCE: ${JWT_AUDIENCE}
+      JWT_REALM: ${JWT_REALM}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      RESEND_FROM_EMAIL: ${RESEND_FROM_EMAIL}
+      ROOT_USERNAME: ${ROOT_USERNAME}
+      ROOT_PASSWORD: ${ROOT_PASSWORD}
+      ROOT_EMAIL: ${ROOT_EMAIL}
+    depends_on:
+      diva_db_dev:
+        condition: service_healthy
+    networks:
+       - diva_dev_net
+  diva_db_dev:
+    container_name: diva_db_dev
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+    ports:
+      - "5433:${DB_PORT}"
+    volumes:
+      - db_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USER} -d ${DB_NAME}'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - diva_dev_net
+volumes:
+  db_dev_data:
+    driver: local
+networks:
+  diva_dev_net:
+    driver: bridge
