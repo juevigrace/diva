@@ -10,7 +10,7 @@ data class PaginationInfo(
     @SerialName("limit")
     val limit: Int,
     @SerialName("total_items")
-    val totalItems: Int,
+    val totalItems: Long,
     @SerialName("total_pages")
     val totalPages: Int,
 )

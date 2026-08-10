@@ -17,14 +17,16 @@ data class SessionResponse(
     val type: String,
     @SerialName("status")
     val status: String,
-    @SerialName("device")
-    val device: String,
+    @SerialName("device_id")
+    val deviceId: String,
     @SerialName("ip")
     val ip: String = "",
     @SerialName("agent")
     val agent: String,
-    @SerialName("expires_at")
-    val expiresAt: Long,
+    @SerialName("access_expires_at")
+    val accessExpiresAt: Long,
+    @SerialName("refresh_expires_at")
+    val refreshExpiresAt: Long,
     @SerialName("created_at")
     val createdAt: Long,
     @SerialName("updated_at")

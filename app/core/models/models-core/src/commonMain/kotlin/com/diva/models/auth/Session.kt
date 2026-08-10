@@ -36,11 +36,11 @@ data class Session(
                 type = safeSessionType(response.type),
                 status = safeSessionStatus(response.status),
                 data = SessionData(
-                    device = response.device,
+                    device = response.deviceId,
                     agent = response.agent,
                     ip = response.ip
                 ),
-                expiresAt = Instant.fromEpochMilliseconds(response.expiresAt),
+                expiresAt = Instant.fromEpochMilliseconds(response.accessExpiresAt),
                 createdAt = Instant.fromEpochMilliseconds(response.createdAt),
                 updatedAt = Instant.fromEpochMilliseconds(response.updatedAt),
             )

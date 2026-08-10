@@ -3,6 +3,10 @@ package com.diva.models.actions
 enum class Actions {
     USER_VERIFICATION,
     PASSWORD_RESET,
+    EMAIL_UPDATE,
+    USERNAME_UPDATE,
+    PHONE_UPDATE,
+    USER_RESTORE,
     UNKNOWN
 }
 

@@ -46,7 +46,7 @@ class VerificationRepositoryImpl(
         return when (action) {
             Actions.PASSWORD_RESET -> handlePasswordReset(token)
             Actions.USER_VERIFICATION -> handleUserVerification(token)
-            Actions.UNKNOWN -> Result.failure(
+            else -> Result.failure(
                 ConstraintException(
                     field = "action",
                     constraint = "unexpected",
@@ -59,8 +59,15 @@ class VerificationRepositoryImpl(
     @OptIn(ExperimentalUuidApi::class)
     private suspend fun handleUserVerification(token: String): Result<Unit> {
         return withSession(sRepository::getCurrent) { session ->
+            val action = uaRepository.getAction(Actions.USER_VERIFICATION)
+                .getOrElse { err -> return@withSession Result.failure(err) }
+
             api.verifyWithAuth(
-                dto = VerificationDto(token, session.data.toSessionDataDto()),
+                dto = VerificationDto(
+                    actionId = action.id.toString(),
+                    token = token,
+                    sessionData = session.data.toSessionDataDto()
+                ),
                 token = session.accessToken
             ).onFailure { err -> return@withSession Result.failure(err) }
 
@@ -68,9 +75,14 @@ class VerificationRepositoryImpl(
         }
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     private suspend fun handlePasswordReset(token: String): Result<Unit> {
+        val action = uaRepository.getAction(Actions.PASSWORD_RESET)
+            .getOrElse { err -> return Result.failure(err) }
+
         return api.verify(
             VerificationDto(
+                actionId = action.id.toString(),
                 token = token,
                 sessionData = SessionDataDto(
                     device = config.deviceName,

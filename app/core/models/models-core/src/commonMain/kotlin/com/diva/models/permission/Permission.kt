@@ -1,5 +1,6 @@
 package com.diva.models.permission
 
+import com.diva.models.permissions.PermissionAction
 import com.diva.models.roles.Role
 import io.github.juevigrace.diva.core.Option
 import kotlin.time.ExperimentalTime
@@ -13,8 +14,7 @@ data class Permission(
     val name: String,
     val description: String,
     val resource: String,
-    // TODO: change to enum
-    val action: String,
+    val action: PermissionAction,
     val roleLevel: Role,
     val createdAt: Instant,
     val updatedAt: Instant,

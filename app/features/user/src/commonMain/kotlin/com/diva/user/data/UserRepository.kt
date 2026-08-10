@@ -56,7 +56,7 @@ class UserRepositoryImpl(
                         onSuccess = { list ->
                             val pagination: Pagination<User> = Pagination(
                                 items = list,
-                                totalItems = res.pagination.totalItems,
+                                totalItems = res.pagination.totalItems.toInt(),
                                 totalPages = res.pagination.totalPages,
                                 currentPage = res.pagination.page,
                                 pageSize = res.pagination.limit

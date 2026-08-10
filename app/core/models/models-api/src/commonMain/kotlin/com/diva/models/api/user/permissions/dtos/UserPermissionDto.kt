@@ -6,21 +6,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserPermissionDto(
     @SerialName("user_id")
-    val userId: String,
+    val userId: String = "",
     @SerialName("permission_id")
-    val permissionId: String,
+    val permissionId: String = "",
+    @SerialName("permission_action")
+    val permissionAction: String = "",
     @SerialName("granted")
     val granted: Boolean = false,
     @SerialName("expires_at")
     val expiresAt: Long? = null,
     @SerialName("granted_by")
     val grantedBy: String? = null,
-)
-
-@Serializable
-data class DeleteUserPermissionDto(
-    @SerialName("user_id")
-    val userId: String,
-    @SerialName("permission_id")
-    val permissionId: String,
 )

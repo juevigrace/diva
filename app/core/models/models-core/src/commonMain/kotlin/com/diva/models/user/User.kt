@@ -3,8 +3,12 @@ package com.diva.models.user
 import com.diva.models.api.user.response.UserResponse
 import com.diva.models.roles.Role
 import com.diva.models.roles.safeRole
+import com.diva.models.user.actions.UserAction
+import com.diva.models.user.device.UserDevice
 import com.diva.models.user.permissions.UserPermission
 import com.diva.models.user.preferences.UserPreferences
+import com.diva.models.user.profile.UserProfile
+import com.diva.models.user.state.UserState
 import io.github.juevigrace.diva.core.Option
 import kotlin.time.Clock
 import kotlin.time.Instant
@@ -24,6 +28,10 @@ data class User(
     val bio: String = "",
     val userVerified: Boolean = false,
     val role: Role = Role.USER,
+    val state: UserState? = null,
+    val profile: UserProfile? = null,
+    val devices: List<UserDevice> = emptyList(),
+    val actions: List<UserAction> = emptyList(),
     val preferences: UserPreferences = UserPreferences(),
     val createdAt: Instant = Clock.System.now(),
     val updatedAt: Instant = Clock.System.now(),
@@ -45,6 +53,7 @@ data class User(
                 bio = response.bio,
                 userVerified = response.userVerified,
                 role = safeRole(response.role),
+                state = response.state?.let { UserState.fromResponse(it) },
                 createdAt = Instant.fromEpochMilliseconds(response.createdAt),
                 updatedAt = Instant.fromEpochMilliseconds(response.updatedAt),
                 deletedAt = Option.of(response.deletedAt?.let { value -> Instant.fromEpochMilliseconds(value) }),

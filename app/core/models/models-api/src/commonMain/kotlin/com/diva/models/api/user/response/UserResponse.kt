@@ -1,5 +1,6 @@
 package com.diva.models.api.user.response
 
+import com.diva.models.api.user.state.response.UserStateResponse
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -25,6 +26,8 @@ data class UserResponse(
     val userVerified: Boolean,
     @SerialName("role")
     val role: String,
+    @SerialName("state")
+    val state: UserStateResponse? = null,
     @SerialName("created_at")
     val createdAt: Long,
     @SerialName("updated_at")
