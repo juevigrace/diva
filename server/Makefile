@@ -1,0 +1,187 @@
+# DIVA Server Makefile
+# Build, test, and development tools for the server
+
+# Variables
+BINARY_DIR = ./bin
+SERVER_BINARY = $(BINARY_DIR)/diva-server
+SERVER_MAIN = ./cmd/server/
+LDFLAGS ?= -s -w
+
+.PHONY: help build run test itest clean watch sqlc sqlc-install dev-build dev-up dev-down dev-logs dev-shell prod-build prod-up prod-down prod-logs prod-shell db-shell-dev db-shell-prod rebuild ps
+
+# Default target
+help:
+	@echo "DIVA Server Commands:"
+	@echo ""
+	@echo "Build:"
+	@echo "  build        Build server binary"
+	@echo "  all          Build and test"
+	@echo ""
+	@echo "Run:"
+	@echo "  run          Run server locally"
+	@echo ""
+	@echo "Development:"
+	@echo "  watch        Live reload with air"
+	@echo "  sqlc         Generate SQL code (run when SQL files change)"
+	@echo "  dev-build    Build development image"
+	@echo "  dev-up       Start development environment"
+	@echo "  dev-down     Stop development environment"
+	@echo "  dev-logs     View development logs"
+	@echo "  dev-shell    Access development container shell"
+	@echo ""
+	@echo "Production:"
+	@echo "  prod-build   Build production image"
+	@echo "  prod-up      Start production environment"
+	@echo "  prod-down    Stop production environment"
+	@echo "  prod-logs    View production logs"
+	@echo "  prod-shell   Access production container shell"
+	@echo ""
+	@echo "Utilities:"
+	@echo "  clean        Clean up containers, volumes, and images"
+	@echo "  ps           Show running containers"
+	@echo "  db-shell-dev Access dev database shell"
+	@echo "  db-shell-prod Access prod database shell"
+	@echo "  rebuild      Force rebuild without cache"
+
+# Build targets
+all: build test
+
+build:
+	@echo "Building server$(if $(BUILD_TAGS), ($(BUILD_TAGS)))..."
+	@mkdir -p $(BINARY_DIR)
+	@go build $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -trimpath -ldflags "$(LDFLAGS)" -o $(SERVER_BINARY) $(SERVER_MAIN)
+	@echo "Server built: $(SERVER_BINARY)"
+
+build-postgres:
+	@echo "Building server (postgres)..."
+	@mkdir -p $(BINARY_DIR)
+	@go build -tags postgres -trimpath -ldflags "$(LDFLAGS)" -o $(SERVER_BINARY) $(SERVER_MAIN)
+	@echo "Server built: $(SERVER_BINARY)"
+
+# Run targets
+run: build
+	@echo "Running server..."
+	$(SERVER_BINARY)
+
+# Development tools
+watch:
+	@if command -v air > /dev/null; then \
+		echo "Starting live reload..."; \
+		air; \
+	else \
+		echo "Installing air..."; \
+		go install github.com/air-verse/air@latest; \
+		echo "Starting live reload..."; \
+		air; \
+	fi
+
+sqlc: sqlc-install
+	@echo "Generating SQL code..."
+	@sqlc generate
+	@echo "SQL code generated!"
+
+sqlc-install:
+	@if ! command -v sqlc > /dev/null; then \
+		echo "Installing sqlc..."; \
+		go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest; \
+	fi
+
+# Testing
+test:
+	@echo "Running tests..."
+	@go test ./... -v
+
+itest:
+	@echo "Running integration tests..."
+	@go test ./internal/database -v
+
+# Utilities
+clean:
+	@echo "Cleaning build artifacts..."
+	@rm -rf $(BINARY_DIR)
+	@echo "Cleaning Docker resources..."
+	@docker compose -p diva-dev -f docker-compose.dev.yml --env-file .env.dev down -v --remove-orphans 2>/dev/null || true
+	@docker compose -p diva-prod -f docker-compose.yml --env-file .env down -v --remove-orphans 2>/dev/null || true
+	@docker system prune -f
+	@echo "Clean completed!"
+
+templ-install:
+	@if ! command -v templ > /dev/null; then \
+		echo "Installing templ..."; \
+		go install github.com/a-h/templ/cmd/templ@latest; \
+	fi
+
+templ-build: templ-install
+	@echo "Generating templ code..."
+	@templ generate
+	@echo "Templ code generated!"
+
+tailwind-install:
+	@echo "Installing tailwindcss..."
+	@mkdir -p $(BINARY_DIR)
+	@if [ ! -f $(BINARY_DIR)/tailwindcss ]; then \
+		curl -sL https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64 -o $(BINARY_DIR)/tailwindcss; \
+		chmod +x $(BINARY_DIR)/tailwindcss; \
+	fi
+	@echo "Tailwindcss installed!"
+
+tailwind-build: tailwind-install
+	@echo "Building CSS..."
+	@$(BINARY_DIR)/tailwindcss -i ./web/styles/styles.css -o ./web/assets/css/style.css
+	@echo "CSS built!"
+
+ps:
+	@echo "Running containers:"
+	@docker ps -a
+
+db-shell-dev:
+	@echo "Accessing dev database shell..."
+	@docker compose -p diva-dev -f docker-compose.dev.yml exec diva_db_dev psql -U ${DB_USER} -d ${DB_NAME}
+
+db-shell-prod:
+	@echo "Accessing prod database shell..."
+	@docker compose -p diva-prod -f docker-compose.yml --env-file .env exec diva_db psql -U ${DB_USER} -d ${DB_NAME}
+
+# Development Commands
+dev-build:
+	@echo "Building development image..."
+	@docker compose -p diva-dev -f docker-compose.dev.yml --env-file .env.dev build
+
+dev-up:
+	@echo "Starting development environment..."
+	@docker compose -p diva-dev -f docker-compose.dev.yml --env-file .env.dev up -d --build
+	@echo "Development environment started!"
+
+dev-down:
+	@echo "Stopping development environment..."
+	@docker compose -p diva-dev -f docker-compose.dev.yml --env-file .env.dev down
+
+dev-logs:
+	@echo "Following development logs..."
+	@docker compose -p diva-dev -f docker-compose.dev.yml --env-file .env.dev logs -f
+
+dev-shell:
+	@echo "Accessing development container shell..."
+	@docker compose -p diva-dev -f docker-compose.dev.yml --env-file .env.dev exec diva_server_dev sh
+
+# Production Commands
+prod-build:
+	@echo "Building production image..."
+	@docker compose -p diva-prod -f docker-compose.yml --env-file .env build
+
+prod-up:
+	@echo "Starting production environment..."
+	@docker compose -p diva-prod -f docker-compose.yml --env-file .env up -d --build
+	@echo "Production environment started!"
+
+prod-down:
+	@echo "Stopping production environment..."
+	@docker compose -p diva-prod -f docker-compose.yml --env-file .env down
+
+prod-logs:
+	@echo "Following production logs..."
+	@docker compose -p diva-prod -f docker-compose.yml --env-file .env logs -f
+
+prod-shell:
+	@echo "Accessing production container shell..."
+	@docker compose -p diva-prod -f docker-compose.yml --env-file .env exec diva_server sh

@@ -1,0 +1,166 @@
+package session
+
+import (
+	"context"
+	"time"
+
+	"github.com/google/uuid"
+	"github.com/juevigrace/diva-server/internal/models"
+	"github.com/juevigrace/diva-server/pkg/jwt"
+	"github.com/juevigrace/diva-server/storage"
+)
+
+type SessionRepo struct {
+	store storage.SessionStore
+}
+
+func NewSessionRepo(store storage.SessionStore) *SessionRepo {
+	return &SessionRepo{
+		store: store,
+	}
+}
+
+func (s *SessionRepo) ListAll(ctx context.Context) ([]*models.Session, error) {
+	rows, err := s.store.ListSessions(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	sessions := make([]*models.Session, len(rows))
+	for i := range rows {
+		sessions[i] = models.SessionFromDB(&rows[i])
+	}
+	return sessions, nil
+}
+
+func (s *SessionRepo) GetByUser(ctx context.Context, userID uuid.UUID) ([]*models.Session, error) {
+	rows, err := s.store.ListSessionsByUser(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	sessions := make([]*models.Session, len(rows))
+	for i := range rows {
+		sessions[i] = models.SessionFromDB(&rows[i])
+	}
+	return sessions, nil
+}
+
+func (s *SessionRepo) GetByID(ctx context.Context, sessionID uuid.UUID) (*models.Session, error) {
+	row, err := s.store.GetSessionByID(ctx, sessionID)
+	if err != nil {
+		return nil, err
+	}
+
+	return models.SessionFromDB(row), nil
+}
+
+func (s *SessionRepo) Create(ctx context.Context, userID uuid.UUID, deviceID uuid.UUID, sType models.SessionType, ipAddress string, userAgent string) (*models.Session, error) {
+	sessionID := uuid.New()
+	accessToken, err := jwt.CreateToken(sessionID, time.Duration(jwt.AccessExp)*time.Second)
+	if err != nil {
+		return nil, err
+	}
+
+	refreshToken, err := jwt.CreateToken(sessionID, time.Duration(jwt.RefreshExp)*time.Second)
+	if err != nil {
+		return nil, err
+	}
+
+	accessExpiration, err := jwt.GetTokenExpiration(accessToken)
+	if err != nil {
+		return nil, err
+	}
+	refreshExpiration, err := jwt.GetTokenExpiration(refreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	session := &models.Session{
+		ID:               sessionID,
+		User:             models.User{ID: userID},
+		AccessToken:      accessToken,
+		RefreshToken:     refreshToken,
+		Device:           models.Device{ID: deviceID},
+		IpAddress:        ipAddress,
+		UserAgent:        userAgent,
+		Status:           models.SESSION_ACTIVE,
+		Type:             sType,
+		AccessExpiresAt:  accessExpiration.UnixMilli(),
+		RefreshExpiresAt: refreshExpiration.UnixMilli(),
+	}
+
+	if err := s.store.CreateSession(ctx, session.DBCreate()); err != nil {
+		return nil, err
+	}
+
+	return s.GetByID(ctx, sessionID)
+}
+
+func (s *SessionRepo) CreateTemporal(ctx context.Context, userID uuid.UUID, deviceID uuid.UUID, ipAddress string, userAgent string) (*models.Session, error) {
+	return s.Create(ctx, userID, deviceID, models.SESSION_TEMPORAL, ipAddress, userAgent)
+}
+
+func (s *SessionRepo) Update(ctx context.Context, session *models.Session) (*models.Session, error) {
+	accessToken, err := jwt.CreateToken(session.ID, time.Duration(jwt.AccessExp)*time.Second)
+	if err != nil {
+		return nil, err
+	}
+
+	refreshToken, err := jwt.CreateToken(session.ID, time.Duration(jwt.RefreshExp)*time.Second)
+	if err != nil {
+		return nil, err
+	}
+
+	accessExpiration, err := jwt.GetTokenExpiration(accessToken)
+	if err != nil {
+		return nil, err
+	}
+	refreshExpiration, err := jwt.GetTokenExpiration(refreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	session.AccessToken = accessToken
+	session.RefreshToken = refreshToken
+	session.AccessExpiresAt = accessExpiration.UnixMilli()
+	session.RefreshExpiresAt = refreshExpiration.UnixMilli()
+
+	if err := s.store.UpdateSession(ctx, session.DBUpdate()); err != nil {
+		return nil, err
+	}
+
+	return s.GetByID(ctx, session.ID)
+}
+
+func (s *SessionRepo) UpdateStatus(ctx context.Context, status models.SessionStatus, sessionID uuid.UUID) error {
+	return s.store.UpdateSessionStatus(ctx, &storage.UpdateSessionStatusParams{
+		Status: status.ToDB(),
+		ID:     sessionID,
+	})
+
+}
+
+func (s *SessionRepo) Expire(ctx context.Context, sessionID uuid.UUID) error {
+	return s.UpdateStatus(ctx, models.SESSION_EXPIRED, sessionID)
+}
+
+func (s *SessionRepo) Close(ctx context.Context, sessionID uuid.UUID) error {
+	return s.UpdateStatus(ctx, models.SESSION_CLOSED, sessionID)
+}
+
+func (s *SessionRepo) SoftDelete(ctx context.Context, sessionID uuid.UUID) error {
+	return s.store.SoftDeleteSession(ctx, sessionID)
+}
+
+func (s *SessionRepo) CloseAllByUser(ctx context.Context, userID uuid.UUID) error {
+	return s.store.CloseAllByUser(ctx, userID)
+}
+
+func (s *SessionRepo) CloseExpired(ctx context.Context) error {
+	return s.store.CloseExpiredSessions(ctx)
+}
+
+func (s *SessionRepo) DeleteSessionsForever(ctx context.Context) error {
+	return s.store.DeleteSessionsForever(ctx)
+}

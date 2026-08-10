@@ -1,0 +1,57 @@
+package models
+
+import "github.com/juevigrace/diva-server/storage"
+
+type MediaType int
+
+const (
+	MEDIA_AUDIO MediaType = iota
+	MEDIA_IMAGE
+	MEDIA_VIDEO
+	MEDIA_UNSPECIFIED
+)
+
+func (m MediaType) String() string {
+	switch m {
+	case MEDIA_AUDIO:
+		return "AUDIO"
+	case MEDIA_IMAGE:
+		return "IMAGE"
+	case MEDIA_VIDEO:
+		return "VIDEO"
+	case MEDIA_UNSPECIFIED:
+		return "UNSPECIFIED"
+	default:
+		return "UNSPECIFIED"
+	}
+}
+
+func MediaTypeFromString(s string) MediaType {
+	switch s {
+	case "AUDIO":
+		return MEDIA_AUDIO
+	case "IMAGE":
+		return MEDIA_IMAGE
+	case "VIDEO":
+		return MEDIA_VIDEO
+	case "UNSPECIFIED":
+		return MEDIA_UNSPECIFIED
+	default:
+		return MEDIA_UNSPECIFIED
+	}
+}
+
+func (m MediaType) ToDB() storage.MediaType {
+	switch m {
+	case MEDIA_AUDIO:
+		return storage.MediaTypeTypeAUDIO
+	case MEDIA_IMAGE:
+		return storage.MediaTypeTypeIMAGE
+	case MEDIA_VIDEO:
+		return storage.MediaTypeTypeVIDEO
+	case MEDIA_UNSPECIFIED:
+		return storage.MediaTypeTypeUNSPECIFIED
+	default:
+		return storage.MediaTypeTypeUNSPECIFIED
+	}
+}
