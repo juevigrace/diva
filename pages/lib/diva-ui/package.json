@@ -1,0 +1,50 @@
+{
+  "name": "diva-ui",
+  "type": "module",
+  "version": "0.0.1",
+  "exports": {
+    "./globals.css": "./src/styles/globals.css",
+    "./layouts/*.astro": "./src/layouts/*.astro",
+    "./components/*": "./src/components/ui/*.tsx",
+    "./lib/*": "./src/lib/*.ts",
+    "./hooks/*": "./src/hooks/*.ts",
+    "./astro/*.astro": "./src/astro/*.astro"
+  },
+  "scripts": {
+    "dev": "echo 'diva-ui: no dev server'",
+    "build": "echo 'diva-ui: nothing to build'"
+  },
+  "dependencies": {
+    "@radix-ui/react-avatar": "catalog:",
+    "@radix-ui/react-checkbox": "catalog:",
+    "@radix-ui/react-dialog": "catalog:",
+    "@radix-ui/react-dropdown-menu": "catalog:",
+    "@radix-ui/react-label": "catalog:",
+    "@radix-ui/react-navigation-menu": "catalog:",
+    "@radix-ui/react-popover": "catalog:",
+    "@radix-ui/react-select": "catalog:",
+    "@radix-ui/react-separator": "catalog:",
+    "@radix-ui/react-slot": "catalog:",
+    "@radix-ui/react-switch": "catalog:",
+    "@radix-ui/react-tabs": "catalog:",
+    "@radix-ui/react-tooltip": "catalog:",
+    "class-variance-authority": "catalog:",
+    "clsx": "catalog:",
+    "cmdk": "catalog:",
+    "lucide-react": "catalog:",
+    "next-themes": "catalog:",
+    "sonner": "catalog:",
+    "tailwind-merge": "catalog:"
+  },
+  "devDependencies": {
+    "astro": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "astro": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  }
+}

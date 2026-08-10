@@ -1,0 +1,41 @@
+---
+import { t } from '@lib/i18n/t';
+const { lang = 'en' } = Astro.props;
+---
+
+<footer class="border-border bg-muted/50 border-t">
+  <div class="container mx-auto px-6 py-12">
+    <div class="grid gap-8 md:grid-cols-4">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-2 text-lg font-bold">
+          <span
+            class="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-md text-xs font-bold"
+            >D</span
+          >
+          Diva
+        </div>
+        <p class="text-muted-foreground mt-3 max-w-xs text-sm">
+          {t('landing.tagline', lang)}
+        </p>
+      </div>
+      <div>
+        <h4 class="text-sm font-semibold">{t('landing.product', lang)}</h4>
+        <ul class="text-muted-foreground mt-4 space-y-3 text-sm">
+          <li><a href="/pricing" class="hover:text-foreground transition-colors">{t('landing.pricing', lang)}</a></li>
+          <li><a href="/about" class="hover:text-foreground transition-colors">{t('landing.about', lang)}</a></li>
+          <li><a href="/contact" class="hover:text-foreground transition-colors">{t('landing.contact', lang)}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-sm font-semibold">{t('landing.legal', lang)}</h4>
+        <ul class="text-muted-foreground mt-4 space-y-3 text-sm">
+          <li><a href="#" class="hover:text-foreground transition-colors">{t('landing.privacyPolicy', lang)}</a></li>
+          <li><a href="#" class="hover:text-foreground transition-colors">{t('landing.termsOfService', lang)}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-border text-muted-foreground mt-12 border-t pt-6 text-center text-sm">
+      &copy; 2026 Diva. {t('landing.allRightsReserved', lang)}
+    </div>
+  </div>
+</footer>

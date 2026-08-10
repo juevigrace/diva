@@ -1,0 +1,127 @@
+---
+import DocsLayout from '@layouts/DocsLayout.astro';
+import TocSidebar from '@components/docs/TocSidebar.astro';
+import CodeBlock from '@components/docs/CodeBlock.astro';
+import { t } from '@lib/i18n/t';
+
+const lang = Astro.locals.lang;
+---
+
+<DocsLayout
+  title={t('page.docsApi.title', lang)}
+  description={t('page.docsApi.desc', lang)}
+>
+  <div class="flex">
+    <main class="max-w-3xl min-w-0 flex-1">
+      <h1 id="overview" class="text-4xl font-bold tracking-tight">{t('docs.api', lang)}</h1>
+      <p class="text-muted-foreground mt-4 text-lg">
+        {t('docs.apiIntro', lang)}
+      </p>
+
+      <h2 id="props" class="mt-12 text-2xl font-bold tracking-tight">{t('docs.componentProps', lang)}</h2>
+      <p class="text-muted-foreground mt-4 leading-relaxed">
+        {t('docs.apiPropsBody', lang)}
+      </p>
+
+      <div class="border-border mt-6 overflow-x-auto rounded-lg border">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-border bg-muted/50 border-b">
+              <th class="px-4 py-3 text-left font-medium">{t('docs.tableComponent', lang)}</th>
+              <th class="px-4 py-3 text-left font-medium">{t('docs.tableProp', lang)}</th>
+              <th class="px-4 py-3 text-left font-medium">{t('docs.tableType', lang)}</th>
+              <th class="px-4 py-3 text-left font-medium">{t('docs.tableDefault', lang)}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-border border-b">
+              <td class="px-4 py-3 font-mono text-xs">Button</td>
+              <td class="px-4 py-3 font-mono text-xs">variant</td>
+              <td class="px-4 py-3 font-mono text-xs"
+                >"default" | "secondary" | "destructive" | "outline" | "ghost" | "link"</td
+              >
+              <td class="px-4 py-3 font-mono text-xs">"default"</td>
+            </tr>
+            <tr class="border-border border-b">
+              <td class="px-4 py-3 font-mono text-xs">Button</td>
+              <td class="px-4 py-3 font-mono text-xs">size</td>
+              <td class="px-4 py-3 font-mono text-xs">"default" | "sm" | "lg" | "icon"</td>
+              <td class="px-4 py-3 font-mono text-xs">"default"</td>
+            </tr>
+            <tr class="border-border border-b">
+              <td class="px-4 py-3 font-mono text-xs">Button</td>
+              <td class="px-4 py-3 font-mono text-xs">asChild</td>
+              <td class="px-4 py-3 font-mono text-xs">boolean</td>
+              <td class="px-4 py-3 font-mono text-xs">false</td>
+            </tr>
+            <tr class="border-border border-b">
+              <td class="px-4 py-3 font-mono text-xs">Card</td>
+              <td class="px-4 py-3 font-mono text-xs">className</td>
+              <td class="px-4 py-3 font-mono text-xs">string</td>
+              <td class="px-4 py-3 font-mono text-xs">—</td>
+            </tr>
+            <tr class="border-border border-b">
+              <td class="px-4 py-3 font-mono text-xs">Badge</td>
+              <td class="px-4 py-3 font-mono text-xs">variant</td>
+              <td class="px-4 py-3 font-mono text-xs"
+                >"default" | "secondary" | "destructive" | "outline"</td
+              >
+              <td class="px-4 py-3 font-mono text-xs">"default"</td>
+            </tr>
+            <tr class="border-border border-b">
+              <td class="px-4 py-3 font-mono text-xs">Input</td>
+              <td class="px-4 py-3 font-mono text-xs">type</td>
+              <td class="px-4 py-3 font-mono text-xs">HTMLInputTypeAttribute</td>
+              <td class="px-4 py-3 font-mono text-xs">"text"</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-mono text-xs">Switch</td>
+              <td class="px-4 py-3 font-mono text-xs">checked</td>
+              <td class="px-4 py-3 font-mono text-xs">boolean</td>
+              <td class="px-4 py-3 font-mono text-xs">false</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="events" class="mt-12 text-2xl font-bold tracking-tight">{t('docs.events', lang)}</h2>
+      <p class="text-muted-foreground mt-4 leading-relaxed">
+        {t('docs.apiEventsBody', lang)}
+      </p>
+      <div class="mt-4">
+        <CodeBlock
+          code={`import { Dialog } from 'diva-ui/components/dialog'
+import { Switch } from 'diva-ui/components/switch'
+
+<Dialog onOpenChange={(open) => console.log(open)} />
+<Switch onCheckedChange={(checked) => console.log(checked)} />`}
+          lang="tsx"
+        />
+      </div>
+
+      <h2 id="types" class="mt-12 text-2xl font-bold tracking-tight">{t('docs.typescriptTypes', lang)}</h2>
+      <p class="text-muted-foreground mt-4 leading-relaxed">
+        {t('docs.apiTypesBody', lang)}
+      </p>
+      <div class="mt-4">
+        <CodeBlock
+          code={`import type { ButtonProps } from 'diva-ui/components/button'
+import type { CardProps } from 'diva-ui/components/card'
+
+type MyButtonProps = ButtonProps & {
+  customProp: string
+}`}
+          lang="ts"
+        />
+      </div>
+    </main>
+    <TocSidebar lang={lang}
+      headings={[
+        { id: 'overview', label: t('docs.overview', lang), level: 1 },
+        { id: 'props', label: t('docs.componentProps', lang), level: 2 },
+        { id: 'events', label: t('docs.events', lang), level: 2 },
+        { id: 'types', label: t('docs.typescriptTypes', lang), level: 2 },
+      ]}
+    />
+  </div>
+</DocsLayout>

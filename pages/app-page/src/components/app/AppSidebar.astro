@@ -1,0 +1,74 @@
+---
+import { getVisibleNavItems } from '../../nav-items';
+import { isActive } from '@lib/ui';
+import SidebarIcon from '@components/app/SidebarIcon.astro';
+import { t } from '@lib/i18n/t';
+import { sectionKey, itemKey } from '@lib/i18n/nav-keys';
+
+const currentPath = Astro.url.pathname;
+const { user, state } = Astro.locals;
+const lang = Astro.locals.lang;
+
+const isAdmin = user?.role === 'ADMIN' || user?.role === 'MODERATOR';
+const visibleNavItems = getVisibleNavItems(isAdmin);
+---
+
+<aside
+  class="bg-card border-border z-40 hidden border-r md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col"
+>
+  <div class="border-border flex h-16 items-center gap-2 border-b px-6">
+    <span
+      class="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold"
+      >D</span
+    >
+    <span class="font-bold">{t('nav.divaApp', lang)}</span>
+  </div>
+  <nav class="flex-1 overflow-y-auto p-4">
+    {
+      visibleNavItems.map((section) => {
+        const sk = sectionKey[section.section] || section.section.toLowerCase();
+        return (
+          <div class="mb-6">
+            <h4 class="text-muted-foreground mb-2 px-3 text-xs font-semibold tracking-wider uppercase">
+              {t(`nav.${sk}`, lang)}
+            </h4>
+            <ul class="space-y-1">
+              {section.items.map((item) => {
+                const active = isActive(item.href, currentPath);
+                const ik = itemKey[item.label] || item.label.toLowerCase().replace(/\s+/g, '');
+                return (
+                  <li>
+                    <a
+                      href={item.href}
+                      class={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                        active
+                          ? 'bg-accent text-accent-foreground'
+                          : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                      } `}
+                    >
+                      <SidebarIcon icon={item.icon} />
+                      {t(`nav.${ik}`, lang)}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        );
+      })
+    }
+  </nav>
+  {
+    user && (
+      <div class="border-border flex items-center gap-3 border-t p-4">
+        <div class="bg-primary/10 text-primary flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold">
+          {(user.id || 'U')[0].toUpperCase()}
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="truncate text-sm font-medium">{user.role || 'User'}</p>
+          <p class="text-muted-foreground truncate text-xs">{state?.status || 'Active'}</p>
+        </div>
+      </div>
+    )
+  }
+</aside>

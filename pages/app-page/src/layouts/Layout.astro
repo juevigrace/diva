@@ -1,0 +1,43 @@
+---
+import { Toaster } from 'diva-ui/components/sonner';
+import ThemeScript from 'diva-ui/astro/ThemeScript.astro';
+import '@styles/global.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Diva Pages',
+  description = 'Beautiful, responsive page designs built with Astro and shadcn/ui.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={Astro.locals.lang || 'en'}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+  </head>
+  <body class="bg-background text-foreground min-h-screen font-sans antialiased">
+    <slot />
+    <Toaster client:load />
+    <script>
+      document.addEventListener('showToast', (e) => {
+        const { type, message } = e.detail;
+        import('diva-ui/components/sonner').then(({ toast }) => {
+          if (type === 'error') toast.error(message);
+          else toast.success(message);
+        });
+      });
+    </script>
+    <ThemeScript />
+  </body>
+</html>

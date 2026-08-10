@@ -1,0 +1,54 @@
+---
+import AppLayout from '@layouts/AppLayout.astro';
+import UsersManager from '@components/app/UsersManager';
+import { apiFetch } from '@api/lib/fetch';
+import { t } from '@lib/i18n/t';
+import type { SessionResponse } from 'diva-types/auth/responses/session';
+
+const { user, state } = Astro.locals;
+const auth = await Astro.session.get<SessionResponse>('auth');
+
+const url = new URL(Astro.request.url);
+const currentPage = parseInt(url.searchParams.get('page') || '1', 10);
+const limit = 10;
+
+let usersData: Record<string, any>[] = [];
+let totalItems = 0;
+let totalPages = 1;
+let loadError = false;
+
+if (state?.verified && user) {
+  try {
+    const res = await apiFetch(`/api/user/?page=${currentPage}&limit=${limit}`, { token: auth!.access_token });
+    if (res.ok) {
+      usersData = res.json.data?.items || [];
+      totalItems = res.json.data?.pagination_info?.total_items || 0;
+      totalPages = res.json.data?.pagination_info?.total_pages || 1;
+    } else {
+      loadError = true;
+    }
+  } catch (_) {
+    loadError = true;
+  }
+}
+
+const isVerified = !!state?.verified;
+---
+
+<AppLayout
+  title={t('page.users.title', Astro.locals.lang)}
+  heading={t('nav.users', Astro.locals.lang)}
+  description={t('page.users.desc', Astro.locals.lang)}
+>
+  <UsersManager
+    initialUsers={usersData}
+    initialPage={currentPage}
+    initialTotalPages={totalPages}
+    initialTotalItems={totalItems}
+    loadError={loadError}
+    isVerified={isVerified}
+    currentUserRole={user?.role || 'USER'}
+    lang={Astro.locals.lang}
+    client:load
+  />
+</AppLayout>

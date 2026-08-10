@@ -1,0 +1,39 @@
+{
+  "name": "diva-pages",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=22.12.0",
+    "bun": ">=1.2"
+  },
+  "scripts": {
+    "dev": "bun run turbo dev",
+    "build": "bun run turbo build",
+    "stop": "bun run turbo stop",
+    "status": "bun run turbo status",
+    "logs": "bun run turbo logs",
+    "lint": "bun run eslint .",
+    "format": "bun run prettier --write .",
+    "format-check": "bun run prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/js": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "astro-eslint-parser": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-astro": "catalog:",
+    "prettier": "catalog:",
+    "prettier-plugin-astro": "catalog:",
+    "prettier-plugin-tailwindcss": "catalog:",
+    "rollup-plugin-visualizer": "catalog:",
+    "turbo": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
+  },
+  "workspaces": [
+    "app-page",
+    "lib/*"
+  ]
+}

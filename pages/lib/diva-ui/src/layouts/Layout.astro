@@ -1,0 +1,33 @@
+---
+import '../styles/globals.css';
+import { ViewTransitions } from 'astro:transitions';
+import ThemeScript from '../astro/ThemeScript.astro';
+
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Diva Pages',
+  description = 'Beautiful, responsive page designs built with Astro and shadcn/ui.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <ViewTransitions />
+  </head>
+  <body class="bg-background text-foreground min-h-screen font-sans antialiased">
+    <slot />
+    <ThemeScript />
+  </body>
+</html>

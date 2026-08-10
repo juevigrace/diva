@@ -1,0 +1,35 @@
+{
+  "name": "app-page",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0",
+    "bun": ">=1.2"
+  },
+  "scripts": {
+    "dev": "bun run astro dev --background",
+    "build": "bun run astro build",
+    "preview": "bun run astro preview",
+    "stop": "astro dev stop",
+    "status": "astro dev status",
+    "logs": "astro dev logs"
+  },
+  "dependencies": {
+    "@astrojs/node": "catalog:",
+    "@astrojs/react": "catalog:",
+    "@astrojs/sitemap": "catalog:",
+    "@fontsource/inter": "catalog:",
+    "astro": "catalog:",
+    "diva-types": "workspace:*",
+    "diva-ui": "workspace:*",
+    "lucide-react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@tailwindcss/vite": "catalog:",
+    "typescript": "catalog:"
+  }
+}

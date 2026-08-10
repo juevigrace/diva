@@ -1,0 +1,9 @@
+---
+import AuthLayout from '@layouts/AuthLayout.astro';
+import SignUpForm from '@components/auth/SignUpForm';
+import { t } from '@lib/i18n/t';
+---
+
+<AuthLayout title={t('page.signUp.title')} description={t('page.signUp.desc')}>
+  <SignUpForm lang={Astro.locals.lang} client:load />
+</AuthLayout>

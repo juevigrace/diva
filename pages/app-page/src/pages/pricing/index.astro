@@ -1,0 +1,16 @@
+---
+import LandingLayout from '@layouts/LandingLayout.astro';
+import PricingCards from '@components/landing/PricingCards.astro';
+import CtaSection from '@components/landing/CtaSection.astro';
+import { t } from '@lib/i18n/t';
+---
+
+<LandingLayout
+  title={t('page.pricing.title', Astro.locals.lang)}
+  description={t('page.pricing.desc', Astro.locals.lang)}
+>
+  <div class="pt-16">
+    <PricingCards />
+  </div>
+  <CtaSection />
+</LandingLayout>

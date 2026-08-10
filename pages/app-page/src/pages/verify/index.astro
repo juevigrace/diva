@@ -1,0 +1,15 @@
+---
+import Layout from '@layouts/Layout.astro';
+import VerificationFlow from '@components/auth/VerificationFlow';
+
+const action = Astro.url.searchParams.get('action') || 'USER_VERIFICATION';
+const email = (await Astro.session?.get('restoreEmail')) ?? Astro.url.searchParams.get('email') ?? '';
+await Astro.session?.set('restoreEmail', undefined);
+import { t } from '@lib/i18n/t';
+---
+
+<Layout title={t('page.verify.title', Astro.locals.lang)} description={t('page.verify.desc', Astro.locals.lang)}>
+  <div class="flex min-h-screen items-center justify-center px-4">
+    <VerificationFlow action={action} email={email} lang={Astro.locals.lang} client:load />
+  </div>
+</Layout>

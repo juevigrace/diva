@@ -1,0 +1,79 @@
+---
+import AppLayout from '@layouts/AppLayout.astro';
+import UserDetailContent from '@components/app/UserDetailContent';
+import { apiFetch } from '@api/lib/fetch';
+import { t } from '@lib/i18n/t';
+import type { SessionResponse } from 'diva-types/auth/responses/session';
+
+const { user: currentUser, state } = Astro.locals;
+const auth = await Astro.session.get<SessionResponse>('auth');
+const { uid } = Astro.params;
+
+const currentUserRole = currentUser?.role || '';
+const isVerified = state?.verified ?? false;
+
+let user: Record<string, any> | null = null;
+let profile: Record<string, any> | null = null;
+let permissions: Record<string, any>[] | null = null;
+let sessions: Record<string, any>[] | null = null;
+let devices: Record<string, any>[] | null = null;
+let actions: Record<string, any>[] | null = null;
+let allPermissions: Record<string, any>[] = [];
+
+if (isVerified) {
+  try {
+    const userRes = await apiFetch(`/api/user/${uid}`, { token: auth!.access_token });
+    if (userRes.ok) { user = userRes.json.data; }
+  } catch (_) {}
+  try {
+    const permRes = await apiFetch(`/api/permissions/?limit=100`, { token: auth!.access_token });
+    if (permRes.ok) { allPermissions = permRes.json.data?.items || []; }
+  } catch (_) {}
+
+  try {
+    const profRes = await apiFetch(`/api/user/${uid}/profile`, { token: auth!.access_token });
+    if (profRes.ok) { profile = profRes.json.data; }
+  } catch (_) {}
+
+  try {
+    const permRes = await apiFetch(`/api/user/${uid}/permissions/`, { token: auth!.access_token });
+    if (permRes.ok) { permissions = permRes.json.data; }
+  } catch (_) {}
+
+  try {
+    const sessRes = await apiFetch(`/api/user/${uid}/sessions`, { token: auth!.access_token });
+    if (sessRes.ok) { sessions = sessRes.json.data; }
+  } catch (_) {}
+
+  try {
+    const devRes = await apiFetch(`/api/user/${uid}/devices`, { token: auth!.access_token });
+    if (devRes.ok) { devices = devRes.json.data; }
+  } catch (_) {}
+
+  try {
+    const actRes = await apiFetch(`/api/user/${uid}/actions/`, { token: auth!.access_token });
+    if (actRes.ok) { actions = actRes.json.data; }
+  } catch (_) {}
+}
+---
+
+<AppLayout
+  title={user ? `${user.username} — Diva` : 'User — Diva'}
+  heading={user?.username || 'User'}
+  description={t('page.userDetail.desc', Astro.locals.lang)}
+>
+  <UserDetailContent
+    uid={uid!}
+    user={user}
+    profile={profile}
+    permissions={permissions}
+    sessions={sessions}
+    devices={devices}
+    actions={actions}
+    allPermissions={allPermissions}
+    currentUserRole={currentUserRole}
+    isVerified={isVerified}
+    lang={Astro.locals.lang}
+    client:load
+  />
+</AppLayout>
