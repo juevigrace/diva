@@ -69,3 +69,5 @@ include(
 include(":features:user")
 
 include(":features:verification")
+
+include(":features:permission")

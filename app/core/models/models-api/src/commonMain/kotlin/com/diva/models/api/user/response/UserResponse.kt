@@ -8,22 +8,12 @@ import kotlinx.serialization.Serializable
 data class UserResponse(
     @SerialName("id")
     val id: String,
-    @SerialName("email")
-    val email: String,
     @SerialName("username")
     val username: String,
-    @SerialName("birth_date")
-    val birthDate: Long,
+    @SerialName("email")
+    val email: String,
     @SerialName("phone_number")
     val phoneNumber: String,
-    @SerialName("alias")
-    val alias: String,
-    @SerialName("avatar")
-    val avatar: String,
-    @SerialName("bio")
-    val bio: String,
-    @SerialName("user_verified")
-    val userVerified: Boolean,
     @SerialName("role")
     val role: String,
     @SerialName("state")

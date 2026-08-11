@@ -11,6 +11,7 @@ import com.diva.app.presentation.viewmodel.AppViewModel
 import com.diva.auth.di.authModule
 import com.diva.models.config.AppConfig
 import com.diva.onboarding.di.onboardingModule
+import com.diva.permission.di.permissionModule
 import com.diva.user.di.userModule
 import com.diva.verification.di.verificationModule
 import org.koin.core.module.Module
@@ -39,6 +40,7 @@ fun appModule(config: AppConfig): Module {
             authModule(),
             userModule(),
             verificationModule(),
+            permissionModule(),
         )
 
         singleOf(::AppRepositoryImpl) { bind<AppRepository>() }

@@ -3,7 +3,6 @@ package com.diva.services
 import com.diva.auth.session.data.SessionRepository
 import com.diva.models.Repository
 import com.diva.user.data.actions.UserActionsRepository
-import com.diva.user.data.me.UserMeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +19,6 @@ interface SyncService : Repository {
 
 class SyncServiceImpl(
     private val sRepository: SessionRepository,
-    private val umRepository: UserMeRepository,
     private val uaRepository: UserActionsRepository,
 ) : SyncService {
     private val state = MutableStateFlow(SyncState())

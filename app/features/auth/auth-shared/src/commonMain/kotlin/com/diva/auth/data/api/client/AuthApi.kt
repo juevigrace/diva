@@ -1,7 +1,7 @@
 package com.diva.auth.data.api.client
 
 import com.diva.models.api.ApiResponse
-import com.diva.models.api.auth.forgot.password.dtos.UpdatePasswordDto
+import com.diva.models.api.auth.forgot.password.dtos.ForgotPasswordConfirmDto
 import com.diva.models.api.auth.session.dtos.SessionDataDto
 import com.diva.models.api.auth.session.response.SessionResponse
 import com.diva.models.api.auth.signin.dto.SignInDto
@@ -22,7 +22,7 @@ interface AuthApi {
     suspend fun signOut(dto: SessionDataDto, token: String): Result<Unit>
     suspend fun ping(token: String): Result<Unit>
     suspend fun refresh(dto: SessionDataDto, token: String): Result<SessionResponse>
-    suspend fun forgotPasswordReset(dto: UpdatePasswordDto, token: String): Result<Unit>
+    suspend fun forgotPasswordConfirm(dto: ForgotPasswordConfirmDto): Result<SessionResponse>
 }
 
 class AuthApiImpl(
@@ -168,26 +168,29 @@ class AuthApiImpl(
         }
     }
 
-    override suspend fun forgotPasswordReset(
-        dto: UpdatePasswordDto,
-        token: String
-    ): Result<Unit> {
+    override suspend fun forgotPasswordConfirm(dto: ForgotPasswordConfirmDto): Result<SessionResponse> {
         return tryResult(
             onError = { e -> e.toDivaNetworkException() }
         ) {
-            val response: HttpResponse = client.patch(
-                path = "/api/auth/forgot/password",
+            val response: HttpResponse = client.post(
+                path = "/api/auth/forgot/password/confirm",
                 body = dto,
-                headers = mapOf("Authorization" to "Bearer $token"),
-                serializer = UpdatePasswordDto.serializer(),
+                serializer = ForgotPasswordConfirmDto.serializer(),
             ).getOrThrow()
             when (response.status) {
-                HttpStatusCode.OK -> return@tryResult
+                HttpStatusCode.OK -> {
+                    val body: ApiResponse<SessionResponse> = response.body()
+                    body.data ?: throw ConstraintException(
+                        field = "data",
+                        constraint = "missing",
+                        value = body.message
+                    )
+                }
                 else -> {
                     val body: ApiResponse<Unit> = response.body()
                     throw HttpException(
                         statusCode = Option.of(response.status.value),
-                        url = Option.of("/api/user/forgot/password"),
+                        url = Option.of("/api/auth/forgot/password/confirm"),
                         details = Option.of(body.message)
                     )
                 }

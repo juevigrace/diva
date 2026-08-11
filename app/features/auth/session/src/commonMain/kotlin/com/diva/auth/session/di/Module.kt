@@ -1,7 +1,11 @@
 package com.diva.auth.session.di
 
+import com.diva.auth.session.api.client.SessionsApi
+import com.diva.auth.session.api.client.SessionsApiImpl
 import com.diva.auth.session.data.SessionRepository
 import com.diva.auth.session.data.SessionRepositoryImpl
+import com.diva.auth.session.data.sessions.SessionsRepository
+import com.diva.auth.session.data.sessions.SessionsRepositoryImpl
 import com.diva.auth.session.database.SessionStorageImpl
 import com.diva.database.session.SessionStorage
 import org.koin.core.module.Module
@@ -14,5 +18,8 @@ fun sessionModule(): Module {
         singleOf(::SessionStorageImpl) { bind<SessionStorage>() }
 
         singleOf(::SessionRepositoryImpl) { bind<SessionRepository>() }
+
+        singleOf(::SessionsApiImpl) { bind<SessionsApi>() }
+        singleOf(::SessionsRepositoryImpl) { bind<SessionsRepository>() }
     }
 }

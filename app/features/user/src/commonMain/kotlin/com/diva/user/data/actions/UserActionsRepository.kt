@@ -5,7 +5,6 @@ import com.diva.database.user.actions.UserActionsStorage
 import com.diva.models.Repository
 import com.diva.models.actions.Actions
 import com.diva.models.actions.safeActionsValueOf
-import com.diva.models.api.user.action.event.UserActionsEvents
 import com.diva.models.user.actions.UserAction
 import com.diva.user.api.client.actions.UserActionsApi
 import io.github.juevigrace.diva.core.errors.ConstraintException
@@ -22,7 +21,6 @@ import kotlin.uuid.Uuid
 interface UserActionsRepository : Repository {
     fun getActions(): Flow<Result<Map<Actions, UserAction>>>
     suspend fun getAction(action: Actions): Result<UserAction>
-    fun syncActions(): Flow<Result<Unit>>
     suspend fun createAction(action: Actions): Result<Unit>
     suspend fun deleteByAction(action: Actions): Result<Unit>
 }
@@ -64,7 +62,7 @@ class UserActionsRepositoryImpl(
     @OptIn(ExperimentalUuidApi::class)
     private suspend fun fetchActions(): Result<Unit> {
         return withSession(sRepo::getCurrent) { session ->
-            api.getActions(session.accessToken).fold(
+            api.getActions(session.user.id.toString(), session.accessToken).fold(
                 onFailure = { err -> Result.failure(err) },
                 onSuccess = { res ->
                     val actions = res.mapNotNull { actionRes ->
@@ -106,39 +104,6 @@ class UserActionsRepositoryImpl(
                     )
                 }
             )
-        }
-    }
-
-    @OptIn(ExperimentalUuidApi::class)
-    override fun syncActions(): Flow<Result<Unit>> {
-        return withSessionFlow(sRepo::getCurrent) { session ->
-            api.streamActions(session.accessToken).collect { result ->
-                result.fold(
-                    onFailure = { err -> emit(Result.failure(err)) },
-                    onSuccess = { events ->
-                        when (events) {
-                            is UserActionsEvents.Actions -> {
-                                val actions = events.list.mapNotNull { actionRes ->
-                                    val action = safeActionsValueOf(actionRes.actionName)
-                                    if (action == Actions.UNKNOWN) {
-                                        return@mapNotNull null
-                                    }
-                                    val uAction = UserAction(
-                                        id = Uuid.parse(actionRes.id),
-                                        action = action
-                                    )
-                                    storage.delete(uAction.id)
-                                    uAction
-                                }
-                                storage.insertAll(mapOf(session.user.id to actions))
-                            }
-                            UserActionsEvents.End -> {
-                                emit(Result.success(Unit))
-                            }
-                        }
-                    }
-                )
-            }
         }
     }
 

@@ -19,6 +19,8 @@ kotlin {
 
             implementation(projects.features.verification)
 
+            implementation(projects.features.permission)
+
             implementation(libs.diva.network.client)
         }
 

@@ -1,11 +1,10 @@
-package com.diva.user.api.client.me
+package com.diva.user.api.client.status
 
 import com.diva.models.api.ApiResponse
-import com.diva.models.api.user.dtos.UpdateEmailDto
-import com.diva.models.api.user.dtos.UpdateUserDto
-import com.diva.models.api.user.response.UserResponse
+import com.diva.models.api.user.state.dtos.UpdateUserStatusDto
+import com.diva.models.api.user.state.dtos.UpdateVerifiedDto
+import com.diva.models.api.user.state.response.UserStateResponse
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.core.errors.ConstraintException
 import io.github.juevigrace.diva.core.errors.HttpException
 import io.github.juevigrace.diva.core.tryResult
 import io.github.juevigrace.diva.network.client.DivaClient
@@ -14,41 +13,34 @@ import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
 
-interface UserMeApi {
-    suspend fun getMe(token: String): Result<UserResponse>
-    suspend fun updateMe(dto: UpdateUserDto, token: String): Result<Unit>
-    suspend fun deleteMe(token: String): Result<Unit>
-    suspend fun updateEmail(
-        dto: UpdateEmailDto,
-        token: String
-    ): Result<Unit>
+interface UserStatusApi {
+    suspend fun getState(uid: String, token: String): Result<UserStateResponse?>
+    suspend fun ping(uid: String, token: String): Result<Unit>
+    suspend fun updateVerified(uid: String, dto: UpdateVerifiedDto, token: String): Result<Unit>
+    suspend fun updateStatus(uid: String, dto: UpdateUserStatusDto, token: String): Result<Unit>
 }
 
-class UserMeApiImpl(
+class UserStatusApiImpl(
     private val client: DivaClient
-) : UserMeApi {
-    override suspend fun getMe(token: String): Result<UserResponse> {
+) : UserStatusApi {
+    override suspend fun getState(uid: String, token: String): Result<UserStateResponse?> {
         return tryResult(
             onError = { e -> e.toDivaNetworkException() }
         ) {
             val response: HttpResponse = client.get(
-                path = "/api/user/me",
+                path = "/api/user/$uid/status",
                 headers = mapOf("Authorization" to "Bearer $token")
             ).getOrThrow()
             when (response.status) {
                 HttpStatusCode.OK -> {
-                    val body: ApiResponse<UserResponse> = response.body()
-                    body.data ?: throw ConstraintException(
-                        field = "data",
-                        constraint = "missing",
-                        value = body.message
-                    )
+                    val body: ApiResponse<UserStateResponse?> = response.body()
+                    body.data
                 }
                 else -> {
-                    val body: ApiResponse<Unit> = response.body()
+                    val body: ApiResponse<Nothing> = response.body()
                     throw HttpException(
                         statusCode = Option.of(response.status.value),
-                        url = Option.of("/api/user/me"),
+                        url = Option.of("/api/user/{uid}/status"),
                         details = Option.of(body.message)
                     )
                 }
@@ -56,45 +48,21 @@ class UserMeApiImpl(
         }
     }
 
-    override suspend fun updateMe(dto: UpdateUserDto, token: String): Result<Unit> {
+    override suspend fun ping(uid: String, token: String): Result<Unit> {
         return tryResult(
             onError = { e -> e.toDivaNetworkException() }
         ) {
-            val response: HttpResponse = client.put(
-                path = "/api/user/me",
-                body = dto,
-                headers = mapOf("Authorization" to "Bearer $token"),
-                serializer = UpdateUserDto.serializer()
-            ).getOrThrow()
-            when (response.status) {
-                HttpStatusCode.Accepted -> return@tryResult
-                else -> {
-                    val body: ApiResponse<Unit> = response.body()
-                    throw HttpException(
-                        statusCode = Option.of(response.status.value),
-                        url = Option.of("/api/user/me"),
-                        details = Option.of(body.message)
-                    )
-                }
-            }
-        }
-    }
-
-    override suspend fun deleteMe(token: String): Result<Unit> {
-        return tryResult(
-            onError = { e -> e.toDivaNetworkException() }
-        ) {
-            val response: HttpResponse = client.delete(
-                path = "/api/user/me",
+            val response: HttpResponse = client.post(
+                path = "/api/user/$uid/status/ping",
                 headers = mapOf("Authorization" to "Bearer $token")
             ).getOrThrow()
             when (response.status) {
-                HttpStatusCode.NoContent -> return@tryResult
+                HttpStatusCode.OK -> return@tryResult
                 else -> {
-                    val body: ApiResponse<Unit> = response.body()
+                    val body: ApiResponse<Nothing> = response.body()
                     throw HttpException(
                         statusCode = Option.of(response.status.value),
-                        url = Option.of("/api/user/me"),
+                        url = Option.of("/api/user/{uid}/status/ping"),
                         details = Option.of(body.message)
                     )
                 }
@@ -102,26 +70,47 @@ class UserMeApiImpl(
         }
     }
 
-    override suspend fun updateEmail(
-        dto: UpdateEmailDto,
-        token: String,
-    ): Result<Unit> {
+    override suspend fun updateVerified(uid: String, dto: UpdateVerifiedDto, token: String): Result<Unit> {
         return tryResult(
             onError = { e -> e.toDivaNetworkException() }
         ) {
             val response: HttpResponse = client.patch(
-                path = "/api/user/me/email",
+                path = "/api/user/$uid/status/verified",
                 body = dto,
                 headers = mapOf("Authorization" to "Bearer $token"),
-                serializer = UpdateEmailDto.serializer()
+                serializer = UpdateVerifiedDto.serializer(),
             ).getOrThrow()
             when (response.status) {
                 HttpStatusCode.Accepted -> return@tryResult
                 else -> {
-                    val body: ApiResponse<Unit> = response.body()
+                    val body: ApiResponse<Nothing> = response.body()
                     throw HttpException(
                         statusCode = Option.of(response.status.value),
-                        url = Option.of("/api/user/me/email"),
+                        url = Option.of("/api/user/{uid}/status/verified"),
+                        details = Option.of(body.message)
+                    )
+                }
+            }
+        }
+    }
+
+    override suspend fun updateStatus(uid: String, dto: UpdateUserStatusDto, token: String): Result<Unit> {
+        return tryResult(
+            onError = { e -> e.toDivaNetworkException() }
+        ) {
+            val response: HttpResponse = client.put(
+                path = "/api/user/$uid/status",
+                body = dto,
+                headers = mapOf("Authorization" to "Bearer $token"),
+                serializer = UpdateUserStatusDto.serializer(),
+            ).getOrThrow()
+            when (response.status) {
+                HttpStatusCode.Accepted -> return@tryResult
+                else -> {
+                    val body: ApiResponse<Nothing> = response.body()
+                    throw HttpException(
+                        statusCode = Option.of(response.status.value),
+                        url = Option.of("/api/user/{uid}/status"),
                         details = Option.of(body.message)
                     )
                 }
