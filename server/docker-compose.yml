@@ -18,6 +18,7 @@ services:
       - DB_DRIVER=${DB_DRIVER}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
+      - DB_PORT_EXT=${DB_PORT_EXT}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
@@ -25,9 +26,6 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - RESEND_API_KEY=${RESEND_API_KEY}
       - RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL}
-      - ROOT_USERNAME=${ROOT_USERNAME}
-      - ROOT_PASSWORD=${ROOT_PASSWORD}
-      - ROOT_EMAIL=${ROOT_EMAIL}
     depends_on:
       diva_db:
         condition: service_healthy
@@ -43,7 +41,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
     ports:
-      - "${DB_PORT}:${DB_PORT}"
+      - "${DB_PORT_EXT}:${DB_PORT}"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:

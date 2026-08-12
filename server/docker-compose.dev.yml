@@ -17,6 +17,7 @@ services:
       - DB_DRIVER=${DB_DRIVER}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
+      - DB_PORT_EXT=${DB_PORT_EXT}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
@@ -50,7 +51,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
     ports:
-      - "5433:${DB_PORT}"
+      - "${DB_PORT_EXT}:${DB_PORT}"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
