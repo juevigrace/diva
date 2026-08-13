@@ -6,10 +6,12 @@ plugins {
 }
 
         dependencies {
-            implementation(projects.divaCore)
-            implementation(projects.divaNetworkClient)
+            implementation(projects.framework.divaCore)
+            implementation(projects.framework.divaNetworkClient)
 
             testImplementation(libs.kotlin.test)
             testImplementation(libs.kotlinx.coroutines.test)
             testImplementation(libs.koin.test)
+            testImplementation(libs.kotlinx.serialization.json)
+            testImplementation(libs.ktor.client.mock)
 }

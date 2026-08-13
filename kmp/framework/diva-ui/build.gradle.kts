@@ -2,6 +2,7 @@ plugins {
     id("divabuild.library-base")
     id("divabuild.publishing")
     id("divabuild.library-targets")
+    id("divabuild.targets-web")
     id("divabuild.serialization")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
@@ -14,7 +15,7 @@ kotlin {
         }
 
         commonMain.dependencies {
-            api(projects.divaCore)
+            api(projects.framework.divaCore)
 
             // Compose Multiplatform
             api(libs.compose.animation)

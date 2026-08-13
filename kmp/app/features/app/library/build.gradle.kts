@@ -5,9 +5,9 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.features.user)
+            implementation(projects.app.features.user)
 
-            implementation(projects.core.ui)
+            implementation(projects.app.core.ui)
         }
     }
 }

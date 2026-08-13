@@ -5,7 +5,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.divaCore)
+            implementation(projects.framework.divaCore)
 
             // Sqldelight
             api(libs.sqldelight.async.extensions)

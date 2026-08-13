@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    implementation(projects.sharedUI)
+    implementation(projects.app.sharedUI)
 }
 
 android {

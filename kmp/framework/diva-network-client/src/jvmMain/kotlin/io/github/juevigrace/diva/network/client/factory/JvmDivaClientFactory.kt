@@ -4,12 +4,12 @@ import io.github.juevigrace.diva.network.client.DivaClient
 import io.github.juevigrace.diva.network.client.JvmDivaClient
 import io.github.juevigrace.diva.network.client.defaultConfig
 import io.ktor.client.HttpClientConfig
+import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.HttpClientEngineFactory
-import io.ktor.client.engine.okhttp.OkHttpConfig
 
-class JvmDivaClientFactory(
-    private val engineFactory: HttpClientEngineFactory<OkHttpConfig>,
-    private val httpClientConfig: HttpClientConfig<OkHttpConfig>.() -> Unit = { defaultConfig() }
+class JvmDivaClientFactory<C : HttpClientEngineConfig>(
+    private val engineFactory: HttpClientEngineFactory<C>,
+    private val httpClientConfig: HttpClientConfig<C>.() -> Unit = { defaultConfig() }
 ) : DivaClientFactory {
     override fun create(): DivaClient {
         return JvmDivaClient(engineFactory, httpClientConfig)

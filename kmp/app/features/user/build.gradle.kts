@@ -6,11 +6,11 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.database)
+            implementation(projects.app.core.database)
 
-            implementation(projects.core.ui)
+            implementation(projects.app.core.ui)
 
-            implementation(projects.features.auth.session)
+            implementation(projects.app.features.auth.session)
 
             implementation(libs.diva.network.client)
         }

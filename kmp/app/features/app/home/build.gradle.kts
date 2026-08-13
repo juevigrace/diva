@@ -5,14 +5,14 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.features.user)
+            implementation(projects.app.features.user)
 
-            implementation(projects.core.ui)
+            implementation(projects.app.core.ui)
 
-            implementation(projects.features.app.library)
-            implementation(projects.features.app.feed)
-            implementation(projects.features.app.creation)
-            implementation(projects.features.app.profile)
+            implementation(projects.app.features.app.library)
+            implementation(projects.app.features.app.feed)
+            implementation(projects.app.features.app.creation)
+            implementation(projects.app.features.app.profile)
         }
     }
 }

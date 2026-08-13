@@ -1,4 +1,4 @@
 plugins {
-    id("divabuild.library")
+    id("divabuild.app-library")
     id("divabuild.serialization")
 }

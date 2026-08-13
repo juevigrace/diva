@@ -5,11 +5,11 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(projects.features.auth.authShared)
-            implementation(projects.features.auth.forgot)
-            api(projects.features.auth.session)
-            implementation(projects.features.auth.signin)
-            implementation(projects.features.auth.signup)
+            api(projects.app.features.auth.authShared)
+            implementation(projects.app.features.auth.forgot)
+            api(projects.app.features.auth.session)
+            implementation(projects.app.features.auth.signin)
+            implementation(projects.app.features.auth.signup)
         }
     }
 }

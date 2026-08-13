@@ -6,7 +6,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.features.auth.session)
+            implementation(projects.app.features.auth.session)
 
             implementation(libs.diva.network.client)
         }

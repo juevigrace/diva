@@ -5,21 +5,21 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.database)
-            implementation(projects.core.ui)
+            implementation(projects.app.core.database)
+            implementation(projects.app.core.ui)
 
-            implementation(projects.features.app.home)
-            implementation(projects.features.app.onboarding)
+            implementation(projects.app.features.app.home)
+            implementation(projects.app.features.app.onboarding)
 
-            implementation(projects.features.app.services)
+            implementation(projects.app.features.app.services)
 
-            implementation(projects.features.auth.authCore)
+            implementation(projects.app.features.auth.authCore)
 
-            implementation(projects.features.user)
+            implementation(projects.app.features.user)
 
-            implementation(projects.features.verification)
+            implementation(projects.app.features.verification)
 
-            implementation(projects.features.permission)
+            implementation(projects.app.features.permission)
 
             implementation(libs.diva.network.client)
         }

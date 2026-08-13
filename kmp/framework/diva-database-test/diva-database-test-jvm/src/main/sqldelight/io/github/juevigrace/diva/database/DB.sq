@@ -1,0 +1,16 @@
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS diva_user(
+    id TEXT NOT NULL PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    alias TEXT NOT NULL,
+    avatar TEXT NOT NULL DEFAULT '',
+    bio TEXT NOT NULL DEFAULT '',
+    user_verified INTEGER AS Boolean NOT NULL DEFAULT 0,
+    role TEXT NOT NULL DEFAULT 'user',
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TEXT DEFAULT NULL
+);

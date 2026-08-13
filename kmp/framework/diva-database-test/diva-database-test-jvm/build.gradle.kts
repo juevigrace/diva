@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.sqldelight)
 }
 dependencies {
-    implementation(projects.divaCore)
-    implementation(projects.divaDatabase)
+    implementation(projects.framework.divaCore)
+    implementation(projects.framework.divaDatabase)
 
     implementation(libs.postgresql)
 
@@ -19,9 +19,6 @@ sqldelight {
         create("DB") {
             packageName.set("io.github.juevigrace.diva.database")
             schemaOutputDirectory.set(file("src/main/sqldelight/databases"))
-            deriveSchemaFromMigrations.set(true)
-            verifyMigrations.set(true)
-            dialect(libs.sqldelight.postgres.dialect)
             generateAsync.set(false)
         }
     }

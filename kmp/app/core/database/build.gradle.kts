@@ -1,12 +1,12 @@
 plugins {
-    id("divabuild.library")
+    id("divabuild.app-library")
     alias(libs.plugins.sqldelight)
 }
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.models.modelsCore)
+            implementation(projects.app.core.models.modelsCore)
 
             api(libs.diva.database)
         }

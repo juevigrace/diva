@@ -1,3 +1,3 @@
 plugins {
-    id("divabuild.library")
+    id("divabuild.app-library")
 }

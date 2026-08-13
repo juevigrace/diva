@@ -9,8 +9,8 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.divaCore)
-            implementation(projects.divaUi)
+            implementation(projects.framework.divaCore)
+            implementation(projects.framework.divaUi)
         }
 
         commonTest.dependencies {

@@ -16,27 +16,24 @@ class DivaDBTest {
     companion object {
         private val provider: DriverProvider = JvmDriverProviderFactory(
             JvmConf(
-                DriverConf.PostgresqlDriverConf(
-                    host = "localhost",
-                    port = 5434,
-                    username = "postgres",
-                    password = "postgres",
-                    database = "pg",
-                    schema = "public",
+                DriverConf.SqliteDriverConf(
+                    name = ":memory:",
                 )
             )
         ).create()
-        private val db: DivaDatabase<DB> by lazy {
+        private val db: DivaDatabase<DB> by lazy { createDatabase() }
+
+        val divaDB = DivaDB(db)
+
+        fun createDatabase(): DivaDatabase<DB> {
             val result = provider.createDriver(Schema.Sync(DB.Schema))
             assert(result.isSuccess) {
                 "INITIALIZATION ERROR: ${result.getOrNull()}"
             }
 
             val success: SqlDriver = result.getOrThrow()
-            DivaDatabase(success, DB(success))
+            return DivaDatabase(success, DB(success))
         }
-
-        val divaDB = DivaDB(db)
     }
 
     @Test
@@ -58,7 +55,7 @@ class DivaDBTest {
 
     @Test
     fun `test close`() = runTest {
-        val close = db.close()
+        val close = createDatabase().close()
         assert(close.isSuccess)
     }
 }
