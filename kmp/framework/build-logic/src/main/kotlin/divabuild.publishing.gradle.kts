@@ -2,7 +2,6 @@ import divabuild.internal.libs
 
 plugins {
     id("com.vanniktech.maven.publish")
-    id("signing")
 }
 
 mavenPublishing {
@@ -37,8 +36,4 @@ mavenPublishing {
             developerConnection.set("scm:git:ssh://github.com:juevigrace/diva-framework-kt.git")
         }
     }
-}
-
-signing {
-    sign(publishing.publications)
 }

@@ -32,7 +32,7 @@ kotlin {
 
         jsMain.dependencies {
             api(libs.sqldelight.web.worker.driver)
-            api(npm("@cashapp/sqldelight-sqljs-worker", "2.2.1"))
+            api(npm("@cashapp/sqldelight-sqljs-worker", "2.3.2"))
             api(devNpm("copy-webpack-plugin", "9.1.0"))
             api(npm("sql.js", "1.8.0"))
         }
