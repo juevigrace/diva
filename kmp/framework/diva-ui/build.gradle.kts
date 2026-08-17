@@ -15,7 +15,7 @@ kotlin {
         }
 
         commonMain.dependencies {
-            api(projects.framework.divaCore)
+            api(projects.divaCore)
 
             // Compose Multiplatform
             api(libs.compose.animation)

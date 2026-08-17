@@ -5,10 +5,10 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.app.features.auth.session)
-            implementation(projects.app.features.user)
+            implementation(projects.features.auth.session)
+            implementation(projects.features.user)
 
-            implementation(projects.app.core.ui)
+            implementation(projects.core.ui)
         }
     }
 }

@@ -100,8 +100,8 @@ clean:
 	@echo "Cleaning build artifacts..."
 	@rm -rf $(BINARY_DIR)
 	@echo "Cleaning Docker resources..."
-	@docker compose -p diva-dev -f docker-compose.dev.yml --env-file .env.dev down -v --remove-orphans 2>/dev/null || true
-	@docker compose -p diva-prod -f docker-compose.yml --env-file .env down -v --remove-orphans 2>/dev/null || true
+	@docker compose -p diva_dev -f docker-compose.dev.yml --env-file .env.dev down -v --remove-orphans 2>/dev/null || true
+	@docker compose -p diva_prod -f docker-compose.yml --env-file .env down -v --remove-orphans 2>/dev/null || true
 	@docker system prune -f
 	@echo "Clean completed!"
 
@@ -136,52 +136,52 @@ ps:
 
 db-shell-dev:
 	@echo "Accessing dev database shell..."
-	@docker compose -p diva-dev -f docker-compose.dev.yml exec diva_db_dev psql -U ${DB_USER} -d ${DB_NAME}
+	@docker compose -p diva_dev -f docker-compose.dev.yml exec diva_db_dev psql -U ${DB_USER} -d ${DB_NAME}
 
 db-shell-prod:
 	@echo "Accessing prod database shell..."
-	@docker compose -p diva-prod -f docker-compose.yml --env-file .env exec diva_db psql -U ${DB_USER} -d ${DB_NAME}
+	@docker compose -p diva_prod -f docker-compose.yml --env-file .env exec diva_db psql -U ${DB_USER} -d ${DB_NAME}
 
 # Development Commands
 dev-build:
 	@echo "Building development image..."
-	@docker compose -p diva-dev -f docker-compose.dev.yml --env-file .env.dev build
+	@docker compose -p diva_dev -f docker-compose.dev.yml --env-file .env.dev build
 
 dev-up:
 	@echo "Starting development environment..."
-	@docker compose -p diva-dev -f docker-compose.dev.yml --env-file .env.dev up -d --build
+	@docker compose -p diva_dev -f docker-compose.dev.yml --env-file .env.dev up -d --build
 	@echo "Development environment started!"
 
 dev-down:
 	@echo "Stopping development environment..."
-	@docker compose -p diva-dev -f docker-compose.dev.yml --env-file .env.dev down
+	@docker compose -p diva_dev -f docker-compose.dev.yml --env-file .env.dev down
 
 dev-logs:
 	@echo "Following development logs..."
-	@docker compose -p diva-dev -f docker-compose.dev.yml --env-file .env.dev logs -f
+	@docker compose -p diva_dev -f docker-compose.dev.yml --env-file .env.dev logs -f
 
 dev-shell:
 	@echo "Accessing development container shell..."
-	@docker compose -p diva-dev -f docker-compose.dev.yml --env-file .env.dev exec diva_server_dev sh
+	@docker compose -p diva_dev -f docker-compose.dev.yml --env-file .env.dev exec diva_server_dev sh
 
 # Production Commands
 prod-build:
 	@echo "Building production image..."
-	@docker compose -p diva-prod -f docker-compose.yml --env-file .env build
+	@docker compose -p diva_prod -f docker-compose.yml --env-file .env build
 
 prod-up:
 	@echo "Starting production environment..."
-	@docker compose -p diva-prod -f docker-compose.yml --env-file .env up -d --build
+	@docker compose -p diva_prod -f docker-compose.yml --env-file .env up -d --build
 	@echo "Production environment started!"
 
 prod-down:
 	@echo "Stopping production environment..."
-	@docker compose -p diva-prod -f docker-compose.yml --env-file .env down
+	@docker compose -p diva_prod -f docker-compose.yml --env-file .env down
 
 prod-logs:
 	@echo "Following production logs..."
-	@docker compose -p diva-prod -f docker-compose.yml --env-file .env logs -f
+	@docker compose -p diva_prod -f docker-compose.yml --env-file .env logs -f
 
 prod-shell:
 	@echo "Accessing production container shell..."
-	@docker compose -p diva-prod -f docker-compose.yml --env-file .env exec diva_server sh
+	@docker compose -p diva_prod -f docker-compose.yml --env-file .env exec diva_server sh

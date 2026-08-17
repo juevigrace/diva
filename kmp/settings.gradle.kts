@@ -32,54 +32,16 @@ rootProject.name = "diva"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
-include(
-    ":app:apps:androidApp",
-    ":app:apps:desktopApp",
-    ":app:sharedUI",
-)
+// framework and app are independent composite builds, stitched together here so
+// app modules resolve io.github.juevigrace:diva-* from framework source.
+includeBuild("framework")
+includeBuild("app")
 
-include(
-    ":app:core:database",
-    ":app:core:ui",
-)
-
-include(
-    ":app:core:models:models-core",
-    ":app:core:models:models-api",
-    ":app:core:models:models-shared",
-)
-
-include(
-    ":app:features:app:home",
-    ":app:features:app:onboarding",
-    ":app:features:app:services",
-    ":app:features:app:library",
-    ":app:features:app:feed",
-    ":app:features:app:creation",
-    ":app:features:app:profile",
-)
-
-include(
-    ":app:features:auth:auth-core",
-    ":app:features:auth:auth-shared",
-    ":app:features:auth:forgot",
-    ":app:features:auth:session",
-    ":app:features:auth:signin",
-    ":app:features:auth:signup",
-)
-
-include(
-    ":app:features:user",
-    ":app:features:verification",
-    ":app:features:permission",
-)
-
-include(
-    ":framework:diva-core",
-    ":framework:diva-database",
-    ":framework:diva-database-test:diva-database-test-jvm",
-    ":framework:diva-network-client",
-    ":framework:diva-network-client-test",
-    ":framework:diva-ui",
-    ":framework:diva-ui-test",
-)
+// NOTE: examples/diva-kmp-app is intentionally NOT part of this build.
+// It is a standalone Gradle build (own settings.gradle.kts + build-logic) that
+// consumes the published io.github.juevigrace:diva-* artifacts (version:
+// io.github.juevigrace:diva-core:0.0.15 does not exist on Maven Central, the
+// old ErrorCause/DivaAction API the samples use is only in 0.0.14 and earlier).
+// Do NOT add includeBuild("examples/diva-kmp-app") here; the root build would
+// fail on its dependency resolution. Build it separately with:
+//     ./gradlew -p examples/diva-kmp-app ...

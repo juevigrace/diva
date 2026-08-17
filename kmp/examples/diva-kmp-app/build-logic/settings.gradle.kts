@@ -19,7 +19,8 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from(files("../gradle/libs.versions.toml"))
+            from(files("../../../gradle/libs.versions.toml"))
+            version("diva", "0.0.15")
         }
     }
 }

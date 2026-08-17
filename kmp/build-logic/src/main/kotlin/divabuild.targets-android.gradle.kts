@@ -7,7 +7,7 @@ plugins {
     id("com.android.kotlin.multiplatform.library")
 }
 
-val isFrameworkModule = path.startsWith(":framework")
+val isFrameworkModule = rootProject.name == "framework"
 
 kotlin {
     android {

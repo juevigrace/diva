@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    implementation(projects.app.sharedUI)
+    implementation(projects.sharedUI)
 }
 
 android {
@@ -64,7 +64,7 @@ android {
         all {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                file("$rootDir/build-logic/src/main/resources/proguard-rules.pro"),
+                file("$rootDir/apps/androidApp/proguard-rules.pro"),
             )
         }
     }

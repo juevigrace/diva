@@ -5,7 +5,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.app.features.auth.authShared)
+            implementation(projects.features.auth.authShared)
         }
     }
 }

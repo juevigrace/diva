@@ -14,7 +14,7 @@ kotlin {
         }
 
         commonMain.dependencies {
-            api(project(":app:core:models:models-core"))
+            api(project(":core:models:models-core"))
 
             api(libs.diva.ui)
 

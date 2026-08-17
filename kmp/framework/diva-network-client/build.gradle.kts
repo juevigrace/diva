@@ -6,7 +6,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.framework.divaCore)
+            implementation(projects.divaCore)
 
             // Ktor
             api(libs.ktor.client.core)

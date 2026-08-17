@@ -25,6 +25,12 @@ dependencyResolutionManagement {
         mavenCentral()
         mavenLocal()
     }
+    versionCatalogs {
+        create("libs") {
+            from(files("../../gradle/libs.versions.toml"))
+            version("diva", "0.0.15")
+        }
+    }
 }
 
 rootProject.name = "diva-kmp-app"

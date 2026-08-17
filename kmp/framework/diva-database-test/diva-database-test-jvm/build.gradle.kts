@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.sqldelight)
 }
 dependencies {
-    implementation(projects.framework.divaCore)
-    implementation(projects.framework.divaDatabase)
+    implementation(projects.divaCore)
+    implementation(projects.divaDatabase)
 
     implementation(libs.postgresql)
 
