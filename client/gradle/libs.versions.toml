@@ -74,7 +74,6 @@ koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compos
 koin-compose = { group = "io.insert-koin", name = "koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
-koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koin" }
 koin-logger-slf4j = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koin" }
 
 ######### [KOTLIN/KOTLINX DEPENDENCIES] #########
@@ -124,6 +123,7 @@ compose-runtime-saveable = { group = "org.jetbrains.compose.runtime", name = "ru
 compose-foundation = { group = "org.jetbrains.compose.foundation", name = "foundation", version.ref = "compose-multiplatform" }
 compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "compose-multiplatform" }
 compose-ui-util = { group = "org.jetbrains.compose.ui", name = "ui-util", version.ref = "compose-multiplatform" }
+compose-ui-tooling = { group = "org.jetbrains.compose.ui", name = "ui-tooling", version.ref = "compose-multiplatform" }
 compose-ui-tooling-preview = { group = "org.jetbrains.compose.ui", name = "ui-tooling-preview", version.ref = "compose-multiplatform" }
 compose-desktop-common = { group = "org.jetbrains.compose.desktop", name = "desktop", version.ref = "compose-multiplatform" }
 

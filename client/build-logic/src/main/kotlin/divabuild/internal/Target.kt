@@ -3,7 +3,7 @@ package divabuild.internal
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 internal fun KotlinMultiplatformExtension.hasTarget(name: String, configure: KotlinMultiplatformExtension.() -> Unit) {
-    if (targets.findByName(name) != null) {
-        configure()
+    targets.matching { it.name == name }.configureEach {
+        this@hasTarget.configure()
     }
 }
