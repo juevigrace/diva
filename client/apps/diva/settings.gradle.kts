@@ -32,3 +32,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "diva-app"
+
+includeBuild("../../framework")
+includeBuild("../lib")

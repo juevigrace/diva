@@ -24,7 +24,7 @@ koin = "4.2.2"
 ktor = "3.5.2"
 logback = "1.6.3"
 maven-publish = "0.37.0"
-nav3 = "1.1.1"
+nav3-ui = "1.1.1"
 sqldelight = "2.3.2"
 sqlite = "3.53.2.1"
 postgresql = "42.7.13"
@@ -89,7 +89,6 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 
 ######### [KTOR DEPENDENCIES] #########
 
-ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-client-websockets = { group = "io.ktor", name = "ktor-client-websockets", version.ref = "ktor" }
@@ -112,6 +111,7 @@ sqldelight-sqlite-driver = { group = "app.cash.sqldelight", name = "sqlite-drive
 sqldelight-jdbc-driver = { group = "app.cash.sqldelight", name = "jdbc-driver", version.ref = "sqldelight" }
 sqldelight-r2dbc-driver = { group = "app.cash.sqldelight", name = "r2dbc-driver", version.ref = "sqldelight" }
 sqldelight-web-worker-driver = { group = "app.cash.sqldelight", name = "web-worker-driver", version.ref = "sqldelight" }
+sqldelight-web-worker-driver-wasm-js = { group = "app.cash.sqldelight", name = "web-worker-driver-wasm-js", version.ref = "sqldelight" }
 sqldelight-postgres-dialect = { group = "app.cash.sqldelight", name = "postgresql-dialect", version.ref = "sqldelight" }
 
 ######### [COMPOSE DEPENDENCIES] #########
@@ -124,6 +124,8 @@ compose-runtime-saveable = { group = "org.jetbrains.compose.runtime", name = "ru
 compose-foundation = { group = "org.jetbrains.compose.foundation", name = "foundation", version.ref = "compose-multiplatform" }
 compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "compose-multiplatform" }
 compose-ui-util = { group = "org.jetbrains.compose.ui", name = "ui-util", version.ref = "compose-multiplatform" }
+compose-ui-test = { group = "org.jetbrains.compose.ui", name = "ui-test", version.ref = "compose-multiplatform" }
+compose-ui-test-junit4 = { group = "org.jetbrains.compose.ui", name = "ui-test-junit4", version.ref = "compose-multiplatform" }
 compose-ui-tooling = { group = "org.jetbrains.compose.ui", name = "ui-tooling", version.ref = "compose-multiplatform" }
 compose-ui-tooling-preview = { group = "org.jetbrains.compose.ui", name = "ui-tooling-preview", version.ref = "compose-multiplatform" }
 compose-desktop-common = { group = "org.jetbrains.compose.desktop", name = "desktop", version.ref = "compose-multiplatform" }
@@ -135,8 +137,7 @@ material3-adaptive-layout = { group = "org.jetbrains.compose.material3.adaptive"
 material3-adaptive-nav3 = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "material3-adaptive" }
 material3-window-size = { group = "org.jetbrains.compose.material3", name = "material3-window-size-class", version.ref = "material3" }
 
-nav3 = { group = "org.jetbrains.androidx.navigation3", name = "navigation3", version.ref = "nav3" }
-nav3-ui = { group = "org.jetbrains.androidx.navigation3", name = "navigation3-ui", version.ref = "nav3" }
+nav3-ui = { group = "org.jetbrains.androidx.navigation3", name = "navigation3-ui", version.ref = "nav3-ui" }
 
 ######### [SAVEDSTATE DEPENDENCIES] #########
 

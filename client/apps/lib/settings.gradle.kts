@@ -1,5 +1,5 @@
 pluginManagement {
-    includeBuild("../../../build-logic")
+    includeBuild("../../build-logic")
     repositories {
         google {
             content {
@@ -26,9 +26,16 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from(files("../../../gradle/libs.versions.toml"))
+            from(files("../../gradle/libs.versions.toml"))
         }
     }
 }
 
-rootProject.name = "diva-user"
+rootProject.name = "diva-lib"
+
+includeBuild("../../framework")
+
+include(":core")
+include(":sharedUI")
+include(":features:auth")
+include(":features:user")

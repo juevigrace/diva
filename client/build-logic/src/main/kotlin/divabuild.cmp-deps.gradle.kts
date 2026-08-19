@@ -23,8 +23,12 @@ kotlin {
             implementation(libs.material3.adaptive.nav3)
             implementation(libs.material3.adaptive.navigation.suite)
             implementation(libs.material3.window.size)
+            implementation(libs.window.core)
             implementation(libs.nav3.ui)
             implementation(libs.savedstate.compose)
+            implementation(libs.lifecycle.viewmodel)
+            implementation(libs.lifecycle.viewmodel.savedstate)
+            implementation(libs.lifecycle.viewmodel.nav3)
             implementation(libs.lifecycle.runtime.compose)
             implementation(libs.lifecycle.viewmodel.compose)
         }

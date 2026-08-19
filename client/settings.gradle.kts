@@ -32,8 +32,5 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 rootProject.name = "diva"
 
 includeBuild("framework")
-includeBuild("apps/core")
 includeBuild("apps/diva")
-includeBuild("apps/features/auth")
-includeBuild("apps/features/user")
-includeBuild("apps/sharedUI")
+includeBuild("apps/lib")

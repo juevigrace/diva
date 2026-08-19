@@ -34,3 +34,9 @@ dependencyResolutionManagement {
 rootProject.name = "framework"
 
 include(":diva-core")
+include(":diva-database")
+include(":diva-database-test")
+include(":diva-network")
+include(":diva-network-test")
+include(":diva-ui")
+include(":diva-ui-test")
