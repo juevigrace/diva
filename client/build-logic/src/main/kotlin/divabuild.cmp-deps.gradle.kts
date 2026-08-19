@@ -23,19 +23,10 @@ kotlin {
             implementation(libs.material3.adaptive.nav3)
             implementation(libs.material3.adaptive.navigation.suite)
             implementation(libs.material3.window.size)
-            implementation(libs.nav3)
             implementation(libs.nav3.ui)
-            implementation(libs.savedstate)
             implementation(libs.savedstate.compose)
-            implementation(libs.window.core)
-            implementation(libs.lifecycle.viewmodel)
             implementation(libs.lifecycle.runtime.compose)
             implementation(libs.lifecycle.viewmodel.compose)
-            implementation(libs.lifecycle.viewmodel.savedstate)
-            implementation(libs.lifecycle.viewmodel.nav3)
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
         }
     }
 
@@ -43,8 +34,6 @@ kotlin {
         sourceSets {
             androidMain.dependencies {
                 implementation(libs.androidx.activity.compose)
-                implementation(libs.koin.android)
-                implementation(libs.koin.androidx.compose)
                 implementation(libs.compose.ui.tooling)
             }
         }
@@ -54,7 +43,6 @@ kotlin {
         sourceSets {
             jvmMain.dependencies {
                 implementation(libs.compose.desktop.common)
-                implementation(libs.koin.logger.slf4j)
             }
         }
     }

@@ -9,6 +9,7 @@ plugins {
 kotlin {
     js {
         outputModuleName = project.name
+        nodejs()
         generateTypeScriptDefinitions()
         compilerOptions {
             target = "es2015"
@@ -17,6 +18,7 @@ kotlin {
 
     wasmJs {
         outputModuleName = project.name
+        nodejs()
         generateTypeScriptDefinitions()
         compilerOptions {
             target = "es2015"
