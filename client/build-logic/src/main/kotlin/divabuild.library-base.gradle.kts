@@ -1,5 +1,5 @@
 plugins {
-    id("divabuild.kmp-deps")
+    id("divabuild.kmp")
     id("divabuild.targets-android")
     id("divabuild.targets-ios")
     id("divabuild.targets-jvm")

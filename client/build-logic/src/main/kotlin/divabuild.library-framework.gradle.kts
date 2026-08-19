@@ -1,5 +1,6 @@
 plugins {
-    id("divabuild.library-framework-base")
+    id("divabuild.library-base")
+    id("divabuild.library-version-framework")
     id("divabuild.targets-apple")
     id("divabuild.targets-mac")
     id("divabuild.targets-linux")
