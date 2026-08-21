@@ -7,6 +7,7 @@ android-compileSdk = "37"
 android-minSdk = "24"
 android-targetSdk = "37"
 androidx-espresso = "3.7.0"
+androidx-test = "1.6.1"
 androidx-activity = "1.13.0"
 androidx-core = "1.19.0"
 lifecycle = "2.11.0"
@@ -30,6 +31,7 @@ sqlite = "3.53.2.1"
 postgresql = "42.7.13"
 mysql = "26.7.0"
 hikari = "7.1.0"
+testcontainers = "1.21.4"
 secrets = "2.0.1"
 
 [plugins]
@@ -52,6 +54,7 @@ kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.re
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-espresso" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidx-test" }
 
 ######### [GRADLE PLUGIN DEPENDENCIES] #########
 
@@ -112,6 +115,7 @@ sqldelight-jdbc-driver = { group = "app.cash.sqldelight", name = "jdbc-driver", 
 sqldelight-r2dbc-driver = { group = "app.cash.sqldelight", name = "r2dbc-driver", version.ref = "sqldelight" }
 sqldelight-web-worker-driver = { group = "app.cash.sqldelight", name = "web-worker-driver", version.ref = "sqldelight" }
 sqldelight-web-worker-driver-wasm-js = { group = "app.cash.sqldelight", name = "web-worker-driver-wasm-js", version.ref = "sqldelight" }
+sqldelight-mysql-dialect = { group = "app.cash.sqldelight", name = "mysql-dialect", version.ref = "sqldelight" }
 sqldelight-postgres-dialect = { group = "app.cash.sqldelight", name = "postgresql-dialect", version.ref = "sqldelight" }
 
 ######### [COMPOSE DEPENDENCIES] #########
@@ -163,3 +167,10 @@ hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
 sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
 postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
 mysql = { group = "com.mysql", name = "mysql-connector-j", version.ref = "mysql" }
+
+######### [TESTCONTAINERS DEPENDENCIES] #########
+
+testcontainers-jdbc = { group = "org.testcontainers", name = "jdbc", version.ref = "testcontainers" }
+testcontainers-junit-jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
+testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
+testcontainers-mysql = { group = "org.testcontainers", name = "mysql", version.ref = "testcontainers" }

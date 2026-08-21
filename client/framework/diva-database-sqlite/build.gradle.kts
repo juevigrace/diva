@@ -16,7 +16,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(project(":diva-database"))
+            api(projects.divaDatabase)
         }
         androidMain.dependencies {
             api(libs.sqldelight.android.driver)

@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":diva-database"))
+    api(projects.divaDatabase)
     api(libs.sqldelight.jdbc.driver)
     api(libs.sqldelight.r2dbc.driver)
     api(libs.hikaricp)

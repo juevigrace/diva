@@ -1,13 +1,24 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     id("divabuild.library-framework")
     id("divabuild.kmp-test")
 }
 
 kotlin {
+    js {
+        nodejs()
+    }
+    wasmJs {
+        nodejs()
+    }
+
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":diva-core"))
-            implementation(project(":diva-network"))
+            implementation(projects.divaCore)
+            implementation(projects.divaNetwork)
         }
         commonTest.dependencies {
             implementation(libs.ktor.client.mock)

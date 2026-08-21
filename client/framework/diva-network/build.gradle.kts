@@ -1,12 +1,23 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     id("divabuild.library-framework")
     id("divabuild.serialization")
 }
 
 kotlin {
+    js {
+        nodejs()
+    }
+    wasmJs {
+        nodejs()
+    }
+
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":diva-core"))
+            implementation(projects.divaCore)
             api(libs.ktor.client.core)
             api(libs.ktor.client.content.negotiation)
             api(libs.ktor.serialization.kotlinx.json)
