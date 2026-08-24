@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 plugins {
     id("divabuild.library-framework")
     id("divabuild.kmp-test")
+    id("divabuild.serialization")
 }
 
 kotlin {
@@ -22,6 +23,10 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.ktor.client.mock)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.kotlin.test)
         }
     }
 }
