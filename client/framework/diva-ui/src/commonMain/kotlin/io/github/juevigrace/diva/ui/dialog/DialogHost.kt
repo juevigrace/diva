@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.fold
+import io.github.juevigrace.diva.ui.navigation.BackHandler
 
 @Stable
 class DialogController {
@@ -50,6 +51,10 @@ fun DialogHost(
         DefaultDialog(request, controller, confirmLabel, dismissLabel, onConfirm, onDismiss)
     },
 ) {
+    BackHandler(enabled = controller.current.isSome) {
+        controller.dismiss()
+    }
+
     controller.current.fold(
         onSome = { request -> dialog(request) },
         onNone = {},

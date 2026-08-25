@@ -2,8 +2,13 @@ package io.github.juevigrace.diva.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
+import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.savedstate.serialization.SavedStateConfiguration
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.fold
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -11,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 
@@ -23,7 +29,10 @@ data class BackStack(val entries: List<NavKey>) {
 @Immutable
 data class NavigationResult(val key: NavKey, val value: Any?)
 
-class Navigator(startDestination: NavKey) {
+class Navigator(
+    startDestination: NavKey,
+    internal val navBackStack: NavBackStack<NavKey>? = null,
+) {
 
     val startDestination: NavKey = startDestination
 
@@ -38,9 +47,12 @@ class Navigator(startDestination: NavKey) {
 
     private val mutResults = MutableSharedFlow<NavigationResult>(extraBufferCapacity = 1)
 
-    // emits whenever a destination is popped through popWithResult
     val results: SharedFlow<NavigationResult>
         get() = mutResults
+
+    internal fun syncFromNavBackStack(entries: List<NavKey>) {
+        mutBackStack.update { BackStack(entries = entries) }
+    }
 
     fun navigate(destination: NavKey, launchSingleTop: Boolean = false) {
         mutBackStack.update { state ->
@@ -109,6 +121,24 @@ class Navigator(startDestination: NavKey) {
 }
 
 @Composable
-fun rememberNavigator(startDestination: NavKey): Navigator {
-    return remember { Navigator(startDestination) }
+fun rememberNavigator(
+    startDestination: NavKey,
+    configuration: SavedStateConfiguration? = LocalSavedStateConfiguration.current,
+): Navigator {
+    val navBackStack: NavBackStack<NavKey>? = if (configuration != null) {
+        rememberNavBackStack(configuration, startDestination)
+    } else {
+        null
+    }
+    val navigator = remember { Navigator(startDestination, navBackStack) }
+    if (navBackStack != null) {
+        LaunchedEffect(navBackStack) {
+            snapshotFlow { navBackStack.toList() }
+                .distinctUntilChanged()
+                .collect { entries ->
+                    navigator.syncFromNavBackStack(entries)
+                }
+        }
+    }
+    return navigator
 }
