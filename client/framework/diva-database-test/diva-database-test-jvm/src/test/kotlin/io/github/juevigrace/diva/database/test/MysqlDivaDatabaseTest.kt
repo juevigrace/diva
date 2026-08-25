@@ -30,7 +30,7 @@ class MysqlDivaDatabaseTest {
             )
         )
         val driver: SqlDriver = provider.createAsyncDriver(MysqlDB.Schema).getOrThrow()
-        return DivaDatabase.createAsync(provider, MysqlDB.Schema) { MysqlDB(driver) }.getOrThrow()
+        return DivaDatabase.createAsync(provider, MysqlDB.Schema, db = { MysqlDB(driver) }).getOrThrow()
     }
 
     @Test

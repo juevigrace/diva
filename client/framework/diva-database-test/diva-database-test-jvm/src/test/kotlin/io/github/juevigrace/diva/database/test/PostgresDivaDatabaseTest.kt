@@ -32,7 +32,7 @@ class PostgresDivaDatabaseTest {
             )
         )
         val driver: SqlDriver = provider.createAsyncDriver(PostgresDB.Schema).getOrThrow()
-        return DivaDatabase.createAsync(provider, PostgresDB.Schema) { PostgresDB(driver) }.getOrThrow()
+        return DivaDatabase.createAsync(provider, PostgresDB.Schema, db = { PostgresDB(driver) }).getOrThrow()
     }
 
     @Test

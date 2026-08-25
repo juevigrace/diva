@@ -17,7 +17,7 @@ class DivaDatabaseTest {
     companion object {
         private suspend fun createDatabase(): DivaDatabase<SqliteDB> {
             val driver: SqlDriver = provider.createAsyncDriver(SqliteDB.Schema).getOrThrow()
-            return DivaDatabase.createAsync(provider, SqliteDB.Schema) { SqliteDB(driver) }.getOrThrow()
+            return DivaDatabase.createAsync(provider, SqliteDB.Schema, db = { SqliteDB(driver) }).getOrThrow()
         }
     }
 

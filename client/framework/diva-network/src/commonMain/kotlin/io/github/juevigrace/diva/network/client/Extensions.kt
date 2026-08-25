@@ -1,5 +1,6 @@
 package io.github.juevigrace.diva.network.client
 
+import io.github.juevigrace.diva.core.ioDispatcher
 import io.ktor.client.call.body
 import io.ktor.client.plugins.sse.ClientSSESession
 import io.ktor.client.plugins.sse.sse
@@ -18,6 +19,8 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
 import io.ktor.http.takeFrom
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 // ── GET ──
 
@@ -25,17 +28,21 @@ suspend fun DivaClient.get(
     path: String,
     queryParams: Map<String, String> = emptyMap(),
     headers: Map<String, String> = emptyMap(),
-): Result<HttpResponse> = call {
-    method = HttpMethod.Get
-    setUrl(path, queryParams)
-    headers.forEach { header(it.key, it.value) }
+): Result<HttpResponse> {
+    return call {
+        method = HttpMethod.Get
+        setUrl(path, queryParams)
+        headers.forEach { header(it.key, it.value) }
+    }
 }
 
 suspend inline fun <reified T : Any> DivaClient.getAs(
     path: String,
     queryParams: Map<String, String> = emptyMap(),
     headers: Map<String, String> = emptyMap(),
-): Result<T> = get(path, queryParams, headers).map { it.body() }
+): Result<T> {
+    return get(path, queryParams, headers).map { it.body() }
+}
 
 // ── POST ──
 
@@ -44,12 +51,14 @@ suspend fun DivaClient.post(
     body: Any? = null,
     headers: Map<String, String> = emptyMap(),
     contentType: ContentType = ContentType.Application.Json,
-): Result<HttpResponse> = call {
-    method = HttpMethod.Post
-    setUrl(path)
-    headers.forEach { header(it.key, it.value) }
-    this.contentType(contentType)
-    if (body != null) setBody(body)
+): Result<HttpResponse> {
+    return call {
+        method = HttpMethod.Post
+        setUrl(path)
+        headers.forEach { header(it.key, it.value) }
+        this.contentType(contentType)
+        if (body != null) setBody(body)
+    }
 }
 
 suspend inline fun <reified T : Any> DivaClient.postAs(
@@ -57,7 +66,9 @@ suspend inline fun <reified T : Any> DivaClient.postAs(
     body: Any? = null,
     headers: Map<String, String> = emptyMap(),
     contentType: ContentType = ContentType.Application.Json,
-): Result<T> = post(path, body, headers, contentType).map { it.body() }
+): Result<T> {
+    return post(path, body, headers, contentType).map { it.body() }
+}
 
 // ── PUT ──
 
@@ -66,12 +77,14 @@ suspend fun DivaClient.put(
     body: Any? = null,
     headers: Map<String, String> = emptyMap(),
     contentType: ContentType = ContentType.Application.Json,
-): Result<HttpResponse> = call {
-    method = HttpMethod.Put
-    setUrl(path)
-    headers.forEach { header(it.key, it.value) }
-    this.contentType(contentType)
-    if (body != null) setBody(body)
+): Result<HttpResponse> {
+    return call {
+        method = HttpMethod.Put
+        setUrl(path)
+        headers.forEach { header(it.key, it.value) }
+        this.contentType(contentType)
+        if (body != null) setBody(body)
+    }
 }
 
 suspend inline fun <reified T : Any> DivaClient.putAs(
@@ -79,7 +92,9 @@ suspend inline fun <reified T : Any> DivaClient.putAs(
     body: Any? = null,
     headers: Map<String, String> = emptyMap(),
     contentType: ContentType = ContentType.Application.Json,
-): Result<T> = put(path, body, headers, contentType).map { it.body() }
+): Result<T> {
+    return put(path, body, headers, contentType).map { it.body() }
+}
 
 // ── PATCH ──
 
@@ -88,12 +103,14 @@ suspend fun DivaClient.patch(
     body: Any? = null,
     headers: Map<String, String> = emptyMap(),
     contentType: ContentType = ContentType.Application.Json,
-): Result<HttpResponse> = call {
-    method = HttpMethod.Patch
-    setUrl(path)
-    headers.forEach { header(it.key, it.value) }
-    this.contentType(contentType)
-    if (body != null) setBody(body)
+): Result<HttpResponse> {
+    return call {
+        method = HttpMethod.Patch
+        setUrl(path)
+        headers.forEach { header(it.key, it.value) }
+        this.contentType(contentType)
+        if (body != null) setBody(body)
+    }
 }
 
 suspend inline fun <reified T : Any> DivaClient.patchAs(
@@ -101,7 +118,9 @@ suspend inline fun <reified T : Any> DivaClient.patchAs(
     body: Any? = null,
     headers: Map<String, String> = emptyMap(),
     contentType: ContentType = ContentType.Application.Json,
-): Result<T> = patch(path, body, headers, contentType).map { it.body() }
+): Result<T> {
+    return patch(path, body, headers, contentType).map { it.body() }
+}
 
 // ── DELETE ──
 
@@ -109,11 +128,13 @@ suspend fun DivaClient.delete(
     path: String,
     headers: Map<String, String> = emptyMap(),
     contentType: ContentType = ContentType.Application.Json,
-): Result<HttpResponse> = call {
-    method = HttpMethod.Delete
-    setUrl(path)
-    headers.forEach { header(it.key, it.value) }
-    this.contentType(contentType)
+): Result<HttpResponse> {
+    return call {
+        method = HttpMethod.Delete
+        setUrl(path)
+        headers.forEach { header(it.key, it.value) }
+        this.contentType(contentType)
+    }
 }
 
 suspend fun DivaClient.delete(
@@ -121,12 +142,14 @@ suspend fun DivaClient.delete(
     body: Any?,
     headers: Map<String, String> = emptyMap(),
     contentType: ContentType = ContentType.Application.Json,
-): Result<HttpResponse> = call {
-    method = HttpMethod.Delete
-    setUrl(path)
-    headers.forEach { header(it.key, it.value) }
-    this.contentType(contentType)
-    if (body != null) setBody(body)
+): Result<HttpResponse> {
+    return call {
+        method = HttpMethod.Delete
+        setUrl(path)
+        headers.forEach { header(it.key, it.value) }
+        this.contentType(contentType)
+        if (body != null) setBody(body)
+    }
 }
 
 // ── SSE ──
@@ -135,20 +158,22 @@ suspend inline fun DivaClient.sse(
     path: String,
     queryParams: Map<String, String> = emptyMap(),
     headers: Map<String, String> = emptyMap(),
+    context: CoroutineContext = ioDispatcher,
     crossinline block: suspend ClientSSESession.() -> Unit,
-): Result<Unit> = try {
-    client.sse(
-        request = {
-            method = HttpMethod.Get
-            setUrl(path, queryParams)
-            headers.forEach { header(it.key, it.value) }
+): Result<Unit> {
+    return withContext(context) {
+        runCatching {
+            client.sse(
+                request = {
+                    method = HttpMethod.Get
+                    setUrl(path, queryParams)
+                    headers.forEach { header(it.key, it.value) }
+                }
+            ) {
+                block()
+            }
         }
-    ) {
-        block()
     }
-    Result.success(Unit)
-} catch (e: Exception) {
-    Result.failure(e)
 }
 
 // ── WebSocket ──
@@ -157,20 +182,22 @@ suspend inline fun DivaClient.webSocket(
     path: String,
     queryParams: Map<String, String> = emptyMap(),
     headers: Map<String, String> = emptyMap(),
+    context: CoroutineContext = ioDispatcher,
     crossinline block: suspend DefaultClientWebSocketSession.() -> Unit,
-): Result<Unit> = try {
-    client.webSocket(
-        request = {
-            method = HttpMethod.Get
-            setUrl(path, queryParams)
-            headers.forEach { header(it.key, it.value) }
+): Result<Unit> {
+    return withContext(context) {
+        runCatching {
+            client.webSocket(
+                request = {
+                    method = HttpMethod.Get
+                    setUrl(path, queryParams)
+                    headers.forEach { header(it.key, it.value) }
+                }
+            ) {
+                block()
+            }
         }
-    ) {
-        block()
     }
-    Result.success(Unit)
-} catch (e: Exception) {
-    Result.failure(e)
 }
 
 // ── Multipart POST ──
@@ -179,36 +206,40 @@ suspend fun DivaClient.multipartPost(
     path: String,
     formData: List<FormDataContent>,
     headers: Map<String, String> = emptyMap(),
-): Result<HttpResponse> = call {
-    method = HttpMethod.Post
-    setUrl(path)
-    headers.forEach { header(it.key, it.value) }
-    setBody(
-        MultiPartFormDataContent(
-            formData {
-                formData.forEach { item ->
-                    when (item) {
-                        is FormDataContent.FormItem -> append(item.key, item.value)
-                        is FormDataContent.FileItem -> append(
-                            item.key,
-                            item.bytes,
-                            io.ktor.http.Headers.build {
-                                append(HttpHeaders.ContentType, item.contentType.toString())
-                                append(HttpHeaders.ContentDisposition, "filename=${item.fileName}")
-                            },
-                        )
+): Result<HttpResponse> {
+    return call {
+        method = HttpMethod.Post
+        setUrl(path)
+        headers.forEach { header(it.key, it.value) }
+        setBody(
+            MultiPartFormDataContent(
+                formData {
+                    formData.forEach { item ->
+                        when (item) {
+                            is FormDataContent.FormItem -> append(item.key, item.value)
+                            is FormDataContent.FileItem -> append(
+                                item.key,
+                                item.bytes,
+                                Headers.build {
+                                    append(HttpHeaders.ContentType, item.contentType.toString())
+                                    append(HttpHeaders.ContentDisposition, "filename=${item.fileName}")
+                                },
+                            )
+                        }
                     }
                 }
-            }
+            )
         )
-    )
+    }
 }
 
 suspend inline fun <reified T : Any> DivaClient.multipartPostAs(
     path: String,
     formData: List<FormDataContent>,
     headers: Map<String, String> = emptyMap(),
-): Result<T> = multipartPost(path, formData, headers).map { it.body() }
+): Result<T> {
+    return multipartPost(path, formData, headers).map { it.body() }
+}
 
 // ── Multipart PUT ──
 
@@ -216,36 +247,40 @@ suspend fun DivaClient.multipartPut(
     path: String,
     formData: List<FormDataContent>,
     headers: Map<String, String> = emptyMap(),
-): Result<HttpResponse> = call {
-    method = HttpMethod.Put
-    setUrl(path)
-    headers.forEach { header(it.key, it.value) }
-    setBody(
-        MultiPartFormDataContent(
-            formData {
-                formData.forEach { item ->
-                    when (item) {
-                        is FormDataContent.FormItem -> append(item.key, item.value)
-                        is FormDataContent.FileItem -> append(
-                            item.key,
-                            item.bytes,
-                            Headers.build {
-                                append(HttpHeaders.ContentType, item.contentType.toString())
-                                append(HttpHeaders.ContentDisposition, "filename=${item.fileName}")
-                            },
-                        )
+): Result<HttpResponse> {
+    return call {
+        method = HttpMethod.Put
+        setUrl(path)
+        headers.forEach { header(it.key, it.value) }
+        setBody(
+            MultiPartFormDataContent(
+                formData {
+                    formData.forEach { item ->
+                        when (item) {
+                            is FormDataContent.FormItem -> append(item.key, item.value)
+                            is FormDataContent.FileItem -> append(
+                                item.key,
+                                item.bytes,
+                                Headers.build {
+                                    append(HttpHeaders.ContentType, item.contentType.toString())
+                                    append(HttpHeaders.ContentDisposition, "filename=${item.fileName}")
+                                },
+                            )
+                        }
                     }
                 }
-            }
+            )
         )
-    )
+    }
 }
 
 suspend inline fun <reified T : Any> DivaClient.multipartPutAs(
     path: String,
     formData: List<FormDataContent>,
     headers: Map<String, String> = emptyMap(),
-): Result<T> = multipartPut(path, formData, headers).map { it.body() }
+): Result<T> {
+    return multipartPut(path, formData, headers).map { it.body() }
+}
 
 // ── Multipart PATCH ──
 
@@ -253,36 +288,40 @@ suspend fun DivaClient.multipartPatch(
     path: String,
     formData: List<FormDataContent>,
     headers: Map<String, String> = emptyMap(),
-): Result<HttpResponse> = call {
-    method = HttpMethod.Patch
-    setUrl(path)
-    headers.forEach { header(it.key, it.value) }
-    setBody(
-        MultiPartFormDataContent(
-            formData {
-                formData.forEach { item ->
-                    when (item) {
-                        is FormDataContent.FormItem -> append(item.key, item.value)
-                        is FormDataContent.FileItem -> append(
-                            item.key,
-                            item.bytes,
-                            Headers.build {
-                                append(HttpHeaders.ContentType, item.contentType.toString())
-                                append(HttpHeaders.ContentDisposition, "filename=${item.fileName}")
-                            },
-                        )
+): Result<HttpResponse> {
+    return call {
+        method = HttpMethod.Patch
+        setUrl(path)
+        headers.forEach { header(it.key, it.value) }
+        setBody(
+            MultiPartFormDataContent(
+                formData {
+                    formData.forEach { item ->
+                        when (item) {
+                            is FormDataContent.FormItem -> append(item.key, item.value)
+                            is FormDataContent.FileItem -> append(
+                                item.key,
+                                item.bytes,
+                                Headers.build {
+                                    append(HttpHeaders.ContentType, item.contentType.toString())
+                                    append(HttpHeaders.ContentDisposition, "filename=${item.fileName}")
+                                },
+                            )
+                        }
                     }
                 }
-            }
+            )
         )
-    )
+    }
 }
 
 suspend inline fun <reified T : Any> DivaClient.multipartPatchAs(
     path: String,
     formData: List<FormDataContent>,
     headers: Map<String, String> = emptyMap(),
-): Result<T> = multipartPatch(path, formData, headers).map { it.body() }
+): Result<T> {
+    return multipartPatch(path, formData, headers).map { it.body() }
+}
 
 // ── URL helper ──
 

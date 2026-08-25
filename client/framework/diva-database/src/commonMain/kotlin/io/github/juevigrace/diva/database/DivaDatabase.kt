@@ -8,33 +8,52 @@ import app.cash.sqldelight.coroutines.mapToOneOrNull
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
+import io.github.juevigrace.diva.core.ioDispatcher
 import io.github.juevigrace.diva.database.driver.DriverProvider
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
 interface DivaDatabase<S : TransacterBase> {
-    suspend fun <T : Any> getOne(block: S.() -> Query<T>): Result<T>
+    val scope: CoroutineScope
+
+    suspend fun <T : Any> getOne(
+        context: CoroutineContext = ioDispatcher,
+        block: S.() -> Query<T>,
+    ): Result<T>
 
     fun <T : Any> getOneAsFlow(
-        ctx: CoroutineContext = EmptyCoroutineContext,
+        context: CoroutineContext = EmptyCoroutineContext,
         block: S.() -> Query<T>,
     ): Flow<Result<T>>
 
-    suspend fun <T : Any> getList(block: S.() -> Query<T>): Result<List<T>>
+    suspend fun <T : Any> getList(
+        context: CoroutineContext = ioDispatcher,
+        block: S.() -> Query<T>,
+    ): Result<List<T>>
 
     fun <T : Any> getListAsFlow(
-        ctx: CoroutineContext = EmptyCoroutineContext,
+        context: CoroutineContext = EmptyCoroutineContext,
         block: S.() -> Query<T>,
     ): Flow<Result<List<T>>>
 
-    suspend fun <T : Any> use(block: suspend S.() -> T): Result<T>
+    suspend fun <T : Any> use(
+        context: CoroutineContext = ioDispatcher,
+        block: suspend S.() -> T,
+    ): Result<T>
 
-    suspend fun <T : Any> withDriver(block: suspend SqlDriver.() -> T): Result<T>
+    suspend fun <T : Any> withDriver(
+        context: CoroutineContext = ioDispatcher,
+        block: suspend SqlDriver.() -> T,
+    ): Result<T>
 
-    suspend fun checkHealth(): Result<Boolean>
+    suspend fun checkHealth(
+        context: CoroutineContext = ioDispatcher,
+    ): Result<Boolean>
 
     suspend fun close(): Result<Unit>
 
@@ -63,21 +82,28 @@ interface DivaDatabase<S : TransacterBase> {
 
 internal class DivaDatabaseImpl<S : TransacterBase>(
     private val driver: SqlDriver,
-    private val db: S
+    private val db: S,
 ) : DivaDatabase<S> {
-    override suspend fun <T : Any> getOne(block: S.() -> Query<T>): Result<T> {
-        return runCatching {
-            block(db).executeAsOneOrNull()
-                ?: throw NoSuchElementException("no rows returned")
+    override val scope: CoroutineScope = CoroutineScope(ioDispatcher)
+
+    override suspend fun <T : Any> getOne(
+        context: CoroutineContext,
+        block: S.() -> Query<T>,
+    ): Result<T> {
+        return withContext(context) {
+            runCatching {
+                block(db).executeAsOneOrNull()
+                    ?: throw NoSuchElementException("no rows returned")
+            }
         }
     }
 
     override fun <T : Any> getOneAsFlow(
-        ctx: CoroutineContext,
-        block: S.() -> Query<T>
+        context: CoroutineContext,
+        block: S.() -> Query<T>,
     ): Flow<Result<T>> {
         return block(db).asFlow()
-            .mapToOneOrNull(ctx)
+            .mapToOneOrNull(context)
             .catch { e ->
                 Result.failure<T>(e)
             }
@@ -91,17 +117,22 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
     }
 
     override suspend fun <T : Any> getList(
-        block: S.() -> Query<T>
+        context: CoroutineContext,
+        block: S.() -> Query<T>,
     ): Result<List<T>> {
-        return runCatching { block(db).executeAsList() }
+        return withContext(context) {
+            runCatching {
+                block(db).executeAsList()
+            }
+        }
     }
 
     override fun <T : Any> getListAsFlow(
-        ctx: CoroutineContext,
-        block: S.() -> Query<T>
+        context: CoroutineContext,
+        block: S.() -> Query<T>,
     ): Flow<Result<List<T>>> {
         return block(db).asFlow()
-            .mapToList(ctx)
+            .mapToList(context)
             .catch { e ->
                 Result.failure<List<T>>(e)
             }
@@ -111,32 +142,41 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
     }
 
     override suspend fun <T : Any> use(
-        block: suspend S.() -> T
+        context: CoroutineContext,
+        block: suspend S.() -> T,
     ): Result<T> {
-        return runCatching {
-            block(db)
+        return withContext(context) {
+            runCatching {
+                block(db)
+            }
         }
     }
 
     override suspend fun <T : Any> withDriver(
-        block: suspend SqlDriver.() -> T
+        context: CoroutineContext,
+        block: suspend SqlDriver.() -> T,
     ): Result<T> {
-        return runCatching {
-            block(driver)
+        return withContext(context) {
+            runCatching {
+                block(driver)
+            }
         }
     }
 
-    override suspend fun checkHealth(): Result<Boolean> {
-        return runCatching {
-            driver.execute(null, "SELECT 1", 0).value
-            true
+    override suspend fun checkHealth(
+        context: CoroutineContext,
+    ): Result<Boolean> {
+        return withContext(context) {
+            runCatching {
+                driver.execute(null, "SELECT 1", 0).value
+                true
+            }
         }
     }
 
     override suspend fun close(): Result<Unit> {
         return runCatching {
             driver.close()
-            Result.success(Unit)
         }
     }
 }
