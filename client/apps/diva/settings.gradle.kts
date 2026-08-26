@@ -33,5 +33,14 @@ dependencyResolutionManagement {
 
 rootProject.name = "diva-app"
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
+
+include(
+    ":platforms:androidApp",
+    ":platforms:desktopApp",
+    ":sharedUI",
+)
+
 includeBuild("../../framework")
 includeBuild("../lib")

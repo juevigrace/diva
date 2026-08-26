@@ -4,18 +4,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.ProvidedValue
 import androidx.compose.ui.Modifier
+import io.github.juevigrace.diva.ui.dialog.DialogController
+import io.github.juevigrace.diva.ui.dialog.LocalDialogController
 import io.github.juevigrace.diva.ui.theme.DivaTheme
 import io.github.juevigrace.diva.ui.theme.DivaThemeConfig
+import io.github.juevigrace.diva.ui.toast.LocalToaster
+import io.github.juevigrace.diva.ui.toast.Toaster
 
 @Composable
 fun DivaApp(
-    vararg providers: ProvidedValue<*> = emptyArray(),
     themeConfig: DivaThemeConfig = DivaThemeConfig(),
+    toaster: Toaster = Toaster.create(),
+    dialogController: DialogController = DialogController.create(),
     content: @Composable () -> Unit,
 ) {
-    CompositionLocalProvider(*providers) {
+    CompositionLocalProvider(
+        LocalToaster provides toaster,
+        LocalDialogController provides dialogController,
+    ) {
         DivaTheme(
             config = themeConfig,
         ) {

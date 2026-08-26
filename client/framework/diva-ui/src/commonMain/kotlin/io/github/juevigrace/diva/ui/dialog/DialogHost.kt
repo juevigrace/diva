@@ -97,10 +97,6 @@ fun DivaAlertDialog(
     shape: Shape = AlertDialogDefaults.shape,
     tonalElevation: Dp = AlertDialogDefaults.TonalElevation,
 ) {
-    val icon = when (request.icon) {
-        is Option.Some -> painterResource(request.icon.value)
-        is Option.None -> null
-    }
     val confirmLabel = when (request.confirmLabel) {
         is Option.Some -> stringResource(request.confirmLabel.value)
         is Option.None -> "OK"

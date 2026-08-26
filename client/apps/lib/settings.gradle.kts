@@ -33,9 +33,12 @@ dependencyResolutionManagement {
 
 rootProject.name = "diva-lib"
 
-includeBuild("../../framework")
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
 include(":core")
 include(":sharedUI")
 include(":features:auth")
 include(":features:user")
+
+includeBuild("../../framework")
