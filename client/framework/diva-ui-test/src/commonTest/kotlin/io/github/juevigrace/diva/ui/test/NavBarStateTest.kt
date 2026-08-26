@@ -1,6 +1,6 @@
 package io.github.juevigrace.diva.ui.test
 
-import io.github.juevigrace.diva.ui.navigation.NavBarState
+import io.github.juevigrace.diva.ui.layout.bars.NavBarState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

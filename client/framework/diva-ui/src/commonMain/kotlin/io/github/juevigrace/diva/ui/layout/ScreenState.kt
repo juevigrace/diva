@@ -1,15 +1,15 @@
-package io.github.juevigrace.diva.ui.util
+package io.github.juevigrace.diva.ui.layout
 
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -29,11 +29,11 @@ fun <T> StateLayout(
     state: ScreenState<T>,
     modifier: Modifier = Modifier,
     onRetry: () -> Unit = {},
-    loading: @Composable () -> Unit = { DefaultLoading(modifier) },
+    loading: @Composable () -> Unit = { LoadingContent(modifier = modifier) },
     error: @Composable (message: String, retry: () -> Unit) -> Unit = { message, retry ->
-        DefaultError(message, retry, onRetry)
+        ErrorContent(message, modifier = modifier, onRetry = retry)
     },
-    empty: @Composable () -> Unit = { DefaultEmpty(modifier) },
+    empty: @Composable () -> Unit = { EmptyContent(modifier = modifier) },
     content: @Composable (value: T) -> Unit,
 ) {
     when (state) {
@@ -45,45 +45,59 @@ fun <T> StateLayout(
 }
 
 @Composable
-private fun DefaultLoading(modifier: Modifier) {
+fun LoadingContent(
+    modifier: Modifier = Modifier.fillMaxSize(),
+    content: @Composable ColumnScope.() -> Unit = {
+        CircularProgressIndicator()
+    },
+) {
     Column(
-        modifier = Modifier.fillMaxSize().then(modifier),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-    ) {
-        CircularProgressIndicator()
-    }
+        content = content,
+    )
 }
 
 @Composable
-private fun DefaultEmpty(modifier: Modifier) {
-    Column(
-        modifier = Modifier.fillMaxSize().then(modifier),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
+fun EmptyContent(
+    text: String = "Nothing here yet",
+    modifier: Modifier = Modifier.fillMaxSize(),
+    content: @Composable ColumnScope.() -> Unit = {
         Text(
-            text = "Nothing here yet",
+            text = text,
             style = MaterialTheme.typography.bodyLarge,
         )
-    }
+    },
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        content = content,
+    )
 }
 
 @Composable
-private fun DefaultError(message: String, retry: () -> Unit, onRetry: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
+fun ErrorContent(
+    message: String,
+    retryText: String = "Retry",
+    onRetry: () -> Unit = {},
+    modifier: Modifier = Modifier.fillMaxSize().padding(16.dp),
+    content: @Composable ColumnScope.() -> Unit = {
         Text(
             text = message,
             style = MaterialTheme.typography.bodyLarge,
         )
-        Button(onClick = { retry() }) {
-            Text("Retry")
+        Button(onClick = onRetry) {
+            Text(retryText)
         }
-    }
+    },
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        content = content,
+    )
 }

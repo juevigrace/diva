@@ -4,7 +4,6 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -23,7 +22,6 @@ data class WindowInfo(
     val isLandscape: Boolean
         get() = orientation == ScreenOrientation.Landscape
 
-    // classified by the smaller dimension, mirroring master's orientation-aware thresholds
     val size: ScreenSize
         get() {
             val minDimension = if (width < height) width else height
@@ -45,14 +43,11 @@ data class WindowInfo(
 
 @Composable
 fun rememberWindowInfo(): WindowInfo {
-    val windowInfo = LocalWindowInfo.current
-    val density = LocalDensity.current
-    return remember(windowInfo.containerSize, density) {
-        with(density) {
-            WindowInfo(
-                width = windowInfo.containerSize.width.toDp(),
-                height = windowInfo.containerSize.height.toDp(),
-            )
-        }
+    val containerDpSize = LocalWindowInfo.current.containerDpSize
+    return remember(containerDpSize) {
+        WindowInfo(
+            width = containerDpSize.width,
+            height = containerDpSize.height,
+        )
     }
 }

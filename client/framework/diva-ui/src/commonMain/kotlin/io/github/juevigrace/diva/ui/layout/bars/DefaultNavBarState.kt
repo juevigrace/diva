@@ -1,17 +1,17 @@
-package io.github.juevigrace.diva.ui.navigation
+package io.github.juevigrace.diva.ui.layout.bars
 
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.Stable
 
 @Stable
 class DefaultNavBarState(
-    initialTabs: List<Tab> = emptyList(),
+    initialTabs: List<io.github.juevigrace.diva.ui.navigation.Tab> = emptyList(),
     initialSelectedTabIndex: Int = 0,
     initialShowBar: Boolean = true,
 ) : NavBarState {
-    override var tabs: List<Tab> by mutableStateOf(initialTabs)
+    override var tabs: List<io.github.juevigrace.diva.ui.navigation.Tab> by mutableStateOf(initialTabs)
         private set
 
     override var selectedTabIndex: Int by mutableStateOf(initialSelectedTabIndex)

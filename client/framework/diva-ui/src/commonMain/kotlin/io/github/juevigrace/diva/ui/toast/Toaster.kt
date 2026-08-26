@@ -8,7 +8,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidableCompositionLocal
-import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,8 +17,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.core.getOrElse
+import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.core.onSome
 import io.github.juevigrace.diva.ui.util.ObserveFlow
 import kotlinx.coroutines.channels.Channel
@@ -52,10 +52,10 @@ class Toaster {
     }
 }
 
-val LocalToaster: ProvidableCompositionLocal<Toaster> = compositionLocalOf { Toaster() }
+val LocalToaster: ProvidableCompositionLocal<Toaster> = staticCompositionLocalOf { Toaster() }
 
 @Composable
-fun rememberToasterState(): Toaster {
+fun rememberToaster(): Toaster {
     return remember { Toaster() }
 }
 

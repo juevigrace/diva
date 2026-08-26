@@ -1,8 +1,9 @@
-package io.github.juevigrace.diva.ui.navigation
+package io.github.juevigrace.diva.ui.layout.bars
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrElse
 import io.github.juevigrace.diva.core.map
+import io.github.juevigrace.diva.ui.navigation.Tab
 
 interface NavBarState {
     val tabs: List<Tab>

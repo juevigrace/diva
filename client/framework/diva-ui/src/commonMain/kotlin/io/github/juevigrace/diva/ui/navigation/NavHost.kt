@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.SizeTransform
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +22,25 @@ import androidx.navigation3.ui.defaultPredictivePopTransitionSpec
 import androidx.navigation3.ui.defaultTransitionSpec
 import androidx.navigationevent.NavigationEvent
 
-// sizeTransform passthrough matches NavDisplay's own signature
+@Composable
+fun NavHost(
+    navigator: Navigator,
+    modifier: Modifier = Modifier,
+    onBack: () -> Unit = { navigator.pop() },
+    entryProvider: (key: NavKey) -> NavEntry<NavKey>,
+) {
+    NavHost(
+        navigator = navigator,
+        modifier = modifier,
+        onBack = onBack,
+        entryProvider = entryProvider,
+        sizeTransform = null,
+        transitionSpec = defaultTransitionSpec(),
+        popTransitionSpec = defaultPopTransitionSpec(),
+        predictivePopTransitionSpec = defaultPredictivePopTransitionSpec(),
+    )
+}
+
 @Composable
 fun NavHost(
     navigator: Navigator,
@@ -43,17 +62,19 @@ fun NavHost(
     entryProvider: (key: NavKey) -> NavEntry<NavKey>,
 ) {
     val backStack: BackStack by navigator.backStack.collectAsStateWithLifecycle()
-    NavDisplay(
-        modifier = modifier,
-        backStack = backStack.entries,
-        contentAlignment = contentAlignment,
-        onBack = onBack,
-        entryDecorators = entryDecorators,
-        sceneStrategies = sceneStrategies,
-        sizeTransform = sizeTransform,
-        transitionSpec = transitionSpec,
-        popTransitionSpec = popTransitionSpec,
-        predictivePopTransitionSpec = predictivePopTransitionSpec,
-        entryProvider = entryProvider,
-    )
+    CompositionLocalProvider(LocalNavigator provides navigator) {
+        NavDisplay(
+            modifier = modifier,
+            backStack = backStack.entries,
+            contentAlignment = contentAlignment,
+            onBack = onBack,
+            entryDecorators = entryDecorators,
+            sceneStrategies = sceneStrategies,
+            sizeTransform = sizeTransform,
+            transitionSpec = transitionSpec,
+            popTransitionSpec = popTransitionSpec,
+            predictivePopTransitionSpec = predictivePopTransitionSpec,
+            entryProvider = entryProvider,
+        )
+    }
 }

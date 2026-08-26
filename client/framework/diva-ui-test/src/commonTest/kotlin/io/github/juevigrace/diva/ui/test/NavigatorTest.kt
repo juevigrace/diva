@@ -2,7 +2,7 @@ package io.github.juevigrace.diva.ui.test
 
 import androidx.navigation3.runtime.NavKey
 import io.github.juevigrace.diva.core.getOrNull
-import io.github.juevigrace.diva.ui.navigation.Navigator
+import io.github.juevigrace.diva.ui.navigation.DefaultNavigator
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -12,8 +12,8 @@ data class TestKey(val id: String) : NavKey
 
 class NavigatorTest {
 
-    private fun navigator(vararg keys: String): Navigator {
-        val nav = Navigator(TestKey(keys.first()))
+    private fun navigator(vararg keys: String): DefaultNavigator {
+        val nav = DefaultNavigator(TestKey(keys.first()))
         keys.drop(1).forEach { key -> nav.navigate(TestKey(key)) }
         return nav
     }
@@ -21,8 +21,9 @@ class NavigatorTest {
     @Test
     fun startsAtStartDestination() {
         val nav = navigator("home")
+        assertEquals(TestKey("home"), nav.backStack.value.startDestination)
         assertEquals(listOf(TestKey("home")), nav.backStack.value.entries)
-        assertTrue(nav.current.isSome)
+        assertTrue(nav.backStack.value.current.isSome)
     }
 
     @Test
@@ -35,23 +36,24 @@ class NavigatorTest {
     }
 
     @Test
-    fun navigateAllowsDuplicatesByDefault() {
+    fun navigateSkipsSameTopByDefault() {
         val nav = navigator("home", "search")
         nav.navigate(TestKey("search"))
-        assertEquals(3, nav.backStack.value.entries.size)
-    }
-
-    @Test
-    fun navigateWithLaunchSingleTopSkipsSameTop() {
-        val nav = navigator("home", "search")
-        nav.navigate(TestKey("search"), launchSingleTop = true)
         assertEquals(2, nav.backStack.value.entries.size)
     }
 
     @Test
-    fun navigateWithLaunchSingleTopStillPushesDifferentTop() {
+    fun navigateWithLaunchSingleTopFalseAllowsDuplicates() {
+        val nav = DefaultNavigator(TestKey("home"))
+        nav.navigate(TestKey("search"), launchSingleTop = false)
+        nav.navigate(TestKey("search"), launchSingleTop = false)
+        assertEquals(3, nav.backStack.value.entries.size)
+    }
+
+    @Test
+    fun navigateStillPushesDifferentTop() {
         val nav = navigator("home")
-        nav.navigate(TestKey("search"), launchSingleTop = true)
+        nav.navigate(TestKey("search"))
         assertEquals(2, nav.backStack.value.entries.size)
     }
 
@@ -98,10 +100,20 @@ class NavigatorTest {
     }
 
     @Test
-    fun currentIsNoneAfterReplaceAllOnFreshNavigator() {
-        val nav = Navigator(TestKey("home"))
-        assertEquals(TestKey("home"), nav.current.getOrNull())
+    fun replaceAllUpdatesStartDestination() {
+        val nav = DefaultNavigator(TestKey("home"))
+        assertEquals(TestKey("home"), nav.backStack.value.startDestination)
         nav.replaceAll(TestKey("other"))
-        assertEquals(TestKey("other"), nav.current.getOrNull())
+        assertEquals(TestKey("other"), nav.backStack.value.entries.first())
+    }
+
+    @Test
+    fun currentReflectsTopOfStack() {
+        val nav = navigator("home")
+        assertEquals(TestKey("home"), nav.backStack.value.current.getOrNull())
+        nav.navigate(TestKey("search"))
+        assertEquals(TestKey("search"), nav.backStack.value.current.getOrNull())
+        nav.pop()
+        assertEquals(TestKey("home"), nav.backStack.value.current.getOrNull())
     }
 }
