@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 @Stable
-class DefaultNavigator(
+internal class DefaultNavigator(
     startDestination: NavKey,
 ) : Navigator {
 

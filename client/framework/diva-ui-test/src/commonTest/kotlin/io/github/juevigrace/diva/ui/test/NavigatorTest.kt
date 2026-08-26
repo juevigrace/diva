@@ -2,7 +2,7 @@ package io.github.juevigrace.diva.ui.test
 
 import androidx.navigation3.runtime.NavKey
 import io.github.juevigrace.diva.core.getOrNull
-import io.github.juevigrace.diva.ui.navigation.DefaultNavigator
+import io.github.juevigrace.diva.ui.navigation.Navigator
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -12,8 +12,8 @@ data class TestKey(val id: String) : NavKey
 
 class NavigatorTest {
 
-    private fun navigator(vararg keys: String): DefaultNavigator {
-        val nav = DefaultNavigator(TestKey(keys.first()))
+    private fun navigator(vararg keys: String): Navigator {
+        val nav = Navigator.create(TestKey(keys.first()))
         keys.drop(1).forEach { key -> nav.navigate(TestKey(key)) }
         return nav
     }
@@ -44,7 +44,7 @@ class NavigatorTest {
 
     @Test
     fun navigateWithLaunchSingleTopFalseAllowsDuplicates() {
-        val nav = DefaultNavigator(TestKey("home"))
+        val nav = Navigator.create(TestKey("home"))
         nav.navigate(TestKey("search"), launchSingleTop = false)
         nav.navigate(TestKey("search"), launchSingleTop = false)
         assertEquals(3, nav.backStack.value.entries.size)
@@ -101,7 +101,7 @@ class NavigatorTest {
 
     @Test
     fun replaceAllUpdatesStartDestination() {
-        val nav = DefaultNavigator(TestKey("home"))
+        val nav = Navigator.create(TestKey("home"))
         assertEquals(TestKey("home"), nav.backStack.value.startDestination)
         nav.replaceAll(TestKey("other"))
         assertEquals(TestKey("other"), nav.backStack.value.entries.first())

@@ -3,8 +3,10 @@ package io.github.juevigrace.diva.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -30,7 +32,14 @@ interface Navigator {
     fun popUntil(destination: NavKey)
     fun replaceTop(destination: NavKey)
     fun replaceAll(destination: NavKey)
+
+    companion object {
+        fun create(startDestination: NavKey): Navigator = DefaultNavigator(startDestination)
+    }
 }
+
+val LocalNavigator = staticCompositionLocalOf<Navigator?> { null }
+val LocalSavedStateConfiguration = compositionLocalOf<SavedStateConfiguration?> { null }
 
 @Composable
 fun rememberNavigator(
