@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 interface DivaDatabase<S : TransacterBase> {
     val scope: CoroutineScope
@@ -27,7 +26,7 @@ interface DivaDatabase<S : TransacterBase> {
     ): Result<T>
 
     fun <T : Any> getOneAsFlow(
-        context: CoroutineContext = EmptyCoroutineContext,
+        context: CoroutineContext = ioDispatcher,
         block: S.() -> Query<T>,
     ): Flow<Result<T>>
 
@@ -37,7 +36,7 @@ interface DivaDatabase<S : TransacterBase> {
     ): Result<List<T>>
 
     fun <T : Any> getListAsFlow(
-        context: CoroutineContext = EmptyCoroutineContext,
+        context: CoroutineContext = ioDispatcher,
         block: S.() -> Query<T>,
     ): Flow<Result<List<T>>>
 
