@@ -37,7 +37,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
 include(":core")
-include(":sharedUI")
+include(":shared-ui")
 include(":features:auth")
 include(":features:user")
 

@@ -25,6 +25,7 @@ kotlin {
             implementation(libs.material3.window.size)
             implementation(libs.window.core)
             implementation(libs.nav3.ui)
+            implementation(libs.savedstate)
             implementation(libs.savedstate.compose)
             implementation(libs.lifecycle.viewmodel)
             implementation(libs.lifecycle.viewmodel.savedstate)

@@ -4,9 +4,10 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     kotlin("jvm")
-    id("divabuild.library-package")
     id("divabuild.library-version-framework")
 }
+
+group = "io.github.juevigrace"
 
 java {
     toolchain {
@@ -29,5 +30,4 @@ dependencies {
     implementation(libs.kotlinx.coroutines.swing)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.datetime)
-    implementation(libs.savedstate)
 }

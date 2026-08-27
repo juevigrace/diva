@@ -11,7 +11,6 @@ kotlin {
             implementation(libs.kotlin.reflect)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.savedstate)
         }
 
         hasTarget("android") {

@@ -8,6 +8,7 @@ import io.github.juevigrace.diva.database.sqlite.config.SqliteConf
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 expect val provider: DriverProvider<SqliteConf>
@@ -26,6 +27,8 @@ class DivaDatabaseTest {
         val db = createDatabase()
         val check = db.checkHealth()
         assertTrue(check.isSuccess, "CHECK HEALTH ERROR: ${check.exceptionOrNull()}")
+        assertNotNull(check.getOrNull(), "CHECK IS NULL")
+        assertTrue(check.getOrNull()!!.await() > 0, "CHECK RETURNED: ${check.getOrNull()!!.await()}")
         db.close()
     }
 

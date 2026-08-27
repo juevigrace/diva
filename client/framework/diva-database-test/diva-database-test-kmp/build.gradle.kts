@@ -10,10 +10,24 @@ plugins {
 
 kotlin {
     js {
-        browser()
+        browser {
+            testTask {
+                useKarma {
+                    useChromeHeadless()
+                    useFirefox()
+                }
+            }
+        }
     }
     wasmJs {
-        browser()
+        browser {
+            testTask {
+                useKarma {
+                    useChromeHeadless()
+                    useFirefox()
+                }
+            }
+        }
     }
 
     sourceSets {
@@ -21,6 +35,12 @@ kotlin {
             implementation(projects.divaCore)
             implementation(projects.divaDatabase)
             implementation(projects.divaDatabaseSqlite)
+        }
+        jsMain.dependencies {
+            devNpm("copy-webpack-plugin", "9.1.0")
+        }
+        wasmJsMain.dependencies {
+            devNpm("copy-webpack-plugin", "9.1.0")
         }
     }
 }

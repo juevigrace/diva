@@ -39,7 +39,6 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 include(
     ":platforms:androidApp",
     ":platforms:desktopApp",
-    ":sharedUI",
 )
 
 includeBuild("../../framework")
