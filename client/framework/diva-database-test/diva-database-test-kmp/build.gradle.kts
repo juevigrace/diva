@@ -3,31 +3,13 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    id("divabuild.library-framework")
-    id("divabuild.kmp-test")
+    id("divabuild.library-framework-browser-test")
     alias(libs.plugins.sqldelight)
 }
 
 kotlin {
-    js {
-        browser {
-            testTask {
-                useKarma {
-                    useChromeHeadless()
-                    useFirefox()
-                }
-            }
-        }
-    }
-    wasmJs {
-        browser {
-            testTask {
-                useKarma {
-                    useChromeHeadless()
-                    useFirefox()
-                }
-            }
-        }
+    linuxX64 {
+        binaries.getTest("DEBUG").linkerOpts("-L/usr/lib", "-lsqlite3", "--allow-shlib-undefined")
     }
 
     sourceSets {
@@ -35,12 +17,6 @@ kotlin {
             implementation(projects.divaCore)
             implementation(projects.divaDatabase)
             implementation(projects.divaDatabaseSqlite)
-        }
-        jsMain.dependencies {
-            devNpm("copy-webpack-plugin", "9.1.0")
-        }
-        wasmJsMain.dependencies {
-            devNpm("copy-webpack-plugin", "9.1.0")
         }
     }
 }
@@ -56,8 +32,8 @@ sqldelight {
         create("SqliteDB") {
             packageName.set("io.github.juevigrace.diva.database")
             schemaOutputDirectory.set(file("src/commonMain/sqldelight/databases"))
-            srcDirs(file("src/commonMain/sqldelight/SqliteDB"))
             generateAsync.set(true)
+            deriveSchemaFromMigrations.set(true)
         }
     }
 }

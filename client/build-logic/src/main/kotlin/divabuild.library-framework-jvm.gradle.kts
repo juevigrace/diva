@@ -31,3 +31,7 @@ dependencies {
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.datetime)
 }
+
+tasks.withType<Test>().configureEach {
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
+}

@@ -15,9 +15,9 @@ class NativeDriverProvider(
         return runCatching {
             NativeSqliteDriver(
                 schema = schema,
-                name = conf.name,
+                name = if (conf.inMemory) "" else conf.name,
                 onConfiguration = { configuration ->
-                    if (conf.inMemory) configuration.copy(inMemory = true) else configuration
+                    if (conf.inMemory) configuration.copy(name = null, inMemory = true) else configuration
                 },
             )
         }
@@ -27,9 +27,9 @@ class NativeDriverProvider(
         return runCatching {
             NativeSqliteDriver(
                 schema = schema.synchronous(),
-                name = conf.name,
+                name = if (conf.inMemory) "" else conf.name,
                 onConfiguration = { configuration ->
-                    if (conf.inMemory) configuration.copy(inMemory = true) else configuration
+                    if (conf.inMemory) configuration.copy(name = null, inMemory = true) else configuration
                 },
             )
         }

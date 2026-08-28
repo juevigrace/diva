@@ -7,7 +7,3 @@ plugins {
     alias(libs.plugins.sqldelight) apply false
     alias(libs.plugins.kotlin.serialization) apply false
 }
-
-rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin> {
-    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension>().resolution("webpack", "5.101.3")
-}

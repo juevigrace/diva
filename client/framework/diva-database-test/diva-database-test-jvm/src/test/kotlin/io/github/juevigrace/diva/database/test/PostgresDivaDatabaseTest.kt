@@ -12,14 +12,13 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 @Testcontainers
 class PostgresDivaDatabaseTest {
 
     @Container
-    private val postgres = PostgreSQLContainer("postgres:16")
+    private var postgres = PostgreSQLContainer("postgres:16")
 
     private suspend fun createDatabase(): DivaDatabase<PostgresDB> {
         val provider = JvmPostgresDriverProvider(
@@ -34,16 +33,6 @@ class PostgresDivaDatabaseTest {
         )
         val driver: SqlDriver = provider.createAsyncDriver(PostgresDB.Schema).getOrThrow()
         return DivaDatabase.createAsync(provider, PostgresDB.Schema, db = { PostgresDB(driver) }).getOrThrow()
-    }
-
-    @Test
-    fun test_check_health() = runTest {
-        val db = createDatabase()
-        val check = db.checkHealth()
-        assertTrue(check.isSuccess, "CHECK HEALTH ERROR: ${check.exceptionOrNull()}")
-        assertNotNull(check.getOrNull(), "CHECK IS NULL")
-        assertTrue(check.getOrNull()!!.await() > 0, "CHECK RETURNED: ${check.getOrNull()!!.await()}")
-        db.close()
     }
 
     @Test

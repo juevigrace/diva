@@ -50,10 +50,6 @@ interface DivaDatabase<S : TransacterBase> {
         block: suspend SqlDriver.() -> T,
     ): Result<T>
 
-    suspend fun checkHealth(
-        context: CoroutineContext = ioDispatcher,
-    ): Result<QueryResult<Long>>
-
     suspend fun close(): Result<Unit>
 
     companion object {
@@ -159,14 +155,6 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
             runCatching {
                 block(driver)
             }
-        }
-    }
-
-    override suspend fun checkHealth(
-        context: CoroutineContext,
-    ): Result<QueryResult<Long>> {
-        return withContext(context) {
-            runCatching { driver.execute(null, "SELECT 1", 0) }
         }
     }
 

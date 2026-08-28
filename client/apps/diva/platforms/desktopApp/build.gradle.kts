@@ -12,6 +12,10 @@ tasks.withType<ComposeHotRun>().configureEach {
     jvmArgs("--enable-native-access=ALL-UNNAMED")
 }
 
+tasks.withType<JavaExec>().configureEach {
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
+}
+
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation(libs.logback.classic)

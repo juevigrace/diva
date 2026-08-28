@@ -51,6 +51,7 @@ sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 ######### [TEST DEPENDENCIES] #########
 
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }

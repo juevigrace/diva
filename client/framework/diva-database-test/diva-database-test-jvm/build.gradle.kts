@@ -9,12 +9,16 @@ dependencies {
     implementation(projects.divaDatabaseMysql)
     implementation(projects.divaDatabasePostgres)
 
-    testImplementation(libs.kotlin.test)
+    testImplementation(libs.kotlin.test.junit5)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.testcontainers.postgresql)
     testImplementation(libs.testcontainers.mysql)
     testImplementation(libs.testcontainers.jdbc)
     testImplementation(libs.testcontainers.junit.jupiter)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 sqldelight {
@@ -25,6 +29,7 @@ sqldelight {
             srcDirs(file("src/main/sqldelight/MysqlDB"))
             dialect(libs.sqldelight.mysql.dialect)
             generateAsync.set(true)
+            deriveSchemaFromMigrations.set(true)
         }
         create("PostgresDB") {
             packageName.set("io.github.juevigrace.diva.database.postgres")
@@ -32,6 +37,7 @@ sqldelight {
             srcDirs(file("src/main/sqldelight/PostgresDB"))
             dialect(libs.sqldelight.postgres.dialect)
             generateAsync.set(true)
+            deriveSchemaFromMigrations.set(true)
         }
     }
 }

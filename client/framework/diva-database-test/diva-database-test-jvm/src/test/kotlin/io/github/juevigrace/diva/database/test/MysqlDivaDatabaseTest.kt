@@ -11,14 +11,13 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 @Testcontainers
 class MysqlDivaDatabaseTest {
 
     @Container
-    private val mysql = MySQLContainer("mysql:8.0")
+    private var mysql = MySQLContainer("mysql:8.0")
 
     private suspend fun createDatabase(): DivaDatabase<MysqlDB> {
         val provider = JvmMySQLDriverProvider(
@@ -32,16 +31,6 @@ class MysqlDivaDatabaseTest {
         )
         val driver: SqlDriver = provider.createAsyncDriver(MysqlDB.Schema).getOrThrow()
         return DivaDatabase.createAsync(provider, MysqlDB.Schema, db = { MysqlDB(driver) }).getOrThrow()
-    }
-
-    @Test
-    fun test_check_health() = runTest {
-        val db = createDatabase()
-        val check = db.checkHealth()
-        assertTrue(check.isSuccess, "CHECK HEALTH ERROR: ${check.exceptionOrNull()}")
-        assertNotNull(check.getOrNull(), "CHECK IS NULL")
-        assertTrue(check.getOrNull()!!.await() > 0, "CHECK RETURNED: ${check.getOrNull()!!.await()}")
-        db.close()
     }
 
     @Test
