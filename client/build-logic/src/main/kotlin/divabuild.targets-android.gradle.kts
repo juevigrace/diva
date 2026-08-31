@@ -11,6 +11,14 @@ kotlin {
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
+        optimization {
+            minify = true
+            consumerKeepRules.apply {
+                publish = true
+                file("${project.rootProject.projectDir}/../build-logic/src/main/resources/consumer-rules.pro")
+            }
+        }
+
         withJava()
         compilerOptions {
             jvmTarget = JvmTarget.JVM_21
@@ -31,6 +39,7 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
+            implementation(libs.kotlinx.coroutines.android)
         }
     }
 }

@@ -1,7 +1,8 @@
 [versions]
-app-version-name = "1.0.0"
-app-version-code = "1"
-framework-version = "0.0.23"
+diva-app-name = "1.0.0"
+diva-app-code = "1"
+diva-lib = "1.0.0"
+diva-framework = "0.0.23"
 agp = "9.3.2"
 android-compileSdk = "37"
 android-minSdk = "24"
@@ -13,7 +14,6 @@ androidx-core = "1.19.0"
 lifecycle = "2.11.0"
 material3-adaptive = "1.3.0-beta02"
 savedstate = "1.4.0"
-diva-lib = "1.0.0"
 window = "1.5.1"
 material3 = "1.9.0"
 compose-hot-reload = "1.2.0"
@@ -68,8 +68,15 @@ kotlin-serialization-gradle-plugin = { module = "org.jetbrains.kotlin.plugin.ser
 maven-publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "maven-publish" }
 secrets-gradle = { group = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", name = "secrets-gradle-plugin", version.ref = "secrets" }
 
-######### [LIB DEPENDENCIES] #########
-diva-shared-ui = { group = "io.github.juevigrace.diva.lib", name = "shared-ui", version.ref = "diva-lib" }
+######### [DIVA DEPENDENCIES] #########
+diva-core = { group = "io.github.juevigrace", name = "diva-core", version.ref = "diva-framework" }
+diva-database = { group = "io.github.juevigrace", name = "diva-database", version.ref = "diva-framework" }
+diva-database-sqlite = { group = "io.github.juevigrace", name = "diva-database-sqlite", version.ref = "diva-framework" }
+diva-database-postgres = { group = "io.github.juevigrace", name = "diva-database-postgres", version.ref = "diva-framework" }
+diva-database-mysql = { group = "io.github.juevigrace", name = "diva-database-mysql", version.ref = "diva-framework" }
+diva-network = { group = "io.github.juevigrace", name = "diva-network", version.ref = "diva-framework" }
+diva-ui = { group = "io.github.juevigrace", name = "diva-ui", version.ref = "diva-framework" }
+diva-lib-shared-ui = { group = "io.github.juevigrace.diva.lib", name = "shared-ui", version.ref = "diva-lib" }
 
 ######### [ANDROIDX DEPENDENCIES] #########
 

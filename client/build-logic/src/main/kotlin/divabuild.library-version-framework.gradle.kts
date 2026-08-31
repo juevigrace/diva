@@ -1,3 +1,4 @@
 import divabuild.internal.libs
 
-version = libs.versions.framework.version
+version = libs.versions.diva.framework
+group = "io.github.juevigrace"

@@ -27,6 +27,7 @@ kotlin {
         jvmMain.dependencies {
             api(libs.sqldelight.sqlite.driver)
             api(libs.sqldelight.jdbc.driver)
+            api(libs.sqldelight.r2dbc.driver)
             implementation(libs.sqlite)
         }
         jsMain.dependencies {

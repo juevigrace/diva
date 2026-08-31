@@ -19,13 +19,30 @@ fun DivaApp(
     dialogController: DialogController = DialogController.create(),
     content: @Composable () -> Unit,
 ) {
+    DivaApp(
+        theme = { content ->
+            DivaTheme(config = themeConfig, content = content)
+        },
+        toaster = toaster,
+        dialogController = dialogController,
+        content = content
+    )
+}
+
+@Composable
+fun DivaApp(
+    theme: @Composable (content: @Composable () -> Unit) -> Unit = { content ->
+        DivaTheme(content = content)
+    },
+    toaster: Toaster = Toaster.create(),
+    dialogController: DialogController = DialogController.create(),
+    content: @Composable () -> Unit,
+) {
     CompositionLocalProvider(
         LocalToaster provides toaster,
         LocalDialogController provides dialogController,
     ) {
-        DivaTheme(
-            config = themeConfig,
-        ) {
+        theme {
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 content = content,

@@ -26,25 +26,6 @@ import androidx.navigationevent.NavigationEvent
 fun NavHost(
     navigator: Navigator,
     modifier: Modifier = Modifier,
-    onBack: () -> Unit = { navigator.pop() },
-    entryProvider: (key: NavKey) -> NavEntry<NavKey>,
-) {
-    NavHost(
-        navigator = navigator,
-        modifier = modifier,
-        onBack = onBack,
-        entryProvider = entryProvider,
-        sizeTransform = null,
-        transitionSpec = defaultTransitionSpec(),
-        popTransitionSpec = defaultPopTransitionSpec(),
-        predictivePopTransitionSpec = defaultPredictivePopTransitionSpec(),
-    )
-}
-
-@Composable
-fun NavHost(
-    navigator: Navigator,
-    modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.TopStart,
     onBack: () -> Unit = { navigator.pop() },
     entryDecorators: List<NavEntryDecorator<NavKey>> = listOf(rememberSaveableStateHolderNavEntryDecorator()),

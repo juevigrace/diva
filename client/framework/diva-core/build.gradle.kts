@@ -9,6 +9,7 @@ plugins {
 kotlin {
     js {
         browser()
+        nodejs()
     }
     wasmJs {
         browser()

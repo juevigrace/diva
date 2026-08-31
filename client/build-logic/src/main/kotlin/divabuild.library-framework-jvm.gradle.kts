@@ -7,8 +7,6 @@ plugins {
     id("divabuild.library-version-framework")
 }
 
-group = "io.github.juevigrace"
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)

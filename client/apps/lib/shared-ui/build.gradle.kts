@@ -1,5 +1,5 @@
 plugins {
-    id("divabuild.library-app")
+    id("divabuild.library-app-ui")
 }
 
 kotlin {
@@ -10,6 +10,19 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "Shared"
             isStatic = true
+        }
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            api(projects.core)
+            implementation(projects.database)
+            implementation(projects.ui)
+
+            implementation(projects.features.auth)
+            implementation(projects.features.user)
+
+            implementation(libs.diva.network)
         }
     }
 }

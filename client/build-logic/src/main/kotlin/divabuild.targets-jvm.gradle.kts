@@ -10,6 +10,7 @@ kotlin {
     sourceSets {
         jvmMain.dependencies {
             implementation(libs.logback.classic)
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }

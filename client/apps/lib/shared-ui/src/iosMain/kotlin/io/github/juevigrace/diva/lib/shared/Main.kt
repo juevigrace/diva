@@ -1,4 +1,4 @@
-package com.diva.app
+package io.github.juevigrace.diva.lib.shared
 
 import androidx.compose.ui.window.ComposeUIViewController
 

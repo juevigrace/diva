@@ -39,7 +39,7 @@ kotlin {
         sourceSets {
             androidMain.dependencies {
                 implementation(libs.androidx.activity.compose)
-                implementation(libs.compose.ui.tooling)
+//                implementation(libs.compose.ui.tooling)
             }
         }
     }

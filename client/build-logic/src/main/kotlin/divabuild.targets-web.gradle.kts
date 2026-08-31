@@ -1,5 +1,6 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
+import divabuild.internal.libs
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
@@ -20,6 +21,12 @@ kotlin {
         generateTypeScriptDefinitions()
         compilerOptions {
             target = "es2015"
+        }
+    }
+
+    sourceSets {
+        jsMain.dependencies {
+            implementation(libs.kotlinx.coroutines.core.js)
         }
     }
 }

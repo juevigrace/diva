@@ -1,15 +1,12 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
+import divabuild.internal.libs
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
     id("divabuild.library-base")
-    id("divabuild.cmp-deps")
-    id("divabuild.koin-deps")
-    id("divabuild.library-version-app")
+    id("divabuild.library-version-apps")
 }
-
-group = "io.github.juevigrace.diva.lib"
 
 kotlin {
     android {
@@ -22,5 +19,21 @@ kotlin {
 
     wasmJs {
         browser()
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.koin.core)
+
+            implementation(libs.diva.core)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.koin.android)
+        }
+
+        jvmMain.dependencies {
+            implementation(libs.koin.logger.slf4j)
+        }
     }
 }
