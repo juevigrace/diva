@@ -10,14 +10,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
-// TODO: implement events for this?
-// TODO: Implement error channel to avoid returning errors directly in the functions
-//       and return the values from the cache instead but still log or notify an error
 interface Repository {
     val scope: CoroutineScope
         get() = CoroutineScope(SupervisorJob() + ioDispatcher)
 
-    fun <T> withSessionObserve(
+    fun <T> withSessionFlow(
         sessionCall: suspend () -> Flow<Result<Session>>,
         onFound: suspend FlowCollector<Result<T>>.(session: Session) -> Unit,
     ): Flow<Result<T>> {

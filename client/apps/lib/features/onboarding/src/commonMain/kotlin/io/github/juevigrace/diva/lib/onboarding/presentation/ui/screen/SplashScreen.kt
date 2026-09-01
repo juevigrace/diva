@@ -1,4 +1,4 @@
-package io.github.juevigrace.diva.lib.auth.presentation.ui.screen
+package io.github.juevigrace.diva.lib.onboarding.presentation.ui.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,13 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.juevigrace.diva.lib.auth.presentation.viewmodel.SignUpViewModel
+import io.github.juevigrace.diva.lib.onboarding.presentation.viewmodel.OnboardingViewModel
 import io.github.juevigrace.diva.ui.layout.Screen
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun SignUpScreen(
-    viewModel: SignUpViewModel = koinViewModel()
+fun SplashScreen(
+    viewModel: OnboardingViewModel = koinViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
 
