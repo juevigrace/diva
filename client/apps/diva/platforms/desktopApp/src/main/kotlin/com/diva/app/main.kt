@@ -2,7 +2,7 @@ package com.diva.app
 
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import io.github.juevigrace.diva.lib.shared.App
+import com.diva.app.presentation.ui.screen.App
 
 fun main() = application {
     Window(

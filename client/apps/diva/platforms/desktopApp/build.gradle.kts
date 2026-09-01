@@ -4,6 +4,10 @@ plugins {
     id("divabuild.app-desktop")
 }
 
+dependencies {
+    implementation(projects.sharedUi)
+}
+
 compose {
     desktop {
         application {

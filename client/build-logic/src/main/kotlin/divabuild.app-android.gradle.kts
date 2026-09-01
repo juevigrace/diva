@@ -96,6 +96,4 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.datetime)
-
-    implementation(libs.diva.lib.shared.ui)
 }

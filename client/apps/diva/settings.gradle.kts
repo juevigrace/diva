@@ -41,5 +41,7 @@ include(
     ":platforms:desktopApp",
 )
 
+include(":shared-ui")
+
 includeBuild("../../framework")
 includeBuild("../lib")

@@ -38,6 +38,4 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.swing)
     implementation(libs.kotlinx.datetime)
-
-    implementation(libs.diva.lib.shared.ui)
 }

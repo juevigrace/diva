@@ -11,3 +11,7 @@ android {
         versionName = libs.versions.diva.app.name.get()
     }
 }
+
+dependencies {
+    implementation(projects.sharedUi)
+}

@@ -38,10 +38,13 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
 include(":core")
 include(":database")
-include(":shared-ui")
 include(":ui")
 
+include(":features:onboarding")
 include(":features:auth")
+include(":features:verification")
+include(":features:session")
 include(":features:user")
+include(":features:account")
 
 includeBuild("../../framework")
