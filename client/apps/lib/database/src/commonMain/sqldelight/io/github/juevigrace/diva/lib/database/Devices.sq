@@ -1,0 +1,27 @@
+upsert:
+INSERT OR REPLACE INTO diva_devices (id, name, created_at, updated_at)
+VALUES (?, ?, ?, ?);
+
+deleteAll:
+DELETE FROM diva_devices;
+
+findAll:
+SELECT
+  id,
+  name,
+  created_at AS createdAt,
+  updated_at AS updatedAt
+FROM diva_devices;
+
+findOneById:
+SELECT
+  id,
+  name,
+  created_at AS createdAt,
+  updated_at AS updatedAt
+FROM diva_devices
+WHERE id = ?;
+
+deleteById:
+DELETE FROM diva_devices
+WHERE id = ?;

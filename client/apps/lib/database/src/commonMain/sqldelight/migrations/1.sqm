@@ -1,0 +1,132 @@
+import io.github.juevigrace.diva.lib.models.Theme;
+import io.github.juevigrace.diva.lib.models.actions.Actions;
+import io.github.juevigrace.diva.lib.models.roles.Role;
+import io.github.juevigrace.diva.lib.models.session.SessionStatus;
+import io.github.juevigrace.diva.lib.models.session.SessionType;
+import io.github.juevigrace.diva.lib.models.user.UserStatus;
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS diva_user(
+    id TEXT NOT NULL PRIMARY KEY,
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
+    phone_number TEXT NOT NULL DEFAULT '',
+    password_hash TEXT NOT NULL,
+    role TEXT AS Role NOT NULL DEFAULT 'USER',
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    deleted_at INTEGER DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS diva_permissions(
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    description TEXT NOT NULL DEFAULT '',
+    action TEXT NOT NULL UNIQUE,
+    role_level TEXT AS Role NOT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    deleted_at INTEGER DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS diva_devices(
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now'))
+);
+
+CREATE TABLE IF NOT EXISTS diva_user_profile(
+    user_id TEXT NOT NULL PRIMARY KEY,
+    first_name TEXT NOT NULL DEFAULT '',
+    last_name TEXT NOT NULL DEFAULT '',
+    birth_date INTEGER DEFAULT NULL,
+    alias TEXT NOT NULL DEFAULT '',
+    bio TEXT NOT NULL DEFAULT '',
+    avatar TEXT NOT NULL DEFAULT '',
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    FOREIGN KEY(user_id) REFERENCES diva_user(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS diva_user_state(
+    user_id TEXT NOT NULL PRIMARY KEY,
+    verified INTEGER AS Boolean NOT NULL DEFAULT 0,
+    status TEXT AS UserStatus NOT NULL DEFAULT 'ACTIVE',
+    last_active_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    FOREIGN KEY(user_id) REFERENCES diva_user(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS diva_user_permissions(
+    permission_id TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    granted_by TEXT DEFAULT NULL,
+    granted INTEGER AS Boolean NOT NULL DEFAULT 0,
+    granted_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    expires_at INTEGER DEFAULT NULL,
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    PRIMARY KEY (permission_id, user_id),
+    FOREIGN KEY(permission_id) REFERENCES diva_permissions(id) ON DELETE CASCADE,
+    FOREIGN KEY(granted_by) REFERENCES diva_user(id),
+    FOREIGN KEY(user_id) REFERENCES diva_user(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS diva_user_preferences(
+    id TEXT NOT NULL PRIMARY KEY,
+    user_id TEXT NOT NULL UNIQUE,
+    theme TEXT AS Theme NOT NULL DEFAULT 'SYSTEM',
+    onboarding_completed INTEGER AS Boolean NOT NULL DEFAULT 0,
+    language TEXT NOT NULL DEFAULT 'en',
+    last_sync_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    FOREIGN KEY(user_id) REFERENCES diva_user(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS diva_session(
+    id TEXT NOT NULL PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    access_token TEXT NOT NULL,
+    refresh_token TEXT NOT NULL,
+    device_id TEXT NOT NULL DEFAULT '',
+    is_current INTEGER AS Boolean NOT NULL DEFAULT 0,
+    type TEXT AS SessionType NOT NULL,
+    status TEXT AS SessionStatus NOT NULL,
+    ip_address TEXT NOT NULL DEFAULT '',
+    user_agent TEXT NOT NULL DEFAULT '',
+    access_expires_at INTEGER NOT NULL,
+    refresh_expires_at INTEGER NOT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    deleted_at INTEGER DEFAULT NULL,
+    FOREIGN KEY(user_id) REFERENCES diva_user(id) ON DELETE CASCADE,
+    FOREIGN KEY(device_id) REFERENCES diva_devices(id)
+);
+
+CREATE TABLE IF NOT EXISTS diva_action(
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT AS Actions NOT NULL,
+    user_id TEXT NOT NULL,
+    UNIQUE(user_id, name),
+    FOREIGN KEY(user_id) REFERENCES diva_user(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS diva_action_verification(
+    action_id TEXT NOT NULL PRIMARY KEY,
+    token TEXT NOT NULL,
+    verified INTEGER AS Boolean NOT NULL DEFAULT 0,
+    expires_at INTEGER NOT NULL,
+    used_at INTEGER DEFAULT NULL,
+    UNIQUE(action_id, token),
+    FOREIGN KEY(action_id) REFERENCES diva_action(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS diva_user_device(
+    user_id TEXT NOT NULL,
+    device_id TEXT NOT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    PRIMARY KEY (user_id, device_id),
+    FOREIGN KEY(user_id) REFERENCES diva_user(id) ON DELETE CASCADE,
+    FOREIGN KEY(device_id) REFERENCES diva_devices(id) ON DELETE CASCADE
+);

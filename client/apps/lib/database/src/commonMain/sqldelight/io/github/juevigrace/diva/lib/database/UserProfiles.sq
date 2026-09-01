@@ -1,0 +1,19 @@
+upsert:
+INSERT OR REPLACE INTO diva_user_profile (user_id, first_name, last_name, birth_date, alias, bio, avatar, updated_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+deleteAll:
+DELETE FROM diva_user_profile;
+
+findByUser:
+SELECT
+  user_id AS userId,
+  first_name AS firstName,
+  last_name AS lastName,
+  birth_date AS birthDate,
+  alias,
+  bio,
+  avatar,
+  updated_at AS updatedAt
+FROM diva_user_profile
+WHERE user_id = ?;

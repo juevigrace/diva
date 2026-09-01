@@ -1,0 +1,36 @@
+upsert:
+INSERT OR REPLACE INTO diva_user_preferences (id, user_id, theme, onboarding_completed, language, last_sync_at, created_at, updated_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+deleteAll:
+DELETE FROM diva_user_preferences;
+
+findByUser:
+SELECT
+  id,
+  user_id AS userId,
+  theme,
+  onboarding_completed AS onboardingCompleted,
+  language,
+  last_sync_at AS lastSyncAt,
+  created_at AS createdAt,
+  updated_at AS updatedAt
+FROM diva_user_preferences
+WHERE user_id = ?;
+
+findOneById:
+SELECT
+  id,
+  user_id AS userId,
+  theme,
+  onboarding_completed AS onboardingCompleted,
+  language,
+  last_sync_at AS lastSyncAt,
+  created_at AS createdAt,
+  updated_at AS updatedAt
+FROM diva_user_preferences
+WHERE id = ?;
+
+deleteById:
+DELETE FROM diva_user_preferences
+WHERE id = ?;

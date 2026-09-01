@@ -1,0 +1,16 @@
+upsert:
+INSERT OR REPLACE INTO diva_user_state (user_id, verified, status, last_active_at, updated_at)
+VALUES (?, ?, ?, ?, ?);
+
+deleteAll:
+DELETE FROM diva_user_state;
+
+findByUser:
+SELECT
+  user_id AS userId,
+  verified,
+  status,
+  last_active_at AS lastActiveAt,
+  updated_at AS updatedAt
+FROM diva_user_state
+WHERE user_id = ?;

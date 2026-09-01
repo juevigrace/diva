@@ -40,6 +40,9 @@ include(":core")
 include(":database")
 include(":ui")
 
+include(":models-api")
+include(":models-core")
+
 include(":features:onboarding")
 include(":features:auth")
 include(":features:verification")

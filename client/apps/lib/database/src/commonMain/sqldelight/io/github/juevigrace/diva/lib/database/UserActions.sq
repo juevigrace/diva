@@ -1,0 +1,25 @@
+upsert:
+INSERT OR REPLACE INTO diva_action (id, name, user_id)
+VALUES (?, ?, ?);
+
+deleteAll:
+DELETE FROM diva_action;
+
+findAllByUser:
+SELECT id, name, user_id AS userId
+FROM diva_action
+WHERE user_id = ?;
+
+findOneByAction:
+SELECT id, name, user_id AS userId
+FROM diva_action
+WHERE user_id = ? AND name = ?;
+
+findOneById:
+SELECT id, name, user_id AS userId
+FROM diva_action
+WHERE id = ?;
+
+deleteById:
+DELETE FROM diva_action
+WHERE id = ?;

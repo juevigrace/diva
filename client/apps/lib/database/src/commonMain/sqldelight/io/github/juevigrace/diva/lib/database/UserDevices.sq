@@ -1,0 +1,28 @@
+upsert:
+INSERT OR REPLACE INTO diva_user_device (user_id, device_id, created_at, updated_at)
+VALUES (?, ?, ?, ?);
+
+deleteAll:
+DELETE FROM diva_user_device;
+
+findAllByUser:
+SELECT
+  user_id AS userId,
+  device_id AS deviceId,
+  created_at AS createdAt,
+  updated_at AS updatedAt
+FROM diva_user_device
+WHERE user_id = ?;
+
+findOneById:
+SELECT
+  user_id AS userId,
+  device_id AS deviceId,
+  created_at AS createdAt,
+  updated_at AS updatedAt
+FROM diva_user_device
+WHERE user_id = ? AND device_id = ?;
+
+deleteById:
+DELETE FROM diva_user_device
+WHERE user_id = ? AND device_id = ?;

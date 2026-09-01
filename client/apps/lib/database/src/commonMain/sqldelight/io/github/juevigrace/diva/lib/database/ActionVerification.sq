@@ -1,0 +1,16 @@
+upsert:
+INSERT OR REPLACE INTO diva_action_verification (action_id, token, verified, expires_at, used_at)
+VALUES (?, ?, ?, ?, ?);
+
+deleteAll:
+DELETE FROM diva_action_verification;
+
+findByAction:
+SELECT
+  action_id AS actionId,
+  token,
+  verified,
+  expires_at AS expiresAt,
+  used_at AS usedAt
+FROM diva_action_verification
+WHERE action_id = ?;

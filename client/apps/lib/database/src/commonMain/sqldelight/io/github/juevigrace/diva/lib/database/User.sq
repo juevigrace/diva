@@ -1,0 +1,35 @@
+upsert:
+INSERT OR REPLACE INTO diva_user (id, username, email, phone_number, password_hash, role, created_at, updated_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+deleteAll:
+DELETE FROM diva_user;
+
+findAll:
+SELECT
+  id,
+  username,
+  email,
+  phone_number AS phoneNumber,
+  password_hash AS passwordHash,
+  role,
+  created_at AS createdAt,
+  updated_at AS updatedAt
+FROM diva_user;
+
+findOneById:
+SELECT
+  id,
+  username,
+  email,
+  phone_number AS phoneNumber,
+  password_hash AS passwordHash,
+  role,
+  created_at AS createdAt,
+  updated_at AS updatedAt
+FROM diva_user
+WHERE id = ?;
+
+deleteById:
+DELETE FROM diva_user
+WHERE id = ?;

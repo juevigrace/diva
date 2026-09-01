@@ -1,0 +1,73 @@
+upsert:
+INSERT OR REPLACE INTO diva_session (
+    id, user_id, access_token, refresh_token, device_id, is_current, type, status,
+    ip_address, user_agent, access_expires_at, refresh_expires_at, created_at, updated_at
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateCurrent:
+UPDATE diva_session
+SET is_current = CASE WHEN id = ? THEN 1 ELSE 0 END;
+
+deleteAll:
+DELETE FROM diva_session;
+
+findAll:
+SELECT
+  id,
+  user_id AS userId,
+  access_token AS accessToken,
+  refresh_token AS refreshToken,
+  device_id AS deviceId,
+  is_current AS isCurrent,
+  type,
+  status,
+  ip_address AS ipAddress,
+  user_agent AS userAgent,
+  access_expires_at AS accessExpiresAt,
+  refresh_expires_at AS refreshExpiresAt,
+  created_at AS createdAt,
+  updated_at AS updatedAt
+FROM diva_session;
+
+findOneById:
+SELECT
+  id,
+  user_id AS userId,
+  access_token AS accessToken,
+  refresh_token AS refreshToken,
+  device_id AS deviceId,
+  is_current AS isCurrent,
+  type,
+  status,
+  ip_address AS ipAddress,
+  user_agent AS userAgent,
+  access_expires_at AS accessExpiresAt,
+  refresh_expires_at AS refreshExpiresAt,
+  created_at AS createdAt,
+  updated_at AS updatedAt
+FROM diva_session
+WHERE id = ?;
+
+findCurrent:
+SELECT
+  id,
+  user_id AS userId,
+  access_token AS accessToken,
+  refresh_token AS refreshToken,
+  device_id AS deviceId,
+  is_current AS isCurrent,
+  type,
+  status,
+  ip_address AS ipAddress,
+  user_agent AS userAgent,
+  access_expires_at AS accessExpiresAt,
+  refresh_expires_at AS refreshExpiresAt,
+  created_at AS createdAt,
+  updated_at AS updatedAt
+FROM diva_session
+WHERE is_current = 1;
+
+deleteById:
+DELETE FROM diva_session
+WHERE id = ?;

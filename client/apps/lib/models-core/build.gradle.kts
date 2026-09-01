@@ -3,13 +3,9 @@ plugins {
 }
 
 kotlin {
-    js {
-        nodejs()
-    }
-
     sourceSets {
         commonMain.dependencies {
-            api(projects.modelsCore)
+            implementation(projects.modelsApi)
         }
     }
 }
