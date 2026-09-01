@@ -1,4 +1,4 @@
-package io.github.juevigrace.diva.lib.account.presentation.ui.screen
+package io.github.juevigrace.diva.lib.settings
 
 import androidx.compose.runtime.Composable
 

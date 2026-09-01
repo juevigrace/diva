@@ -48,6 +48,6 @@ include(":features:auth")
 include(":features:verification")
 include(":features:session")
 include(":features:user")
-include(":features:account")
+include(":features:settings")
 
 includeBuild("../../framework")
