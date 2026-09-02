@@ -1,0 +1,13 @@
+{
+  "name": "@diva/admin-page",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'admin-page dev'",
+    "build": "echo 'admin-page build'",
+    "test": "echo 'admin-page test'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

@@ -9,3 +9,36 @@ build
 
 # Ignore SQLite temporary files from tests
 file:test?*
+
+# Node / pnpm
+node_modules
+.pnpm-store
+.pnpm-debug.log
+pnpm-lock.yaml
+
+# build output
+dist/
+
+# generated types
+.astro/
+
+# turbo
+.turbo/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
+
+# bun lockfile
+bun.lock

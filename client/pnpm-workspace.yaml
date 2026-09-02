@@ -1,0 +1,21 @@
+packages:
+  - "packages/web/*"
+  - "apps/**/platforms/webApp/*"
+
+allowBuilds:
+  esbuild: true
+  sharp: true
+
+catalog:
+  # root-only tooling
+  jiti: ^2.0.0
+  typescript: ^6.0.3
+  '@eslint/js': ^10.0.1
+  astro-eslint-parser: ^2.1.0
+  eslint: ^10.6.0
+  eslint-plugin-astro: ^2.1.1
+  prettier: ^3.9.3
+  prettier-plugin-astro: ^0.14.1
+  prettier-plugin-tailwindcss: ^0.8.0
+  turbo: ^2.10.0
+  typescript-eslint: ^8.62.0

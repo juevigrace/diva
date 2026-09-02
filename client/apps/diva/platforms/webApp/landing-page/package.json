@@ -1,0 +1,13 @@
+{
+  "name": "@diva/landing-page",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'landing-page dev'",
+    "build": "echo 'landing-page build'",
+    "test": "echo 'landing-page test'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

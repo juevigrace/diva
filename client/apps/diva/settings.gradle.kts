@@ -43,5 +43,5 @@ include(
 
 include(":shared-ui")
 
-includeBuild("../../framework")
-includeBuild("../lib")
+includeBuild("../../packages/shared/framework")
+includeBuild("../../packages/shared/app-lib")

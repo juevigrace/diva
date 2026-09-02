@@ -1,5 +1,5 @@
 pluginManagement {
-    includeBuild("../../build-logic")
+    includeBuild("../../../build-logic")
     repositories {
         google {
             content {
@@ -26,7 +26,7 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from(files("../../gradle/libs.versions.toml"))
+            from(files("../../../gradle/libs.versions.toml"))
         }
     }
 }
@@ -52,4 +52,4 @@ include(":features:settings")
 include(":features:permissions")
 include(":features:devices")
 
-includeBuild("../../framework")
+includeBuild("../framework")

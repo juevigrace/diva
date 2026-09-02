@@ -31,6 +31,6 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
 rootProject.name = "diva"
 
-includeBuild("framework")
+includeBuild("packages/shared/framework")
 includeBuild("apps/diva")
-includeBuild("apps/lib")
+includeBuild("packages/shared/app-lib")
