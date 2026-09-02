@@ -6,11 +6,15 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import io.github.juevigrace.diva.database.driver.DriverProvider
+import io.github.juevigrace.diva.database.exception.DatabaseExceptionTransformer
 import io.github.juevigrace.diva.database.sqlite.config.SqliteConf
+import io.github.juevigrace.diva.database.sqlite.exception.SqliteExceptionTransformer
 
 class JvmSqliteDriverProvider(
     override val conf: SqliteConf,
 ) : DriverProvider<SqliteConf> {
+    override val transformer: DatabaseExceptionTransformer = SqliteExceptionTransformer
+
     override fun createSyncDriver(schema: SqlSchema<QueryResult.Value<Unit>>): Result<SqlDriver> {
         return runCatching {
             JdbcSqliteDriver(

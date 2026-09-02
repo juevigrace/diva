@@ -7,11 +7,15 @@ import app.cash.sqldelight.driver.jdbc.asJdbcDriver
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.github.juevigrace.diva.database.driver.DriverProvider
+import io.github.juevigrace.diva.database.exception.DatabaseExceptionTransformer
 import io.github.juevigrace.diva.database.mysql.config.MysqlConf
+import io.github.juevigrace.diva.database.mysql.exception.MysqlExceptionTransformer
 
 class JvmMySQLDriverProvider(
     override val conf: MysqlConf,
 ) : DriverProvider<MysqlConf> {
+    override val transformer: DatabaseExceptionTransformer = MysqlExceptionTransformer
+
     override fun createSyncDriver(schema: SqlSchema<QueryResult.Value<Unit>>): Result<SqlDriver> {
         return runCatching {
             val driver = createDataSource().asJdbcDriver()

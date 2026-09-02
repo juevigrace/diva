@@ -12,6 +12,7 @@ import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.ioDispatcher
 import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.database.driver.DriverProvider
+import io.github.juevigrace.diva.database.exception.DatabaseExceptionTransformer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -61,7 +62,7 @@ interface DivaDatabase<S : TransacterBase> {
             db: (SqlDriver) -> S,
         ): Result<DivaDatabase<S>> {
             return provider.createSyncDriver(schema).map { driver ->
-                DivaDatabaseImpl(driver, db(driver))
+                DivaDatabaseImpl(driver, db(driver), provider.transformer)
             }
         }
 
@@ -71,7 +72,7 @@ interface DivaDatabase<S : TransacterBase> {
             db: (SqlDriver) -> S,
         ): Result<DivaDatabase<S>> {
             return provider.createAsyncDriver(schema).map { driver ->
-                DivaDatabaseImpl(driver, db(driver))
+                DivaDatabaseImpl(driver, db(driver), provider.transformer)
             }
         }
     }
@@ -80,6 +81,7 @@ interface DivaDatabase<S : TransacterBase> {
 internal class DivaDatabaseImpl<S : TransacterBase>(
     private val driver: SqlDriver,
     private val db: S,
+    private val transformer: DatabaseExceptionTransformer,
 ) : DivaDatabase<S> {
     override val scope: CoroutineScope = CoroutineScope(ioDispatcher)
 
@@ -90,7 +92,7 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
         return withContext(context) {
             runCatching {
                 block(db).executeAsOneOrNull().toOption()
-            }
+            }.recoverCatching { throw transformer.transform(it) }
         }
     }
 
@@ -104,7 +106,7 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
                 Result.success(entity.toOption())
             }
             .catch { e ->
-                emit(Result.failure(e))
+                emit(Result.failure(transformer.transform(e)))
             }
     }
 
@@ -115,7 +117,7 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
         return withContext(context) {
             runCatching {
                 block(db).executeAsList()
-            }
+            }.recoverCatching { throw transformer.transform(it) }
         }
     }
 
@@ -125,11 +127,11 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
     ): Flow<Result<List<T>>> {
         return block(db).asFlow()
             .mapToList(context)
-            .catch { e ->
-                Result.failure<List<T>>(e)
-            }
             .map { list ->
                 Result.success(list)
+            }
+            .catch { e ->
+                emit(Result.failure(transformer.transform(e)))
             }
     }
 
@@ -140,7 +142,7 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
         return withContext(context) {
             runCatching {
                 block(db)
-            }
+            }.recoverCatching { throw transformer.transform(it) }
         }
     }
 
@@ -151,13 +153,13 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
         return withContext(context) {
             runCatching {
                 block(driver)
-            }
+            }.recoverCatching { throw transformer.transform(it) }
         }
     }
 
     override suspend fun close(): Result<Unit> {
         return runCatching {
             driver.close()
-        }
+        }.recoverCatching { throw transformer.transform(it) }
     }
 }

@@ -7,11 +7,15 @@ import app.cash.sqldelight.driver.jdbc.asJdbcDriver
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.github.juevigrace.diva.database.driver.DriverProvider
+import io.github.juevigrace.diva.database.exception.DatabaseExceptionTransformer
 import io.github.juevigrace.diva.database.postgres.config.PostgresConf
+import io.github.juevigrace.diva.database.postgres.exception.PostgresExceptionTransformer
 
 class JvmPostgresDriverProvider(
     override val conf: PostgresConf
 ) : DriverProvider<PostgresConf> {
+    override val transformer: DatabaseExceptionTransformer = PostgresExceptionTransformer
+
     override fun createSyncDriver(schema: SqlSchema<QueryResult.Value<Unit>>): Result<SqlDriver> {
         return runCatching {
             val driver = createDataSource().asJdbcDriver()
