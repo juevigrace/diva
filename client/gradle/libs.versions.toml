@@ -76,11 +76,13 @@ diva-database-postgres = { group = "io.github.juevigrace", name = "diva-database
 diva-database-mysql = { group = "io.github.juevigrace", name = "diva-database-mysql", version.ref = "diva-framework" }
 diva-network = { group = "io.github.juevigrace", name = "diva-network", version.ref = "diva-framework" }
 diva-ui = { group = "io.github.juevigrace", name = "diva-ui", version.ref = "diva-framework" }
-diva-lib-core = { group = "io.github.juevigrace.diva.lib", name = "core", version.ref = "diva-lib" }
-diva-lib-database = { group = "io.github.juevigrace.diva.lib", name = "database", version.ref = "diva-lib" }
-diva-lib-ui = { group = "io.github.juevigrace.diva.lib", name = "ui", version.ref = "diva-lib" }
-diva-lib-auth = { group = "io.github.juevigrace.diva.lib", name = "auth", version.ref = "diva-lib" }
-diva-lib-user = { group = "io.github.juevigrace.diva.lib", name = "user", version.ref = "diva-lib" }
+diva-lib-core = { group = "io.github.juevigrace", name = "diva-lib-core", version.ref = "diva-lib" }
+diva-lib-database = { group = "io.github.juevigrace", name = "diva-lib-database", version.ref = "diva-lib" }
+diva-lib-ui = { group = "io.github.juevigrace", name = "diva-lib-ui", version.ref = "diva-lib" }
+diva-lib-models-api = { group = "io.github.juevigrace", name = "diva-lib-models-api", version.ref = "diva-lib" }
+diva-lib-models-core = { group = "io.github.juevigrace", name = "diva-lib-models-core", version.ref = "diva-lib" }
+diva-lib-auth = { group = "io.github.juevigrace", name = "diva-lib-auth", version.ref = "diva-lib" }
+diva-lib-user = { group = "io.github.juevigrace", name = "diva-lib-user", version.ref = "diva-lib" }
 
 ######### [ANDROIDX DEPENDENCIES] #########
 

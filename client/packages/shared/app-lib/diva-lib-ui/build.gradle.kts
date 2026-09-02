@@ -1,11 +1,11 @@
 plugins {
-    id("divabuild.library-app")
+    id("divabuild.library-app-ui")
 }
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.modelsApi)
+            implementation(projects.divaLibCore)
         }
     }
 }

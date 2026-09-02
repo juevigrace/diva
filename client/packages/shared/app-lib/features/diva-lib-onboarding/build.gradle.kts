@@ -5,8 +5,8 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core)
-            implementation(projects.database)
+            implementation(projects.divaLibCore)
+            implementation(projects.divaLibDatabase)
 
             implementation(libs.diva.network)
         }

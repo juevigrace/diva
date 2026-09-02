@@ -10,9 +10,11 @@ plugins {
 kotlin {
     js {
         nodejs()
+        binaries.library()
     }
     wasmJs {
         nodejs()
+        binaries.library()
     }
 
     sourceSets {

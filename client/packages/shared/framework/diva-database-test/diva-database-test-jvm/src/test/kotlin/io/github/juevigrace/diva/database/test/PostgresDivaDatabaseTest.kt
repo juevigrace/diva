@@ -3,8 +3,8 @@ package io.github.juevigrace.diva.database.test
 import app.cash.sqldelight.db.SqlDriver
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
-import io.github.juevigrace.diva.database.postgres.PostgresDB
 import io.github.juevigrace.diva.database.postgres.JvmPostgresDriverProvider
+import io.github.juevigrace.diva.database.postgres.PostgresDB
 import io.github.juevigrace.diva.database.postgres.config.PostgresConf
 import kotlinx.coroutines.test.runTest
 import org.testcontainers.containers.PostgreSQLContainer

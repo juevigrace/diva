@@ -10,9 +10,11 @@ kotlin {
     js {
         browser()
         nodejs()
+        binaries.library()
     }
     wasmJs {
         browser()
+        binaries.library()
     }
 
     sourceSets {

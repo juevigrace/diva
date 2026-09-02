@@ -9,9 +9,11 @@ plugins {
 kotlin {
     js {
         browser()
+        binaries.library()
     }
     wasmJs {
         browser()
+        binaries.library()
     }
 
     sourceSets {

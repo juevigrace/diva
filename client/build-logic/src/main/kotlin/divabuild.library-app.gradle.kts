@@ -10,15 +10,17 @@ plugins {
 
 kotlin {
     android {
-        namespace = "io.github.juevigrace.diva.lib.${project.name.replace("-", ".")}"
+        namespace = "io.github.juevigrace.${project.name.replace("-", ".")}"
     }
 
     js {
         browser()
+        binaries.library()
     }
 
     wasmJs {
         browser()
+        binaries.library()
     }
 
     sourceSets {

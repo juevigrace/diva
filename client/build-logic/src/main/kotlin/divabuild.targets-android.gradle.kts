@@ -15,7 +15,7 @@ kotlin {
             minify = true
             consumerKeepRules.apply {
                 publish = true
-                file("${project.rootProject.projectDir}/../build-logic/src/main/resources/consumer-rules.pro")
+                file("${project.rootProject.projectDir}/../../../build-logic/src/main/resources/consumer-rules.pro")
             }
         }
 

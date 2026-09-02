@@ -38,7 +38,7 @@ android {
         all {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                file("${project.rootProject.projectDir}/../build-logic/src/main/resources/proguard-rules.pro"),
+                file("${project.rootProject.projectDir}/../../build-logic/src/main/resources/proguard-rules.pro"),
                 file("proguard-rules.pro"),
             )
         }

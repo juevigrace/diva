@@ -2,8 +2,8 @@ package io.github.juevigrace.diva.database.test
 
 import app.cash.sqldelight.db.SqlDriver
 import io.github.juevigrace.diva.database.DivaDatabase
-import io.github.juevigrace.diva.database.mysql.MysqlDB
 import io.github.juevigrace.diva.database.mysql.JvmMySQLDriverProvider
+import io.github.juevigrace.diva.database.mysql.MysqlDB
 import io.github.juevigrace.diva.database.mysql.config.MysqlConf
 import kotlinx.coroutines.test.runTest
 import org.testcontainers.containers.MySQLContainer

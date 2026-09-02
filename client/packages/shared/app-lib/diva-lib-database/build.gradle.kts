@@ -22,7 +22,7 @@ kotlin {
             api(libs.diva.database)
             api(libs.diva.database.sqlite)
 
-            api(projects.modelsCore)
+            api(projects.divaLibModelsCore)
         }
     }
 }
