@@ -8,10 +8,10 @@ plugins {
 
 kotlin {
     js {
-        binaries.library()
+        binaries.executable()
     }
     wasmJs {
-        binaries.library()
+        binaries.executable()
     }
 
     sourceSets {

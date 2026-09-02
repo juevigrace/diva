@@ -10,6 +10,15 @@ plugins {
 }
 
 kotlin {
+    js {
+        browser()
+        binaries.executable()
+    }
+
+    wasmJs {
+        browser()
+        binaries.executable()
+    }
     sourceSets {
         commonMain.dependencies {
             implementation(libs.koin.compose)

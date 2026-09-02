@@ -13,16 +13,6 @@ kotlin {
         namespace = "io.github.juevigrace.${project.name.replace("-", ".")}"
     }
 
-    js {
-        browser()
-        binaries.library()
-    }
-
-    wasmJs {
-        browser()
-        binaries.library()
-    }
-
     sourceSets {
         commonMain.dependencies {
             implementation(libs.koin.core)
