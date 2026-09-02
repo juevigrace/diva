@@ -6,6 +6,7 @@ import io.github.juevigrace.diva.lib.database.DivaDB
 import io.github.juevigrace.diva.lib.database.user.devices.UserDevicesStorage
 import io.github.juevigrace.diva.lib.models.device.Device
 import io.github.juevigrace.diva.lib.models.user.device.UserDevice
+import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -21,8 +22,20 @@ class UserDevicesStorageImpl(
         }
     }
 
+    override fun getAllByUserFlow(userId: Uuid): Flow<Result<List<UserDevice>>> {
+        return db.getListAsFlow {
+            userDevicesQueries.findAllByUser(userId.toString(), ::mapToUserDevice)
+        }
+    }
+
     override suspend fun getById(userId: Uuid, deviceId: Uuid): Result<Option<UserDevice>> {
         return db.getOne {
+            userDevicesQueries.findOneById(userId.toString(), deviceId.toString(), ::mapToUserDevice)
+        }
+    }
+
+    override fun getByIdFlow(userId: Uuid, deviceId: Uuid): Flow<Result<Option<UserDevice>>> {
+        return db.getOneAsFlow {
             userDevicesQueries.findOneById(userId.toString(), deviceId.toString(), ::mapToUserDevice)
         }
     }

@@ -8,6 +8,7 @@ import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.DivaDB
 import io.github.juevigrace.diva.lib.database.user.profile.UserProfileStorage
 import io.github.juevigrace.diva.lib.models.user.profile.UserProfile
+import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -19,6 +20,12 @@ class UserProfileStorageImpl(
 
     override suspend fun getByUser(userId: Uuid): Result<Option<UserProfile>> {
         return db.getOne {
+            userProfilesQueries.findByUser(userId.toString(), ::mapToUserProfile)
+        }
+    }
+
+    override fun getByUserFlow(userId: Uuid): Flow<Result<Option<UserProfile>>> {
+        return db.getOneAsFlow {
             userProfilesQueries.findByUser(userId.toString(), ::mapToUserProfile)
         }
     }

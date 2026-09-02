@@ -6,6 +6,7 @@ import io.github.juevigrace.diva.lib.database.DivaDB
 import io.github.juevigrace.diva.lib.database.user.actions.UserActionsStorage
 import io.github.juevigrace.diva.lib.models.actions.Actions
 import io.github.juevigrace.diva.lib.models.user.actions.UserAction
+import kotlinx.coroutines.flow.Flow
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -20,14 +21,32 @@ class UserActionsStorageImpl(
         }
     }
 
+    override fun getByIdFlow(id: Uuid): Flow<Result<Option<UserAction>>> {
+        return db.getOneAsFlow {
+            userActionsQueries.findOneById(id.toString(), ::mapToUserAction)
+        }
+    }
+
     override suspend fun getAllByUser(userId: Uuid): Result<List<UserAction>> {
         return db.getList {
             userActionsQueries.findAllByUser(userId.toString(), ::mapToUserAction)
         }
     }
 
+    override fun getAllByUserFlow(userId: Uuid): Flow<Result<List<UserAction>>> {
+        return db.getListAsFlow {
+            userActionsQueries.findAllByUser(userId.toString(), ::mapToUserAction)
+        }
+    }
+
     override suspend fun getByAction(userId: Uuid, action: Actions): Result<Option<UserAction>> {
         return db.getOne {
+            userActionsQueries.findOneByAction(userId.toString(), action, ::mapToUserAction)
+        }
+    }
+
+    override fun getByActionFlow(userId: Uuid, action: Actions): Flow<Result<Option<UserAction>>> {
+        return db.getOneAsFlow {
             userActionsQueries.findOneByAction(userId.toString(), action, ::mapToUserAction)
         }
     }

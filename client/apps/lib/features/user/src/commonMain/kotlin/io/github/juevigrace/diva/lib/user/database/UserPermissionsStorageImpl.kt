@@ -11,6 +11,7 @@ import io.github.juevigrace.diva.lib.models.permission.Permission
 import io.github.juevigrace.diva.lib.models.permissions.PermissionAction
 import io.github.juevigrace.diva.lib.models.roles.Role
 import io.github.juevigrace.diva.lib.models.user.permissions.UserPermission
+import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -26,8 +27,20 @@ class UserPermissionsStorageImpl(
         }
     }
 
+    override fun getAllByUserFlow(userId: Uuid): Flow<Result<List<UserPermission>>> {
+        return db.getListAsFlow {
+            userPermissionsQueries.findAllByUser(userId.toString(), ::mapToUserPermission)
+        }
+    }
+
     override suspend fun getById(permissionId: Uuid, userId: Uuid): Result<Option<UserPermission>> {
         return db.getOne {
+            userPermissionsQueries.findOneById(permissionId.toString(), userId.toString(), ::mapToUserPermission)
+        }
+    }
+
+    override fun getByIdFlow(permissionId: Uuid, userId: Uuid): Flow<Result<Option<UserPermission>>> {
+        return db.getOneAsFlow {
             userPermissionsQueries.findOneById(permissionId.toString(), userId.toString(), ::mapToUserPermission)
         }
     }
