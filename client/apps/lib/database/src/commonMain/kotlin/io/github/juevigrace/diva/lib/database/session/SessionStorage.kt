@@ -9,6 +9,8 @@ import kotlin.uuid.Uuid
 interface SessionStorage {
     suspend fun getAll(): Result<List<Session>>
 
+    fun getAllFlow(): Flow<Result<List<Session>>>
+
     @OptIn(ExperimentalUuidApi::class)
     suspend fun getById(id: Uuid): Result<Option<Session>>
 

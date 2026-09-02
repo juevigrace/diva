@@ -8,7 +8,9 @@ import app.cash.sqldelight.coroutines.mapToOneOrNull
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
+import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.ioDispatcher
+import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.database.driver.DriverProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -23,12 +25,12 @@ interface DivaDatabase<S : TransacterBase> {
     suspend fun <T : Any> getOne(
         context: CoroutineContext = ioDispatcher,
         block: S.() -> Query<T>,
-    ): Result<T>
+    ): Result<Option<T>>
 
     fun <T : Any> getOneAsFlow(
         context: CoroutineContext = ioDispatcher,
         block: S.() -> Query<T>,
-    ): Flow<Result<T>>
+    ): Flow<Result<Option<T>>>
 
     suspend fun <T : Any> getList(
         context: CoroutineContext = ioDispatcher,
@@ -84,11 +86,10 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
     override suspend fun <T : Any> getOne(
         context: CoroutineContext,
         block: S.() -> Query<T>,
-    ): Result<T> {
+    ): Result<Option<T>> {
         return withContext(context) {
             runCatching {
-                block(db).executeAsOneOrNull()
-                    ?: throw NoSuchElementException("no rows returned")
+                block(db).executeAsOneOrNull().toOption()
             }
         }
     }
@@ -96,18 +97,14 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
     override fun <T : Any> getOneAsFlow(
         context: CoroutineContext,
         block: S.() -> Query<T>,
-    ): Flow<Result<T>> {
+    ): Flow<Result<Option<T>>> {
         return block(db).asFlow()
             .mapToOneOrNull(context)
-            .catch { e ->
-                Result.failure<T>(e)
-            }
             .map { entity ->
-                if (entity == null) {
-                    Result.failure(NoSuchElementException("no rows returned"))
-                } else {
-                    Result.success(entity)
-                }
+                Result.success(entity.toOption())
+            }
+            .catch { e ->
+                emit(Result.failure(e))
             }
     }
 
