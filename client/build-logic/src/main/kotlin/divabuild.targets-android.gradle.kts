@@ -1,3 +1,4 @@
+import divabuild.internal.buildLogicResourcesDir
 import divabuild.internal.libs
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -15,7 +16,7 @@ kotlin {
             minify = true
             consumerKeepRules.apply {
                 publish = true
-                file("${project.rootProject.projectDir}/../../../build-logic/src/main/resources/consumer-rules.pro")
+                file(buildLogicResourcesDir().resolve("consumer-rules.pro"))
             }
         }
 

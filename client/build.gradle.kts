@@ -1,4 +1,7 @@
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.Directory
+import org.gradle.api.provider.ListProperty
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.process.ExecOperations
 import javax.inject.Inject
@@ -10,16 +13,14 @@ plugins {
 abstract class BuildAllTask @Inject constructor(
     private val execOperations: ExecOperations,
 ) : DefaultTask() {
+    @get:Input
+    abstract val buildRoots: ListProperty<Directory>
+
     @TaskAction
     fun build() {
-        val buildRoots = listOf(
-            project.projectDir.resolve("packages/shared/framework"),
-            project.projectDir.resolve("packages/shared/app-lib"),
-            project.projectDir.resolve("apps/diva"),
-        )
-        buildRoots.forEach { dir ->
+        buildRoots.get().forEach { dir ->
             execOperations.exec {
-                workingDir = dir
+                workingDir = dir.asFile
                 commandLine("./gradlew", "build")
             }.rethrowFailure()
         }
@@ -41,6 +42,14 @@ val cleanAll = tasks.register<Delete>("cleanAll") {
 val buildAll = tasks.register<BuildAllTask>("buildAll") {
     group = "build"
     description = "Builds all Gradle composite builds (framework, app-lib, apps/diva)."
+    val rootDir = layout.projectDirectory
+    buildRoots.set(
+        listOf(
+            rootDir.dir("packages/shared/framework"),
+            rootDir.dir("packages/shared/app-lib"),
+            rootDir.dir("apps/diva"),
+        ),
+    )
 }
 
 tasks.named("clean") {

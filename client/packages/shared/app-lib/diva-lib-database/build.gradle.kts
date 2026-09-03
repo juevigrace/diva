@@ -1,3 +1,7 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     id("divabuild.library-app")
     id("divabuild.serialization")
@@ -19,13 +23,11 @@ sqldelight {
 kotlin {
     js {
         browser()
-        nodejs()
         binaries.library()
     }
 
     wasmJs {
         browser()
-        nodejs()
         binaries.library()
     }
 

@@ -14,7 +14,7 @@ interface Repository {
     val scope: CoroutineScope
         get() = CoroutineScope(SupervisorJob() + ioDispatcher)
 
-    fun <T> withSessionFlow(
+    fun <T> observeSession(
         sessionCall: suspend () -> Flow<Result<Session>>,
         onFound: suspend FlowCollector<Result<T>>.(session: Session) -> Unit,
     ): Flow<Result<T>> {

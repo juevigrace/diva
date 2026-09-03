@@ -1,3 +1,4 @@
+import divabuild.internal.buildLogicResourcesDir
 import divabuild.internal.libs
 import org.gradle.api.JavaVersion
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -38,7 +39,7 @@ android {
         all {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                file("${project.rootProject.projectDir}/../../build-logic/src/main/resources/proguard-rules.pro"),
+                file(buildLogicResourcesDir().resolve("proguard-rules.pro")),
                 file("proguard-rules.pro"),
             )
         }
