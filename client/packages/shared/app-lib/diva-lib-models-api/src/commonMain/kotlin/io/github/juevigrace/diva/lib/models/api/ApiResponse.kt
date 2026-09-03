@@ -3,8 +3,12 @@ package io.github.juevigrace.diva.lib.models.api
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 import kotlin.time.Clock
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 @Serializable
 data class ApiResponse<T>(
     @Transient

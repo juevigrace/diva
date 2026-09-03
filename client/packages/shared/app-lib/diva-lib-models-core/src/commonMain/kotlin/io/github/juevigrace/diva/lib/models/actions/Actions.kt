@@ -1,5 +1,10 @@
 package io.github.juevigrace.diva.lib.models.actions
 
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 enum class Actions {
     USER_VERIFICATION,
     PASSWORD_RESET,

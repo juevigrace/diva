@@ -1,22 +1,23 @@
 package io.github.juevigrace.diva.lib.models.user
 
+import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.core.fold
 import io.github.juevigrace.diva.lib.models.api.user.UserResponse
-import io.github.juevigrace.diva.lib.models.roles.Role
-import io.github.juevigrace.diva.lib.models.roles.safeRole
 import io.github.juevigrace.diva.lib.models.user.actions.UserAction
 import io.github.juevigrace.diva.lib.models.user.device.UserDevice
 import io.github.juevigrace.diva.lib.models.user.permissions.UserPermission
 import io.github.juevigrace.diva.lib.models.user.preferences.UserPreferences
 import io.github.juevigrace.diva.lib.models.user.profile.UserProfile
 import io.github.juevigrace.diva.lib.models.user.state.UserState
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalJsExport::class)
+@JsExport
 data class User(
     val id: Uuid,
     val email: String = "",

@@ -3,13 +3,16 @@ package io.github.juevigrace.diva.lib.models.user.permissions
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.api.user.permissions.UserPermissionResponse
 import io.github.juevigrace.diva.lib.models.permission.Permission
-import io.github.juevigrace.diva.lib.models.permissions.PermissionAction
-import io.github.juevigrace.diva.lib.models.roles.Role
+import io.github.juevigrace.diva.lib.models.permission.PermissionAction
+import io.github.juevigrace.diva.lib.models.user.Role
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalJsExport::class)
+@JsExport
 data class UserPermission(
     val permission: Permission,
     val userId: Uuid,

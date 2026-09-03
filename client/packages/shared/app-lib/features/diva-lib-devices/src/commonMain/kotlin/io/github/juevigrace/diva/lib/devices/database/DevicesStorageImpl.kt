@@ -12,7 +12,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class DevicesStorageImpl(
-    private val db: DivaDatabase<DivaDB>
+    private val db: DivaDatabase<DivaDB>,
 ) : DevicesStorage {
 
     override suspend fun getAll(): Result<List<Device>> {

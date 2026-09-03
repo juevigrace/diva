@@ -1,6 +1,7 @@
 packages:
   - "packages/web/*"
   - "apps/**/platforms/webApp/*"
+  - "**/build/js/packages/*"
 
 allowBuilds:
   esbuild: true

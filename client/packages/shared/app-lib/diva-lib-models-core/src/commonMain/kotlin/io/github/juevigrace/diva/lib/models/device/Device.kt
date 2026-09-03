@@ -1,11 +1,14 @@
 package io.github.juevigrace.diva.lib.models.device
 
 import io.github.juevigrace.diva.lib.models.api.device.DeviceResponse
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalJsExport::class)
+@JsExport
 data class Device(
     val id: Uuid,
     val name: String,

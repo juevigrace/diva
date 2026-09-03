@@ -1,5 +1,10 @@
 package io.github.juevigrace.diva.lib.models.session
 
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 enum class SessionStatus {
     ACTIVE,
     EXPIRED,
@@ -14,6 +19,8 @@ fun safeSessionStatus(value: String): SessionStatus {
     }
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 enum class SessionType {
     NORMAL,
     TEMPORAL,

@@ -6,8 +6,8 @@ import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.DivaDB
 import io.github.juevigrace.diva.lib.database.permissions.PermissionsStorage
 import io.github.juevigrace.diva.lib.models.permission.Permission
-import io.github.juevigrace.diva.lib.models.permissions.safePermissionAction
-import io.github.juevigrace.diva.lib.models.roles.Role
+import io.github.juevigrace.diva.lib.models.permission.safePermissionAction
+import io.github.juevigrace.diva.lib.models.user.Role
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
@@ -15,7 +15,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class PermissionsStorageImpl(
-    private val db: DivaDatabase<DivaDB>
+    private val db: DivaDatabase<DivaDB>,
 ) : PermissionsStorage {
 
     override suspend fun getAll(): Result<List<Permission>> {
@@ -83,14 +83,16 @@ class PermissionsStorageImpl(
         createdAt: Long,
         updatedAt: Long,
         deletedAt: Long?,
-    ): Permission = Permission(
-        id = Uuid.parse(id),
-        name = name,
-        description = description,
-        action = safePermissionAction(action),
-        roleLevel = roleLevel,
-        createdAt = Instant.fromEpochSeconds(createdAt),
-        updatedAt = Instant.fromEpochSeconds(updatedAt),
-        deletedAt = deletedAt?.let { Instant.fromEpochSeconds(it) }.toOption()
-    )
+    ): Permission {
+        return Permission(
+            id = Uuid.parse(id),
+            name = name,
+            description = description,
+            action = safePermissionAction(action),
+            roleLevel = roleLevel,
+            createdAt = Instant.fromEpochSeconds(createdAt),
+            updatedAt = Instant.fromEpochSeconds(updatedAt),
+            deletedAt = deletedAt?.let { Instant.fromEpochSeconds(it) }.toOption()
+        )
+    }
 }

@@ -22,6 +22,8 @@
     "@fontsource/inter": "catalog:",
     "astro": "catalog:",
     "diva-ui": "workspace:*",
+    "diva-lib-models-core": "workspace:*",
+    "diva-lib-models-api": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

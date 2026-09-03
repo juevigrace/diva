@@ -1,5 +1,10 @@
 package io.github.juevigrace.diva.lib.models
 
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 enum class Theme {
     LIGHT,
     DARK,

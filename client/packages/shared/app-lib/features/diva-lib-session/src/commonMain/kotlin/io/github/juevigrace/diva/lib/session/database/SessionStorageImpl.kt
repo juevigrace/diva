@@ -16,7 +16,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class SessionStorageImpl(
-    private val db: DivaDatabase<DivaDB>
+    private val db: DivaDatabase<DivaDB>,
 ) : SessionStorage {
 
     override suspend fun getAll(): Result<List<Session>> {
@@ -111,18 +111,20 @@ class SessionStorageImpl(
         refreshExpiresAt: Long,
         createdAt: Long,
         updatedAt: Long,
-    ): Session = Session(
-        id = Uuid.parse(id),
-        user = User(id = Uuid.parse(userId)),
-        accessToken = accessToken,
-        refreshToken = refreshToken,
-        type = type,
-        status = status,
-        isCurrent = isCurrent,
-        data = SessionData(device = deviceId, agent = userAgent, ip = ipAddress),
-        accessExpiresAt = Instant.fromEpochSeconds(accessExpiresAt),
-        refreshExpiresAt = Instant.fromEpochSeconds(refreshExpiresAt),
-        createdAt = Instant.fromEpochSeconds(createdAt),
-        updatedAt = Instant.fromEpochSeconds(updatedAt)
-    )
+    ): Session {
+        return Session(
+            id = Uuid.parse(id),
+            user = User(id = Uuid.parse(userId)),
+            accessToken = accessToken,
+            refreshToken = refreshToken,
+            type = type,
+            status = status,
+            isCurrent = isCurrent,
+            data = SessionData(device = deviceId, agent = userAgent, ip = ipAddress),
+            accessExpiresAt = Instant.fromEpochSeconds(accessExpiresAt),
+            refreshExpiresAt = Instant.fromEpochSeconds(refreshExpiresAt),
+            createdAt = Instant.fromEpochSeconds(createdAt),
+            updatedAt = Instant.fromEpochSeconds(updatedAt)
+        )
+    }
 }

@@ -1,5 +1,10 @@
-package io.github.juevigrace.diva.lib.models.permissions
+package io.github.juevigrace.diva.lib.models.permission
 
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 enum class PermissionAction {
     PERMISSION_NONE,
 

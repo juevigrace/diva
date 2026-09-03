@@ -1,16 +1,18 @@
 package io.github.juevigrace.diva.lib.models.permission
 
+import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.api.permission.PermissionResponse
-import io.github.juevigrace.diva.lib.models.permissions.PermissionAction
-import io.github.juevigrace.diva.lib.models.permissions.safePermissionAction
-import io.github.juevigrace.diva.lib.models.roles.Role
-import io.github.juevigrace.diva.lib.models.roles.safeRole
+import io.github.juevigrace.diva.lib.models.user.Role
+import io.github.juevigrace.diva.lib.models.user.safeRole
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalJsExport::class)
+@JsExport
 data class Permission(
     val id: Uuid,
     val name: String,
@@ -19,7 +21,7 @@ data class Permission(
     val roleLevel: Role,
     val createdAt: Instant,
     val updatedAt: Instant,
-    val deletedAt: Option<Instant> = Option.None,
+    val deletedAt: Option<Instant> = None,
 ) {
     companion object {
         fun fromResponse(response: PermissionResponse): Permission {

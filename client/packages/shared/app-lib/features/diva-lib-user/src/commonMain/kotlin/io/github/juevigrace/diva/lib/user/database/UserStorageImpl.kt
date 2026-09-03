@@ -6,7 +6,7 @@ import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.DivaDB
 import io.github.juevigrace.diva.lib.database.user.UserStorage
-import io.github.juevigrace.diva.lib.models.roles.Role
+import io.github.juevigrace.diva.lib.models.user.Role
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
@@ -15,7 +15,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class UserStorageImpl(
-    private val db: DivaDatabase<DivaDB>
+    private val db: DivaDatabase<DivaDB>,
 ) : UserStorage {
 
     override suspend fun getAll(): Result<List<User>> {
@@ -84,14 +84,16 @@ class UserStorageImpl(
         role: Role,
         createdAt: Long,
         updatedAt: Long,
-    ): User = User(
-        id = Uuid.parse(id),
-        username = username,
-        email = email,
-        phoneNumber = phoneNumber,
-        passwordHash = passwordHash.toOption(),
-        role = role,
-        createdAt = Instant.fromEpochSeconds(createdAt),
-        updatedAt = Instant.fromEpochSeconds(updatedAt)
-    )
+    ): User {
+        return User(
+            id = Uuid.parse(id),
+            username = username,
+            email = email,
+            phoneNumber = phoneNumber,
+            passwordHash = passwordHash.toOption(),
+            role = role,
+            createdAt = Instant.fromEpochSeconds(createdAt),
+            updatedAt = Instant.fromEpochSeconds(updatedAt)
+        )
+    }
 }

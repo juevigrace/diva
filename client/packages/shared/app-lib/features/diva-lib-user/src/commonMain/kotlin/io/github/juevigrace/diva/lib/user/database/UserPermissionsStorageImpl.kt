@@ -8,8 +8,8 @@ import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.DivaDB
 import io.github.juevigrace.diva.lib.database.user.permissions.UserPermissionsStorage
 import io.github.juevigrace.diva.lib.models.permission.Permission
-import io.github.juevigrace.diva.lib.models.permissions.PermissionAction
-import io.github.juevigrace.diva.lib.models.roles.Role
+import io.github.juevigrace.diva.lib.models.permission.PermissionAction
+import io.github.juevigrace.diva.lib.models.user.Role
 import io.github.juevigrace.diva.lib.models.user.permissions.UserPermission
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant

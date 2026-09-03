@@ -2,11 +2,14 @@ package io.github.juevigrace.diva.lib.models.user.profile
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.api.user.profile.UserProfileResponse
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalJsExport::class)
+@JsExport
 data class UserProfile(
     val userId: Uuid = Uuid.NIL,
     val firstName: String = "",

@@ -1,6 +1,6 @@
 import io.github.juevigrace.diva.lib.models.Theme;
 import io.github.juevigrace.diva.lib.models.actions.Actions;
-import io.github.juevigrace.diva.lib.models.roles.Role;
+import io.github.juevigrace.diva.lib.models.user.Role;
 import io.github.juevigrace.diva.lib.models.session.SessionStatus;
 import io.github.juevigrace.diva.lib.models.session.SessionType;
 import io.github.juevigrace.diva.lib.models.user.UserStatus;

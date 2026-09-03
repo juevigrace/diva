@@ -4,11 +4,14 @@ import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.actions.Actions
 import io.github.juevigrace.diva.lib.models.actions.safeActionsValueOf
 import io.github.juevigrace.diva.lib.models.api.user.action.UserActionResponse
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalJsExport::class)
+@JsExport
 data class UserAction(
     val id: Uuid,
     val action: Actions,
@@ -24,6 +27,8 @@ data class UserAction(
     }
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 data class UserActionVerification(
     val action: UserAction,
     val token: String,
