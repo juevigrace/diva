@@ -5,10 +5,14 @@
       "cache": false,
       "persistent": true
     },
-
     "build": {
-      "outputs": ["dist/**", ".astro/**"],
-      "dependsOn": ["^build"]
+      "outputs": [
+        "dist/**",
+        ".astro/**"
+      ],
+      "dependsOn": [
+        "^build"
+      ]
     },
     "preview": {
       "cache": false

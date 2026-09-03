@@ -1,13 +1,35 @@
 {
   "name": "@diva/admin-page",
-  "version": "0.0.1",
-  "private": true,
   "type": "module",
-  "scripts": {
-    "dev": "echo 'admin-page dev'",
-    "build": "echo 'admin-page build'",
-    "test": "echo 'admin-page test'"
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0",
+    "bun": ">=1.2"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "scripts": {
+    "dev": "bun run astro dev --background",
+    "build": "bun run astro build",
+    "preview": "bun run astro preview",
+    "start": "PORT=4321 node ./dist/server/entry.mjs",
+    "stop": "astro dev stop",
+    "status": "astro dev status",
+    "logs": "astro dev logs"
+  },
+  "dependencies": {
+    "@astrojs/node": "catalog:",
+    "@astrojs/react": "catalog:",
+    "@astrojs/sitemap": "catalog:",
+    "@fontsource/inter": "catalog:",
+    "astro": "catalog:",
+    "diva-ui": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@astrojs/check": "catalog:",
+    "@tailwindcss/vite": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
 }

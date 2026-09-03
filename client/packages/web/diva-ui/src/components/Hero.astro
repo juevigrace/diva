@@ -1,0 +1,32 @@
+---
+import type { HeroProps } from '../lib/shared';
+import { ButtonLink } from './button-link';
+
+type Props = HeroProps;
+
+const { title = 'Welcome to the Diva ecosystem', description, image, ctas = [], id } = Astro.props;
+---
+
+<section id={id} class="mx-auto flex max-w-4xl flex-col items-center gap-8 px-6 py-32 text-center">
+  <h1 class="text-5xl font-bold tracking-tight sm:text-6xl">{title}</h1>
+
+  {description && <p class="text-muted-foreground max-w-2xl text-lg">{description}</p>}
+
+  {
+    image && (
+      <img src={image.src} alt={image.alt ?? ''} class="w-full max-w-2xl rounded-xl shadow-lg" />
+    )
+  }
+
+  {
+    ctas.length > 0 && (
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        {ctas.map((cta) => (
+          <ButtonLink client:load href={cta.href} variant={cta.variant} size={cta.size}>
+            {cta.label}
+          </ButtonLink>
+        ))}
+      </div>
+    )
+  }
+</section>

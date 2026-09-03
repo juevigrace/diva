@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@import 'diva-ui/globals.css';
+@import '@fontsource/inter';
+
+@source '../**/*.astro';
+@source '../../../../../../packages/web/diva-ui/src/**/*.{astro,ts,tsx}';

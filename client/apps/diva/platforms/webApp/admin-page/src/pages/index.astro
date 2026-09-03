@@ -1,0 +1,24 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Header from 'diva-ui/sections/header';
+import Footer from 'diva-ui/sections/footer';
+import { ButtonLink } from 'diva-ui/components/button-link';
+import type { Brand } from 'diva-ui/lib/shared';
+
+const brand: Brand = {
+  title: 'Diva',
+  href: '/',
+};
+---
+
+<Layout>
+  <Header brand={{ title: 'Diva Admin' }} />
+  <main class="grid min-h-screen place-items-center">
+    <div class="flex flex-col items-center gap-6 text-center">
+      <h1 class="text-4xl font-bold tracking-tight">Diva Admin</h1>
+      <p class="text-muted-foreground">Manage the Diva ecosystem from this admin page.</p>
+      <ButtonLink client:load href="/">Get started</ButtonLink>
+    </div>
+  </main>
+  <Footer brand={brand} />
+</Layout>

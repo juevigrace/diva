@@ -1,0 +1,17 @@
+---
+import type { FeatureCardProps } from '../lib/shared';
+
+type Props = FeatureCardProps;
+
+const { title, description, image } = Astro.props;
+---
+
+<article class="rounded-lg border p-6">
+  {
+    image && (
+      <img src={image.src} alt={image.alt ?? ''} class="mb-4 h-12 w-12 rounded-lg object-cover" />
+    )
+  }
+  <h3 class="mb-2 text-xl font-semibold">{title}</h3>
+  <p class="text-muted-foreground text-sm">{description}</p>
+</article>

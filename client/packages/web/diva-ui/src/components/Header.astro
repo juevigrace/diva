@@ -1,0 +1,39 @@
+---
+import type { HeaderProps } from '../lib/shared';
+
+type Props = HeaderProps;
+
+const { brand = { title: 'Diva' }, columns = [] } = Astro.props;
+---
+
+<header class="bg-background/80 sticky top-0 z-10 border-b backdrop-blur">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4">
+    {
+      brand && (
+        <a href={brand.href ?? '/'} class="flex items-center gap-2 text-lg font-semibold tracking-tight">
+          {brand.image && (
+            <img src={brand.image.src} alt={brand.image.alt ?? ''} class="h-6 w-6 object-contain" />
+          )}
+          {brand.title}
+        </a>
+      )
+    }
+
+    {
+      columns.length > 0 && (
+        <nav class="flex items-center gap-6">
+          {columns
+            .flatMap((column) => column.links)
+            .map((link) => (
+              <a
+                href={link.href}
+                class="text-muted-foreground hover:text-foreground text-sm transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
+        </nav>
+      )
+    }
+  </div>
+</header>

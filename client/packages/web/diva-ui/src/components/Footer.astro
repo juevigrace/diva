@@ -1,0 +1,48 @@
+---
+import type { FooterProps } from '../lib/shared';
+
+type Props = FooterProps;
+
+const {
+  brand = { title: 'Diva', href: '/' },
+  copyright = `© ${new Date().getFullYear()} ${brand.title}. All rights reserved.`,
+  columns = [],
+} = Astro.props;
+---
+
+<footer class="border-t py-8">
+  <div
+    class="text-muted-foreground mx-auto flex max-w-4xl flex-col items-center gap-6 px-6 text-sm"
+  >
+    {
+      columns.length > 0 && (
+        <div class="grid w-full grid-cols-2 gap-6 sm:grid-cols-4">
+          {columns.map((column) => (
+            <div>
+              <h4 class="text-foreground mb-3 text-sm font-semibold">{column.title}</h4>
+              <ul class="space-y-2">
+                {column.links.map((link) => (
+                  <li>
+                    <a href={link.href} class="hover:text-foreground transition-colors">
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    <div class="text-center">
+      <a href={brand.href} class="flex items-center justify-center gap-2 hover:text-foreground transition-colors">
+        {brand.image && (
+          <img src={brand.image.src} alt={brand.image.alt ?? ''} class="h-5 w-5 object-contain" />
+        )}
+        <span class="font-semibold">{brand.title}</span>
+      </a>
+      <p class="mt-2">{copyright}</p>
+    </div>
+  </div>
+</footer>

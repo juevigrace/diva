@@ -8,7 +8,7 @@ export default [
   ...tseslint.configs.recommended,
   ...astroPlugin.configs.recommended,
   {
-    ignores: ['**/dist/**', '**/.astro/**', 'packages/shared/**'],
+    ignores: ['**/dist/**', '**/.astro/**', '**/build/**', 'packages/shared/**'],
   },
   {
     rules: {

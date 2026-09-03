@@ -1,0 +1,17 @@
+---
+import '@styles/global.css';
+import SharedLayout from 'diva-ui/layouts/layout';
+import type { LayoutProps } from 'diva-ui/lib/shared';
+
+type Props = LayoutProps;
+
+const {
+  title = 'Diva Admin',
+  description = 'Admin page for the Diva ecosystem.',
+  bodyClass,
+} = Astro.props;
+---
+
+<SharedLayout title={title} description={description} bodyClass={bodyClass}>
+  <slot />
+</SharedLayout>

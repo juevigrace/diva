@@ -8,14 +8,14 @@
     "bun": ">=1.2"
   },
   "scripts": {
-    "dev": "pnpm turbo dev",
-    "build": "pnpm turbo build",
-    "stop": "pnpm turbo stop",
-    "status": "pnpm turbo status",
-    "logs": "pnpm turbo logs",
-    "lint": "pnpm eslint .",
-    "format": "pnpm prettier --write \"packages/web/**\" \"apps/**/platforms/webApp/**\" \"*.{ts,mjs}\"",
-    "format-check": "pnpm prettier --check \"packages/web/**\" \"apps/**/platforms/webApp/**\" \"*.{ts,mjs}\""
+    "dev": "bun run turbo dev",
+    "build": "bun run turbo build",
+    "stop": "bun run turbo stop",
+    "status": "bun run turbo status",
+    "logs": "bun run turbo logs",
+    "lint": "bun run eslint .",
+    "format": "bun run prettier --write \"packages/web/**/*.{ts,tsx,astro,mjs,cjs,js,json}\" \"apps/**/platforms/webApp/**/*.{ts,tsx,astro,mjs,cjs,js,json}\" \"*.{ts,mjs}\"",
+    "format-check": "bun run prettier --check \"packages/web/**/*.{ts,tsx,astro,mjs,cjs,js,json}\" \"apps/**/platforms/webApp/**/*.{ts,tsx,astro,mjs,cjs,js,json}\" \"*.{ts,mjs}\""
   },
   "devDependencies": {
     "@eslint/js": "catalog:",

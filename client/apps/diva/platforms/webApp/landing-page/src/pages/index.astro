@@ -1,0 +1,52 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Header from 'diva-ui/sections/header';
+import Hero from 'diva-ui/sections/hero';
+import FeatureCard from 'diva-ui/sections/feature-card';
+import Footer from 'diva-ui/sections/footer';
+import type { Brand, CtaLink, FeatureCardProps } from 'diva-ui/lib/shared';
+
+const features: FeatureCardProps[] = [
+  {
+    title: 'Landing Page',
+    description: 'The main entry point showcasing the Diva ecosystem.',
+  },
+  {
+    title: 'Admin Page',
+    description: 'Manage users, sessions, and permissions.',
+  },
+  {
+    title: 'Shared UI Kit',
+    description: 'Reusable shadcn/ui components in the diva-ui package.',
+  },
+];
+
+const ctas: CtaLink[] = [
+  { label: 'Get started', href: '/#get-started', size: 'lg' },
+  { label: 'Learn more', href: '/#features', variant: 'outline', size: 'lg' },
+];
+
+const brand: Brand = {
+  title: 'Diva',
+  href: '/',
+};
+---
+
+<Layout title="Diva Landing" description="Welcome to the Diva ecosystem.">
+  <Header brand={brand} />
+  <main>
+    <Hero
+      title="Welcome to the Diva ecosystem"
+      description="Beautiful, responsive pages built with Astro, Tailwind, and shadcn/ui."
+      ctas={ctas}
+    />
+    <section id="features" class="mx-auto grid max-w-4xl gap-6 px-6 pb-32 sm:grid-cols-3">
+      {
+        features.map((f) => (
+          <FeatureCard title={f.title} description={f.description} image={f.image} />
+        ))
+      }
+    </section>
+  </main>
+  <Footer brand={brand} />
+</Layout>
