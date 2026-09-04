@@ -3,7 +3,7 @@ package io.github.juevigrace.diva.lib.permissions.database
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.database.DivaDatabase
-import io.github.juevigrace.diva.lib.database.DivaDB
+import io.github.juevigrace.diva.lib.database.DivaSharedDB
 import io.github.juevigrace.diva.lib.database.permissions.PermissionsStorage
 import io.github.juevigrace.diva.lib.models.permission.Permission
 import io.github.juevigrace.diva.lib.models.permission.safePermissionAction
@@ -15,7 +15,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class PermissionsStorageImpl(
-    private val db: DivaDatabase<DivaDB>,
+    private val db: DivaDatabase<DivaSharedDB>,
 ) : PermissionsStorage {
 
     override suspend fun getAll(): Result<List<Permission>> {

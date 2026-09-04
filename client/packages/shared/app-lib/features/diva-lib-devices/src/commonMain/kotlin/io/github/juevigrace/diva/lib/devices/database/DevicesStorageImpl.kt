@@ -2,7 +2,7 @@ package io.github.juevigrace.diva.lib.devices.database
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
-import io.github.juevigrace.diva.lib.database.DivaDB
+import io.github.juevigrace.diva.lib.database.DivaSharedDB
 import io.github.juevigrace.diva.lib.database.devices.DevicesStorage
 import io.github.juevigrace.diva.lib.models.device.Device
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +12,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class DevicesStorageImpl(
-    private val db: DivaDatabase<DivaDB>,
+    private val db: DivaDatabase<DivaSharedDB>,
 ) : DevicesStorage {
 
     override suspend fun getAll(): Result<List<Device>> {

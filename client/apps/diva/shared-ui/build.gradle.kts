@@ -23,6 +23,12 @@ kotlin {
             implementation(libs.diva.lib.user)
 
             implementation(libs.diva.network)
+
+            implementation(projects.core.models)
+            implementation(projects.core.modelsApi)
+            implementation(projects.core.database)
+            implementation(projects.core.ui)
+            implementation(projects.features.home)
         }
     }
 }

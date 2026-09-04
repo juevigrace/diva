@@ -5,7 +5,7 @@ import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.database.DivaDatabase
-import io.github.juevigrace.diva.lib.database.DivaDB
+import io.github.juevigrace.diva.lib.database.DivaSharedDB
 import io.github.juevigrace.diva.lib.database.user.profile.UserProfileStorage
 import io.github.juevigrace.diva.lib.models.user.profile.UserProfile
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +15,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class UserProfileStorageImpl(
-    private val db: DivaDatabase<DivaDB>
+    private val db: DivaDatabase<DivaSharedDB>
 ) : UserProfileStorage {
 
     override suspend fun getByUser(userId: Uuid): Result<Option<UserProfile>> {

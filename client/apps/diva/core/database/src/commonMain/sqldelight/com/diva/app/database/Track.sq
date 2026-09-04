@@ -1,0 +1,27 @@
+upsert:
+INSERT OR REPLACE INTO diva_track (id, title, artist, stream_url)
+VALUES (?, ?, ?, ?);
+
+deleteAll:
+DELETE FROM diva_track;
+
+findAll:
+SELECT
+  id,
+  title,
+  artist,
+  stream_url AS streamUrl
+FROM diva_track;
+
+findOneById:
+SELECT
+  id,
+  title,
+  artist,
+  stream_url AS streamUrl
+FROM diva_track
+WHERE id = ?;
+
+deleteById:
+DELETE FROM diva_track
+WHERE id = ?;

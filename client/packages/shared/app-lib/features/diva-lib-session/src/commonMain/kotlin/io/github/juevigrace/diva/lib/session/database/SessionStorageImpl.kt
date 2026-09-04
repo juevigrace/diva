@@ -2,7 +2,7 @@ package io.github.juevigrace.diva.lib.session.database
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
-import io.github.juevigrace.diva.lib.database.DivaDB
+import io.github.juevigrace.diva.lib.database.DivaSharedDB
 import io.github.juevigrace.diva.lib.database.session.SessionStorage
 import io.github.juevigrace.diva.lib.models.session.Session
 import io.github.juevigrace.diva.lib.models.session.SessionData
@@ -16,7 +16,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class SessionStorageImpl(
-    private val db: DivaDatabase<DivaDB>,
+    private val db: DivaDatabase<DivaSharedDB>,
 ) : SessionStorage {
 
     override suspend fun getAll(): Result<List<Session>> {

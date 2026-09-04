@@ -43,5 +43,13 @@ include(
 
 include(":shared-ui")
 
+include(
+    ":core:models",
+    ":core:models-api",
+    ":core:database",
+    ":core:ui",
+    ":features:home",
+)
+
 includeBuild("../../packages/shared/framework")
 includeBuild("../../packages/shared/app-lib")

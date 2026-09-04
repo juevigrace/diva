@@ -22,7 +22,8 @@
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
     "radix-ui": "catalog:",
-    "tailwind-merge": "catalog:"
+    "tailwind-merge": "catalog:",
+    "diva-lib-models-core": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "catalog:",

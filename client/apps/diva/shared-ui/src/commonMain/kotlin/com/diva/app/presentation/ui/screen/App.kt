@@ -6,6 +6,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import com.diva.app.navigation.routes.HomeRoute
+import com.diva.app.features.home.presentation.ui.screen.HomeScreen
 import com.diva.app.presentation.ui.theme.AppTypography
 import com.diva.app.presentation.ui.theme.darkScheme
 import com.diva.app.presentation.ui.theme.lightScheme
@@ -36,6 +38,9 @@ fun App() {
                     rememberViewModelStoreNavEntryDecorator(),
                 ),
                 entryProvider = entryProvider {
+                    entry<HomeRoute> {
+                        HomeScreen()
+                    }
                 }
             )
         }

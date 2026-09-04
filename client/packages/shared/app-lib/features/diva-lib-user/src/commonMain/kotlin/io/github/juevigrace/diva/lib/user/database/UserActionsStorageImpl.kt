@@ -2,7 +2,7 @@ package io.github.juevigrace.diva.lib.user.database
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
-import io.github.juevigrace.diva.lib.database.DivaDB
+import io.github.juevigrace.diva.lib.database.DivaSharedDB
 import io.github.juevigrace.diva.lib.database.user.actions.UserActionsStorage
 import io.github.juevigrace.diva.lib.models.actions.Actions
 import io.github.juevigrace.diva.lib.models.user.actions.UserAction
@@ -12,7 +12,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class UserActionsStorageImpl(
-    private val db: DivaDatabase<DivaDB>
+    private val db: DivaDatabase<DivaSharedDB>
 ) : UserActionsStorage {
 
     override suspend fun getById(id: Uuid): Result<Option<UserAction>> {
