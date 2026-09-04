@@ -12,7 +12,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import io.github.juevigrace.diva.core.getOrElse
+import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.core.onSome
 import io.github.juevigrace.diva.ui.util.ObserveFlow
@@ -44,7 +44,7 @@ fun ToasterHost(
                     }
                     hostState.showSnackbar(
                         message = messageText,
-                        actionLabel = request.actionLabel.map { getString(it) }.getOrElse { null },
+                        actionLabel = request.actionLabel.map { getString(it) }.getOrNull(),
                         withDismissAction = request.withDismissAction,
                         duration = request.duration,
                     )
