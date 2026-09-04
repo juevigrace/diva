@@ -18,7 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.DialogProperties
-import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.core.None
+import io.github.juevigrace.diva.core.Some
 import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.ui.navigation.BackHandler
 import io.github.juevigrace.diva.ui.util.ObserveFlow
@@ -98,12 +99,12 @@ fun DivaAlertDialog(
     tonalElevation: Dp = AlertDialogDefaults.TonalElevation,
 ) {
     val confirmLabel = when (request.confirmLabel) {
-        is Option.Some -> stringResource(request.confirmLabel.value)
-        is Option.None -> "OK"
+        is Some -> stringResource(request.confirmLabel.value)
+        is None -> "OK"
     }
     val dismissLabel = when (request.dismissLabel) {
-        is Option.Some -> stringResource(request.dismissLabel.value)
-        is Option.None -> "Cancel"
+        is Some -> stringResource(request.dismissLabel.value)
+        is None -> "Cancel"
     }
 
     AlertDialog(

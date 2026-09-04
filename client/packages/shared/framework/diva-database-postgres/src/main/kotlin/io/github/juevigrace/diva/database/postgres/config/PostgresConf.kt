@@ -1,5 +1,6 @@
 package io.github.juevigrace.diva.database.postgres.config
 
+import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.config.DriverConf
 
@@ -9,6 +10,6 @@ data class PostgresConf(
     val database: String,
     val username: String,
     val password: String,
-    val schema: Option<String> = Option.None,
+    val schema: Option<String> = None,
     override val properties: Map<String, String> = emptyMap(),
 ) : DriverConf

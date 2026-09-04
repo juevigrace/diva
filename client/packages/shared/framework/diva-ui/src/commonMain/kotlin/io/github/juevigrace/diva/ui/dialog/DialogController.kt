@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.staticCompositionLocalOf
+import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.DrawableResource
@@ -11,11 +12,11 @@ import org.jetbrains.compose.resources.StringResource
 
 @Immutable
 data class DialogRequest(
-    val title: Option<StringResource> = Option.None,
-    val message: Option<StringResource> = Option.None,
-    val icon: Option<DrawableResource> = Option.None,
-    val confirmLabel: Option<StringResource> = Option.None,
-    val dismissLabel: Option<StringResource> = Option.None,
+    val title: Option<StringResource> = None,
+    val message: Option<StringResource> = None,
+    val icon: Option<DrawableResource> = None,
+    val confirmLabel: Option<StringResource> = None,
+    val dismissLabel: Option<StringResource> = None,
     val showConfirmButton: Boolean = true,
     val showDismissButton: Boolean = true,
     val dismissOnBackPress: Boolean = true,

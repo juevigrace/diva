@@ -77,6 +77,7 @@ class UserPermissionsStorageImpl(
         }
     }
 
+    @Suppress("LongParameterList")
     private fun mapToUserPermission(
         permissionId: String,
         userId: String,

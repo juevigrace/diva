@@ -75,6 +75,7 @@ class UserStorageImpl(
         }
     }
 
+    @Suppress("LongParameterList")
     private fun mapToUser(
         id: String,
         username: String,

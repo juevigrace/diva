@@ -1,18 +1,20 @@
+@file:OptIn(ExperimentalJsExport::class)
+@file:DivaJsExport
+
 package io.github.juevigrace.diva.lib.models.permission
 
+import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.api.permission.PermissionResponse
 import io.github.juevigrace.diva.lib.models.user.Role
 import io.github.juevigrace.diva.lib.models.user.safeRole
 import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class, ExperimentalJsExport::class)
-@JsExport
+@OptIn(ExperimentalUuidApi::class)
 data class Permission(
     val id: Uuid,
     val name: String,

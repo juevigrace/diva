@@ -1,13 +1,14 @@
+@file:OptIn(ExperimentalJsExport::class)
+@file:DivaJsExport
+
 package io.github.juevigrace.diva.lib.models.auth
 
+import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.lib.models.api.auth.signup.SignUpDto
 import io.github.juevigrace.diva.lib.models.api.user.CreateUserDto
 import io.github.juevigrace.diva.lib.models.session.SessionData
 import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport
 data class SignUpForm(
     val email: String = "",
     val isEmailTaken: Boolean = false,

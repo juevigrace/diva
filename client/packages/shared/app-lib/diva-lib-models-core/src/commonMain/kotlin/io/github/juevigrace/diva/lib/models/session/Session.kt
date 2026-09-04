@@ -1,16 +1,18 @@
+@file:OptIn(ExperimentalJsExport::class)
+@file:DivaJsExport
+
 package io.github.juevigrace.diva.lib.models.session
 
+import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.lib.models.api.auth.session.SessionResponse
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class, ExperimentalJsExport::class)
-@JsExport
+@OptIn(ExperimentalUuidApi::class)
 data class Session(
     val id: Uuid,
     val user: User,

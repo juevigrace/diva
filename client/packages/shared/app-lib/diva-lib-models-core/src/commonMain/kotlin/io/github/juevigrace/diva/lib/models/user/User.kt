@@ -1,5 +1,9 @@
+@file:OptIn(ExperimentalJsExport::class)
+@file:DivaJsExport
+
 package io.github.juevigrace.diva.lib.models.user
 
+import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.api.user.UserResponse
@@ -10,30 +14,28 @@ import io.github.juevigrace.diva.lib.models.user.preferences.UserPreferences
 import io.github.juevigrace.diva.lib.models.user.profile.UserProfile
 import io.github.juevigrace.diva.lib.models.user.state.UserState
 import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class, ExperimentalJsExport::class)
-@JsExport
+@OptIn(ExperimentalUuidApi::class)
 data class User(
     val id: Uuid,
     val email: String = "",
     val username: String = "",
     val phoneNumber: String = "",
-    val passwordHash: Option<String> = Option.None,
+    val passwordHash: Option<String> = None,
     val role: Role = Role.USER,
-    val state: Option<UserState> = Option.None,
-    val profile: Option<UserProfile> = Option.None,
+    val state: Option<UserState> = None,
+    val profile: Option<UserProfile> = None,
     val devices: List<UserDevice> = emptyList(),
     val actions: List<UserAction> = emptyList(),
     val permissions: List<UserPermission> = emptyList(),
-    val preferences: Option<UserPreferences> = Option.None,
+    val preferences: Option<UserPreferences> = None,
     val createdAt: Instant = Clock.System.now(),
     val updatedAt: Instant = Clock.System.now(),
-    val deletedAt: Option<Instant> = Option.None,
+    val deletedAt: Option<Instant> = None,
 ) {
     companion object {
         fun fromResponse(response: UserResponse): User {

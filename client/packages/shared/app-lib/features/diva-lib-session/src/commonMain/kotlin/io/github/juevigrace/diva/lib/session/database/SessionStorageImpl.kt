@@ -96,6 +96,7 @@ class SessionStorageImpl(
         }
     }
 
+    @Suppress("LongParameterList")
     private fun mapToSession(
         id: String,
         userId: String,

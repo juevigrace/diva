@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions", "unused")
+
 package io.github.juevigrace.diva.core
 
 inline fun <T : Any, R : Any> Option<T>.map(transform: (T) -> R): Option<R> {
@@ -40,7 +42,7 @@ fun <T : Any> Option<T>.getOrNull(): T? {
 fun <T : Any> Option<T>.getOrThrow(): T {
     return when (this) {
         is Some -> value
-        is None -> throw NoSuchElementException("No value present in Option.Some")
+        is None -> throw NoSuchElementException("No value present in Some")
     }
 }
 
@@ -61,7 +63,7 @@ inline fun <T : Any> Option<T>.filter(predicate: (T) -> Boolean): Option<T> {
 inline fun <T : Any> Option<T>.filterNot(predicate: (T) -> Boolean): Option<T> = filter { !predicate(it) }
 
 operator fun <T : Any> Option<T>.contains(value: T): Boolean {
-    return this is Some && this.value == value
+    return (this is Some) && (this.value == value)
 }
 
 inline fun <T : Any> Option<T>.exists(predicate: (T) -> Boolean): Boolean {
@@ -69,11 +71,11 @@ inline fun <T : Any> Option<T>.exists(predicate: (T) -> Boolean): Boolean {
 }
 
 fun <T : Any> Option<T>.orElse(default: Option<T>): Option<T> {
-    return if (this is Some) this else default
+    return (this as? Some) ?: default
 }
 
 inline fun <T : Any> Option<T>.orElseGet(default: () -> Option<T>): Option<T> {
-    return if (this is Some) this else default()
+    return this as? Some ?: default()
 }
 
 fun <T : Any, R : Any> Option<T>.zip(other: Option<R>): Option<Pair<T, R>> {

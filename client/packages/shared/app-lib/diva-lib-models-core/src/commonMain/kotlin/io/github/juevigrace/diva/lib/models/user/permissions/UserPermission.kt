@@ -1,25 +1,28 @@
+@file:OptIn(ExperimentalJsExport::class)
+@file:DivaJsExport
+
 package io.github.juevigrace.diva.lib.models.user.permissions
 
+import io.github.juevigrace.diva.core.DivaJsExport
+import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.api.user.permissions.UserPermissionResponse
 import io.github.juevigrace.diva.lib.models.permission.Permission
 import io.github.juevigrace.diva.lib.models.permission.PermissionAction
 import io.github.juevigrace.diva.lib.models.user.Role
 import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class, ExperimentalJsExport::class)
-@JsExport
+@OptIn(ExperimentalUuidApi::class)
 data class UserPermission(
     val permission: Permission,
     val userId: Uuid,
-    val grantedBy: Option<String> = Option.None,
+    val grantedBy: Option<String> = None,
     val granted: Boolean,
-    val grantedAt: Option<Instant> = Option.None,
-    val expiresAt: Option<Instant> = Option.None,
+    val grantedAt: Option<Instant> = None,
+    val expiresAt: Option<Instant> = None,
     val updatedAt: Instant,
 ) {
     companion object {

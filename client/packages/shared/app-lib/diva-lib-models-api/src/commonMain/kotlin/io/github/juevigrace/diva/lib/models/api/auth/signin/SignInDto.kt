@@ -1,13 +1,14 @@
+@file:OptIn(ExperimentalJsExport::class)
+@file:DivaJsExport
+
 package io.github.juevigrace.diva.lib.models.api.auth.signin
 
+import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.lib.models.api.auth.session.SessionDataDto
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.js.ExperimentalJsExport
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport
 @Serializable
 data class SignInDto(
     @SerialName("username")
