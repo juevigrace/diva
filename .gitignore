@@ -39,6 +39,7 @@ local.properties
 captures/
 .externalNativeBuild/
 .cxx/
+kotlin-js-store/
 
 # ===== iOS / Xcode =====
 xcuserdata/
