@@ -1,22 +1,39 @@
 package io.github.juevigrace.diva.lib.ui.navigation
 
 import androidx.navigation3.runtime.NavKey
+import kotlinx.serialization.Serializable
 
+@Serializable
 sealed interface Screens : NavKey {
 
+    @Serializable
     sealed interface OnboardingGraph : Screens {
+        @Serializable
         data object Splash : OnboardingGraph
+
+        @Serializable
         data object Onboarding : OnboardingGraph
     }
 
+    @Serializable
     sealed interface AuthGraph : Screens {
+        @Serializable
         data object SignIn : AuthGraph
+
+        @Serializable
         data object SignUp : AuthGraph
+
+        @Serializable
         data object Forgot : AuthGraph
+
+        @Serializable
         data object Verification : AuthGraph
     }
 
+    @Serializable
     data object Account : Screens
+
+    @Serializable
     data object Settings : Screens
 }
 

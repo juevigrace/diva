@@ -6,6 +6,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.diva.lib.ui)
+
+            implementation(projects.core.models)
         }
     }
 }

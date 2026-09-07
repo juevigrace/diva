@@ -3,9 +3,12 @@ package io.github.juevigrace.diva.network.client
 import io.github.juevigrace.diva.core.ioDispatcher
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.statement.HttpResponse
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.serialization.json.Json
 import kotlin.coroutines.CoroutineContext
 
 interface DivaClient {
@@ -33,7 +36,17 @@ interface DivaClient {
         }
 
         fun create(): DivaClient {
-            return DivaClientImpl(createDefaultHttpClient())
+            return DivaClientImpl(createDefaultHttpClient {
+                defaultConfig()
+                install(ContentNegotiation) {
+                    json(
+                        Json {
+                            encodeDefaults = true
+                            prettyPrint = true
+                        }
+                    )
+                }
+            })
         }
     }
 }

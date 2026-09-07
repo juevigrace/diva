@@ -6,11 +6,11 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import com.diva.app.navigation.routes.HomeRoute
 import com.diva.app.features.home.presentation.ui.screen.HomeScreen
 import com.diva.app.presentation.ui.theme.AppTypography
 import com.diva.app.presentation.ui.theme.darkScheme
 import com.diva.app.presentation.ui.theme.lightScheme
+import com.diva.app.ui.navigation.HomeRoute
 import io.github.juevigrace.diva.ui.DivaApp
 import io.github.juevigrace.diva.ui.layout.Screen
 import io.github.juevigrace.diva.ui.navigation.NavHost
@@ -27,7 +27,9 @@ fun App() {
                 dark = darkScheme,
             ),
             typography = AppTypography,
-        )
+        ),
+        toaster = koinInject(),
+        dialogController = koinInject(),
     ) {
         Screen {
             NavHost(
