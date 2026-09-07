@@ -1,21 +1,9 @@
-@file:OptIn(ExperimentalWasmDsl::class)
-
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-
 plugins {
-    id("divabuild.library-app")
+    id("divabuild.library-app-shared")
     alias(libs.plugins.sqldelight)
 }
 
 kotlin {
-    js {
-        browser()
-        binaries.library()
-    }
-    wasmJs {
-        browser()
-        binaries.library()
-    }
     sourceSets {
         commonMain.dependencies {
             implementation(libs.diva.lib.database)
