@@ -1,0 +1,15 @@
+link:
+INSERT OR REPLACE INTO diva_media_folder (media_id, folder_id, created_at)
+VALUES (?, ?, ?);
+
+unlink:
+DELETE FROM diva_media_folder
+WHERE media_id = ? AND folder_id = ?;
+
+deleteMediaLinks:
+DELETE FROM diva_media_folder
+WHERE media_id = ?;
+
+deleteFolderLinks:
+DELETE FROM diva_media_folder
+WHERE folder_id = ?;

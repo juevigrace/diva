@@ -1,0 +1,39 @@
+insert:
+INSERT INTO diva_playlist_item (playlist_id, media_id, position, added_at)
+VALUES (?, ?, ?, ?);
+
+delete:
+DELETE FROM diva_playlist_item
+WHERE playlist_id = ? AND media_id = ?;
+
+deleteAll:
+DELETE FROM diva_playlist_item
+WHERE playlist_id = ?;
+
+deleteByMedia:
+DELETE FROM diva_playlist_item
+WHERE media_id = ?;
+
+findForPlaylist:
+SELECT media.*
+FROM diva_media AS media
+INNER JOIN diva_playlist_item AS item ON item.media_id = media.id
+WHERE item.playlist_id = ? AND media.deleted_at IS NULL
+ORDER BY item.position;
+
+findByMedia:
+SELECT playlist.*
+FROM diva_playlist AS playlist
+INNER JOIN diva_playlist_item AS item ON item.playlist_id = playlist.id
+WHERE item.media_id = ? AND playlist.deleted_at IS NULL
+ORDER BY playlist.name;
+
+countItems:
+SELECT COUNT(*) AS count
+FROM diva_playlist_item
+WHERE playlist_id = ?;
+
+updatePosition:
+UPDATE diva_playlist_item
+SET position = ?
+WHERE playlist_id = ? AND media_id = ?;

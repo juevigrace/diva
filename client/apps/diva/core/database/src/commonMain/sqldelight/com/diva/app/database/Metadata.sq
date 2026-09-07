@@ -1,0 +1,29 @@
+upsert:
+INSERT OR REPLACE INTO diva_media_metadata (media_id, album, artist, genre, year, track_number, disc_number, cover_uri, lyrics, updated_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+delete:
+DELETE FROM diva_media_metadata
+WHERE media_id = ?;
+
+findAll:
+SELECT *
+FROM diva_media_metadata
+ORDER BY artist, album, track_number;
+
+findOneByMediaId:
+SELECT *
+FROM diva_media_metadata
+WHERE media_id = ?;
+
+findByArtist:
+SELECT *
+FROM diva_media_metadata
+WHERE artist = ? AND artist != ''
+ORDER BY album, track_number;
+
+findByAlbum:
+SELECT *
+FROM diva_media_metadata
+WHERE album = ? AND album != ''
+ORDER BY track_number;

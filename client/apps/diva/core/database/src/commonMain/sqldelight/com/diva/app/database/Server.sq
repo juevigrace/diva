@@ -1,0 +1,21 @@
+upsert:
+INSERT OR REPLACE INTO diva_server (id, name, base_url, protocol, port, enabled, last_connected_at, created_at, updated_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+deleteById:
+DELETE FROM diva_server
+WHERE id = ?;
+
+findAll:
+SELECT *
+FROM diva_server;
+
+findOneById:
+SELECT *
+FROM diva_server
+WHERE id = ?;
+
+findEnabled:
+SELECT *
+FROM diva_server
+WHERE enabled = 1;

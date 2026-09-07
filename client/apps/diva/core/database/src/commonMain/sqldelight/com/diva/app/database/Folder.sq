@@ -1,0 +1,30 @@
+upsert:
+INSERT OR REPLACE INTO diva_folder (id, name, path, parent_id, scanned_at, created_at, updated_at)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+deleteById:
+DELETE FROM diva_folder
+WHERE id = ?;
+
+findAll:
+SELECT *
+FROM diva_folder
+WHERE deleted_at IS NULL
+ORDER BY name;
+
+findRoots:
+SELECT *
+FROM diva_folder
+WHERE parent_id IS NULL AND deleted_at IS NULL
+ORDER BY name;
+
+findChildren:
+SELECT *
+FROM diva_folder
+WHERE parent_id = ? AND deleted_at IS NULL
+ORDER BY name;
+
+findOneByPath:
+SELECT *
+FROM diva_folder
+WHERE path = ? AND deleted_at IS NULL;

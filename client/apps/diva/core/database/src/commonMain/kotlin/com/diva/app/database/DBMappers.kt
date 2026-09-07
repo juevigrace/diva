@@ -4,6 +4,7 @@ import app.cash.sqldelight.EnumColumnAdapter
 import app.cash.sqldelight.db.SqlDriver
 import io.github.juevigrace.diva.lib.database.DivaSharedDB
 import migrations.Diva_action
+import migrations.Diva_media
 import migrations.Diva_permissions
 import migrations.Diva_session
 import migrations.Diva_user
@@ -23,5 +24,8 @@ fun sharedDBMapper(driver: SqlDriver): DivaSharedDB {
 }
 
 fun appDivaDBMapper(driver: SqlDriver): DivaDB {
-    return DivaDB(driver)
+    return DivaDB(
+        driver = driver,
+        diva_mediaAdapter = Diva_media.Adapter(EnumColumnAdapter()),
+    )
 }

@@ -1,0 +1,16 @@
+insert:
+INSERT OR REPLACE INTO diva_playback_history (id, media_id, played_at, position_ms, completed)
+VALUES (?, ?, ?, ?, ?);
+
+findRecent:
+SELECT media.*
+FROM diva_media AS media
+INNER JOIN diva_playback_history AS history ON history.media_id = media.id
+WHERE media.deleted_at IS NULL
+ORDER BY history.played_at DESC
+LIMIT ?;
+
+countCompleted:
+SELECT COUNT(*) AS count
+FROM diva_playback_history
+WHERE completed = 1;
