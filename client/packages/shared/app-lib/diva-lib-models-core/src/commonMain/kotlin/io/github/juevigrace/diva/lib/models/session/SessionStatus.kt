@@ -23,6 +23,7 @@ fun safeSessionStatus(value: String): SessionStatus {
 enum class SessionType {
     NORMAL,
     TEMPORAL,
+    LOCAL,
 }
 
 fun safeSessionType(value: String): SessionType {
