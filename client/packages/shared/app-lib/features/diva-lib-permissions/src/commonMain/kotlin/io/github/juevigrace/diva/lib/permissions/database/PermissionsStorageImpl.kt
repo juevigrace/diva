@@ -6,7 +6,7 @@ import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.DivaSharedDB
 import io.github.juevigrace.diva.lib.database.permissions.PermissionsStorage
 import io.github.juevigrace.diva.lib.models.permission.Permission
-import io.github.juevigrace.diva.lib.models.permission.safePermissionAction
+import io.github.juevigrace.diva.lib.models.permission.PermissionAction
 import io.github.juevigrace.diva.lib.models.user.Role
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
@@ -49,7 +49,7 @@ class PermissionsStorageImpl(
                     id = item.id.toString(),
                     name = item.name,
                     description = item.description,
-                    action = item.action.toString(),
+                    action = item.action,
                     role_level = item.roleLevel,
                     created_at = item.createdAt.epochSeconds,
                     updated_at = item.updatedAt.epochSeconds
@@ -79,7 +79,7 @@ class PermissionsStorageImpl(
         id: String,
         name: String,
         description: String,
-        action: String,
+        action: PermissionAction,
         roleLevel: Role,
         createdAt: Long,
         updatedAt: Long,
@@ -89,7 +89,7 @@ class PermissionsStorageImpl(
             id = Uuid.parse(id),
             name = name,
             description = description,
-            action = safePermissionAction(action),
+            action = action,
             roleLevel = roleLevel,
             createdAt = Instant.fromEpochSeconds(createdAt),
             updatedAt = Instant.fromEpochSeconds(updatedAt),

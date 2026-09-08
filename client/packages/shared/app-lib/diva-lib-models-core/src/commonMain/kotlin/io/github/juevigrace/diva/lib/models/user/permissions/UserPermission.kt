@@ -18,7 +18,6 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 data class UserPermission(
     val permission: Permission,
-    val userId: Uuid,
     val grantedBy: Option<String> = None,
     val granted: Boolean,
     val grantedAt: Option<Instant> = None,
@@ -37,7 +36,6 @@ data class UserPermission(
                     createdAt = Instant.fromEpochMilliseconds(response.grantedAt ?: response.updatedAt),
                     updatedAt = Instant.fromEpochMilliseconds(response.updatedAt),
                 ),
-                userId = Uuid.NIL,
                 grantedBy = Option.of(response.grantedBy),
                 granted = response.granted,
                 grantedAt = Option.of(response.grantedAt?.let { Instant.fromEpochMilliseconds(it) }),

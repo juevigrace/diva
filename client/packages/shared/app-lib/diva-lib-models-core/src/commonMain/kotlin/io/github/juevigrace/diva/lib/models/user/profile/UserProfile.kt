@@ -10,11 +10,9 @@ import io.github.juevigrace.diva.lib.models.api.user.profile.UserProfileResponse
 import kotlin.js.ExperimentalJsExport
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 data class UserProfile(
-    val userId: Uuid = Uuid.NIL,
     val firstName: String = "",
     val lastName: String = "",
     val birthDate: Option<Instant> = None,

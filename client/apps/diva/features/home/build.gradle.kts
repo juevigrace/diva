@@ -5,6 +5,8 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
+            implementation(libs.diva.lib.core)
+
             implementation(projects.core.models)
         }
     }

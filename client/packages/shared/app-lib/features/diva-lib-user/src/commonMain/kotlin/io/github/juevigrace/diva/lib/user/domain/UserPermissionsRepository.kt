@@ -18,7 +18,7 @@ interface UserPermissionsRepository : Repository {
 
     suspend fun sync(userId: Uuid): Result<Unit>
 
-    suspend fun save(permission: UserPermission): Result<Unit>
+    suspend fun save(userId: Uuid, permission: UserPermission): Result<Unit>
 
     suspend fun delete(permissionId: Uuid, userId: Uuid): Result<Unit>
 }

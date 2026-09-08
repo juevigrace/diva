@@ -17,7 +17,7 @@ interface UserPermissionsStorage {
     @OptIn(ExperimentalUuidApi::class)
     fun getByIdFlow(permissionId: Uuid, userId: Uuid): Flow<Result<Option<UserPermission>>>
 
-    suspend fun upsert(item: UserPermission): Result<Unit>
+    suspend fun upsert(userId: Uuid, item: UserPermission): Result<Unit>
 
     @OptIn(ExperimentalUuidApi::class)
     suspend fun delete(permissionId: Uuid, userId: Uuid): Result<Unit>

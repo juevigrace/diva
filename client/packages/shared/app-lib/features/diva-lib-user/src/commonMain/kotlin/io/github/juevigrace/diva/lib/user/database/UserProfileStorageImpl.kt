@@ -30,11 +30,11 @@ class UserProfileStorageImpl(
         }
     }
 
-    override suspend fun upsert(item: UserProfile): Result<Unit> {
+    override suspend fun upsert(userId: Uuid, item: UserProfile): Result<Unit> {
         return db.use {
             transaction {
                 userProfilesQueries.upsert(
-                    user_id = item.userId.toString(),
+                    user_id = userId.toString(),
                     first_name = item.firstName,
                     last_name = item.lastName,
                     birth_date = item.birthDate.map { it.epochSeconds }.getOrNull(),
@@ -65,7 +65,6 @@ class UserProfileStorageImpl(
         avatar: String,
         updatedAt: Long,
     ): UserProfile = UserProfile(
-        userId = Uuid.parse(userId),
         firstName = firstName,
         lastName = lastName,
         birthDate = birthDate?.let { Instant.fromEpochSeconds(it) }.toOption(),

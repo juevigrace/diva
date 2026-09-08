@@ -18,7 +18,6 @@ import kotlin.uuid.Uuid
 data class UserAction(
     val id: Uuid,
     val action: Actions,
-    val userId: Uuid = Uuid.NIL,
 ) {
     companion object {
         fun fromResponse(response: UserActionResponse): UserAction {

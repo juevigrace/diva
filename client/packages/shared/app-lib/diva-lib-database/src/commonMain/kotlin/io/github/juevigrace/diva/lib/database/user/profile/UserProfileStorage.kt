@@ -10,7 +10,7 @@ interface UserProfileStorage {
 
     fun getByUserFlow(userId: Uuid): Flow<Result<Option<UserProfile>>>
 
-    suspend fun upsert(item: UserProfile): Result<Unit>
+    suspend fun upsert(userId: Uuid, item: UserProfile): Result<Unit>
 
     suspend fun deleteAll(): Result<Unit>
 }

@@ -19,7 +19,7 @@ interface UserActionsRepository : Repository {
 
     suspend fun sync(userId: Uuid): Result<Unit>
 
-    suspend fun save(action: UserAction): Result<Unit>
+    suspend fun save(userId: Uuid, action: UserAction): Result<Unit>
 
     suspend fun delete(id: Uuid): Result<Unit>
 }

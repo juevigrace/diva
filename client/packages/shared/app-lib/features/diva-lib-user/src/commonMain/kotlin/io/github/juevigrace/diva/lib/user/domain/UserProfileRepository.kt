@@ -16,5 +16,5 @@ interface UserProfileRepository : Repository {
 
     suspend fun sync(userId: Uuid): Result<Unit>
 
-    suspend fun save(profile: UserProfile): Result<Unit>
+    suspend fun save(userId: Uuid, profile: UserProfile): Result<Unit>
 }

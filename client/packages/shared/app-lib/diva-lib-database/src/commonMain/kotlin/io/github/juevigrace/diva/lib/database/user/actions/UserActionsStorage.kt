@@ -22,7 +22,7 @@ interface UserActionsStorage {
 
     fun getByActionFlow(userId: Uuid, action: Actions): Flow<Result<Option<UserAction>>>
 
-    suspend fun upsert(item: UserAction): Result<Unit>
+    suspend fun upsert(userId: Uuid, item: UserAction): Result<Unit>
 
     @OptIn(ExperimentalUuidApi::class)
     suspend fun delete(id: Uuid): Result<Unit>

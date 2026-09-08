@@ -21,7 +21,7 @@ class UserPermissionsRepositoryImpl(
 
     override suspend fun sync(userId: Uuid): Result<Unit> = Result.success(Unit)
 
-    override suspend fun save(permission: UserPermission): Result<Unit> = storage.upsert(permission)
+    override suspend fun save(userId: Uuid, permission: UserPermission): Result<Unit> = storage.upsert(userId, permission)
 
     override suspend fun delete(permissionId: Uuid, userId: Uuid): Result<Unit> = storage.delete(permissionId, userId)
 }

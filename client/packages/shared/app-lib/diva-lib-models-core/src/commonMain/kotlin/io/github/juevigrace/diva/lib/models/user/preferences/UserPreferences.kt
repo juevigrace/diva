@@ -17,7 +17,6 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 data class UserPreferences(
     val id: Uuid = Uuid.NIL,
-    val userId: Uuid = Uuid.NIL,
     val theme: Theme = Theme.SYSTEM,
     val onboardingCompleted: Boolean = false,
     val language: String = "en",

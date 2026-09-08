@@ -18,5 +18,5 @@ class UserStateRepositoryImpl(
 
     override suspend fun sync(userId: Uuid): Result<Unit> = Result.success(Unit)
 
-    override suspend fun save(state: UserState): Result<Unit> = storage.upsert(state)
+    override suspend fun save(userId: Uuid, state: UserState): Result<Unit> = storage.upsert(userId, state)
 }

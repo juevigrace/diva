@@ -37,12 +37,12 @@ class UserPreferencesStorageImpl(
         }
     }
 
-    override suspend fun upsert(item: UserPreferences): Result<Unit> {
+    override suspend fun upsert(userId: Uuid, item: UserPreferences): Result<Unit> {
         return db.use {
             transaction {
                 userPreferencesQueries.upsert(
                     id = item.id.toString(),
-                    user_id = item.userId.toString(),
+                    user_id = userId.toString(),
                     theme = item.theme,
                     onboarding_completed = item.onboardingCompleted,
                     language = item.language,
@@ -81,7 +81,6 @@ class UserPreferencesStorageImpl(
         updatedAt: Long,
     ): UserPreferences = UserPreferences(
         id = Uuid.parse(id),
-        userId = Uuid.parse(userId),
         theme = theme,
         onboardingCompleted = onboardingCompleted,
         language = language,

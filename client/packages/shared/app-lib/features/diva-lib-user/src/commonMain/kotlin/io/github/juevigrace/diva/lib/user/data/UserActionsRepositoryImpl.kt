@@ -22,7 +22,7 @@ class UserActionsRepositoryImpl(
 
     override suspend fun sync(userId: Uuid): Result<Unit> = Result.success(Unit)
 
-    override suspend fun save(action: UserAction): Result<Unit> = storage.upsert(action)
+    override suspend fun save(userId: Uuid, action: UserAction): Result<Unit> = storage.upsert(userId, action)
 
     override suspend fun delete(id: Uuid): Result<Unit> = storage.delete(id)
 }

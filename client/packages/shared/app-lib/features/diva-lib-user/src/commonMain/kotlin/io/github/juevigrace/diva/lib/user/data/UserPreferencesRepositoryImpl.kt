@@ -18,7 +18,7 @@ class UserPreferencesRepositoryImpl(
 
     override suspend fun sync(userId: Uuid): Result<Unit> = Result.success(Unit)
 
-    override suspend fun save(preferences: UserPreferences): Result<Unit> = storage.upsert(preferences)
+    override suspend fun save(userId: Uuid, preferences: UserPreferences): Result<Unit> = storage.upsert(userId, preferences)
 
     override suspend fun delete(id: Uuid): Result<Unit> = storage.delete(id)
 }

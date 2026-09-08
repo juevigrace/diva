@@ -12,11 +12,9 @@ import io.github.juevigrace.diva.lib.models.user.safeUserStatus
 import kotlin.js.ExperimentalJsExport
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 data class UserState(
-    val userId: Uuid = Uuid.NIL,
     val verified: Boolean = false,
     val status: UserStatus = UserStatus.ACTIVE,
     val lastActiveAt: Option<Instant> = None,
@@ -25,7 +23,6 @@ data class UserState(
     companion object {
         fun fromResponse(response: UserStateResponse): UserState {
             return UserState(
-                userId = Uuid.NIL,
                 verified = response.verified,
                 status = safeUserStatus(response.status),
                 lastActiveAt = Option.of(response.lastActiveAt.let { Instant.fromEpochMilliseconds(it) }),

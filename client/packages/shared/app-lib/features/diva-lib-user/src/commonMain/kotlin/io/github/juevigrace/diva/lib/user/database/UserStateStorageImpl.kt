@@ -31,11 +31,11 @@ class UserStateStorageImpl(
         }
     }
 
-    override suspend fun upsert(item: UserState): Result<Unit> {
+    override suspend fun upsert(userId: Uuid, item: UserState): Result<Unit> {
         return db.use {
             transaction {
                 userStateQueries.upsert(
-                    user_id = item.userId.toString(),
+                    user_id = userId.toString(),
                     verified = item.verified,
                     status = item.status,
                     last_active_at = item.lastActiveAt.map { it.epochSeconds }.getOrNull() ?: 0L,
@@ -60,7 +60,6 @@ class UserStateStorageImpl(
         lastActiveAt: Long,
         updatedAt: Long,
     ): UserState = UserState(
-        userId = Uuid.parse(userId),
         verified = verified,
         status = status,
         lastActiveAt = Instant.fromEpochSeconds(lastActiveAt).toOption(),

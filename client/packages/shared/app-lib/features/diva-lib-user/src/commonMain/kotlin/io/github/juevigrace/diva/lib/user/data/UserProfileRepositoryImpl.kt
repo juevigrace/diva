@@ -18,5 +18,5 @@ class UserProfileRepositoryImpl(
 
     override suspend fun sync(userId: Uuid): Result<Unit> = Result.success(Unit)
 
-    override suspend fun save(profile: UserProfile): Result<Unit> = storage.upsert(profile)
+    override suspend fun save(userId: Uuid, profile: UserProfile): Result<Unit> = storage.upsert(userId, profile)
 }

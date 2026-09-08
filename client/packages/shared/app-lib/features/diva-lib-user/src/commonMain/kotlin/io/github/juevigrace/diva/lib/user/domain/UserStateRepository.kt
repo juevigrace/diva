@@ -16,5 +16,5 @@ interface UserStateRepository : Repository {
 
     suspend fun sync(userId: Uuid): Result<Unit>
 
-    suspend fun save(state: UserState): Result<Unit>
+    suspend fun save(userId: Uuid, state: UserState): Result<Unit>
 }

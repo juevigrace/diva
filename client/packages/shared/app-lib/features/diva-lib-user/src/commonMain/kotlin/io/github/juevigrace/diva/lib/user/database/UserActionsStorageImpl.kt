@@ -51,13 +51,13 @@ class UserActionsStorageImpl(
         }
     }
 
-    override suspend fun upsert(item: UserAction): Result<Unit> {
+    override suspend fun upsert(userId: Uuid, item: UserAction): Result<Unit> {
         return db.use {
             transaction {
                 userActionsQueries.upsert(
                     id = item.id.toString(),
                     name = item.action,
-                    user_id = item.userId.toString()
+                    user_id = userId.toString()
                 )
             }
         }
@@ -85,7 +85,6 @@ class UserActionsStorageImpl(
         userId: String,
     ): UserAction = UserAction(
         id = Uuid.parse(id),
-        action = name,
-        userId = Uuid.parse(userId)
+        action = name
     )
 }

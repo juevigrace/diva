@@ -45,12 +45,12 @@ class UserPermissionsStorageImpl(
         }
     }
 
-    override suspend fun upsert(item: UserPermission): Result<Unit> {
+    override suspend fun upsert(userId: Uuid, item: UserPermission): Result<Unit> {
         return db.use {
             transaction {
                 userPermissionsQueries.upsert(
                     permission_id = item.permission.id.toString(),
-                    user_id = item.userId.toString(),
+                    user_id = userId.toString(),
                     granted_by = item.grantedBy.getOrNull(),
                     granted = item.granted,
                     granted_at = item.grantedAt.map { it.epochSeconds }.getOrNull() ?: 0L,
@@ -96,7 +96,6 @@ class UserPermissionsStorageImpl(
             createdAt = Instant.fromEpochSeconds(0),
             updatedAt = Instant.fromEpochSeconds(0)
         ),
-        userId = Uuid.parse(userId),
         grantedBy = grantedBy.toOption(),
         granted = granted,
         grantedAt = Instant.fromEpochSeconds(grantedAt).toOption(),

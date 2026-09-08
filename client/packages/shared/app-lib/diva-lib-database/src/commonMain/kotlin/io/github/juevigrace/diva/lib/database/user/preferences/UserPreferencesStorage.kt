@@ -14,7 +14,7 @@ interface UserPreferencesStorage {
 
     fun getByUserFlow(userId: Uuid): Flow<Result<Option<UserPreferences>>>
 
-    suspend fun upsert(item: UserPreferences): Result<Unit>
+    suspend fun upsert(userId: Uuid, item: UserPreferences): Result<Unit>
 
     @OptIn(ExperimentalUuidApi::class)
     suspend fun delete(id: Uuid): Result<Unit>

@@ -16,7 +16,7 @@ interface UserPreferencesRepository : Repository {
 
     suspend fun sync(userId: Uuid): Result<Unit>
 
-    suspend fun save(preferences: UserPreferences): Result<Unit>
+    suspend fun save(userId: Uuid, preferences: UserPreferences): Result<Unit>
 
     suspend fun delete(id: Uuid): Result<Unit>
 }
