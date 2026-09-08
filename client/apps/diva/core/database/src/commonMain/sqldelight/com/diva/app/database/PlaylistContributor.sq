@@ -1,0 +1,16 @@
+insert:
+INSERT INTO diva_playlist_contributor
+VALUES ?;
+
+delete:
+DELETE FROM diva_playlist_contributor
+WHERE collection_id = ? AND contributor_id = ?;
+
+deleteByCollection:
+DELETE FROM diva_playlist_contributor
+WHERE collection_id = ?;
+
+findForCollection:
+SELECT *
+FROM diva_playlist_contributor
+WHERE collection_id = ?;

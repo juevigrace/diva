@@ -1,0 +1,24 @@
+upsert:
+INSERT OR REPLACE INTO diva_tag
+VALUES ?;
+
+deleteById:
+DELETE FROM diva_tag
+WHERE id = ?;
+
+findAll:
+SELECT *
+FROM diva_tag
+WHERE deleted_at IS NULL
+ORDER BY tag_name;
+
+findOneById:
+SELECT *
+FROM diva_tag
+WHERE id = ? AND deleted_at IS NULL;
+
+findByName:
+SELECT *
+FROM diva_tag
+WHERE tag_name = ? COLLATE NOCASE AND deleted_at IS NULL
+LIMIT 1;

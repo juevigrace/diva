@@ -1,0 +1,29 @@
+insert:
+INSERT INTO diva_media_tag (media_id, tag_id)
+VALUES (?, ?);
+
+delete:
+DELETE FROM diva_media_tag
+WHERE media_id = ? AND tag_id = ?;
+
+deleteByMedia:
+DELETE FROM diva_media_tag
+WHERE media_id = ?;
+
+deleteByTag:
+DELETE FROM diva_media_tag
+WHERE tag_id = ?;
+
+findTagsForMedia:
+SELECT tag.*
+FROM diva_tag AS tag
+INNER JOIN diva_media_tag AS link ON link.tag_id = tag.id
+WHERE link.media_id = ? AND tag.deleted_at IS NULL
+ORDER BY tag.tag_name;
+
+findMediaForTag:
+SELECT media.*
+FROM diva_media AS media
+INNER JOIN diva_media_tag AS link ON link.media_id = media.id
+WHERE link.tag_id = ? AND media.deleted_at IS NULL
+ORDER BY media.title;

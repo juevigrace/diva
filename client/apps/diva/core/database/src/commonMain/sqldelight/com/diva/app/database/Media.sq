@@ -1,6 +1,6 @@
 upsert:
-INSERT OR REPLACE INTO diva_media (id, user_id, media_type, title, uri, mime_type, size_bytes, duration_ms, fingerprint, created_at, updated_at)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO diva_media
+VALUES ?;
 
 deleteAll:
 DELETE FROM diva_media;

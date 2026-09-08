@@ -1,0 +1,12 @@
+upsert:
+INSERT OR REPLACE INTO diva_playlist_metadata
+VALUES ?;
+
+deleteByCollection:
+DELETE FROM diva_playlist_metadata
+WHERE collection_id = ?;
+
+findByCollection:
+SELECT *
+FROM diva_playlist_metadata
+WHERE collection_id = ?;

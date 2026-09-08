@@ -48,8 +48,8 @@ class UserStorageImpl(
                 userQueries.upsert(
                     id = item.id.toString(),
                     username = item.username,
-                    email = item.email,
-                    phone_number = item.phoneNumber,
+                    email = item.email.getOrNull() ?: "",
+                    phone_number = item.phoneNumber.getOrNull() ?: "",
                     password_hash = item.passwordHash.getOrNull() ?: "",
                     role = item.role,
                     created_at = item.createdAt.epochSeconds,
@@ -79,22 +79,24 @@ class UserStorageImpl(
     private fun mapToUser(
         id: String,
         username: String,
-        email: String,
-        phoneNumber: String,
-        passwordHash: String,
+        email: String?,
+        phoneNumber: String?,
+        passwordHash: String?,
         role: Role,
         createdAt: Long,
         updatedAt: Long,
+        deletedAt: Long?,
     ): User {
         return User(
             id = Uuid.parse(id),
             username = username,
-            email = email,
-            phoneNumber = phoneNumber,
+            email = email.toOption(),
+            phoneNumber = phoneNumber.toOption(),
             passwordHash = passwordHash.toOption(),
             role = role,
             createdAt = Instant.fromEpochSeconds(createdAt),
-            updatedAt = Instant.fromEpochSeconds(updatedAt)
+            updatedAt = Instant.fromEpochSeconds(updatedAt),
+            deletedAt = deletedAt?.let { Instant.fromEpochSeconds(it) }.toOption()
         )
     }
 }

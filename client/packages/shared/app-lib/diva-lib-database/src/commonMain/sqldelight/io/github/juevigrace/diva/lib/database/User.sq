@@ -14,7 +14,8 @@ SELECT
   password_hash AS passwordHash,
   role,
   created_at AS createdAt,
-  updated_at AS updatedAt
+  updated_at AS updatedAt,
+  deleted_at AS deletedAt
 FROM diva_user;
 
 findOneById:
@@ -26,7 +27,8 @@ SELECT
   password_hash AS passwordHash,
   role,
   created_at AS createdAt,
-  updated_at AS updatedAt
+  updated_at AS updatedAt,
+  deleted_at AS deletedAt
 FROM diva_user
 WHERE id = ?;
 

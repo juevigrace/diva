@@ -1,7 +1,7 @@
 package com.diva.app.ui.navigation
 
 import androidx.navigation3.runtime.NavKey
-import io.github.juevigrace.diva.lib.models.media.MediaType
+import com.diva.app.models.media.MediaType
 import kotlinx.serialization.Serializable
 
 @Serializable

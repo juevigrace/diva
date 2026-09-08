@@ -1,0 +1,28 @@
+insert:
+INSERT INTO diva_playlist_suggestions
+VALUES ?;
+
+updateStatus:
+UPDATE diva_playlist_suggestions
+SET status = ?
+WHERE id = ?;
+
+delete:
+DELETE FROM diva_playlist_suggestions
+WHERE id = ?;
+
+deleteByCollection:
+DELETE FROM diva_playlist_suggestions
+WHERE collection_id = ?;
+
+findForCollection:
+SELECT *
+FROM diva_playlist_suggestions
+WHERE collection_id = ?
+ORDER BY suggested_at DESC;
+
+findPendingForCollection:
+SELECT *
+FROM diva_playlist_suggestions
+WHERE collection_id = ? AND status = 'PENDING'
+ORDER BY suggested_at DESC;

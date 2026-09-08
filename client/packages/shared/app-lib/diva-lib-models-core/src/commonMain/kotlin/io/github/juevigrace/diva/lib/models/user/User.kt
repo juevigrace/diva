@@ -22,9 +22,9 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 data class User(
     val id: Uuid,
-    val email: String = "",
+    val email: Option<String> = None,
     val username: String = "",
-    val phoneNumber: String = "",
+    val phoneNumber: Option<String> = None,
     val passwordHash: Option<String> = None,
     val role: Role = Role.USER,
     val state: Option<UserState> = None,
@@ -41,9 +41,9 @@ data class User(
         fun fromResponse(response: UserResponse): User {
             return User(
                 id = Uuid.parse(response.id),
-                email = response.email,
+                email = Option.of(response.email),
                 username = response.username,
-                phoneNumber = response.phoneNumber,
+                phoneNumber = Option.of(response.phoneNumber),
                 role = safeRole(response.role),
                 state = Option.of(response.state?.let { UserState.fromResponse(it) }),
                 createdAt = Instant.fromEpochMilliseconds(response.createdAt),

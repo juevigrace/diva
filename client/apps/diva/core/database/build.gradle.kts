@@ -7,6 +7,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.diva.lib.database)
+            implementation(projects.core.models)
         }
     }
 }

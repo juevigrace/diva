@@ -1,10 +1,4 @@
-@file:OptIn(ExperimentalJsExport::class)
-@file:DivaJsExport
-
-package io.github.juevigrace.diva.lib.models.media
-
-import io.github.juevigrace.diva.core.DivaJsExport
-import kotlin.js.ExperimentalJsExport
+package com.diva.app.models.media
 
 enum class MediaType {
     AUDIO,

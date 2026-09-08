@@ -22,7 +22,7 @@ kotlin {
         commonMain.dependencies {
             api(libs.diva.database.sqlite)
 
-            api(projects.divaLibModelsCore)
+            implementation(projects.divaLibModelsCore)
         }
     }
 }
