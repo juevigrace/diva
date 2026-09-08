@@ -16,102 +16,103 @@ Goal: reconcile/implement the shared-library API clients against these routes.
   - `owner` = `RequireResourceOwner` (requesting user must own the URL resource; some also require a `PermissionAction`)
 - Fine-grained access uses `RequirePermission(PermissionAction)`.
 - DTO/response model names reference `diva-lib-models-api`.
+- Status: `done` = API client implemented in app-lib; `todo` = not yet implemented.
 
 ## Root (no `/api` prefix)
 
-| Method | Path        | Auth            | Body / Notes                      |
-|--------|-------------|-----------------|-----------------------------------|
-| GET    | /health     | public          | returns `{ "status": "ok" }`      |
-| GET    | /status     | session, ADMIN/MOD | DB health                        |
-| GET    | /uploads    | public          | static file server (uploads dir)  |
-| *      | (404)       | public          | JSON "Route not found"            |
+| Method | Path        | Auth            | Body / Notes                      | Status |
+|--------|-------------|-----------------|-----------------------------------|--------|
+| GET    | /health     | public          | returns `{ "status": "ok" }`      | todo   |
+| GET    | /status     | session, ADMIN/MOD | DB health                        | todo   |
+| GET    | /uploads    | public          | static file server (uploads dir)  | todo   |
+| *      | (404)       | public          | JSON "Route not found"            | todo   |
 
 ## /api/user
 
-| Method | Path                            | Auth                                        | Body / Notes                                  |
-|--------|---------------------------------|---------------------------------------------|-----------------------------------------------|
-| GET    | /user/check/username/{username} | public                                      |                                               |
-| GET    | /user/check/email/{email}       | public                                      |                                               |
-| GET    | /user                           | session, verified, ADMIN/MOD                | list all users                               |
-| POST   | /user                           | session, verified, ADMIN/MOD                | `CreateUserDto`                              |
-| GET    | /user/{uid}                     | session                                     |                                               |
-| PATCH  | /user/{uid}/email               | session, verified, owner + `USERS_EMAIL_WRITE`   | `UpdateEmailDto`                        |
-| PATCH  | /user/{uid}/phone               | session, verified, owner + `USERS_PHONE_WRITE`   | `UpdatePhoneNumberDto`                  |
-| PATCH  | /user/{uid}/username            | session, verified, owner + `USERS_USERNAME_WRITE`| `UpdateUsernameDto`                   |
-| PATCH  | /user/{uid}/password            | session, verified, owner + `USERS_PASSWORD_WRITE`| password update                        |
-| PATCH  | /user/{uid}/role                | session, verified, ADMIN/MOD + `USERS_ROLE_WRITE` | `UpdateRoleDto`                      |
-| PATCH  | /user/{uid}/restore             | session, verified, ADMIN/MOD + `USERS_RESTORE_WRITE` |                                   |
-| DELETE | /user/{uid}                     | session, verified, owner + `USERS_WRITE`    | soft delete                                  |
-| DELETE | /user/{uid}/forever             | session, verified, owner + `USERS_WRITE`    | hard delete                                  |
-| GET    | /user/{uid}/status              | session, verified, owner                    | `UserStateResponse`                          |
-| POST   | /user/{uid}/status/ping         | session, verified, owner                    |                                               |
-| PATCH  | /user/{uid}/status/verified     | session, verified, ADMIN/MOD + `USERS_VERIFIED_WRITE` | `UpdateVerifiedDto`              |
-| PUT    | /user/{uid}/status              | session, verified, ADMIN/MOD + `USERS_WRITE`| `UpdateUserStatusDto`                        |
-| GET    | /user/{uid}/actions             | session, verified, owner + `ACTIONS_READ`   |                                               |
-| GET    | /user/actions/{aid}             | session, verified, owner-by-action + `ACTIONS_READ` |                               |
-| DELETE | /user/actions/{aid}             | session, verified, ADMIN/MOD + `ACTIONS_WRITE` |                                          |
-| GET    | /user/{uid}/permissions         | session, verified, owner + `USER_PERMISSIONS_READ` |                                 |
-| GET    | /user/{uid}/permissions/{pid}   | session, verified, owner + `USER_PERMISSIONS_READ` |                                 |
-| POST   | /user/{uid}/permissions         | session, verified, ADMIN/MOD + `USER_PERMISSIONS_WRITE` | `CreateUserPermissionDto`     |
-| PUT    | /user/{uid}/permissions/{pid}   | session, verified, ADMIN/MOD, grantedBy-owner + `USER_PERMISSIONS_WRITE` | `UpdateUserPermissionDto` |
-| DELETE | /user/{uid}/permissions/{pid}   | session, verified, ADMIN/MOD, grantedBy-owner + `USER_PERMISSIONS_WRITE` |        |
-| GET    | /user/{uid}/preferences         | session, verified, owner + `USER_PERMISSIONS_READ` | `UserPreferencesResponse`            |
-| POST   | /user/{uid}/preferences         | session, verified, owner + `USERS_PREFERENCES_WRITE` | `CreateUserPreferencesDto`     |
-| GET    | /user/preferences/{pid}         | session, verified, owner-by-pref + `USERS_PREFERENCES_READ` |                       |
-| PUT    | /user/preferences/{pid}         | session, verified, owner-by-pref + `USERS_PREFERENCES_WRITE` | `UpdateUserPreferencesDto` |
-| GET    | /user/{uid}/profile             | session, verified (**any verified session, NO owner check**) | `UserProfileResponse` |
-| POST   | /user/{uid}/profile             | session, verified, owner + `USERS_PROFILE_WRITE` | `CreateProfileDto`                |
-| PUT    | /user/{uid}/profile             | session, verified, owner + `USERS_PROFILE_WRITE` | `UpdateProfileDto`                |
-| PATCH  | /user/{uid}/profile/avatar      | session, verified, owner + `USERS_PROFILE_WRITE` | multipart file upload          |
-| GET    | /user/{uid}/sessions            | session, verified, owner + `SESSIONS_READ`  |                                               |
-| DELETE | /user/{uid}/sessions            | session, verified, owner + `SESSIONS_WRITE` | soft-delete all user sessions                |
-| DELETE | /user/{uid}/sessions/close      | session, verified, ADMIN/MOD                |                                               |
-| GET    | /user/{uid}/devices             | session, verified, owner + `DEVICES_READ`   |                                               |
-| GET    | /user/{uid}/devices/{did}       | session, verified, owner + `DEVICES_READ`   |                                               |
-| DELETE | /user/{uid}/devices/{did}       | session, verified, owner + `DEVICES_READ`   | (no write permission attached)               |
+| Method | Path                            | Auth                                        | Body / Notes                                  | Status |
+|--------|---------------------------------|---------------------------------------------|-----------------------------------------------|--------|
+| GET    | /user/check/username/{username} | public                                      |                                               | todo   |
+| GET    | /user/check/email/{email}       | public                                      |                                               | todo   |
+| GET    | /user                           | session, verified, ADMIN/MOD                | list all users                               | todo   |
+| POST   | /user                           | session, verified, ADMIN/MOD                | `CreateUserDto`                              | todo   |
+| GET    | /user/{uid}                     | session                                     |                                               | todo   |
+| PATCH  | /user/{uid}/email               | session, verified, owner + `USERS_EMAIL_WRITE`   | `UpdateEmailDto`                        | todo   |
+| PATCH  | /user/{uid}/phone               | session, verified, owner + `USERS_PHONE_WRITE`   | `UpdatePhoneNumberDto`                  | todo   |
+| PATCH  | /user/{uid}/username            | session, verified, owner + `USERS_USERNAME_WRITE`| `UpdateUsernameDto`                   | todo   |
+| PATCH  | /user/{uid}/password            | session, verified, owner + `USERS_PASSWORD_WRITE`| password update                        | todo   |
+| PATCH  | /user/{uid}/role                | session, verified, ADMIN/MOD + `USERS_ROLE_WRITE` | `UpdateRoleDto`                      | todo   |
+| PATCH  | /user/{uid}/restore             | session, verified, ADMIN/MOD + `USERS_RESTORE_WRITE` |                                   | todo   |
+| DELETE | /user/{uid}                     | session, verified, owner + `USERS_WRITE`    | soft delete                                  | todo   |
+| DELETE | /user/{uid}/forever             | session, verified, owner + `USERS_WRITE`    | hard delete                                  | todo   |
+| GET    | /user/{uid}/status              | session, verified, owner                    | `UserStateResponse`                          | todo   |
+| POST   | /user/{uid}/status/ping         | session, verified, owner                    |                                               | todo   |
+| PATCH  | /user/{uid}/status/verified     | session, verified, ADMIN/MOD + `USERS_VERIFIED_WRITE` | `UpdateVerifiedDto`              | todo   |
+| PUT    | /user/{uid}/status              | session, verified, ADMIN/MOD + `USERS_WRITE`| `UpdateUserStatusDto`                        | todo   |
+| GET    | /user/{uid}/actions             | session, verified, owner + `ACTIONS_READ`   |                                               | todo   |
+| GET    | /user/actions/{aid}             | session, verified, owner-by-action + `ACTIONS_READ` |                               | todo   |
+| DELETE | /user/actions/{aid}             | session, verified, ADMIN/MOD + `ACTIONS_WRITE` |                                          | todo   |
+| GET    | /user/{uid}/permissions         | session, verified, owner + `USER_PERMISSIONS_READ` |                                 | todo   |
+| GET    | /user/{uid}/permissions/{pid}   | session, verified, owner + `USER_PERMISSIONS_READ` |                                 | todo   |
+| POST   | /user/{uid}/permissions         | session, verified, ADMIN/MOD + `USER_PERMISSIONS_WRITE` | `CreateUserPermissionDto`     | todo   |
+| PUT    | /user/{uid}/permissions/{pid}   | session, verified, ADMIN/MOD, grantedBy-owner + `USER_PERMISSIONS_WRITE` | `UpdateUserPermissionDto` | todo   |
+| DELETE | /user/{uid}/permissions/{pid}   | session, verified, ADMIN/MOD, grantedBy-owner + `USER_PERMISSIONS_WRITE` |        | todo   |
+| GET    | /user/{uid}/preferences         | session, verified, owner + `USER_PERMISSIONS_READ` | `UserPreferencesResponse`            | todo   |
+| POST   | /user/{uid}/preferences         | session, verified, owner + `USERS_PREFERENCES_WRITE` | `CreateUserPreferencesDto`     | todo   |
+| GET    | /user/preferences/{pid}         | session, verified, owner-by-pref + `USERS_PREFERENCES_READ` |                       | todo   |
+| PUT    | /user/preferences/{pid}         | session, verified, owner-by-pref + `USERS_PREFERENCES_WRITE` | `UpdateUserPreferencesDto` | todo   |
+| GET    | /user/{uid}/profile             | session, verified (**any verified session, NO owner check**) | `UserProfileResponse` | todo   |
+| POST   | /user/{uid}/profile             | session, verified, owner + `USERS_PROFILE_WRITE` | `CreateProfileDto`                | todo   |
+| PUT    | /user/{uid}/profile             | session, verified, owner + `USERS_PROFILE_WRITE` | `UpdateProfileDto`                | todo   |
+| PATCH  | /user/{uid}/profile/avatar      | session, verified, owner + `USERS_PROFILE_WRITE` | multipart file upload          | todo   |
+| GET    | /user/{uid}/sessions            | session, verified, owner + `SESSIONS_READ`  |                                               | todo   |
+| DELETE | /user/{uid}/sessions            | session, verified, owner + `SESSIONS_WRITE` | soft-delete all user sessions                | todo   |
+| DELETE | /user/{uid}/sessions/close      | session, verified, ADMIN/MOD                |                                               | todo   |
+| GET    | /user/{uid}/devices             | session, verified, owner + `DEVICES_READ`   |                                               | todo   |
+| GET    | /user/{uid}/devices/{did}       | session, verified, owner + `DEVICES_READ`   |                                               | todo   |
+| DELETE | /user/{uid}/devices/{did}       | session, verified, owner + `DEVICES_READ`   | (no write permission attached)               | todo   |
 
 ## /api/sessions (all require session + verified)
 
-| Method | Path                     | Auth                  | Body / Notes            |
-|--------|--------------------------|-----------------------|-------------------------|
-| GET    | /sessions                | ADMIN/MOD             | list all                |
-| DELETE | /sessions/close          | ADMIN/MOD             | close expired           |
-| DELETE | /sessions                | ADMIN/MOD             | delete sessions forever |
-| GET    | /sessions/{sid}          | owner-by-sid + `SESSIONS_READ`  | `SessionResponse` |
-| DELETE | /sessions/{sid}/close    | owner-by-sid + `SESSIONS_WRITE` |                   |
+| Method | Path                     | Auth                  | Body / Notes            | Status |
+|--------|--------------------------|-----------------------|-------------------------|--------|
+| GET    | /sessions                | ADMIN/MOD             | list all                | done   |
+| DELETE | /sessions/close          | ADMIN/MOD             | close expired           | done   |
+| DELETE | /sessions                | ADMIN/MOD             | delete sessions forever | done   |
+| GET    | /sessions/{sid}          | owner-by-sid + `SESSIONS_READ`  | `SessionResponse` | done   |
+| DELETE | /sessions/{sid}/close    | owner-by-sid + `SESSIONS_WRITE` |                   | done   |
 
 ## /api/auth
 
-| Method | Path                              | Auth     | Body / Notes                          |
-|--------|-----------------------------------|----------|---------------------------------------|
-| POST   | /auth/signIn                      | public   | `SignInDto`                           |
-| POST   | /auth/signUp                      | public   | `SignUpDto`                           |
-| POST   | /auth/signOut                     | session  |                                       |
-| POST   | /auth/ping                        | session  |                                       |
-| POST   | /auth/refresh                     | session  | `SessionDataDto`                      |
-| POST   | /auth/forgot/password/confirm     | public   | `ForgotPasswordConfirmDto` (token + new password) |
+| Method | Path                              | Auth     | Body / Notes                          | Status |
+|--------|-----------------------------------|----------|---------------------------------------|--------|
+| POST   | /auth/signIn                      | public   | `SignInDto`                           | done   |
+| POST   | /auth/signUp                      | public   | `SignUpDto`                           | done   |
+| POST   | /auth/signOut                     | session  |                                       | done   |
+| POST   | /auth/ping                        | session  |                                       | done   |
+| POST   | /auth/refresh                     | session  | `SessionDataDto`                      | done   |
+| POST   | /auth/forgot/password/confirm     | public   | `ForgotPasswordConfirmDto` (token + new password) | done   |
 
 ## /api/permissions (all require session + verified)
 
-| Method | Path                     | Auth                       | Body / Notes               |
-|--------|--------------------------|----------------------------|----------------------------|
-| GET    | /permissions             | ADMIN/MOD + `PERMISSIONS_READ`  | list                  |
-| GET    | /permissions/{pid}       | ADMIN/MOD + `PERMISSIONS_READ`  | `PermissionResponse`  |
-| PUT    | /permissions/{pid}       | ADMIN/MOD + `PERMISSIONS_WRITE` | `UpdatePermissionDto` |
-| PATCH  | /permissions/{pid}/level | ADMIN only                  | `UpdatePermissionRoleLevelDto` |
+| Method | Path                     | Auth                       | Body / Notes               | Status |
+|--------|--------------------------|----------------------------|----------------------------|--------|
+| GET    | /permissions             | ADMIN/MOD + `PERMISSIONS_READ`  | list                  | done   |
+| GET    | /permissions/{pid}       | ADMIN/MOD + `PERMISSIONS_READ`  | `PermissionResponse`  | done   |
+| PUT    | /permissions/{pid}       | ADMIN/MOD + `PERMISSIONS_WRITE` | `UpdatePermissionDto` | done   |
+| PATCH  | /permissions/{pid}/level | ADMIN only                  | `UpdatePermissionRoleLevelDto` | done   |
 
 ## /api/verification
 
-| Method | Path                 | Auth   | Body / Notes                           |
-|--------|----------------------|--------|----------------------------------------|
-| POST   | /verification/request| public | `RequestActionVerificationDto` (email, action) |
-| POST   | /verification        | public | `VerifyActionDto` (actionId, token)    |
+| Method | Path                 | Auth   | Body / Notes                           | Status |
+|--------|----------------------|--------|----------------------------------------|--------|
+| POST   | /verification/request| public | `RequestActionVerificationDto` (email, action) | done   |
+| POST   | /verification        | public | `VerifyActionDto` (actionId, token)    | done   |
 
 ## /api/devices
 
-| Method | Path      | Auth                    | Body / Notes |
-|--------|-----------|-------------------------|--------------|
-| GET    | /devices  | session, verified, ADMIN/MOD | list all devices |
+| Method | Path      | Auth                    | Body / Notes | Status |
+|--------|-----------|-------------------------|--------------|--------|
+| GET    | /devices  | session, verified, ADMIN/MOD | list all devices | done   |
 
 ## Notes for client implementation
 

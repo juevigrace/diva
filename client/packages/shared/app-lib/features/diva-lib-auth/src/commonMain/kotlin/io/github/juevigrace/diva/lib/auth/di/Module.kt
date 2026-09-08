@@ -1,6 +1,8 @@
 package io.github.juevigrace.diva.lib.auth.di
 
 import io.github.juevigrace.diva.lib.auth.data.AuthRepositoryImpl
+import io.github.juevigrace.diva.lib.auth.data.api.client.AuthApi
+import io.github.juevigrace.diva.lib.auth.data.api.client.AuthApiImpl
 import io.github.juevigrace.diva.lib.auth.domain.AuthRepository
 import io.github.juevigrace.diva.lib.auth.presentation.viewmodel.ForgotViewModel
 import io.github.juevigrace.diva.lib.auth.presentation.viewmodel.SignInViewModel
@@ -13,6 +15,7 @@ import org.koin.dsl.module
 
 fun authModule(): Module {
     return module {
+        singleOf(::AuthApiImpl) bind AuthApi::class
         singleOf(::AuthRepositoryImpl) bind AuthRepository::class
 
         viewModelOf(::SignInViewModel)
