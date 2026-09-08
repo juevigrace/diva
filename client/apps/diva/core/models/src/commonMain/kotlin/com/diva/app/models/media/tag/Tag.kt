@@ -1,5 +1,6 @@
 package com.diva.app.models.media.tag
 
+import com.diva.app.models.api.media.tag.response.TagResponse
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import kotlin.time.Clock
@@ -14,4 +15,16 @@ data class Tag(
     val createdAt: Instant = Clock.System.now(),
     val updatedAt: Instant = Clock.System.now(),
     val deletedAt: Option<Instant> = None,
-)
+) {
+    companion object {
+        fun fromResponse(response: TagResponse): Tag {
+            return Tag(
+                id = Uuid.parse(response.id),
+                name = response.name,
+                createdAt = Instant.fromEpochSeconds(response.createdAt),
+                updatedAt = Instant.fromEpochSeconds(response.updatedAt),
+                deletedAt = Option.of(response.deletedAt?.let { Instant.fromEpochSeconds(it) }),
+            )
+        }
+    }
+}
