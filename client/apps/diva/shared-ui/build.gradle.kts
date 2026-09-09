@@ -29,6 +29,14 @@ kotlin {
             implementation(projects.core.database)
             implementation(projects.core.ui)
             implementation(projects.features.home)
+            implementation(projects.features.server)
+            implementation(projects.features.media)
+            implementation(projects.features.folder)
+            implementation(projects.features.collection)
+            implementation(projects.features.playlist)
+            implementation(projects.features.mix)
+            implementation(projects.features.player)
+            implementation(projects.features.library)
         }
     }
 }

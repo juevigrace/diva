@@ -9,7 +9,8 @@ interface PlaylistSuggestionsStorage {
     @OptIn(ExperimentalUuidApi::class)
     suspend fun getByCollection(collectionId: Uuid): Result<List<PlaylistSuggestions>>
 
-    suspend fun add(item: PlaylistSuggestions): Result<Unit>
+    @OptIn(ExperimentalUuidApi::class)
+    suspend fun add(collectionId: Uuid, item: PlaylistSuggestions): Result<Unit>
 
     @OptIn(ExperimentalUuidApi::class)
     suspend fun updateStatus(id: Uuid, status: ModerationStatus): Result<Unit>

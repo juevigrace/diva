@@ -49,6 +49,14 @@ include(
     ":core:database",
     ":core:ui",
     ":features:home",
+    ":features:library",
+    ":features:media",
+    ":features:folder",
+    ":features:collection",
+    ":features:playlist",
+    ":features:mix",
+    ":features:player",
+    ":features:server",
 )
 
 includeBuild("../../packages/shared/framework")
