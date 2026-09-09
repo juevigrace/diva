@@ -1,19 +1,19 @@
-toggle:
-INSERT OR REPLACE INTO diva_favorite (media_id, created_at)
-VALUES (?, ?);
+insert:
+INSERT OR REPLACE INTO diva_favorite (user_id, media_id, created_at)
+VALUES (?, ?, ?);
 
-remove:
+delete:
 DELETE FROM diva_favorite
-WHERE media_id = ?;
+WHERE user_id = ? AND media_id = ?;
 
-findAll:
+findFavoritesByUser:
 SELECT media.*
 FROM diva_media AS media
 INNER JOIN diva_favorite AS fav ON fav.media_id = media.id
-WHERE media.deleted_at IS NULL
+WHERE fav.user_id = ? AND media.deleted_at IS NULL
 ORDER BY fav.created_at DESC;
 
 isFavorite:
 SELECT COUNT(*) AS count
 FROM diva_favorite
-WHERE media_id = ?;
+WHERE user_id = ? AND media_id = ?;

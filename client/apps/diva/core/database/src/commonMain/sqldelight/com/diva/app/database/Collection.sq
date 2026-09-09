@@ -16,21 +16,3 @@ findOneById:
 SELECT *
 FROM diva_collection
 WHERE id = ? AND deleted_at IS NULL;
-
-findByType:
-SELECT *
-FROM diva_collection
-WHERE collection_type = ? AND deleted_at IS NULL
-ORDER BY name;
-
-findByUser:
-SELECT *
-FROM diva_collection
-WHERE owner_id = ? AND deleted_at IS NULL
-ORDER BY name;
-
-findByCover:
-SELECT *
-FROM diva_collection
-WHERE cover_media_id = ? AND deleted_at IS NULL
-ORDER BY name;

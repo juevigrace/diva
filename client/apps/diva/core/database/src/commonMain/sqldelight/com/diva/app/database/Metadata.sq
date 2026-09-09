@@ -11,19 +11,7 @@ SELECT *
 FROM diva_media_metadata
 ORDER BY artist, album, track_number;
 
-findOneByMediaId:
+findOneByMedia:
 SELECT *
 FROM diva_media_metadata
 WHERE media_id = ?;
-
-findByArtist:
-SELECT *
-FROM diva_media_metadata
-WHERE artist = ? AND artist != ''
-ORDER BY album, track_number;
-
-findByAlbum:
-SELECT *
-FROM diva_media_metadata
-WHERE album = ? AND album != ''
-ORDER BY track_number;

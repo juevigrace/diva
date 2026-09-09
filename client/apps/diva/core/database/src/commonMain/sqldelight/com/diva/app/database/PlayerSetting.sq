@@ -1,16 +1,15 @@
 upsert:
-INSERT OR REPLACE INTO diva_player_setting (id, key, value, updated_at)
-VALUES (?, ?, ?, ?);
+INSERT OR REPLACE INTO diva_player_setting (user_id, volume, playback_speed, repeat_mode, shuffle, updated_at)
+VALUES (?, ?, ?, ?, ?, ?);
 
-deleteByKey:
-DELETE FROM diva_player_setting
-WHERE key = ?;
-
-findAll:
+findByUser:
 SELECT *
-FROM diva_player_setting;
-
-findByKey:
-SELECT value
 FROM diva_player_setting
-WHERE key = ?;
+WHERE user_id = ?;
+
+deleteByUser:
+DELETE FROM diva_player_setting
+WHERE user_id = ?;
+
+deleteAll:
+DELETE FROM diva_player_setting;

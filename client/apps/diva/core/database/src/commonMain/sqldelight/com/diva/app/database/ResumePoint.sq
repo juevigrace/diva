@@ -1,16 +1,23 @@
 upsert:
-INSERT OR REPLACE INTO diva_resume_point (media_id, position_ms, updated_at)
-VALUES (?, ?, ?);
+INSERT OR REPLACE INTO diva_resume_point (user_id, media_id, position_ms, updated_at)
+VALUES (?, ?, ?, ?);
 
 delete:
 DELETE FROM diva_resume_point
-WHERE media_id = ?;
+WHERE user_id = ? AND media_id = ?;
 
 deleteCompleted:
 DELETE FROM diva_resume_point
-WHERE position_ms = 0;
+WHERE user_id = ? AND position_ms = 0;
 
-findOneByMediaId:
-SELECT position_ms AS positionMs
+findOneByMedia:
+SELECT position_ms AS positionMs, updated_at AS updatedAt
 FROM diva_resume_point
-WHERE media_id = ?;
+WHERE user_id = ? AND media_id = ?;
+
+findResumableByUser:
+SELECT media.*, resume.position_ms AS resumePositionMs
+FROM diva_media AS media
+INNER JOIN diva_resume_point AS resume ON resume.media_id = media.id
+WHERE resume.user_id = ? AND media.deleted_at IS NULL AND resume.position_ms > 0
+ORDER BY resume.updated_at DESC;

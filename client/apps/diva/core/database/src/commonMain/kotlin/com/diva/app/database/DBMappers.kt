@@ -8,6 +8,7 @@ import migrations.Diva_collection
 import migrations.Diva_media
 import migrations.Diva_permissions
 import migrations.Diva_playlist_suggestions
+import migrations.Diva_player_setting
 import migrations.Diva_session
 import migrations.Diva_user
 import migrations.Diva_user_preferences
@@ -17,7 +18,7 @@ fun sharedDBMapper(driver: SqlDriver): DivaSharedDB {
     return DivaSharedDB(
         driver = driver,
         diva_actionAdapter = Diva_action.Adapter(EnumColumnAdapter()),
-        diva_permissionsAdapter = Diva_permissions.Adapter(EnumColumnAdapter()),
+        diva_permissionsAdapter = Diva_permissions.Adapter(EnumColumnAdapter(), EnumColumnAdapter()),
         diva_sessionAdapter = Diva_session.Adapter(EnumColumnAdapter(), EnumColumnAdapter()),
         diva_userAdapter = Diva_user.Adapter(EnumColumnAdapter()),
         diva_user_preferencesAdapter = Diva_user_preferences.Adapter(EnumColumnAdapter()),
@@ -31,5 +32,6 @@ fun appDivaDBMapper(driver: SqlDriver): DivaDB {
         diva_mediaAdapter = Diva_media.Adapter(EnumColumnAdapter(), EnumColumnAdapter()),
         diva_collectionAdapter = Diva_collection.Adapter(EnumColumnAdapter(), EnumColumnAdapter()),
         diva_playlist_suggestionsAdapter = Diva_playlist_suggestions.Adapter(EnumColumnAdapter()),
+        diva_player_settingAdapter = Diva_player_setting.Adapter(EnumColumnAdapter()),
     )
 }

@@ -20,9 +20,3 @@ SELECT *
 FROM diva_playlist_suggestions
 WHERE collection_id = ?
 ORDER BY suggested_at DESC;
-
-findPendingForCollection:
-SELECT *
-FROM diva_playlist_suggestions
-WHERE collection_id = ? AND status = 'PENDING'
-ORDER BY suggested_at DESC;

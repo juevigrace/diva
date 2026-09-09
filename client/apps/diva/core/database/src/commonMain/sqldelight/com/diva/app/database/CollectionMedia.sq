@@ -2,21 +2,22 @@ insert:
 INSERT INTO diva_collection_media
 VALUES ?;
 
-delete:
+deleteOne:
 DELETE FROM diva_collection_media
 WHERE collection_id = ? AND media_id = ?;
 
-deleteAll:
+deleteByCollection:
 DELETE FROM diva_collection_media
 WHERE collection_id = ?;
-
-deleteByMedia:
-DELETE FROM diva_collection_media
-WHERE media_id = ?;
 
 updateScore:
 UPDATE diva_collection_media
 SET score = ?
+WHERE collection_id = ? AND media_id = ?;
+
+updatePosition:
+UPDATE diva_collection_media
+SET position = ?
 WHERE collection_id = ? AND media_id = ?;
 
 findForCollection:
@@ -26,19 +27,7 @@ INNER JOIN diva_collection_media AS item ON item.media_id = media.id
 WHERE item.collection_id = ? AND media.deleted_at IS NULL
 ORDER BY item.position;
 
-findCollectionsByMedia:
-SELECT collection.*
-FROM diva_collection AS collection
-INNER JOIN diva_collection_media AS item ON item.collection_id = collection.id
-WHERE item.media_id = ? AND collection.deleted_at IS NULL
-ORDER BY collection.name;
-
-countItems:
+count:
 SELECT COUNT(*) AS count
 FROM diva_collection_media
 WHERE collection_id = ?;
-
-updatePosition:
-UPDATE diva_collection_media
-SET position = ?
-WHERE collection_id = ? AND media_id = ?;

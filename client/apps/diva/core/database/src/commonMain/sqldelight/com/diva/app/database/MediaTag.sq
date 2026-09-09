@@ -2,7 +2,7 @@ insert:
 INSERT INTO diva_media_tag (media_id, tag_id)
 VALUES (?, ?);
 
-delete:
+deleteOne:
 DELETE FROM diva_media_tag
 WHERE media_id = ? AND tag_id = ?;
 
