@@ -31,7 +31,7 @@ fun App() {
         toaster = koinInject(),
         dialogController = koinInject(),
     ) {
-        Screen {
+        Screen { _ ->
             NavHost(
                 modifier = Modifier.fillMaxSize(),
                 navigator = koinInject(),

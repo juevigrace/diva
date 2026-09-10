@@ -4,7 +4,7 @@ import com.diva.app.database.DivaDB
 import com.diva.app.database.playback.FavoriteStorage
 import com.diva.app.features.player.presentation.constant.MediaMapper
 import com.diva.app.models.media.Media
-import io.github.juevigrace.diva.core.*
+import io.github.juevigrace.diva.core.getOrElse
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Clock
@@ -21,7 +21,7 @@ class FavoriteStorageImpl(
             transaction {
                 val count = favoriteQueries.isFavorite(userId.toString(), mediaId.toString()).executeAsOne()
                 if (count > 0L) {
-                    favoriteQueries.delete(userId.toString(), mediaId.toString())
+                    remove(userId, mediaId).getOrThrow()
                 } else {
                     favoriteQueries.insert(
                         user_id = userId.toString(),
