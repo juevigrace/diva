@@ -83,6 +83,7 @@ diva-lib-models-api = { group = "io.github.juevigrace", name = "diva-lib-models-
 diva-lib-models-core = { group = "io.github.juevigrace", name = "diva-lib-models-core", version.ref = "diva-lib" }
 diva-lib-auth = { group = "io.github.juevigrace", name = "diva-lib-auth", version.ref = "diva-lib" }
 diva-lib-user = { group = "io.github.juevigrace", name = "diva-lib-user", version.ref = "diva-lib" }
+diva-lib-session = { group = "io.github.juevigrace", name = "diva-lib-session", version.ref = "diva-lib" }
 
 ######### [ANDROIDX DEPENDENCIES] #########
 

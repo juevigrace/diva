@@ -58,6 +58,8 @@ include(
     ":features:mix",
     ":features:player",
     ":features:server",
+    ":features:search",
+    ":features:profile",
 )
 
 includeBuild("../../packages/shared/framework")

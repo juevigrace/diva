@@ -21,6 +21,7 @@ kotlin {
 
             implementation(libs.diva.lib.auth)
             implementation(libs.diva.lib.user)
+            implementation(libs.diva.lib.session)
 
             implementation(libs.diva.network)
 
@@ -37,6 +38,8 @@ kotlin {
             implementation(projects.features.mix)
             implementation(projects.features.player)
             implementation(projects.features.library)
+            implementation(projects.features.search)
+            implementation(projects.features.profile)
         }
     }
 }

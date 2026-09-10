@@ -3,10 +3,13 @@ package com.diva.app.features.home.presentation.ui.screen
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -14,17 +17,20 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import com.diva.app.features.home.presentation.viewmodel.HomeViewModel
+import com.diva.app.features.library.presentation.ui.screen.LibraryScreen
+import com.diva.app.features.profile.presentation.ui.screen.ProfileScreen
+import com.diva.app.features.search.presentation.ui.screen.SearchScreen
 import com.diva.app.ui.navigation.HomeRoute
 import com.diva.app.ui.navigation.LibraryRoute
 import com.diva.app.ui.navigation.ProfileRoute
 import com.diva.app.ui.navigation.SearchRoute
-import io.github.juevigrace.diva.ui.layout.Screen
+import io.github.juevigrace.diva.ui.layout.AdaptiveScreen
+import io.github.juevigrace.diva.ui.layout.bars.NavItem
 import io.github.juevigrace.diva.ui.layout.bars.TabBar
 import io.github.juevigrace.diva.ui.navigation.Tab
 import io.github.juevigrace.diva.ui.navigation.TabNavigator
 import io.github.juevigrace.diva.ui.navigation.TabNavHost
-import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.stringResource
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -42,14 +48,31 @@ fun HomeScreen(
             .coerceAtLeast(0)
     }
 
-    Screen(
+    val scope = rememberCoroutineScope()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+    AdaptiveScreen(
         bottomBar = {
             TabBar(
                 tabs = tabNavigator.tabs,
                 selectedTabIndex = selectedTabIndex,
                 onTabSelected = { index -> tabNavigator.selectTab(tabNavigator.tabs[index]) },
             )
-        }
+        },
+        drawerState = drawerState,
+        navContent = {
+            tabNavigator.tabs.forEachIndexed { index, tab ->
+                NavItem(
+                    selected = selectedTabIndex == index,
+                    icon = tab.icon,
+                    label = tab.title,
+                    onClick = {
+                        tabNavigator.selectTab(tab)
+                        scope.launch { drawerState.close() }
+                    },
+                )
+            }
+        },
     ) { innerPadding ->
         TabNavHost(
             modifier = Modifier.padding(innerPadding).fillMaxSize(),
@@ -68,25 +91,15 @@ fun HomeScreen(
                     }
                 }
                 entry<SearchRoute> {
-                    TabPlaceholder(title = SearchRoute.title)
+                    SearchScreen()
                 }
                 entry<LibraryRoute> {
-                    TabPlaceholder(title = LibraryRoute.title)
+                    LibraryScreen()
                 }
                 entry<ProfileRoute> {
-                    TabPlaceholder(title = ProfileRoute.title)
+                    ProfileScreen()
                 }
             }
         )
-    }
-}
-
-@Composable
-private fun TabPlaceholder(title: StringResource) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(text = stringResource(title))
     }
 }

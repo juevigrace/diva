@@ -6,13 +6,10 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.diva.lib.core)
+            implementation(libs.diva.lib.user)
+            implementation(libs.diva.lib.session)
 
             implementation(projects.core.models)
-            implementation(projects.core.ui)
-
-            implementation(projects.features.library)
-            implementation(projects.features.search)
-            implementation(projects.features.profile)
         }
     }
 }

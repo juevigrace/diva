@@ -3,10 +3,10 @@ package com.diva.app.ui.navigation
 import androidx.navigation3.runtime.NavKey
 import com.diva.app.generated.resources.Res
 import com.diva.app.generated.resources.home
+import com.diva.app.generated.resources.ic_books
 import com.diva.app.generated.resources.ic_home
-import com.diva.app.generated.resources.ic_library
-import com.diva.app.generated.resources.ic_profile
 import com.diva.app.generated.resources.ic_search
+import com.diva.app.generated.resources.ic_user_circle
 import com.diva.app.generated.resources.library
 import com.diva.app.generated.resources.profile
 import com.diva.app.generated.resources.search
@@ -38,13 +38,13 @@ sealed interface AppScreens : NavKey {
 
         @Serializable
         data object Library : HomeGraph {
-            override val icon: DrawableResource = Res.drawable.ic_library
+            override val icon: DrawableResource = Res.drawable.ic_books
             override val title: StringResource = Res.string.library
         }
 
         @Serializable
         data object Profile : HomeGraph {
-            override val icon: DrawableResource = Res.drawable.ic_profile
+            override val icon: DrawableResource = Res.drawable.ic_user_circle
             override val title: StringResource = Res.string.profile
         }
     }
