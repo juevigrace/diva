@@ -8,6 +8,7 @@ import com.diva.app.models.collection.ModerationStatus
 import com.diva.app.models.collection.playlist.Playlist
 import com.diva.app.models.collection.playlist.PlaylistSuggestions
 import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.core.getOrElse
 import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlinx.coroutines.flow.Flow

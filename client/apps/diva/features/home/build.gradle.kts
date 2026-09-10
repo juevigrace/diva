@@ -8,6 +8,7 @@ kotlin {
             implementation(libs.diva.lib.core)
 
             implementation(projects.core.models)
+            implementation(projects.core.ui)
         }
     }
 }

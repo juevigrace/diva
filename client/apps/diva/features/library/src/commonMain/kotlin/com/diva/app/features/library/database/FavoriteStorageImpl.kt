@@ -5,6 +5,7 @@ import com.diva.app.database.playback.FavoriteStorage
 import com.diva.app.features.player.presentation.constant.MediaMapper
 import com.diva.app.models.media.Media
 import io.github.juevigrace.diva.core.getOrElse
+import io.github.juevigrace.diva.core.getOrThrow
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Clock

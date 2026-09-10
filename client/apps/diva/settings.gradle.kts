@@ -47,6 +47,7 @@ include(
     ":core:models",
     ":core:models-api",
     ":core:database",
+    ":core:resources",
     ":core:ui",
     ":features:home",
     ":features:library",
