@@ -1,7 +1,12 @@
+@file:OptIn(ExperimentalJsExport::class)
+@file:DivaJsExport
+
 package com.diva.app.models.collection.mix
 
 import com.diva.app.models.api.collection.mix.response.MixResponse
 import com.diva.app.models.collection.Collection
+import io.github.juevigrace.diva.core.DivaJsExport
+import kotlin.js.ExperimentalJsExport
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

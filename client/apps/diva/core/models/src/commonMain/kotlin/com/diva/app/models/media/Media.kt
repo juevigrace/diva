@@ -1,12 +1,17 @@
+@file:OptIn(ExperimentalJsExport::class)
+@file:DivaJsExport
+
 package com.diva.app.models.media
 
 import com.diva.app.models.api.media.response.MediaResponse
 import com.diva.app.models.collection.VisibilityType
 import com.diva.app.models.collection.safeVisibilityType
 import com.diva.app.models.media.tag.Tag
+import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.user.User
+import kotlin.js.ExperimentalJsExport
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi

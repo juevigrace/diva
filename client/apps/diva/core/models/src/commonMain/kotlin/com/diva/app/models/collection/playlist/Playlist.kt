@@ -1,8 +1,13 @@
+@file:OptIn(ExperimentalJsExport::class)
+@file:DivaJsExport
+
 package com.diva.app.models.collection.playlist
 
 import com.diva.app.models.api.collection.playlist.response.PlaylistResponse
 import com.diva.app.models.collection.Collection
+import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.lib.models.user.User
+import kotlin.js.ExperimentalJsExport
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

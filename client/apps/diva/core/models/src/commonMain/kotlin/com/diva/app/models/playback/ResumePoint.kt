@@ -1,5 +1,10 @@
+@file:OptIn(ExperimentalJsExport::class)
+@file:DivaJsExport
+
 package com.diva.app.models.playback
 
+import io.github.juevigrace.diva.core.DivaJsExport
+import kotlin.js.ExperimentalJsExport
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
