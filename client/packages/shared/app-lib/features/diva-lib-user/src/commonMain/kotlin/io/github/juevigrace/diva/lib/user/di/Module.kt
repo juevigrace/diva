@@ -8,6 +8,22 @@ import io.github.juevigrace.diva.lib.database.user.preferences.UserPreferencesSt
 import io.github.juevigrace.diva.lib.database.user.profile.UserProfileStorage
 import io.github.juevigrace.diva.lib.database.user.state.UserStateStorage
 import io.github.juevigrace.diva.lib.user.data.UserActionsRepositoryImpl
+import io.github.juevigrace.diva.lib.user.data.api.client.UserActionsApi
+import io.github.juevigrace.diva.lib.user.data.api.client.UserActionsApiImpl
+import io.github.juevigrace.diva.lib.user.data.api.client.UserApi
+import io.github.juevigrace.diva.lib.user.data.api.client.UserApiImpl
+import io.github.juevigrace.diva.lib.user.data.api.client.UserDevicesApi
+import io.github.juevigrace.diva.lib.user.data.api.client.UserDevicesApiImpl
+import io.github.juevigrace.diva.lib.user.data.api.client.UserPermissionsApi
+import io.github.juevigrace.diva.lib.user.data.api.client.UserPermissionsApiImpl
+import io.github.juevigrace.diva.lib.user.data.api.client.UserPreferencesApi
+import io.github.juevigrace.diva.lib.user.data.api.client.UserPreferencesApiImpl
+import io.github.juevigrace.diva.lib.user.data.api.client.UserProfileApi
+import io.github.juevigrace.diva.lib.user.data.api.client.UserProfileApiImpl
+import io.github.juevigrace.diva.lib.user.data.api.client.UserStateApi
+import io.github.juevigrace.diva.lib.user.data.api.client.UserStateApiImpl
+import io.github.juevigrace.diva.lib.user.data.api.client.UserSessionsApi
+import io.github.juevigrace.diva.lib.user.data.api.client.UserSessionsApiImpl
 import io.github.juevigrace.diva.lib.user.data.UserDevicesRepositoryImpl
 import io.github.juevigrace.diva.lib.user.data.UserPermissionsRepositoryImpl
 import io.github.juevigrace.diva.lib.user.data.UserPreferencesRepositoryImpl
@@ -52,6 +68,15 @@ fun userModule(): Module {
         singleOf(::UserProfileRepositoryImpl) bind UserProfileRepository::class
         singleOf(::UserPermissionsRepositoryImpl) bind UserPermissionsRepository::class
         singleOf(::UserPreferencesRepositoryImpl) bind UserPreferencesRepository::class
+
+        singleOf(::UserApiImpl) bind UserApi::class
+        singleOf(::UserStateApiImpl) bind UserStateApi::class
+        singleOf(::UserActionsApiImpl) bind UserActionsApi::class
+        singleOf(::UserDevicesApiImpl) bind UserDevicesApi::class
+        singleOf(::UserProfileApiImpl) bind UserProfileApi::class
+        singleOf(::UserPermissionsApiImpl) bind UserPermissionsApi::class
+        singleOf(::UserPreferencesApiImpl) bind UserPreferencesApi::class
+        singleOf(::UserSessionsApiImpl) bind UserSessionsApi::class
 
         viewModelOf(::UserViewModel)
     }
