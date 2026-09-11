@@ -33,6 +33,6 @@ class UserActionsApiImpl(
         return client.delete(
             path = "/api/user/actions/$aid",
             headers = mapOf("Authorization" to "Bearer $token"),
-        )
+        ).map {}
     }
 }

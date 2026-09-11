@@ -22,6 +22,7 @@ kotlin {
             implementation(libs.diva.lib.auth)
             implementation(libs.diva.lib.user)
             implementation(libs.diva.lib.session)
+            implementation(libs.diva.lib.settings)
 
             implementation(libs.diva.network)
 

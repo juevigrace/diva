@@ -13,7 +13,9 @@ import com.diva.app.features.profile.di.profileModule
 import com.diva.app.features.search.di.searchModule
 import com.diva.app.features.server.di.serverModule
 import com.diva.app.ui.di.uiModule
+import io.github.juevigrace.diva.lib.auth.di.authModule
 import io.github.juevigrace.diva.lib.session.di.sessionModule
+import io.github.juevigrace.diva.lib.settings.di.settingsModule
 import io.github.juevigrace.diva.lib.user.di.userModule
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -25,18 +27,22 @@ fun appModule(): Module {
             networkModule(),
             databaseModule(),
         )
-        includes(homeModule())
-        includes(serverModule())
-        includes(mediaModule())
-        includes(folderModule())
-        includes(collectionModule())
-        includes(playlistModule())
-        includes(mixModule())
-        includes(playerModule())
-        includes(libraryModule())
-        includes(searchModule())
-        includes(profileModule())
-        includes(userModule())
-        includes(sessionModule())
+        includes(
+            homeModule(),
+            serverModule(),
+            mediaModule(),
+            folderModule(),
+            collectionModule(),
+            playlistModule(),
+            mixModule(),
+            playerModule(),
+            libraryModule(),
+            searchModule(),
+            profileModule(),
+            userModule(),
+            sessionModule(),
+            authModule(),
+            settingsModule(),
+        )
     }
 }

@@ -9,6 +9,7 @@ kotlin {
             implementation(projects.divaLibDatabase)
             implementation(projects.divaLibModelsApi)
             implementation(projects.divaLibModelsCore)
+            implementation(projects.divaLibUi)
 
             implementation(libs.diva.network)
         }
