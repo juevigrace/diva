@@ -3,7 +3,7 @@ package io.github.juevigrace.diva.lib.user.data.api.client
 import io.github.juevigrace.diva.lib.models.api.ApiResponse
 import io.github.juevigrace.diva.lib.models.api.user.device.UserDeviceResponse
 import io.github.juevigrace.diva.network.client.DivaClient
-import io.github.juevigrace.diva.network.client.delete
+import io.github.juevigrace.diva.network.client.deleteAs
 import io.github.juevigrace.diva.network.client.getAs
 
 interface UserDevicesApi {
@@ -30,9 +30,9 @@ class UserDevicesApiImpl(
     }
 
     override suspend fun delete(uid: String, did: String, token: String): Result<Unit> {
-        return client.delete(
+        return client.deleteAs<Unit>(
             path = "/api/user/$uid/devices/$did",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 }

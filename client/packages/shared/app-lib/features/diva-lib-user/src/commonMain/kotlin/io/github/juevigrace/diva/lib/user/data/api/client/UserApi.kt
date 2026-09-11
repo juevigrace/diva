@@ -10,11 +10,10 @@ import io.github.juevigrace.diva.lib.models.api.user.UpdateRoleDto
 import io.github.juevigrace.diva.lib.models.api.user.UpdateUsernameDto
 import io.github.juevigrace.diva.lib.models.api.user.UserResponse
 import io.github.juevigrace.diva.network.client.DivaClient
-import io.github.juevigrace.diva.network.client.delete
-import io.github.juevigrace.diva.network.client.get
+import io.github.juevigrace.diva.network.client.deleteAs
 import io.github.juevigrace.diva.network.client.getAs
-import io.github.juevigrace.diva.network.client.patch
-import io.github.juevigrace.diva.network.client.post
+import io.github.juevigrace.diva.network.client.patchAs
+import io.github.juevigrace.diva.network.client.postAs
 
 interface UserApi {
     suspend fun checkUsername(username: String): Result<Unit>
@@ -36,15 +35,15 @@ class UserApiImpl(
     private val client: DivaClient,
 ) : UserApi {
     override suspend fun checkUsername(username: String): Result<Unit> {
-        return client.get(
+        return client.getAs<Unit>(
             path = "/api/user/check/username/$username",
-        ).map {}
+        )
     }
 
     override suspend fun checkEmail(email: String): Result<Unit> {
-        return client.get(
+        return client.getAs<Unit>(
             path = "/api/user/check/email/$email",
-        ).map {}
+        )
     }
 
     override suspend fun list(
@@ -63,11 +62,11 @@ class UserApiImpl(
     }
 
     override suspend fun create(dto: CreateUserDto, token: String): Result<Unit> {
-        return client.post(
+        return client.postAs<Unit>(
             path = "/api/user",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 
     override suspend fun getByID(uid: String, token: String): Result<UserResponse> {
@@ -78,63 +77,63 @@ class UserApiImpl(
     }
 
     override suspend fun updateEmail(uid: String, dto: UpdateEmailDto, token: String): Result<Unit> {
-        return client.patch(
+        return client.patchAs<Unit>(
             path = "/api/user/$uid/email",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 
     override suspend fun updatePhone(uid: String, dto: UpdatePhoneNumberDto, token: String): Result<Unit> {
-        return client.patch(
+        return client.patchAs<Unit>(
             path = "/api/user/$uid/phone",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 
     override suspend fun updateUsername(uid: String, dto: UpdateUsernameDto, token: String): Result<Unit> {
-        return client.patch(
+        return client.patchAs<Unit>(
             path = "/api/user/$uid/username",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 
     override suspend fun updatePassword(uid: String, dto: UpdatePasswordDto, token: String): Result<Unit> {
-        return client.patch(
+        return client.patchAs<Unit>(
             path = "/api/user/$uid/password",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 
     override suspend fun updateRole(uid: String, dto: UpdateRoleDto, token: String): Result<Unit> {
-        return client.patch(
+        return client.patchAs<Unit>(
             path = "/api/user/$uid/role",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 
     override suspend fun restore(uid: String, token: String): Result<Unit> {
-        return client.patch(
+        return client.patchAs<Unit>(
             path = "/api/user/$uid/restore",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 
     override suspend fun softDelete(uid: String, token: String): Result<Unit> {
-        return client.delete(
+        return client.deleteAs<Unit>(
             path = "/api/user/$uid",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 
     override suspend fun hardDelete(uid: String, token: String): Result<Unit> {
-        return client.delete(
+        return client.deleteAs<Unit>(
             path = "/api/user/$uid/forever",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 }

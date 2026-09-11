@@ -152,6 +152,23 @@ suspend fun DivaClient.delete(
     }
 }
 
+suspend inline fun <reified T : Any> DivaClient.deleteAs(
+    path: String,
+    headers: Map<String, String> = emptyMap(),
+    contentType: ContentType = ContentType.Application.Json,
+): Result<T> {
+    return delete(path, headers, contentType).map { it.body() }
+}
+
+suspend inline fun <reified T : Any> DivaClient.deleteAs(
+    path: String,
+    body: Any?,
+    headers: Map<String, String> = emptyMap(),
+    contentType: ContentType = ContentType.Application.Json,
+): Result<T> {
+    return delete(path, body, headers, contentType).map { it.body() }
+}
+
 // ── SSE ──
 
 suspend inline fun DivaClient.sse(

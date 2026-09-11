@@ -16,6 +16,8 @@ interface SessionRepository : Repository {
 
     fun getCurrentSession(): Flow<Result<Option<Session>>>
 
+    suspend fun getCurrent(): Result<Session>
+
     suspend fun sync(): Result<Unit>
 
     suspend fun markCurrent(id: Uuid): Result<Unit>

@@ -3,7 +3,7 @@ package io.github.juevigrace.diva.lib.session.data.api.client
 import io.github.juevigrace.diva.lib.models.api.ApiResponse
 import io.github.juevigrace.diva.lib.models.api.auth.session.SessionResponse
 import io.github.juevigrace.diva.network.client.DivaClient
-import io.github.juevigrace.diva.network.client.delete
+import io.github.juevigrace.diva.network.client.deleteAs
 import io.github.juevigrace.diva.network.client.getAs
 
 interface SessionsApi {
@@ -32,23 +32,23 @@ class SessionsApiImpl(
     }
 
     override suspend fun close(sid: String, token: String): Result<Unit> {
-        return client.delete(
+        return client.deleteAs<Unit>(
             path = "/api/sessions/$sid/close",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { }
+        )
     }
 
     override suspend fun closeExpired(token: String): Result<Unit> {
-        return client.delete(
+        return client.deleteAs<Unit>(
             path = "/api/sessions/close",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { }
+        )
     }
 
     override suspend fun deleteAllForever(token: String): Result<Unit> {
-        return client.delete(
+        return client.deleteAs<Unit>(
             path = "/api/sessions",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { }
+        )
     }
 }

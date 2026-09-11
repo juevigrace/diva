@@ -7,7 +7,6 @@ import io.github.juevigrace.diva.lib.models.api.auth.session.SessionResponse
 import io.github.juevigrace.diva.lib.models.api.auth.signin.SignInDto
 import io.github.juevigrace.diva.lib.models.api.auth.signup.SignUpDto
 import io.github.juevigrace.diva.network.client.DivaClient
-import io.github.juevigrace.diva.network.client.post
 import io.github.juevigrace.diva.network.client.postAs
 
 interface AuthApi {
@@ -37,18 +36,18 @@ class AuthApiImpl(
     }
 
     override suspend fun signOut(dto: SessionDataDto, token: String): Result<Unit> {
-        return client.post(
+        return client.postAs<Unit>(
             path = "/api/auth/signOut",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { }
+        )
     }
 
     override suspend fun ping(token: String): Result<Unit> {
-        return client.post(
+        return client.postAs<Unit>(
             path = "/api/auth/ping",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { }
+        )
     }
 
     override suspend fun refresh(dto: SessionDataDto, token: String): Result<SessionResponse> {

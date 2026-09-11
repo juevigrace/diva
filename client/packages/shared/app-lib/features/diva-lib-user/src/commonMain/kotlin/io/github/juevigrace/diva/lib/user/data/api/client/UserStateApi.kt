@@ -1,17 +1,19 @@
 package io.github.juevigrace.diva.lib.user.data.api.client
 
+import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.lib.models.api.ApiResponse
 import io.github.juevigrace.diva.lib.models.api.user.state.UpdateUserStatusDto
 import io.github.juevigrace.diva.lib.models.api.user.state.UpdateVerifiedDto
 import io.github.juevigrace.diva.lib.models.api.user.state.UserStateResponse
 import io.github.juevigrace.diva.network.client.DivaClient
 import io.github.juevigrace.diva.network.client.getAs
-import io.github.juevigrace.diva.network.client.patch
-import io.github.juevigrace.diva.network.client.post
-import io.github.juevigrace.diva.network.client.put
+import io.github.juevigrace.diva.network.client.patchAs
+import io.github.juevigrace.diva.network.client.postAs
+import io.github.juevigrace.diva.network.client.putAs
 
 interface UserStateApi {
-    suspend fun getState(uid: String, token: String): Result<UserStateResponse?>
+    suspend fun getState(uid: String, token: String): Result<Option<UserStateResponse>>
     suspend fun ping(uid: String, token: String): Result<Unit>
     suspend fun updateVerified(uid: String, dto: UpdateVerifiedDto, token: String): Result<Unit>
     suspend fun updateStatus(uid: String, dto: UpdateUserStatusDto, token: String): Result<Unit>
@@ -20,33 +22,33 @@ interface UserStateApi {
 class UserStateApiImpl(
     private val client: DivaClient,
 ) : UserStateApi {
-    override suspend fun getState(uid: String, token: String): Result<UserStateResponse?> {
+    override suspend fun getState(uid: String, token: String): Result<Option<UserStateResponse>> {
         return client.getAs<ApiResponse<UserStateResponse?>>(
             path = "/api/user/$uid/status",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data }
+        ).map { it.data.toOption() }
     }
 
     override suspend fun ping(uid: String, token: String): Result<Unit> {
-        return client.post(
+        return client.postAs<Unit>(
             path = "/api/user/$uid/status/ping",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 
     override suspend fun updateVerified(uid: String, dto: UpdateVerifiedDto, token: String): Result<Unit> {
-        return client.patch(
+        return client.patchAs<Unit>(
             path = "/api/user/$uid/status/verified",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 
     override suspend fun updateStatus(uid: String, dto: UpdateUserStatusDto, token: String): Result<Unit> {
-        return client.put(
+        return client.putAs<Unit>(
             path = "/api/user/$uid/status",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 }

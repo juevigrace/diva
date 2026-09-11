@@ -58,7 +58,6 @@ class SessionStorageImpl(
                     access_token = item.accessToken,
                     refresh_token = item.refreshToken,
                     device_id = item.data.device,
-                    is_current = item.isCurrent,
                     type = item.type,
                     status = item.status,
                     ip_address = item.data.ip,

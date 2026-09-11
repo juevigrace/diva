@@ -3,7 +3,7 @@ package io.github.juevigrace.diva.lib.user.data.api.client
 import io.github.juevigrace.diva.lib.models.api.ApiResponse
 import io.github.juevigrace.diva.lib.models.api.auth.session.SessionResponse
 import io.github.juevigrace.diva.network.client.DivaClient
-import io.github.juevigrace.diva.network.client.delete
+import io.github.juevigrace.diva.network.client.deleteAs
 import io.github.juevigrace.diva.network.client.getAs
 
 interface UserSessionsApi {
@@ -23,16 +23,16 @@ class UserSessionsApiImpl(
     }
 
     override suspend fun deleteAll(uid: String, token: String): Result<Unit> {
-        return client.delete(
+        return client.deleteAs<Unit>(
             path = "/api/user/$uid/sessions",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 
     override suspend fun closeByUser(uid: String, token: String): Result<Unit> {
-        return client.delete(
+        return client.deleteAs<Unit>(
             path = "/api/user/$uid/sessions/close",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 }

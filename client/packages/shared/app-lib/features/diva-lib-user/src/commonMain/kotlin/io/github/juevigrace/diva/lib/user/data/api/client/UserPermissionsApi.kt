@@ -5,10 +5,10 @@ import io.github.juevigrace.diva.lib.models.api.user.permissions.CreateUserPermi
 import io.github.juevigrace.diva.lib.models.api.user.permissions.UpdateUserPermissionDto
 import io.github.juevigrace.diva.lib.models.api.user.permissions.UserPermissionResponse
 import io.github.juevigrace.diva.network.client.DivaClient
-import io.github.juevigrace.diva.network.client.delete
+import io.github.juevigrace.diva.network.client.deleteAs
 import io.github.juevigrace.diva.network.client.getAs
-import io.github.juevigrace.diva.network.client.post
-import io.github.juevigrace.diva.network.client.put
+import io.github.juevigrace.diva.network.client.postAs
+import io.github.juevigrace.diva.network.client.putAs
 
 interface UserPermissionsApi {
     suspend fun list(uid: String, token: String): Result<List<UserPermissionResponse>>
@@ -36,11 +36,11 @@ class UserPermissionsApiImpl(
     }
 
     override suspend fun create(uid: String, dto: CreateUserPermissionDto, token: String): Result<Unit> {
-        return client.post(
+        return client.postAs<Unit>(
             path = "/api/user/$uid/permissions",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 
     override suspend fun update(
@@ -49,17 +49,17 @@ class UserPermissionsApiImpl(
         dto: UpdateUserPermissionDto,
         token: String,
     ): Result<Unit> {
-        return client.put(
+        return client.putAs<Unit>(
             path = "/api/user/$uid/permissions/$pid",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 
     override suspend fun delete(uid: String, pid: String, token: String): Result<Unit> {
-        return client.delete(
+        return client.deleteAs<Unit>(
             path = "/api/user/$uid/permissions/$pid",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map {}
+        )
     }
 }

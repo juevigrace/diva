@@ -18,9 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.DialogProperties
-import io.github.juevigrace.diva.core.None
-import io.github.juevigrace.diva.core.Some
+import io.github.juevigrace.diva.core.getOrDefault
 import io.github.juevigrace.diva.core.getOrNull
+import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.ui.navigation.BackHandler
 import io.github.juevigrace.diva.ui.util.ObserveFlow
 import org.jetbrains.compose.resources.painterResource
@@ -98,14 +98,8 @@ fun DivaAlertDialog(
     shape: Shape = AlertDialogDefaults.shape,
     tonalElevation: Dp = AlertDialogDefaults.TonalElevation,
 ) {
-    val confirmLabel = when (request.confirmLabel) {
-        is Some -> stringResource(request.confirmLabel.value)
-        is None -> "OK"
-    }
-    val dismissLabel = when (request.dismissLabel) {
-        is Some -> stringResource(request.dismissLabel.value)
-        is None -> "Cancel"
-    }
+    val confirmLabel = request.confirmLabel.map { stringResource(it) }.getOrDefault("OK")
+    val dismissLabel = request.dismissLabel.map { stringResource(it) }.getOrDefault("Cancel")
 
     AlertDialog(
         onDismissRequest = onDismiss,

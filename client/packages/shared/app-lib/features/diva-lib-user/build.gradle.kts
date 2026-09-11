@@ -10,6 +10,7 @@ kotlin {
             implementation(projects.divaLibModelsApi)
             implementation(projects.divaLibModelsCore)
 
+            implementation(libs.diva.lib.session)
             implementation(libs.diva.network)
         }
     }

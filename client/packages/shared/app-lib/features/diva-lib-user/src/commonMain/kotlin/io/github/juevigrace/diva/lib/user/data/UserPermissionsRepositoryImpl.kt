@@ -3,8 +3,12 @@ package io.github.juevigrace.diva.lib.user.data
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.database.user.permissions.UserPermissionsStorage
 import io.github.juevigrace.diva.lib.models.user.permissions.UserPermission
+import io.github.juevigrace.diva.lib.session.domain.SessionRepository
+import io.github.juevigrace.diva.lib.user.data.api.client.UserPermissionsApi
 import io.github.juevigrace.diva.lib.user.domain.UserPermissionsRepository
 import io.github.juevigrace.diva.network.client.DivaClient
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -13,15 +17,45 @@ import kotlin.uuid.Uuid
 class UserPermissionsRepositoryImpl(
     override val client: DivaClient,
     private val storage: UserPermissionsStorage,
+    private val sessionRepository: SessionRepository,
+    private val api: UserPermissionsApi,
 ) : UserPermissionsRepository {
     override fun getPermissions(userId: Uuid): Flow<Result<List<UserPermission>>> = storage.getAllByUserFlow(userId)
 
     override fun getPermission(permissionId: Uuid, userId: Uuid): Flow<Result<Option<UserPermission>>> =
         storage.getByIdFlow(permissionId, userId)
 
-    override suspend fun sync(userId: Uuid): Result<Unit> = Result.success(Unit)
+    override suspend fun sync(userId: Uuid): Result<Unit> {
+        return withSession(
+            sessionCall = sessionRepository::getCurrent,
+            onFound = { session ->
+                api.list(
+                    uid = userId.toString(),
+                    token = session.accessToken
+                ).mapCatching { responses ->
+                    val results = responses.map {
+                        scope.async {
+                            storage.upsert(userId, UserPermission.fromResponse(it))
+                        }
+                    }.awaitAll()
 
-    override suspend fun save(userId: Uuid, permission: UserPermission): Result<Unit> = storage.upsert(userId, permission)
+                    val failures = results.mapNotNull { it.exceptionOrNull() }
+                    if (failures.isNotEmpty()) {
+                        val error = IllegalStateException(
+                            "Failed to upsert ${failures.size} of ${results.size} user permissions"
+                        )
+                        failures.forEach(error::addSuppressed)
+                        throw error
+                    }
+                }
+            },
+        )
+    }
+
+    override suspend fun save(
+        userId: Uuid,
+        permission: UserPermission
+    ): Result<Unit> = storage.upsert(userId, permission)
 
     override suspend fun delete(permissionId: Uuid, userId: Uuid): Result<Unit> = storage.delete(permissionId, userId)
 }

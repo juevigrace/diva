@@ -7,7 +7,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.staticCompositionLocalOf
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.core.Some
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.StringResource
 
@@ -16,8 +15,8 @@ data class ToastRequest(
     val message: StringResource,
     val details: Option<StringResource> = None,
     val actionLabel: Option<StringResource> = None,
-    val withDismissAction: Boolean = actionLabel is Some,
-    val duration: SnackbarDuration = if (actionLabel is None) {
+    val withDismissAction: Boolean = actionLabel.isSome,
+    val duration: SnackbarDuration = if (actionLabel.isNone) {
         SnackbarDuration.Short
     } else {
         SnackbarDuration.Indefinite

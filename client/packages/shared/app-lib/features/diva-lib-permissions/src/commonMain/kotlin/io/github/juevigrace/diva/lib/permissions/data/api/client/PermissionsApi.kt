@@ -8,7 +8,7 @@ import io.github.juevigrace.diva.lib.models.api.permission.UpdatePermissionRoleL
 import io.github.juevigrace.diva.network.client.DivaClient
 import io.github.juevigrace.diva.network.client.getAs
 import io.github.juevigrace.diva.network.client.patchAs
-import io.github.juevigrace.diva.network.client.put
+import io.github.juevigrace.diva.network.client.putAs
 
 interface PermissionsApi {
     suspend fun list(
@@ -51,11 +51,11 @@ class PermissionsApiImpl(
     }
 
     override suspend fun update(pid: String, dto: UpdatePermissionDto, token: String): Result<Unit> {
-        return client.put(
+        return client.putAs<Unit>(
             path = "/api/permissions/$pid",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { }
+        )
     }
 
     override suspend fun updateRoleLevel(

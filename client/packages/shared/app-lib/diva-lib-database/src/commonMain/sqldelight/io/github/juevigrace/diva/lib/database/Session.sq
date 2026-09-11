@@ -1,9 +1,9 @@
 upsert:
 INSERT OR REPLACE INTO diva_session (
-    id, user_id, access_token, refresh_token, device_id, is_current, type, status,
+    id, user_id, access_token, refresh_token, device_id, type, status,
     ip_address, user_agent, access_expires_at, refresh_expires_at, created_at, updated_at
 )
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 updateCurrent:
 UPDATE diva_session
