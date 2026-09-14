@@ -20,6 +20,12 @@ data class TabBackStack(
 ) {
     val currentBackStack: List<NavKey>
         get() = tabs[selectedTab].orEmpty()
+
+    val canPop: Boolean
+        get() = currentBackStack.size > 1
+
+    val canPopTab: Boolean
+        get() = tabHistory.size > 1
 }
 
 interface TabNavigator {
@@ -32,6 +38,10 @@ interface TabNavigator {
     fun popUntil(destination: NavKey)
     fun replaceTop(destination: NavKey)
     fun replaceAll(destination: NavKey)
+
+    fun popTab(): Boolean
+    fun popTabUntil(tabRoute: NavKey)
+    fun clearTabHistory()
 
     companion object {
         fun create(tabs: List<Tab>, startTab: Tab = tabs.first()): TabNavigator =

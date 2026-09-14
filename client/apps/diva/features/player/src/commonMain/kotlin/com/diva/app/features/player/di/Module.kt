@@ -1,5 +1,6 @@
 package com.diva.app.features.player.di
 
+import com.diva.app.database.AppDatabase
 import com.diva.app.database.player.PlayerSettingStorage
 import com.diva.app.database.playback.PlaybackHistoryStorage
 import com.diva.app.database.playback.ResumePointStorage
@@ -17,9 +18,9 @@ import org.koin.dsl.module
 
 fun playerModule(): Module {
     return module {
-        singleOf(::ResumePointStorageImpl) bind ResumePointStorage::class
-        singleOf(::PlaybackHistoryStorageImpl) bind PlaybackHistoryStorage::class
-        singleOf(::PlayerSettingStorageImpl) bind PlayerSettingStorage::class
+        single<ResumePointStorage> { ResumePointStorageImpl(get(qualifier = AppDatabase)) }
+        single<PlaybackHistoryStorage> { PlaybackHistoryStorageImpl(get(qualifier = AppDatabase)) }
+        single<PlayerSettingStorage> { PlayerSettingStorageImpl(get(qualifier = AppDatabase)) }
 
         singleOf(::PlayerRepositoryImpl) bind PlayerRepository::class
 

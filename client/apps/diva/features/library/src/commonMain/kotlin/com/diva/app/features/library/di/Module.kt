@@ -1,5 +1,6 @@
 package com.diva.app.features.library.di
 
+import com.diva.app.database.AppDatabase
 import com.diva.app.database.playback.FavoriteStorage
 import com.diva.app.features.library.data.LibraryRepositoryImpl
 import com.diva.app.features.library.database.FavoriteStorageImpl
@@ -13,7 +14,7 @@ import org.koin.dsl.module
 
 fun libraryModule(): Module {
     return module {
-        singleOf(::FavoriteStorageImpl) bind FavoriteStorage::class
+        single<FavoriteStorage> { FavoriteStorageImpl(get(qualifier = AppDatabase)) }
 
         singleOf(::LibraryRepositoryImpl) bind LibraryRepository::class
 

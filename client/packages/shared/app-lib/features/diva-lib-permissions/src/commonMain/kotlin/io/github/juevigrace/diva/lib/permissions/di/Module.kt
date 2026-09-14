@@ -1,5 +1,6 @@
 package io.github.juevigrace.diva.lib.permissions.di
 
+import io.github.juevigrace.diva.lib.database.SharedDatabase
 import io.github.juevigrace.diva.lib.database.permissions.PermissionsStorage
 import io.github.juevigrace.diva.lib.permissions.data.PermissionsRepositoryImpl
 import io.github.juevigrace.diva.lib.permissions.data.api.client.PermissionsApi
@@ -15,7 +16,7 @@ import org.koin.dsl.module
 
 fun permissionsModule(): Module = module {
     singleOf(::PermissionsApiImpl) bind PermissionsApi::class
-    singleOf(::PermissionsStorageImpl) bind PermissionsStorage::class
+    single<PermissionsStorage> { PermissionsStorageImpl(get(qualifier = SharedDatabase)) }
     singleOf(::PermissionsRepositoryImpl) bind PermissionsRepository::class
     viewModelOf(::PermissionsViewModel)
 }

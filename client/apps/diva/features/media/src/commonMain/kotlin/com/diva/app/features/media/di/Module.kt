@@ -1,5 +1,6 @@
 package com.diva.app.features.media.di
 
+import com.diva.app.database.AppDatabase
 import com.diva.app.database.media.MediaMetadataStorage
 import com.diva.app.database.media.MediaStorage
 import com.diva.app.database.media.MediaTagStorage
@@ -23,10 +24,10 @@ import org.koin.dsl.module
 
 fun mediaModule(): Module {
     return module {
-        singleOf(::MediaStorageImpl) bind MediaStorage::class
-        singleOf(::MediaMetadataStorageImpl) bind MediaMetadataStorage::class
-        singleOf(::TagStorageImpl) bind TagStorage::class
-        singleOf(::MediaTagStorageImpl) bind MediaTagStorage::class
+        single<MediaStorage> { MediaStorageImpl(get(qualifier = AppDatabase)) }
+        single<MediaMetadataStorage> { MediaMetadataStorageImpl(get(qualifier = AppDatabase)) }
+        single<TagStorage> { TagStorageImpl(get(qualifier = AppDatabase)) }
+        single<MediaTagStorage> { MediaTagStorageImpl(get(qualifier = AppDatabase)) }
 
         singleOf(::MediaRepositoryImpl) bind MediaRepository::class
         singleOf(::MediaMetadataRepositoryImpl) bind MediaMetadataRepository::class

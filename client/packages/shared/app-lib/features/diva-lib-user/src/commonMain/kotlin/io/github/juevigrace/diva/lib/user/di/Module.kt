@@ -1,5 +1,6 @@
 package io.github.juevigrace.diva.lib.user.di
 
+import io.github.juevigrace.diva.lib.database.SharedDatabase
 import io.github.juevigrace.diva.lib.database.user.UserStorage
 import io.github.juevigrace.diva.lib.database.user.actions.UserActionsStorage
 import io.github.juevigrace.diva.lib.database.user.devices.UserDevicesStorage
@@ -53,13 +54,13 @@ import org.koin.dsl.module
 
 fun userModule(): Module {
     return module {
-        singleOf(::UserStorageImpl) bind UserStorage::class
-        singleOf(::UserStateStorageImpl) bind UserStateStorage::class
-        singleOf(::UserActionsStorageImpl) bind UserActionsStorage::class
-        singleOf(::UserDevicesStorageImpl) bind UserDevicesStorage::class
-        singleOf(::UserProfileStorageImpl) bind UserProfileStorage::class
-        singleOf(::UserPermissionsStorageImpl) bind UserPermissionsStorage::class
-        singleOf(::UserPreferencesStorageImpl) bind UserPreferencesStorage::class
+        single<UserStorage> { UserStorageImpl(get(qualifier = SharedDatabase)) }
+        single<UserStateStorage> { UserStateStorageImpl(get(qualifier = SharedDatabase)) }
+        single<UserActionsStorage> { UserActionsStorageImpl(get(qualifier = SharedDatabase)) }
+        single<UserDevicesStorage> { UserDevicesStorageImpl(get(qualifier = SharedDatabase)) }
+        single<UserProfileStorage> { UserProfileStorageImpl(get(qualifier = SharedDatabase)) }
+        single<UserPermissionsStorage> { UserPermissionsStorageImpl(get(qualifier = SharedDatabase)) }
+        single<UserPreferencesStorage> { UserPreferencesStorageImpl(get(qualifier = SharedDatabase)) }
 
         singleOf(::UserRepositoryImpl) bind UserRepository::class
         singleOf(::UserStateRepositoryImpl) bind UserStateRepository::class

@@ -8,11 +8,9 @@ import kotlinx.coroutines.flow.update
 
 @Stable
 internal class DefaultTabNavigator(
-    tabs: List<Tab>,
+    override val tabs: List<Tab>,
     startTab: Tab,
 ) : TabNavigator {
-
-    override val tabs: List<Tab> = tabs
 
     private val tabRoutes: Set<NavKey> = tabs.map { it.route }.toSet()
 
@@ -112,6 +110,40 @@ internal class DefaultTabNavigator(
         backStack.update { state ->
             state.copy(
                 tabs = state.tabs + (state.selectedTab to listOf(destination)),
+            )
+        }
+    }
+
+    override fun popTab(): Boolean {
+        var popped = false
+        backStack.update { state ->
+            if (state.tabHistory.size <= 1) return@update state
+            popped = true
+            val newHistory = state.tabHistory.dropLast(1)
+            state.copy(
+                tabHistory = newHistory,
+                selectedTab = newHistory.last(),
+            )
+        }
+        return popped
+    }
+
+    override fun popTabUntil(tabRoute: NavKey) {
+        backStack.update { state ->
+            val index = state.tabHistory.lastIndexOf(tabRoute)
+            if (index == -1) return@update state
+            val newHistory = state.tabHistory.take(index + 1)
+            state.copy(
+                tabHistory = newHistory,
+                selectedTab = newHistory.last(),
+            )
+        }
+    }
+
+    override fun clearTabHistory() {
+        backStack.update { state ->
+            state.copy(
+                tabHistory = listOf(state.selectedTab),
             )
         }
     }

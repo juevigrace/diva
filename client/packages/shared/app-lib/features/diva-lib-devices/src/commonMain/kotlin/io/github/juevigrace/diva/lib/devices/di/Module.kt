@@ -1,5 +1,6 @@
 package io.github.juevigrace.diva.lib.devices.di
 
+import io.github.juevigrace.diva.lib.database.SharedDatabase
 import io.github.juevigrace.diva.lib.database.devices.DevicesStorage
 import io.github.juevigrace.diva.lib.devices.data.DevicesRepositoryImpl
 import io.github.juevigrace.diva.lib.devices.data.api.client.DevicesApi
@@ -15,7 +16,7 @@ import org.koin.dsl.module
 
 fun devicesModule(): Module = module {
     singleOf(::DevicesApiImpl) bind DevicesApi::class
-    singleOf(::DevicesStorageImpl) bind DevicesStorage::class
+    single<DevicesStorage> { DevicesStorageImpl(get(qualifier = SharedDatabase)) }
     singleOf(::DevicesRepositoryImpl) bind DevicesRepository::class
     viewModelOf(::DevicesViewModel)
 }

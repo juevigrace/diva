@@ -1,5 +1,6 @@
 package com.diva.app.features.mix.di
 
+import com.diva.app.database.AppDatabase
 import com.diva.app.database.collection.mix.MixMetadataStorage
 import com.diva.app.features.mix.data.MixRepositoryImpl
 import com.diva.app.features.mix.database.MixMetadataStorageImpl
@@ -13,7 +14,7 @@ import org.koin.dsl.module
 
 fun mixModule(): Module {
     return module {
-        singleOf(::MixMetadataStorageImpl) bind MixMetadataStorage::class
+        single<MixMetadataStorage> { MixMetadataStorageImpl(get(qualifier = AppDatabase)) }
 
         singleOf(::MixRepositoryImpl) bind MixRepository::class
 

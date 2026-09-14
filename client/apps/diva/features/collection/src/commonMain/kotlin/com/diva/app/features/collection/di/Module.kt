@@ -1,5 +1,6 @@
 package com.diva.app.features.collection.di
 
+import com.diva.app.database.AppDatabase
 import com.diva.app.database.collection.CollectionMediaStorage
 import com.diva.app.database.collection.CollectionStorage
 import com.diva.app.features.collection.data.CollectionRepositoryImpl
@@ -15,8 +16,8 @@ import org.koin.dsl.module
 
 fun collectionModule(): Module {
     return module {
-        singleOf(::CollectionStorageImpl) bind CollectionStorage::class
-        singleOf(::CollectionMediaStorageImpl) bind CollectionMediaStorage::class
+        single<CollectionStorage> { CollectionStorageImpl(get(qualifier = AppDatabase)) }
+        single<CollectionMediaStorage> { CollectionMediaStorageImpl(get(qualifier = AppDatabase)) }
 
         singleOf(::CollectionRepositoryImpl) bind CollectionRepository::class
 

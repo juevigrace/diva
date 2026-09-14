@@ -1,5 +1,6 @@
 package com.diva.app.features.playlist.di
 
+import com.diva.app.database.AppDatabase
 import com.diva.app.database.collection.playlist.PlaylistContributorStorage
 import com.diva.app.database.collection.playlist.PlaylistMetadataStorage
 import com.diva.app.database.collection.playlist.PlaylistSuggestionsStorage
@@ -17,9 +18,9 @@ import org.koin.dsl.module
 
 fun playlistModule(): Module {
     return module {
-        singleOf(::PlaylistMetadataStorageImpl) bind PlaylistMetadataStorage::class
-        singleOf(::PlaylistContributorStorageImpl) bind PlaylistContributorStorage::class
-        singleOf(::PlaylistSuggestionsStorageImpl) bind PlaylistSuggestionsStorage::class
+        single<PlaylistMetadataStorage> { PlaylistMetadataStorageImpl(get(qualifier = AppDatabase)) }
+        single<PlaylistContributorStorage> { PlaylistContributorStorageImpl(get(qualifier = AppDatabase)) }
+        single<PlaylistSuggestionsStorage> { PlaylistSuggestionsStorageImpl(get(qualifier = AppDatabase)) }
 
         singleOf(::PlaylistRepositoryImpl) bind PlaylistRepository::class
 

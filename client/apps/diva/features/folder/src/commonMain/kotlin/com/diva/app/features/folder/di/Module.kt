@@ -1,5 +1,6 @@
 package com.diva.app.features.folder.di
 
+import com.diva.app.database.AppDatabase
 import com.diva.app.database.folder.FolderStorage
 import com.diva.app.database.folder.MediaFolderLinkStorage
 import com.diva.app.features.folder.data.FolderRepositoryImpl
@@ -15,8 +16,8 @@ import org.koin.dsl.module
 
 fun folderModule(): Module {
     return module {
-        singleOf(::FolderStorageImpl) bind FolderStorage::class
-        singleOf(::MediaFolderLinkStorageImpl) bind MediaFolderLinkStorage::class
+        single<FolderStorage> { FolderStorageImpl(get(qualifier = AppDatabase)) }
+        single<MediaFolderLinkStorage> { MediaFolderLinkStorageImpl(get(qualifier = AppDatabase)) }
 
         singleOf(::FolderRepositoryImpl) bind FolderRepository::class
 

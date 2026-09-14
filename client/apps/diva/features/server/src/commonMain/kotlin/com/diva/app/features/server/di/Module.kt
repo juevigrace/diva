@@ -1,5 +1,6 @@
 package com.diva.app.features.server.di
 
+import com.diva.app.database.AppDatabase
 import com.diva.app.database.server.ServerStorage
 import com.diva.app.features.server.data.ServerRepositoryImpl
 import com.diva.app.features.server.database.ServerStorageImpl
@@ -13,7 +14,7 @@ import org.koin.dsl.module
 
 fun serverModule(): Module {
     return module {
-        singleOf(::ServerStorageImpl) bind ServerStorage::class
+        single<ServerStorage> { ServerStorageImpl(get(qualifier = AppDatabase)) }
 
         singleOf(::ServerRepositoryImpl) bind ServerRepository::class
 
