@@ -9,7 +9,6 @@ import io.github.juevigrace.diva.lib.database.user.UserStorage
 import io.github.juevigrace.diva.lib.models.user.Role
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -46,14 +45,14 @@ class UserStorageImpl(
         return db.use {
             transaction {
                 userQueries.upsert(
-                    id = item.id.toString(),
+                    id = item.id,
                     username = item.username,
                     email = item.email.getOrNull() ?: "",
                     phone_number = item.phoneNumber.getOrNull() ?: "",
                     password_hash = item.passwordHash.getOrNull() ?: "",
                     role = item.role,
-                    created_at = item.createdAt.epochSeconds,
-                    updated_at = item.updatedAt.epochSeconds
+                    created_at = item.createdAt,
+                    updated_at = item.updatedAt
                 )
             }
         }
@@ -88,15 +87,15 @@ class UserStorageImpl(
         deletedAt: Long?,
     ): User {
         return User(
-            id = Uuid.parse(id),
+            id = id,
             username = username,
             email = email.toOption(),
             phoneNumber = phoneNumber.toOption(),
             passwordHash = passwordHash.toOption(),
             role = role,
-            createdAt = Instant.fromEpochSeconds(createdAt),
-            updatedAt = Instant.fromEpochSeconds(updatedAt),
-            deletedAt = deletedAt?.let { Instant.fromEpochSeconds(it) }.toOption()
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            deletedAt = deletedAt.toOption()
         )
     }
 }

@@ -10,7 +10,6 @@ import io.github.juevigrace.diva.lib.models.session.SessionStatus
 import io.github.juevigrace.diva.lib.models.session.SessionType
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -53,8 +52,8 @@ class SessionStorageImpl(
         return db.use {
             transaction {
                 sessionQueries.upsert(
-                    id = item.id.toString(),
-                    user_id = item.user.id.toString(),
+                    id = item.id,
+                    user_id = item.user.id,
                     access_token = item.accessToken,
                     refresh_token = item.refreshToken,
                     device_id = item.data.device,
@@ -62,10 +61,10 @@ class SessionStorageImpl(
                     status = item.status,
                     ip_address = item.data.ip,
                     user_agent = item.data.agent,
-                    access_expires_at = item.accessExpiresAt.epochSeconds,
-                    refresh_expires_at = item.refreshExpiresAt.epochSeconds,
-                    created_at = item.createdAt.epochSeconds,
-                    updated_at = item.updatedAt.epochSeconds
+                    access_expires_at = item.accessExpiresAt,
+                    refresh_expires_at = item.refreshExpiresAt,
+                    created_at = item.createdAt,
+                    updated_at = item.updatedAt
                 )
             }
         }
@@ -113,18 +112,18 @@ class SessionStorageImpl(
         updatedAt: Long,
     ): Session {
         return Session(
-            id = Uuid.parse(id),
-            user = User(id = Uuid.parse(userId)),
+            id = id,
+            user = User(id = userId),
             accessToken = accessToken,
             refreshToken = refreshToken,
             type = type,
             status = status,
             isCurrent = isCurrent,
             data = SessionData(device = deviceId, agent = userAgent, ip = ipAddress),
-            accessExpiresAt = Instant.fromEpochSeconds(accessExpiresAt),
-            refreshExpiresAt = Instant.fromEpochSeconds(refreshExpiresAt),
-            createdAt = Instant.fromEpochSeconds(createdAt),
-            updatedAt = Instant.fromEpochSeconds(updatedAt)
+            accessExpiresAt = accessExpiresAt,
+            refreshExpiresAt = refreshExpiresAt,
+            createdAt = createdAt,
+            updatedAt = updatedAt
         )
     }
 }

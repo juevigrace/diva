@@ -6,7 +6,6 @@ import io.github.juevigrace.diva.lib.database.DivaSharedDB
 import io.github.juevigrace.diva.lib.database.devices.DevicesStorage
 import io.github.juevigrace.diva.lib.models.device.Device
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -43,10 +42,10 @@ class DevicesStorageImpl(
         return db.use {
             transaction {
                 devicesQueries.upsert(
-                    id = item.id.toString(),
+                    id = item.id,
                     name = item.name,
-                    created_at = item.createdAt.epochSeconds,
-                    updated_at = item.updatedAt.epochSeconds
+                    created_at = item.createdAt,
+                    updated_at = item.updatedAt
                 )
             }
         }
@@ -74,9 +73,9 @@ class DevicesStorageImpl(
         createdAt: Long,
         updatedAt: Long,
     ): Device = Device(
-        id = Uuid.parse(id),
+        id = id,
         name = name,
-        createdAt = Instant.fromEpochSeconds(createdAt),
-        updatedAt = Instant.fromEpochSeconds(updatedAt)
+        createdAt = createdAt,
+        updatedAt = updatedAt
     )
 }

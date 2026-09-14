@@ -8,19 +8,15 @@ import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import kotlin.js.ExperimentalJsExport
 import kotlin.time.Clock
-import kotlin.time.Instant
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 data class Server(
-    val id: Uuid,
+    val id: String,
     val name: String,
     val baseUrl: String,
     val protocol: String = "http",
     val port: Option<Int> = None,
     val enabled: Boolean = false,
-    val lastConnectedAt: Option<Instant> = None,
-    val createdAt: Instant = Clock.System.now(),
-    val updatedAt: Instant = Clock.System.now(),
+    val lastConnectedAt: Option<Long> = None,
+    val createdAt: Long = Clock.System.now().toEpochMilliseconds(),
+    val updatedAt: Long = Clock.System.now().toEpochMilliseconds(),
 )

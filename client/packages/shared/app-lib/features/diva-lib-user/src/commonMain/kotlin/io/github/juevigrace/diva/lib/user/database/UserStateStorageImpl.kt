@@ -2,7 +2,6 @@ package io.github.juevigrace.diva.lib.user.database
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
-import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.DivaSharedDB
@@ -10,7 +9,6 @@ import io.github.juevigrace.diva.lib.database.user.state.UserStateStorage
 import io.github.juevigrace.diva.lib.models.user.UserStatus
 import io.github.juevigrace.diva.lib.models.user.state.UserState
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -38,8 +36,8 @@ class UserStateStorageImpl(
                     user_id = userId.toString(),
                     verified = item.verified,
                     status = item.status,
-                    last_active_at = item.lastActiveAt.map { it.epochSeconds }.getOrNull() ?: 0L,
-                    updated_at = item.updatedAt.map { it.epochSeconds }.getOrNull() ?: 0L
+                    last_active_at = item.lastActiveAt.getOrNull() ?: 0L,
+                    updated_at = item.updatedAt.getOrNull() ?: 0L
                 )
             }
         }
@@ -62,7 +60,7 @@ class UserStateStorageImpl(
     ): UserState = UserState(
         verified = verified,
         status = status,
-        lastActiveAt = Instant.fromEpochSeconds(lastActiveAt).toOption(),
-        updatedAt = Instant.fromEpochSeconds(updatedAt).toOption()
+        lastActiveAt = lastActiveAt.toOption(),
+        updatedAt = updatedAt.toOption()
     )
 }

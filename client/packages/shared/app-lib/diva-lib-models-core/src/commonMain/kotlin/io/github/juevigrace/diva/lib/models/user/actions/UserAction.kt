@@ -10,19 +10,15 @@ import io.github.juevigrace.diva.lib.models.actions.Actions
 import io.github.juevigrace.diva.lib.models.actions.safeActionsValueOf
 import io.github.juevigrace.diva.lib.models.api.user.action.UserActionResponse
 import kotlin.js.ExperimentalJsExport
-import kotlin.time.Instant
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 data class UserAction(
-    val id: Uuid,
+    val id: String,
     val action: Actions,
 ) {
     companion object {
         fun fromResponse(response: UserActionResponse): UserAction {
             return UserAction(
-                id = Uuid.parse(response.id),
+                id = response.id,
                 action = safeActionsValueOf(response.actionName),
             )
         }
@@ -32,7 +28,7 @@ data class UserAction(
 data class UserActionVerification(
     val action: UserAction,
     val token: String,
-    val expiresAt: Instant,
-    val usedAt: Option<Instant> = None,
+    val expiresAt: Long,
+    val usedAt: Option<Long> = None,
     val verified: Boolean = false,
 )

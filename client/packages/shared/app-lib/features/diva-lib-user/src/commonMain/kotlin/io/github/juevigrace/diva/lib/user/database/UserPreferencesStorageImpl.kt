@@ -2,7 +2,6 @@ package io.github.juevigrace.diva.lib.user.database
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
-import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.DivaSharedDB
@@ -10,7 +9,6 @@ import io.github.juevigrace.diva.lib.database.user.preferences.UserPreferencesSt
 import io.github.juevigrace.diva.lib.models.Theme
 import io.github.juevigrace.diva.lib.models.user.preferences.UserPreferences
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -41,14 +39,14 @@ class UserPreferencesStorageImpl(
         return db.use {
             transaction {
                 userPreferencesQueries.upsert(
-                    id = item.id.toString(),
+                    id = item.id,
                     user_id = userId.toString(),
                     theme = item.theme,
                     onboarding_completed = item.onboardingCompleted,
                     language = item.language,
-                    last_sync_at = item.lastSyncAt.map { it.epochSeconds }.getOrNull() ?: 0L,
-                    created_at = item.createdAt.map { it.epochSeconds }.getOrNull() ?: 0L,
-                    updated_at = item.updatedAt.map { it.epochSeconds }.getOrNull() ?: 0L
+                    last_sync_at = item.lastSyncAt.getOrNull() ?: 0L,
+                    created_at = item.createdAt.getOrNull() ?: 0L,
+                    updated_at = item.updatedAt.getOrNull() ?: 0L
                 )
             }
         }
@@ -80,12 +78,12 @@ class UserPreferencesStorageImpl(
         createdAt: Long,
         updatedAt: Long,
     ): UserPreferences = UserPreferences(
-        id = Uuid.parse(id),
+        id = id,
         theme = theme,
         onboardingCompleted = onboardingCompleted,
         language = language,
-        lastSyncAt = Instant.fromEpochSeconds(lastSyncAt).toOption(),
-        createdAt = Instant.fromEpochSeconds(createdAt).toOption(),
-        updatedAt = Instant.fromEpochSeconds(updatedAt).toOption()
+        lastSyncAt = lastSyncAt.toOption(),
+        createdAt = createdAt.toOption(),
+        updatedAt = updatedAt.toOption()
     )
 }

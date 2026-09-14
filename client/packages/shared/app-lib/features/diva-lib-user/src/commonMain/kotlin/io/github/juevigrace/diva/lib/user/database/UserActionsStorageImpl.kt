@@ -55,7 +55,7 @@ class UserActionsStorageImpl(
         return db.use {
             transaction {
                 userActionsQueries.upsert(
-                    id = item.id.toString(),
+                    id = item.id,
                     name = item.action,
                     user_id = userId.toString()
                 )
@@ -84,7 +84,7 @@ class UserActionsStorageImpl(
         name: Actions,
         userId: String,
     ): UserAction = UserAction(
-        id = Uuid.parse(id),
+        id = id,
         action = name
     )
 }

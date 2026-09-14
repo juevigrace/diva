@@ -5,11 +5,7 @@ import com.diva.app.models.media.Media
 import com.diva.app.models.media.MediaType
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.user.User
-import kotlin.time.Instant
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 object MediaMapper {
 
     fun map(
@@ -33,8 +29,8 @@ object MediaMapper {
         updatedAt: Long,
         deletedAt: Long?,
     ): Media = Media(
-        id = Uuid.parse(id),
-        submittedBy = User(id = Uuid.parse(submittedBy)),
+        id = id,
+        submittedBy = User(id = submittedBy),
         mediaType = mediaType,
         title = title,
         uri = uri,
@@ -47,10 +43,10 @@ object MediaMapper {
         visibility = visibility,
         sensitiveContent = sensitiveContent,
         adultContent = adultContent,
-        publishedAt = Instant.fromEpochSeconds(publishedAt),
+        publishedAt = publishedAt,
         fingerprint = Option.of(fingerprint),
-        createdAt = Instant.fromEpochSeconds(createdAt),
-        updatedAt = Instant.fromEpochSeconds(updatedAt),
-        deletedAt = Option.of(deletedAt?.let { Instant.fromEpochSeconds(it) }),
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = Option.of(deletedAt),
     )
 }

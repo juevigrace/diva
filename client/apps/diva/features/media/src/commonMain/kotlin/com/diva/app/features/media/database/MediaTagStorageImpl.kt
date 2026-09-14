@@ -10,7 +10,6 @@ import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -70,11 +69,11 @@ class MediaTagStorageImpl(
         updatedAt: Long,
         deletedAt: Long?,
     ): Tag = Tag(
-        id = Uuid.parse(id),
+        id = id,
         name = name,
-        createdAt = Instant.fromEpochSeconds(createdAt),
-        updatedAt = Instant.fromEpochSeconds(updatedAt),
-        deletedAt = Option.of(deletedAt?.let { Instant.fromEpochSeconds(it) }),
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = Option.of(deletedAt),
     )
 
     private fun mapToMedia(
@@ -98,8 +97,8 @@ class MediaTagStorageImpl(
         updatedAt: Long,
         deletedAt: Long?,
     ): Media = Media(
-        id = Uuid.parse(id),
-        submittedBy = User(id = Uuid.parse(submittedBy)),
+        id = id,
+        submittedBy = User(id = submittedBy),
         mediaType = mediaType,
         title = title,
         uri = uri,
@@ -112,10 +111,10 @@ class MediaTagStorageImpl(
         visibility = visibility,
         sensitiveContent = sensitiveContent,
         adultContent = adultContent,
-        publishedAt = Instant.fromEpochSeconds(publishedAt),
+        publishedAt = publishedAt,
         fingerprint = Option.of(fingerprint),
-        createdAt = Instant.fromEpochSeconds(createdAt),
-        updatedAt = Instant.fromEpochSeconds(updatedAt),
-        deletedAt = Option.of(deletedAt?.let { Instant.fromEpochSeconds(it) }),
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = Option.of(deletedAt),
     )
 }

@@ -7,10 +7,7 @@ import com.diva.app.models.api.collection.mix.response.MixResponse
 import com.diva.app.models.collection.Collection
 import io.github.juevigrace.diva.core.DivaJsExport
 import kotlin.js.ExperimentalJsExport
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 data class Mix(
     val collection: Collection,
     val algorithmType: String = "trending",
@@ -26,7 +23,7 @@ data class Mix(
         fun fromResponse(response: MixResponse): Mix {
             return Mix(
                 collection = Collection(
-                    id = Uuid.parse(response.collectionId),
+                    id = response.collectionId,
                     name = "",
                 ),
                 algorithmType = response.algorithmType,

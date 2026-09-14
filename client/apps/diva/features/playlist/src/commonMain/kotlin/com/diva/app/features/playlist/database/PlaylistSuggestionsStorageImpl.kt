@@ -7,7 +7,6 @@ import com.diva.app.models.collection.playlist.PlaylistSuggestions
 import com.diva.app.models.media.Media
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.models.user.User
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import migrations.Diva_playlist_suggestions
@@ -26,12 +25,12 @@ class PlaylistSuggestionsStorageImpl(
             transaction {
                 playlistSuggestionsQueries.insert(
                     Diva_playlist_suggestions(
-                        id = item.id.toString(),
+                        id = item.id,
                         collection_id = collectionId.toString(),
-                        suggester_id = item.suggesterId.id.toString(),
-                        media_id = item.mediaId.id.toString(),
+                        suggester_id = item.suggesterId.id,
+                        media_id = item.mediaId.id,
                         status = item.status,
-                        suggested_at = item.suggestedAt.epochSeconds,
+                        suggested_at = item.suggestedAt,
                     )
                 )
             }
@@ -70,10 +69,10 @@ class PlaylistSuggestionsStorageImpl(
         status: ModerationStatus,
         suggestedAt: Long,
     ): PlaylistSuggestions = PlaylistSuggestions(
-        id = Uuid.parse(id),
-        suggesterId = User(id = Uuid.parse(suggesterId)),
-        mediaId = Media(id = Uuid.parse(mediaId), title = "", uri = ""),
+        id = id,
+        suggesterId = User(id = suggesterId),
+        mediaId = Media(id = mediaId, title = "", uri = ""),
         status = status,
-        suggestedAt = Instant.fromEpochSeconds(suggestedAt),
+        suggestedAt = suggestedAt,
     )
 }

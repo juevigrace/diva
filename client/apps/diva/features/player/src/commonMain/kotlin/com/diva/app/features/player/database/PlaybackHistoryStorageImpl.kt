@@ -19,10 +19,10 @@ class PlaybackHistoryStorageImpl(
         return db.use {
             transaction {
                 playbackHistoryQueries.insert(
-                    id = item.id.toString(),
-                    user_id = item.userId.toString(),
-                    media_id = item.mediaId.toString(),
-                    played_at = item.playedAt.epochSeconds,
+                    id = item.id,
+                    user_id = item.userId,
+                    media_id = item.mediaId,
+                    played_at = item.playedAt,
                     position_ms = item.positionMs,
                     completed = item.completed,
                 )

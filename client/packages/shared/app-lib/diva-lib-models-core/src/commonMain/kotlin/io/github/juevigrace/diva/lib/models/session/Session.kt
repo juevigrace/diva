@@ -8,13 +8,9 @@ import io.github.juevigrace.diva.lib.models.api.auth.session.SessionResponse
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlin.js.ExperimentalJsExport
 import kotlin.time.Clock
-import kotlin.time.Instant
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 data class Session(
-    val id: Uuid,
+    val id: String,
     val user: User,
     val accessToken: String,
     val refreshToken: String,
@@ -22,17 +18,17 @@ data class Session(
     val status: SessionStatus,
     val isCurrent: Boolean = false,
     val data: SessionData,
-    val accessExpiresAt: Instant,
-    val refreshExpiresAt: Instant,
-    val expired: Boolean = accessExpiresAt < Clock.System.now(),
-    val createdAt: Instant,
-    val updatedAt: Instant,
+    val accessExpiresAt: Long,
+    val refreshExpiresAt: Long,
+    val expired: Boolean = accessExpiresAt < Clock.System.now().toEpochMilliseconds(),
+    val createdAt: Long,
+    val updatedAt: Long,
 ) {
     companion object {
         fun fromResponse(response: SessionResponse): Session {
             return Session(
-                id = Uuid.parse(response.sessionId),
-                user = User(id = Uuid.parse(response.userId)),
+                id = response.sessionId,
+                user = User(id = response.userId),
                 accessToken = response.accessToken,
                 refreshToken = response.refreshToken,
                 type = safeSessionType(response.type),
@@ -42,10 +38,10 @@ data class Session(
                     agent = response.agent,
                     ip = response.ip,
                 ),
-                accessExpiresAt = Instant.fromEpochMilliseconds(response.accessExpiresAt),
-                refreshExpiresAt = Instant.fromEpochMilliseconds(response.refreshExpiresAt),
-                createdAt = Instant.fromEpochMilliseconds(response.createdAt),
-                updatedAt = Instant.fromEpochMilliseconds(response.updatedAt),
+                accessExpiresAt = response.accessExpiresAt,
+                refreshExpiresAt = response.refreshExpiresAt,
+                createdAt = response.createdAt,
+                updatedAt = response.updatedAt,
             )
         }
     }

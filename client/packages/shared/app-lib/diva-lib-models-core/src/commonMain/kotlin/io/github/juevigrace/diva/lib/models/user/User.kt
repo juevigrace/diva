@@ -15,13 +15,9 @@ import io.github.juevigrace.diva.lib.models.user.profile.UserProfile
 import io.github.juevigrace.diva.lib.models.user.state.UserState
 import kotlin.js.ExperimentalJsExport
 import kotlin.time.Clock
-import kotlin.time.Instant
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 data class User(
-    val id: Uuid,
+    val id: String,
     val email: Option<String> = None,
     val username: String = "",
     val phoneNumber: Option<String> = None,
@@ -33,22 +29,22 @@ data class User(
     val actions: List<UserAction> = emptyList(),
     val permissions: List<UserPermission> = emptyList(),
     val preferences: Option<UserPreferences> = None,
-    val createdAt: Instant = Clock.System.now(),
-    val updatedAt: Instant = Clock.System.now(),
-    val deletedAt: Option<Instant> = None,
+    val createdAt: Long = Clock.System.now().toEpochMilliseconds(),
+    val updatedAt: Long = Clock.System.now().toEpochMilliseconds(),
+    val deletedAt: Option<Long> = None,
 ) {
     companion object {
         fun fromResponse(response: UserResponse): User {
             return User(
-                id = Uuid.parse(response.id),
+                id = response.id,
                 email = Option.of(response.email),
                 username = response.username,
                 phoneNumber = Option.of(response.phoneNumber),
                 role = safeRole(response.role),
                 state = Option.of(response.state?.let { UserState.fromResponse(it) }),
-                createdAt = Instant.fromEpochMilliseconds(response.createdAt),
-                updatedAt = Instant.fromEpochMilliseconds(response.updatedAt),
-                deletedAt = Option.of(response.deletedAt?.let { Instant.fromEpochMilliseconds(it) }),
+                createdAt = response.createdAt,
+                updatedAt = response.updatedAt,
+                deletedAt = Option.of(response.deletedAt),
             )
         }
     }

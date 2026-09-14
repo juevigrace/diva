@@ -8,7 +8,6 @@ import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -37,7 +36,7 @@ class MediaMetadataStorageImpl(
         return db.use {
             transaction {
                 metadataQueries.upsert(
-                    media_id = item.mediaId.toString(),
+                    media_id = item.mediaId,
                     album = item.album,
                     artist = item.artist,
                     genre = item.genre,
@@ -46,7 +45,7 @@ class MediaMetadataStorageImpl(
                     disc_number = item.discNumber.map { it.toLong() }.getOrNull(),
                     cover_uri = item.coverUri,
                     lyrics = item.lyrics,
-                    updated_at = item.updatedAt.epochSeconds,
+                    updated_at = item.updatedAt,
                 )
             }
         }
@@ -66,7 +65,7 @@ class MediaMetadataStorageImpl(
                 metadataQueries.findAll(::mapToMediaMetadata)
                     .executeAsList()
                     .forEach { metadata ->
-                        metadataQueries.delete(metadata.mediaId.toString())
+                        metadataQueries.delete(metadata.mediaId)
                     }
             }
         }
@@ -84,7 +83,7 @@ class MediaMetadataStorageImpl(
         lyrics: String,
         updatedAt: Long,
     ): MediaMetadata = MediaMetadata(
-        mediaId = Uuid.parse(mediaId),
+        mediaId = mediaId,
         album = album,
         artist = artist,
         genre = genre,
@@ -93,6 +92,6 @@ class MediaMetadataStorageImpl(
         discNumber = Option.of(discNumber?.toInt()),
         coverUri = coverUri,
         lyrics = lyrics,
-        updatedAt = Instant.fromEpochSeconds(updatedAt),
+        updatedAt = updatedAt,
     )
 }

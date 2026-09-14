@@ -12,7 +12,6 @@ import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -57,14 +56,14 @@ class FolderStorageImpl(
         return db.use {
             transaction {
                 folderQueries.upsert(
-                    id = item.id.toString(),
-                    user_id = item.userId.toString(),
+                    id = item.id,
+                    user_id = item.userId,
                     name = item.name,
                     path = item.path,
-                    parent_id = item.parentId.map { it.toString() }.getOrNull(),
-                    scanned_at = item.scannedAt.epochSeconds,
-                    created_at = item.createdAt.epochSeconds,
-                    updated_at = item.updatedAt.epochSeconds,
+                    parent_id = item.parentId.getOrNull(),
+                    scanned_at = item.scannedAt,
+                    created_at = item.createdAt,
+                    updated_at = item.updatedAt,
                 )
             }
         }
@@ -97,15 +96,15 @@ class FolderStorageImpl(
         updatedAt: Long,
         deletedAt: Long?,
     ): Folder = Folder(
-        id = Uuid.parse(id),
-        userId = Uuid.parse(userId),
+        id = id,
+        userId = userId,
         name = name,
         path = path,
-        parentId = Option.of(parentId?.let { Uuid.parse(it) }),
-        scannedAt = Instant.fromEpochSeconds(scannedAt),
-        createdAt = Instant.fromEpochSeconds(createdAt),
-        updatedAt = Instant.fromEpochSeconds(updatedAt),
-        deletedAt = Option.of(deletedAt?.let { Instant.fromEpochSeconds(it) }),
+        parentId = Option.of(parentId),
+        scannedAt = scannedAt,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = Option.of(deletedAt),
     )
 
     private fun mapToMedia(
@@ -129,8 +128,8 @@ class FolderStorageImpl(
         updatedAt: Long,
         deletedAt: Long?,
     ): Media = Media(
-        id = Uuid.parse(id),
-        submittedBy = User(id = Uuid.parse(submittedBy)),
+        id = id,
+        submittedBy = User(id = submittedBy),
         mediaType = mediaType,
         title = title,
         uri = uri,
@@ -143,10 +142,10 @@ class FolderStorageImpl(
         visibility = visibility,
         sensitiveContent = sensitiveContent,
         adultContent = adultContent,
-        publishedAt = Instant.fromEpochSeconds(publishedAt),
+        publishedAt = publishedAt,
         fingerprint = Option.of(fingerprint),
-        createdAt = Instant.fromEpochSeconds(createdAt),
-        updatedAt = Instant.fromEpochSeconds(updatedAt),
-        deletedAt = Option.of(deletedAt?.let { Instant.fromEpochSeconds(it) }),
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = Option.of(deletedAt),
     )
 }

@@ -26,7 +26,7 @@ class MixRepositoryImpl(
     }
 
     override suspend fun save(mix: Mix): Result<Unit> {
-        return storage.upsert(mix.collection.id, mix)
+        return storage.upsert(Uuid.parse(mix.collection.id), mix)
     }
 
     override suspend fun deleteByCollection(collectionId: Uuid): Result<Unit> {

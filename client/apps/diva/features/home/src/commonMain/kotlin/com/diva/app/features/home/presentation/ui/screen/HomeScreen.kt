@@ -27,9 +27,8 @@ import com.diva.app.ui.navigation.SearchRoute
 import io.github.juevigrace.diva.ui.layout.AdaptiveScreen
 import io.github.juevigrace.diva.ui.layout.bars.NavItem
 import io.github.juevigrace.diva.ui.layout.bars.TabBar
-import io.github.juevigrace.diva.ui.navigation.Tab
-import io.github.juevigrace.diva.ui.navigation.TabNavigator
 import io.github.juevigrace.diva.ui.navigation.TabNavHost
+import io.github.juevigrace.diva.ui.navigation.TabNavigator
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel

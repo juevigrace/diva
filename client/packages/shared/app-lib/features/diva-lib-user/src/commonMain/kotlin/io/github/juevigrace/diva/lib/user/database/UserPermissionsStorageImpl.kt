@@ -2,7 +2,6 @@ package io.github.juevigrace.diva.lib.user.database
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
-import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.DivaSharedDB
@@ -12,7 +11,6 @@ import io.github.juevigrace.diva.lib.models.permission.PermissionAction
 import io.github.juevigrace.diva.lib.models.user.Role
 import io.github.juevigrace.diva.lib.models.user.permissions.UserPermission
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -53,9 +51,9 @@ class UserPermissionsStorageImpl(
                     user_id = userId.toString(),
                     granted_by = item.grantedBy.getOrNull(),
                     granted = item.granted,
-                    granted_at = item.grantedAt.map { it.epochSeconds }.getOrNull() ?: 0L,
-                    expires_at = item.expiresAt.map { it.epochSeconds }.getOrNull(),
-                    updated_at = item.updatedAt.epochSeconds
+                    granted_at = item.grantedAt.getOrNull() ?: 0L,
+                    expires_at = item.expiresAt.getOrNull(),
+                    updated_at = item.updatedAt
                 )
             }
         }
@@ -88,18 +86,18 @@ class UserPermissionsStorageImpl(
         updatedAt: Long,
     ): UserPermission = UserPermission(
         permission = Permission(
-            id = Uuid.parse(permissionId),
+            id = permissionId,
             name = "",
             description = "",
             action = PermissionAction.PERMISSION_NONE,
             roleLevel = Role.USER,
-            createdAt = Instant.fromEpochSeconds(0),
-            updatedAt = Instant.fromEpochSeconds(0)
+            createdAt = 0L,
+            updatedAt = 0L
         ),
         grantedBy = grantedBy.toOption(),
         granted = granted,
-        grantedAt = Instant.fromEpochSeconds(grantedAt).toOption(),
-        expiresAt = expiresAt?.let { Instant.fromEpochSeconds(it) }.toOption(),
-        updatedAt = Instant.fromEpochSeconds(updatedAt)
+        grantedAt = grantedAt.toOption(),
+        expiresAt = expiresAt.toOption(),
+        updatedAt = updatedAt
     )
 }

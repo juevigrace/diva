@@ -63,7 +63,7 @@ class MixMetadataStorageImpl(
         autoRefresh: Boolean,
         refreshIntervalSeconds: Long,
     ): Mix = Mix(
-        collection = Collection(id = Uuid.parse(collectionId)),
+        collection = Collection(id = collectionId),
         algorithmType = algorithmType,
         timeWindowHours = timeWindowHours.toInt(),
         contentWeight = contentWeight.toFloat(),

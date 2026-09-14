@@ -2,14 +2,12 @@ package io.github.juevigrace.diva.lib.user.database
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
-import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.DivaSharedDB
 import io.github.juevigrace.diva.lib.database.user.profile.UserProfileStorage
 import io.github.juevigrace.diva.lib.models.user.profile.UserProfile
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -37,11 +35,11 @@ class UserProfileStorageImpl(
                     user_id = userId.toString(),
                     first_name = item.firstName,
                     last_name = item.lastName,
-                    birth_date = item.birthDate.map { it.epochSeconds }.getOrNull(),
+                    birth_date = item.birthDate.getOrNull(),
                     alias = item.alias,
                     bio = item.bio,
                     avatar = item.avatar,
-                    updated_at = item.updatedAt.map { it.epochSeconds }.getOrNull() ?: 0L
+                    updated_at = item.updatedAt.getOrNull() ?: 0L
                 )
             }
         }
@@ -67,10 +65,10 @@ class UserProfileStorageImpl(
     ): UserProfile = UserProfile(
         firstName = firstName,
         lastName = lastName,
-        birthDate = birthDate?.let { Instant.fromEpochSeconds(it) }.toOption(),
+        birthDate = birthDate.toOption(),
         alias = alias,
         bio = bio,
         avatar = avatar,
-        updatedAt = Instant.fromEpochSeconds(updatedAt).toOption()
+        updatedAt = updatedAt.toOption()
     )
 }

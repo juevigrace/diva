@@ -8,7 +8,6 @@ import com.diva.app.models.playback.ResumePoint
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -21,10 +20,10 @@ class ResumePointStorageImpl(
         return db.getOne {
             resumePointQueries.findOneByMedia(userId.toString(), mediaId.toString()) { positionMs, updatedAt ->
                 ResumePoint(
-                    userId = userId,
-                    mediaId = mediaId,
+                    userId = userId.toString(),
+                    mediaId = mediaId.toString(),
                     positionMs = positionMs,
-                    updatedAt = Instant.fromEpochSeconds(updatedAt),
+                    updatedAt = updatedAt,
                 )
             }
         }
@@ -34,10 +33,10 @@ class ResumePointStorageImpl(
         return db.use {
             transaction {
                 resumePointQueries.upsert(
-                    user_id = item.userId.toString(),
-                    media_id = item.mediaId.toString(),
+                    user_id = item.userId,
+                    media_id = item.mediaId,
                     position_ms = item.positionMs,
-                    updated_at = item.updatedAt.epochSeconds,
+                    updated_at = item.updatedAt,
                 )
             }
         }

@@ -8,7 +8,6 @@ import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -41,15 +40,15 @@ class ServerStorageImpl(
         return db.use {
             transaction {
                 serverQueries.upsert(
-                    id = item.id.toString(),
+                    id = item.id,
                     name = item.name,
                     base_url = item.baseUrl,
                     protocol = item.protocol,
                     port = item.port.map { it.toLong() }.getOrNull(),
                     enabled = item.enabled,
-                    last_connected_at = item.lastConnectedAt.map { it.epochSeconds }.getOrNull(),
-                    created_at = item.createdAt.epochSeconds,
-                    updated_at = item.updatedAt.epochSeconds,
+                    last_connected_at = item.lastConnectedAt.getOrNull(),
+                    created_at = item.createdAt,
+                    updated_at = item.updatedAt,
                 )
             }
         }
@@ -69,7 +68,7 @@ class ServerStorageImpl(
                 serverQueries.findAll(::mapToServer)
                     .executeAsList()
                     .forEach { server ->
-                        serverQueries.deleteById(server.id.toString())
+                        serverQueries.deleteById(server.id)
                     }
             }
         }
@@ -86,14 +85,14 @@ class ServerStorageImpl(
         createdAt: Long,
         updatedAt: Long,
     ): Server = Server(
-        id = Uuid.parse(id),
+        id = id,
         name = name,
         baseUrl = baseUrl,
         protocol = protocol,
         port = Option.of(port?.toInt()),
         enabled = enabled,
-        lastConnectedAt = Option.of(lastConnectedAt?.let { Instant.fromEpochSeconds(it) }),
-        createdAt = Instant.fromEpochSeconds(createdAt),
-        updatedAt = Instant.fromEpochSeconds(updatedAt),
+        lastConnectedAt = Option.of(lastConnectedAt),
+        createdAt = createdAt,
+        updatedAt = updatedAt,
     )
 }

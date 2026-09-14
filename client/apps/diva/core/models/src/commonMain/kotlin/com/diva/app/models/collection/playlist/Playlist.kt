@@ -8,10 +8,7 @@ import com.diva.app.models.collection.Collection
 import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlin.js.ExperimentalJsExport
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 data class Playlist(
     val collection: Collection,
     val isCollaborative: Boolean = false,
@@ -23,12 +20,12 @@ data class Playlist(
         fun fromResponse(response: PlaylistResponse): Playlist {
             return Playlist(
                 collection = Collection(
-                    id = Uuid.parse(response.collectionId),
+                    id = response.collectionId,
                     name = "",
                 ),
                 isCollaborative = response.isCollaborative,
                 allowSuggestions = response.allowSuggestions,
-                contributors = response.contributors.map { User(id = Uuid.parse(it)) },
+                contributors = response.contributors.map { User(id = it) },
                 suggestions = response.suggestions.map { PlaylistSuggestions.fromResponse(it) },
             )
         }

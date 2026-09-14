@@ -7,29 +7,25 @@ import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.lib.models.api.user.device.UserDeviceResponse
 import io.github.juevigrace.diva.lib.models.device.Device
 import kotlin.js.ExperimentalJsExport
-import kotlin.time.Instant
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 data class UserDevice(
-    val userId: Uuid,
+    val userId: String,
     val device: Device,
-    val createdAt: Instant,
-    val updatedAt: Instant,
+    val createdAt: Long,
+    val updatedAt: Long,
 ) {
     companion object {
         fun fromResponse(response: UserDeviceResponse): UserDevice {
             return UserDevice(
-                userId = Uuid.parse(response.userId),
+                userId = response.userId,
                 device = Device(
-                    id = Uuid.parse(response.deviceId),
+                    id = response.deviceId,
                     name = response.deviceName,
-                    createdAt = Instant.fromEpochMilliseconds(response.createdAt),
-                    updatedAt = Instant.fromEpochMilliseconds(response.updatedAt),
+                    createdAt = response.createdAt,
+                    updatedAt = response.updatedAt,
                 ),
-                createdAt = Instant.fromEpochMilliseconds(response.createdAt),
-                updatedAt = Instant.fromEpochMilliseconds(response.updatedAt),
+                createdAt = response.createdAt,
+                updatedAt = response.updatedAt,
             )
         }
     }

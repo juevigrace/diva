@@ -8,26 +8,22 @@ import com.diva.app.models.media.Media
 import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlin.js.ExperimentalJsExport
-import kotlin.time.Instant
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 data class CollectionMedia(
     val media: Media,
     val position: Int,
-    val addedBy: User = User(id = Uuid.NIL),
+    val addedBy: User = User(id = ""),
     val score: Float = 0f,
-    val addedAt: Instant,
+    val addedAt: Long,
 ) {
     companion object {
         fun fromResponse(response: CollectionMediaResponse): CollectionMedia {
             return CollectionMedia(
-                media = Media(id = Uuid.parse(response.mediaId), title = "", uri = ""),
+                media = Media(id = response.mediaId, title = "", uri = ""),
                 position = response.position,
-                addedBy = User(id = Uuid.parse(response.addedBy)),
+                addedBy = User(id = response.addedBy),
                 score = response.score,
-                addedAt = Instant.fromEpochSeconds(response.addedAt),
+                addedAt = response.addedAt * 1000L,
             )
         }
     }

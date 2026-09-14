@@ -51,7 +51,7 @@ class PlaylistMetadataStorageImpl(
         isCollaborative: Boolean,
         allowSuggestions: Boolean,
     ): Playlist = Playlist(
-        collection = Collection(id = Uuid.parse(collectionId)),
+        collection = Collection(id = collectionId),
         isCollaborative = isCollaborative,
         allowSuggestions = allowSuggestions,
     )

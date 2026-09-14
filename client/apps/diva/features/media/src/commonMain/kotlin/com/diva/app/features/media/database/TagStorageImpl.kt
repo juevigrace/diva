@@ -8,7 +8,6 @@ import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import migrations.Diva_tag
@@ -43,11 +42,11 @@ class TagStorageImpl(
             transaction {
                 tagQueries.upsert(
                     Diva_tag(
-                        id = item.id.toString(),
+                        id = item.id,
                         tag_name = item.name,
-                        created_at = item.createdAt.epochSeconds,
-                        updated_at = item.updatedAt.epochSeconds,
-                        deleted_at = item.deletedAt.map { it.epochSeconds }.getOrNull(),
+                        created_at = item.createdAt,
+                        updated_at = item.updatedAt,
+                        deleted_at = item.deletedAt.getOrNull(),
                     )
                 )
             }
@@ -68,7 +67,7 @@ class TagStorageImpl(
                 tagQueries.findAll(::mapToTag)
                     .executeAsList()
                     .forEach { tag ->
-                        tagQueries.deleteById(tag.id.toString())
+                        tagQueries.deleteById(tag.id)
                     }
             }
         }
@@ -81,10 +80,10 @@ class TagStorageImpl(
         updatedAt: Long,
         deletedAt: Long?,
     ): Tag = Tag(
-        id = Uuid.parse(id),
+        id = id,
         name = name,
-        createdAt = Instant.fromEpochSeconds(createdAt),
-        updatedAt = Instant.fromEpochSeconds(updatedAt),
-        deletedAt = Option.of(deletedAt?.let { Instant.fromEpochSeconds(it) }),
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = Option.of(deletedAt),
     )
 }

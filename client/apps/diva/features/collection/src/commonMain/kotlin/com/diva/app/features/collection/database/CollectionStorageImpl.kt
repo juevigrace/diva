@@ -12,7 +12,6 @@ import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import migrations.Diva_collection
@@ -43,16 +42,16 @@ class CollectionStorageImpl(
             transaction {
                 collectionQueries.upsert(
                     Diva_collection(
-                        id = item.id.toString(),
-                        owner_id = item.owner.id.toString(),
+                        id = item.id,
+                        owner_id = item.owner.id,
                         name = item.name,
                         description = item.description,
                         collection_type = item.collectionType,
                         visibility = item.visibility,
-                        cover_media_id = item.coverMedia.map { it.id.toString() }.getOrNull(),
-                        created_at = item.createdAt.epochSeconds,
-                        updated_at = item.updatedAt.epochSeconds,
-                        deleted_at = item.deletedAt.map { it.epochSeconds }.getOrNull(),
+                        cover_media_id = item.coverMedia.map { it.id }.getOrNull(),
+                        created_at = item.createdAt,
+                        updated_at = item.updatedAt,
+                        deleted_at = item.deletedAt.getOrNull(),
                     )
                 )
             }
@@ -73,7 +72,7 @@ class CollectionStorageImpl(
                 collectionQueries.findAll(::mapToCollection)
                     .executeAsList()
                     .forEach { collection ->
-                        collectionQueries.deleteById(collection.id.toString())
+                        collectionQueries.deleteById(collection.id)
                     }
             }
         }
@@ -91,15 +90,15 @@ class CollectionStorageImpl(
         updatedAt: Long,
         deletedAt: Long?,
     ): Collection = Collection(
-        id = Uuid.parse(id),
-        owner = User(id = Uuid.parse(ownerId)),
+        id = id,
+        owner = User(id = ownerId),
         name = name,
         description = description,
         collectionType = collectionType,
         visibility = visibility,
-        coverMedia = Option.of(coverMediaId?.let { Media(id = Uuid.parse(it), title = "", uri = "") }),
-        createdAt = Instant.fromEpochSeconds(createdAt),
-        updatedAt = Instant.fromEpochSeconds(updatedAt),
-        deletedAt = Option.of(deletedAt?.let { Instant.fromEpochSeconds(it) }),
+        coverMedia = Option.of(coverMediaId?.let { Media(id = it, title = "", uri = "") }),
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = Option.of(deletedAt),
     )
 }

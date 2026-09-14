@@ -15,7 +15,7 @@ class PlaylistContributorStorageImpl(
 
     override suspend fun getByCollection(collectionId: Uuid): Result<List<User>> {
         return db.getList { playlistContributorQueries.findForCollection(collectionId.toString()) { _, contributorId ->
-            User(id = Uuid.parse(contributorId))
+            User(id = contributorId)
         } }
     }
 

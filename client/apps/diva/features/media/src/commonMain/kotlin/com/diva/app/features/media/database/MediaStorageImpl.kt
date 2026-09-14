@@ -11,7 +11,6 @@ import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import migrations.Diva_media
@@ -42,8 +41,8 @@ class MediaStorageImpl(
             transaction {
                 mediaQueries.upsert(
                     Diva_media(
-                        id = item.id.toString(),
-                        submitted_by = item.submittedBy.id.toString(),
+                        id = item.id,
+                        submitted_by = item.submittedBy.id,
                         media_type = item.mediaType,
                         title = item.title,
                         uri = item.uri,
@@ -56,11 +55,11 @@ class MediaStorageImpl(
                         visibility = item.visibility,
                         sensitive_content = item.sensitiveContent,
                         adult_content = item.adultContent,
-                        published_at = item.publishedAt.epochSeconds,
+                        published_at = item.publishedAt,
                         fingerprint = item.fingerprint.getOrNull(),
-                        created_at = item.createdAt.epochSeconds,
-                        updated_at = item.updatedAt.epochSeconds,
-                        deleted_at = item.deletedAt.map { it.epochSeconds }.getOrNull(),
+                        created_at = item.createdAt,
+                        updated_at = item.updatedAt,
+                        deleted_at = item.deletedAt.getOrNull(),
                     )
                 )
             }
@@ -104,8 +103,8 @@ class MediaStorageImpl(
         updatedAt: Long,
         deletedAt: Long?,
     ): Media = Media(
-        id = Uuid.parse(id),
-        submittedBy = User(id = Uuid.parse(submittedBy)),
+        id = id,
+        submittedBy = User(id = submittedBy),
         mediaType = mediaType,
         title = title,
         uri = uri,
@@ -118,10 +117,10 @@ class MediaStorageImpl(
         visibility = visibility,
         sensitiveContent = sensitiveContent,
         adultContent = adultContent,
-        publishedAt = Instant.fromEpochSeconds(publishedAt),
+        publishedAt = publishedAt,
         fingerprint = Option.of(fingerprint),
-        createdAt = Instant.fromEpochSeconds(createdAt),
-        updatedAt = Instant.fromEpochSeconds(updatedAt),
-        deletedAt = Option.of(deletedAt?.let { Instant.fromEpochSeconds(it) }),
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = Option.of(deletedAt),
     )
 }

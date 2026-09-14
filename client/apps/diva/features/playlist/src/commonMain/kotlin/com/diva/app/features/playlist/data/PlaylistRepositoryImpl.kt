@@ -75,11 +75,11 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun save(playlist: Playlist): Result<Unit> {
-        val collectionId = playlist.collection.id
+        val collectionId = Uuid.parse(playlist.collection.id)
         return metadataStorage.upsert(collectionId, playlist)
             .onSuccess {
                 playlist.contributors.forEach { contributor ->
-                    contributorStorage.add(collectionId, contributor.id)
+                    contributorStorage.add(collectionId, Uuid.parse(contributor.id))
                 }
                 playlist.suggestions.forEach { suggestion ->
                     suggestionsStorage.add(collectionId, suggestion)

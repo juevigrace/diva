@@ -9,7 +9,6 @@ import io.github.juevigrace.diva.lib.models.permission.Permission
 import io.github.juevigrace.diva.lib.models.permission.PermissionAction
 import io.github.juevigrace.diva.lib.models.user.Role
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -46,13 +45,13 @@ class PermissionsStorageImpl(
         return db.use {
             transaction {
                 permissionsQueries.upsert(
-                    id = item.id.toString(),
+                    id = item.id,
                     name = item.name,
                     description = item.description,
                     action = item.action,
                     role_level = item.roleLevel,
-                    created_at = item.createdAt.epochSeconds,
-                    updated_at = item.updatedAt.epochSeconds
+                    created_at = item.createdAt,
+                    updated_at = item.updatedAt
                 )
             }
         }
@@ -86,14 +85,14 @@ class PermissionsStorageImpl(
         deletedAt: Long?,
     ): Permission {
         return Permission(
-            id = Uuid.parse(id),
+            id = id,
             name = name,
             description = description,
             action = action,
             roleLevel = roleLevel,
-            createdAt = Instant.fromEpochSeconds(createdAt),
-            updatedAt = Instant.fromEpochSeconds(updatedAt),
-            deletedAt = deletedAt?.let { Instant.fromEpochSeconds(it) }.toOption()
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            deletedAt = deletedAt.toOption()
         )
     }
 }
