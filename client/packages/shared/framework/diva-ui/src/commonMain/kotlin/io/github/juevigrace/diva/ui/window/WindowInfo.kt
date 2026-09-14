@@ -51,3 +51,15 @@ fun rememberWindowInfo(): WindowInfo {
         )
     }
 }
+
+enum class ScreenOrientation {
+    Portrait,
+    Landscape,
+}
+
+enum class ScreenSize {
+    Small,
+    Medium,
+    Large,
+    XLarge,
+}
