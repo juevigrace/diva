@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+// TODO: rework this
 sealed interface ScreenState<out T> {
     data object Loading : ScreenState<Nothing>
 

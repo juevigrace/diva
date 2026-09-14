@@ -3,7 +3,6 @@ package io.github.juevigrace.diva.ui.layout
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.material3.DrawerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -16,10 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
-import io.github.juevigrace.diva.ui.layout.bars.LocalNavItemStyle
-import io.github.juevigrace.diva.ui.layout.bars.NavItemStyle
+import io.github.juevigrace.diva.ui.layout.navigation.LocalNavItemStyle
+import io.github.juevigrace.diva.ui.layout.navigation.NavItemStyle
 import io.github.juevigrace.diva.ui.toast.ToasterHost
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
@@ -29,8 +30,7 @@ import com.diva.app.ui.navigation.LibraryRoute
 import com.diva.app.ui.navigation.ProfileRoute
 import com.diva.app.ui.navigation.SearchRoute
 import io.github.juevigrace.diva.ui.layout.AdaptiveScreen
-import io.github.juevigrace.diva.ui.layout.bars.BottomBar
-import io.github.juevigrace.diva.ui.layout.bars.NavItem
+import io.github.juevigrace.diva.ui.layout.navigation.NavItem
 import io.github.juevigrace.diva.ui.navigation.Tab
 import io.github.juevigrace.diva.ui.navigation.TabNavHost
 import io.github.juevigrace.diva.ui.navigation.TabNavigator
@@ -59,7 +59,8 @@ fun HomeScreen(
 
     AdaptiveScreen(
         bottomBar = {
-            BottomBar {
+            BottomAppBar(
+            ) {
                 tabNavigator.tabs.forEachIndexed { index, tab ->
                     NavigationBarItem(
                         modifier = Modifier.weight(1f),

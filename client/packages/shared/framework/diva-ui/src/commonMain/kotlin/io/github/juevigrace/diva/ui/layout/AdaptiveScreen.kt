@@ -14,6 +14,7 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import io.github.juevigrace.diva.ui.layout.navigation.NavStyle
 import io.github.juevigrace.diva.ui.toast.ToasterHost
 import io.github.juevigrace.diva.ui.window.rememberWindowInfo
 
@@ -21,7 +22,7 @@ import io.github.juevigrace.diva.ui.window.rememberWindowInfo
 @Composable
 fun AdaptiveScreen(
     modifier: Modifier = Modifier,
-    style: NavigationStyle = adaptiveNavigationStyle(),
+    style: NavStyle = adaptiveNavigationStyle(),
     topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
@@ -35,7 +36,7 @@ fun AdaptiveScreen(
     content: @Composable (innerPadding: PaddingValues) -> Unit,
 ) {
     when (style) {
-        NavigationStyle.BottomBar -> Screen(
+        NavStyle.BottomBar -> Screen(
             modifier = modifier,
             topBar = topBar,
             bottomBar = bottomBar,
@@ -47,7 +48,7 @@ fun AdaptiveScreen(
             contentWindowInsets = contentWindowInsets,
             content = content,
         )
-        NavigationStyle.ModalDrawer -> ModalDrawerScreen(
+        NavStyle.ModalDrawer -> ModalDrawerScreen(
             modifier = modifier,
             topBar = topBar,
             drawerState = drawerState,
@@ -61,7 +62,7 @@ fun AdaptiveScreen(
             contentWindowInsets = contentWindowInsets,
             content = content,
         )
-        NavigationStyle.PermanentDrawer -> PermanentDrawerScreen(
+        NavStyle.PermanentDrawer -> PermanentDrawerScreen(
             modifier = modifier,
             topBar = topBar,
             navContent = navContent,
@@ -74,7 +75,7 @@ fun AdaptiveScreen(
             contentWindowInsets = contentWindowInsets,
             content = content,
         )
-        NavigationStyle.Rail -> RailScreen(
+        NavStyle.Rail -> RailScreen(
             modifier = modifier,
             topBar = topBar,
             navContent = navContent,
@@ -90,11 +91,11 @@ fun AdaptiveScreen(
 }
 
 @Composable
-fun adaptiveNavigationStyle(): NavigationStyle {
+fun adaptiveNavigationStyle(): NavStyle {
     val windowInfo = rememberWindowInfo()
     return if (windowInfo.widthSizeClass == WindowWidthSizeClass.Expanded) {
-        NavigationStyle.Rail
+        NavStyle.Rail
     } else {
-        NavigationStyle.BottomBar
+        NavStyle.BottomBar
     }
 }
