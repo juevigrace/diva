@@ -3,14 +3,15 @@ package io.github.juevigrace.diva.lib.database.user.profile
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.user.profile.UserProfile
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.Uuid
 
 interface UserProfileStorage {
-    suspend fun getByUser(userId: Uuid): Result<Option<UserProfile>>
+    suspend fun findOne(userId: String): Result<Option<UserProfile>>
 
-    fun getByUserFlow(userId: Uuid): Flow<Result<Option<UserProfile>>>
+    fun findOneFlow(userId: String): Flow<Result<Option<UserProfile>>>
 
-    suspend fun upsert(userId: Uuid, item: UserProfile): Result<Unit>
+    suspend fun upsert(userId: String, item: UserProfile): Result<Unit>
 
-    suspend fun deleteAll(): Result<Unit>
+    suspend fun deleteOne(userId: String): Result<Unit>
+
+    suspend fun delete(): Result<Unit>
 }

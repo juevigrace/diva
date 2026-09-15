@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS diva_devices(
 
 CREATE TABLE IF NOT EXISTS diva_user_profile(
     user_id TEXT NOT NULL PRIMARY KEY,
-    first_name TEXT NOT NULL DEFAULT '',
+    first_name TEXT NOT NULL DEFAULT 'profile',
     last_name TEXT NOT NULL DEFAULT '',
     birth_date INTEGER DEFAULT NULL,
     alias TEXT NOT NULL DEFAULT '',
@@ -73,8 +73,7 @@ CREATE TABLE IF NOT EXISTS diva_user_permissions(
 );
 
 CREATE TABLE IF NOT EXISTS diva_user_preferences(
-    id TEXT NOT NULL PRIMARY KEY,
-    user_id TEXT NOT NULL UNIQUE,
+    user_id TEXT NOT NULL PRIMARY KEY,
     theme TEXT AS Theme NOT NULL DEFAULT 'SYSTEM',
     onboarding_completed INTEGER AS Boolean NOT NULL DEFAULT 0,
     language TEXT NOT NULL DEFAULT 'en',

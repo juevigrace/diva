@@ -6,35 +6,32 @@ import io.github.juevigrace.diva.lib.database.DivaSharedDB
 import io.github.juevigrace.diva.lib.database.devices.DevicesStorage
 import io.github.juevigrace.diva.lib.models.device.Device
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class DevicesStorageImpl(
     private val db: DivaDatabase<DivaSharedDB>,
 ) : DevicesStorage {
 
-    override suspend fun getAll(): Result<List<Device>> {
+    override suspend fun findAll(): Result<List<Device>> {
         return db.getList {
             devicesQueries.findAll(::mapToDevice)
         }
     }
 
-    override fun getAllFlow(): Flow<Result<List<Device>>> {
+    override fun findAllFlow(): Flow<Result<List<Device>>> {
         return db.getListAsFlow {
             devicesQueries.findAll(::mapToDevice)
         }
     }
 
-    override suspend fun getById(id: Uuid): Result<Option<Device>> {
+    override suspend fun findOne(id: String): Result<Option<Device>> {
         return db.getOne {
-            devicesQueries.findOneById(id.toString(), ::mapToDevice)
+            devicesQueries.findOne(id, ::mapToDevice)
         }
     }
 
-    override fun getByIdFlow(id: Uuid): Flow<Result<Option<Device>>> {
+    override fun findOneFlow(id: String): Flow<Result<Option<Device>>> {
         return db.getOneAsFlow {
-            devicesQueries.findOneById(id.toString(), ::mapToDevice)
+            devicesQueries.findOne(id, ::mapToDevice)
         }
     }
 
@@ -51,18 +48,18 @@ class DevicesStorageImpl(
         }
     }
 
-    override suspend fun delete(id: Uuid): Result<Unit> {
+    override suspend fun deleteOne(id: String): Result<Unit> {
         return db.use {
             transaction {
-                devicesQueries.deleteById(id.toString())
+                devicesQueries.deleteOne(id)
             }
         }
     }
 
-    override suspend fun deleteAll(): Result<Unit> {
+    override suspend fun delete(): Result<Unit> {
         return db.use {
             transaction {
-                devicesQueries.deleteAll()
+                devicesQueries.delete()
             }
         }
     }

@@ -9,38 +9,28 @@ import io.github.juevigrace.diva.lib.database.user.preferences.UserPreferencesSt
 import io.github.juevigrace.diva.lib.models.Theme
 import io.github.juevigrace.diva.lib.models.user.preferences.UserPreferences
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class UserPreferencesStorageImpl(
     private val db: DivaDatabase<DivaSharedDB>
 ) : UserPreferencesStorage {
 
-    override suspend fun getById(id: Uuid): Result<Option<UserPreferences>> {
+    override suspend fun findOne(userId: String): Result<Option<UserPreferences>> {
         return db.getOne {
-            userPreferencesQueries.findOneById(id.toString(), ::mapToUserPreferences)
+            userPreferencesQueries.findOne(userId, ::mapToUserPreferences)
         }
     }
 
-    override suspend fun getByUser(userId: Uuid): Result<Option<UserPreferences>> {
-        return db.getOne {
-            userPreferencesQueries.findByUser(userId.toString(), ::mapToUserPreferences)
-        }
-    }
-
-    override fun getByUserFlow(userId: Uuid): Flow<Result<Option<UserPreferences>>> {
+    override fun findOneFlow(userId: String): Flow<Result<Option<UserPreferences>>> {
         return db.getOneAsFlow {
-            userPreferencesQueries.findByUser(userId.toString(), ::mapToUserPreferences)
+            userPreferencesQueries.findOne(userId, ::mapToUserPreferences)
         }
     }
 
-    override suspend fun upsert(userId: Uuid, item: UserPreferences): Result<Unit> {
+    override suspend fun upsert(userId: String, item: UserPreferences): Result<Unit> {
         return db.use {
             transaction {
                 userPreferencesQueries.upsert(
-                    id = item.id,
-                    user_id = userId.toString(),
+                    user_id = userId,
                     theme = item.theme,
                     onboarding_completed = item.onboardingCompleted,
                     language = item.language,
@@ -52,24 +42,23 @@ class UserPreferencesStorageImpl(
         }
     }
 
-    override suspend fun delete(id: Uuid): Result<Unit> {
+    override suspend fun deleteOne(userId: String): Result<Unit> {
         return db.use {
             transaction {
-                userPreferencesQueries.deleteById(id.toString())
+                userPreferencesQueries.deleteOne(userId)
             }
         }
     }
 
-    override suspend fun deleteAll(): Result<Unit> {
+    override suspend fun delete(): Result<Unit> {
         return db.use {
             transaction {
-                userPreferencesQueries.deleteAll()
+                userPreferencesQueries.delete()
             }
         }
     }
 
     private fun mapToUserPreferences(
-        id: String,
         userId: String,
         theme: Theme,
         onboardingCompleted: Boolean,
@@ -78,7 +67,6 @@ class UserPreferencesStorageImpl(
         createdAt: Long,
         updatedAt: Long,
     ): UserPreferences = UserPreferences(
-        id = id,
         theme = theme,
         onboardingCompleted = onboardingCompleted,
         language = language,

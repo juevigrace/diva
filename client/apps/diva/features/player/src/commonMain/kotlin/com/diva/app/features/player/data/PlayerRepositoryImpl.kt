@@ -10,10 +10,8 @@ import com.diva.app.models.playback.PlaybackHistory
 import com.diva.app.models.playback.ResumePoint
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class PlayerRepositoryImpl(
     private val resumePointStorage: ResumePointStorage,
     private val historyStorage: PlaybackHistoryStorage,

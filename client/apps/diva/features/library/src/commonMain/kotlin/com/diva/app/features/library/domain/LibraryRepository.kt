@@ -4,10 +4,8 @@ import com.diva.app.models.folder.Folder
 import com.diva.app.models.media.Media
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 interface LibraryRepository : Repository {
     fun getFavorites(userId: Uuid): Flow<Result<List<Media>>>
 

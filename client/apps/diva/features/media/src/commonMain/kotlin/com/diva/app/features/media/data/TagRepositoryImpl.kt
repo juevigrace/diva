@@ -5,10 +5,8 @@ import com.diva.app.features.media.domain.TagRepository
 import com.diva.app.models.media.tag.Tag
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class TagRepositoryImpl(
     private val storage: TagStorage,
 ) : TagRepository {

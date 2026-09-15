@@ -11,44 +11,41 @@ import io.github.juevigrace.diva.lib.models.permission.PermissionAction
 import io.github.juevigrace.diva.lib.models.user.Role
 import io.github.juevigrace.diva.lib.models.user.permissions.UserPermission
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class UserPermissionsStorageImpl(
     private val db: DivaDatabase<DivaSharedDB>
 ) : UserPermissionsStorage {
 
-    override suspend fun getAllByUser(userId: Uuid): Result<List<UserPermission>> {
+    override suspend fun findAll(userId: String): Result<List<UserPermission>> {
         return db.getList {
-            userPermissionsQueries.findAllByUser(userId.toString(), ::mapToUserPermission)
+            userPermissionsQueries.findAll(userId, ::mapToUserPermission)
         }
     }
 
-    override fun getAllByUserFlow(userId: Uuid): Flow<Result<List<UserPermission>>> {
+    override fun findAllFlow(userId: String): Flow<Result<List<UserPermission>>> {
         return db.getListAsFlow {
-            userPermissionsQueries.findAllByUser(userId.toString(), ::mapToUserPermission)
+            userPermissionsQueries.findAll(userId, ::mapToUserPermission)
         }
     }
 
-    override suspend fun getById(permissionId: Uuid, userId: Uuid): Result<Option<UserPermission>> {
+    override suspend fun findOne(permissionId: String, userId: String): Result<Option<UserPermission>> {
         return db.getOne {
-            userPermissionsQueries.findOneById(permissionId.toString(), userId.toString(), ::mapToUserPermission)
+            userPermissionsQueries.findOne(permissionId, userId, ::mapToUserPermission)
         }
     }
 
-    override fun getByIdFlow(permissionId: Uuid, userId: Uuid): Flow<Result<Option<UserPermission>>> {
+    override fun findOneFlow(permissionId: String, userId: String): Flow<Result<Option<UserPermission>>> {
         return db.getOneAsFlow {
-            userPermissionsQueries.findOneById(permissionId.toString(), userId.toString(), ::mapToUserPermission)
+            userPermissionsQueries.findOne(permissionId, userId, ::mapToUserPermission)
         }
     }
 
-    override suspend fun upsert(userId: Uuid, item: UserPermission): Result<Unit> {
+    override suspend fun upsert(userId: String, item: UserPermission): Result<Unit> {
         return db.use {
             transaction {
                 userPermissionsQueries.upsert(
-                    permission_id = item.permission.id.toString(),
-                    user_id = userId.toString(),
+                    permission_id = item.permission.id,
+                    user_id = userId,
                     granted_by = item.grantedBy.getOrNull(),
                     granted = item.granted,
                     granted_at = item.grantedAt.getOrNull() ?: 0L,
@@ -59,18 +56,18 @@ class UserPermissionsStorageImpl(
         }
     }
 
-    override suspend fun delete(permissionId: Uuid, userId: Uuid): Result<Unit> {
+    override suspend fun deleteOne(permissionId: String, userId: String): Result<Unit> {
         return db.use {
             transaction {
-                userPermissionsQueries.deleteById(permissionId.toString(), userId.toString())
+                userPermissionsQueries.deleteOne(permissionId, userId)
             }
         }
     }
 
-    override suspend fun deleteAll(): Result<Unit> {
+    override suspend fun delete(): Result<Unit> {
         return db.use {
             transaction {
-                userPermissionsQueries.deleteAll()
+                userPermissionsQueries.delete()
             }
         }
     }

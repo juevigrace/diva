@@ -19,14 +19,14 @@ class UserDevicesApiImpl(
         return client.getAs<ApiResponse<List<UserDeviceResponse>>>(
             path = "/api/user/$uid/devices",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: emptyList() }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun getByID(uid: String, did: String, token: String): Result<UserDeviceResponse> {
         return client.getAs<ApiResponse<UserDeviceResponse>>(
             path = "/api/user/$uid/devices/$did",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: error("Missing data in ApiResponse") }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun delete(uid: String, did: String, token: String): Result<Unit> {

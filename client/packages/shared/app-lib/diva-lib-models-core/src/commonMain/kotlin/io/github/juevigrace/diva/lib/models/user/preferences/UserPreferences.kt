@@ -12,7 +12,6 @@ import io.github.juevigrace.diva.lib.models.safeValueOfTheme
 import kotlin.js.ExperimentalJsExport
 
 data class UserPreferences(
-    val id: String = "",
     val theme: Theme = Theme.SYSTEM,
     val onboardingCompleted: Boolean = false,
     val language: String = "en",
@@ -23,7 +22,6 @@ data class UserPreferences(
     companion object {
         fun fromResponse(response: UserPreferencesResponse): UserPreferences {
             return UserPreferences(
-                id = response.id,
                 theme = safeValueOfTheme(response.theme),
                 onboardingCompleted = response.onboardingCompleted,
                 language = response.language,

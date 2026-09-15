@@ -10,39 +10,42 @@ import io.github.juevigrace.diva.lib.models.session.SessionStatus
 import io.github.juevigrace.diva.lib.models.session.SessionType
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class SessionStorageImpl(
     private val db: DivaDatabase<DivaSharedDB>,
 ) : SessionStorage {
 
-    override suspend fun getAll(): Result<List<Session>> {
+    override suspend fun findAll(): Result<List<Session>> {
         return db.getList {
             sessionQueries.findAll(::mapToSession)
         }
     }
 
-    override fun getAllFlow(): Flow<Result<List<Session>>> {
+    override fun findAllFlow(): Flow<Result<List<Session>>> {
         return db.getListAsFlow {
             sessionQueries.findAll(::mapToSession)
         }
     }
 
-    override suspend fun getById(id: Uuid): Result<Option<Session>> {
+    override suspend fun findOne(id: String): Result<Option<Session>> {
         return db.getOne {
-            sessionQueries.findOneById(id.toString(), ::mapToSession)
+            sessionQueries.findOne(id, ::mapToSession)
         }
     }
 
-    override suspend fun getCurrent(): Result<Option<Session>> {
+    override fun findOneFlow(id: String): Flow<Result<Option<Session>>> {
+        return db.getOneAsFlow {
+            sessionQueries.findOne(id, ::mapToSession)
+        }
+    }
+
+    override suspend fun findCurrent(): Result<Option<Session>> {
         return db.getOne {
             sessionQueries.findCurrent(::mapToSession)
         }
     }
 
-    override fun getCurrentFlow(): Flow<Result<Option<Session>>> {
+    override fun findCurrentFlow(): Flow<Result<Option<Session>>> {
         return db.getOneAsFlow {
             sessionQueries.findCurrent(::mapToSession)
         }
@@ -70,26 +73,26 @@ class SessionStorageImpl(
         }
     }
 
-    override suspend fun delete(id: Uuid): Result<Unit> {
+    override suspend fun deleteOne(id: String): Result<Unit> {
         return db.use {
             transaction {
-                sessionQueries.deleteById(id.toString())
+                sessionQueries.deleteOne(id)
             }
         }
     }
 
-    override suspend fun markCurrent(id: Uuid): Result<Unit> {
+    override suspend fun markCurrent(id: String): Result<Unit> {
         return db.use {
             transaction {
-                sessionQueries.updateCurrent(id.toString())
+                sessionQueries.updateCurrent(id)
             }
         }
     }
 
-    override suspend fun deleteAll(): Result<Unit> {
+    override suspend fun delete(): Result<Unit> {
         return db.use {
             transaction {
-                sessionQueries.deleteAll()
+                sessionQueries.delete()
             }
         }
     }

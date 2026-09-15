@@ -4,10 +4,8 @@ import com.diva.app.models.server.Server
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 interface ServerRepository : Repository {
     fun getServers(): Flow<Result<List<Server>>>
 

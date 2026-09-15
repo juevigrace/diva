@@ -3,24 +3,19 @@ package io.github.juevigrace.diva.lib.database.permissions
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.permission.Permission
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 interface PermissionsStorage {
-    suspend fun getAll(): Result<List<Permission>>
+    suspend fun findAll(): Result<List<Permission>>
 
-    fun getAllFlow(): Flow<Result<List<Permission>>>
+    fun findAllFlow(): Flow<Result<List<Permission>>>
 
-    @OptIn(ExperimentalUuidApi::class)
-    suspend fun getById(id: Uuid): Result<Option<Permission>>
+    suspend fun findOne(id: String): Result<Option<Permission>>
 
-    @OptIn(ExperimentalUuidApi::class)
-    fun getByIdFlow(id: Uuid): Flow<Result<Option<Permission>>>
+    fun findOneFlow(id: String): Flow<Result<Option<Permission>>>
 
     suspend fun upsert(item: Permission): Result<Unit>
 
-    @OptIn(ExperimentalUuidApi::class)
-    suspend fun delete(id: Uuid): Result<Unit>
+    suspend fun deleteOne(id: String): Result<Unit>
 
-    suspend fun deleteAll(): Result<Unit>
+    suspend fun delete(): Result<Unit>
 }

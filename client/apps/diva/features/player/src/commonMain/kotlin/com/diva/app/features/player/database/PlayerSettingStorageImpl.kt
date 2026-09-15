@@ -7,10 +7,8 @@ import com.diva.app.models.player.RepeatMode
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class PlayerSettingStorageImpl(
     private val db: DivaDatabase<DivaDB>,
 ) : PlayerSettingStorage {

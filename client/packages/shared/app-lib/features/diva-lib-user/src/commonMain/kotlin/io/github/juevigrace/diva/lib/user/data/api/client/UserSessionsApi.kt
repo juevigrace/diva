@@ -19,7 +19,7 @@ class UserSessionsApiImpl(
         return client.getAs<ApiResponse<List<SessionResponse>>>(
             path = "/api/user/$uid/sessions",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: emptyList() }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun deleteAll(uid: String, token: String): Result<Unit> {

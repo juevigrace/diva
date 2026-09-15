@@ -10,21 +10,18 @@ import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class SessionRepositoryImpl(
     override val client: DivaClient,
     private val storage: SessionStorage,
     private val api: SessionsApi,
 ) : SessionRepository {
-    override fun getSessions(): Flow<Result<List<Session>>> = storage.getAllFlow()
+    override fun getSessions(): Flow<Result<List<Session>>> = storage.findAllFlow()
 
-    override fun getCurrentSession(): Flow<Result<Option<Session>>> = storage.getCurrentFlow()
+    override fun getCurrentSession(): Flow<Result<Option<Session>>> = storage.findCurrentFlow()
 
     override suspend fun getCurrent(): Result<Session> {
-        return storage.getCurrent().mapCatching { option ->
+        return storage.findCurrent().mapCatching { option ->
             option.getOrThrow { error("No current session available") }
         }
     }
@@ -53,9 +50,9 @@ class SessionRepositoryImpl(
         )
     }
 
-    override suspend fun markCurrent(id: Uuid): Result<Unit> = storage.markCurrent(id)
+    override suspend fun markCurrent(id: String): Result<Unit> = storage.markCurrent(id)
 
-    override suspend fun delete(id: Uuid): Result<Unit> = storage.delete(id)
+    override suspend fun delete(id: String): Result<Unit> = storage.deleteOne(id)
 
-    override suspend fun deleteAll(): Result<Unit> = storage.deleteAll()
+    override suspend fun deleteAll(): Result<Unit> = storage.delete()
 }

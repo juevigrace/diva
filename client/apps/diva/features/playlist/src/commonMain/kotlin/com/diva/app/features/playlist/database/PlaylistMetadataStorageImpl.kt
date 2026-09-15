@@ -7,11 +7,9 @@ import com.diva.app.models.collection.playlist.Playlist
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import migrations.Diva_playlist_metadata
 
-@OptIn(ExperimentalUuidApi::class)
 class PlaylistMetadataStorageImpl(
     private val db: DivaDatabase<DivaDB>,
 ) : PlaylistMetadataStorage {

@@ -40,14 +40,14 @@ class PermissionsApiImpl(
                 "limit" to pageSize.toString(),
             ),
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: error("Missing data in ApiResponse") }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun getByID(pid: String, token: String): Result<PermissionResponse> {
         return client.getAs<ApiResponse<PermissionResponse>>(
             path = "/api/permissions/$pid",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: error("Missing data in ApiResponse") }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun update(pid: String, dto: UpdatePermissionDto, token: String): Result<Unit> {
@@ -67,6 +67,6 @@ class PermissionsApiImpl(
             path = "/api/permissions/$pid/level",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: error("Missing data in ApiResponse") }
+        ).map { it.data ?: error(it.message) }
     }
 }

@@ -16,6 +16,6 @@ class DevicesApiImpl(
         return client.getAs<ApiResponse<List<DeviceResponse>>>(
             path = "/api/devices",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: emptyList() }
+        ).map { it.data ?: error(it.message) }
     }
 }

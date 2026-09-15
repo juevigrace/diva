@@ -5,10 +5,8 @@ import com.diva.app.features.server.domain.ServerRepository
 import com.diva.app.models.server.Server
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class ServerRepositoryImpl(
     private val storage: ServerStorage,
 ) : ServerRepository {

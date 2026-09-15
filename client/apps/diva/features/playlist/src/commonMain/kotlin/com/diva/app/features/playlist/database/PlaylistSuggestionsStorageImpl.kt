@@ -7,11 +7,9 @@ import com.diva.app.models.collection.playlist.PlaylistSuggestions
 import com.diva.app.models.media.Media
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.models.user.User
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import migrations.Diva_playlist_suggestions
 
-@OptIn(ExperimentalUuidApi::class)
 class PlaylistSuggestionsStorageImpl(
     private val db: DivaDatabase<DivaDB>,
 ) : PlaylistSuggestionsStorage {

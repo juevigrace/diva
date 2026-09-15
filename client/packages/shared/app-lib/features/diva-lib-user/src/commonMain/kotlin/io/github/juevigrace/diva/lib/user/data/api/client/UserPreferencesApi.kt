@@ -40,7 +40,7 @@ class UserPreferencesApiImpl(
         return client.getAs<ApiResponse<UserPreferencesResponse>>(
             path = "/api/user/preferences/$pid",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: error("Missing data in ApiResponse") }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun update(pid: String, dto: UpdateUserPreferencesDto, token: String): Result<Unit> {

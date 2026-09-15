@@ -4,10 +4,8 @@ import com.diva.app.database.DivaDB
 import com.diva.app.database.folder.MediaFolderLinkStorage
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlin.time.Clock
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class MediaFolderLinkStorageImpl(
     private val db: DivaDatabase<DivaDB>,
 ) : MediaFolderLinkStorage {

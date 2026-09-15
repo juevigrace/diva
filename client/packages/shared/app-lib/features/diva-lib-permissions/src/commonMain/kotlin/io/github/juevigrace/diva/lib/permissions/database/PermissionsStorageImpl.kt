@@ -9,35 +9,32 @@ import io.github.juevigrace.diva.lib.models.permission.Permission
 import io.github.juevigrace.diva.lib.models.permission.PermissionAction
 import io.github.juevigrace.diva.lib.models.user.Role
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class PermissionsStorageImpl(
     private val db: DivaDatabase<DivaSharedDB>,
 ) : PermissionsStorage {
 
-    override suspend fun getAll(): Result<List<Permission>> {
+    override suspend fun findAll(): Result<List<Permission>> {
         return db.getList {
             permissionsQueries.findAll(::mapToPermission)
         }
     }
 
-    override fun getAllFlow(): Flow<Result<List<Permission>>> {
+    override fun findAllFlow(): Flow<Result<List<Permission>>> {
         return db.getListAsFlow {
             permissionsQueries.findAll(::mapToPermission)
         }
     }
 
-    override suspend fun getById(id: Uuid): Result<Option<Permission>> {
+    override suspend fun findOne(id: String): Result<Option<Permission>> {
         return db.getOne {
-            permissionsQueries.findOneById(id.toString(), ::mapToPermission)
+            permissionsQueries.findOne(id, ::mapToPermission)
         }
     }
 
-    override fun getByIdFlow(id: Uuid): Flow<Result<Option<Permission>>> {
+    override fun findOneFlow(id: String): Flow<Result<Option<Permission>>> {
         return db.getOneAsFlow {
-            permissionsQueries.findOneById(id.toString(), ::mapToPermission)
+            permissionsQueries.findOne(id, ::mapToPermission)
         }
     }
 
@@ -57,18 +54,18 @@ class PermissionsStorageImpl(
         }
     }
 
-    override suspend fun delete(id: Uuid): Result<Unit> {
+    override suspend fun deleteOne(id: String): Result<Unit> {
         return db.use {
             transaction {
-                permissionsQueries.deleteById(id.toString())
+                permissionsQueries.deleteOne(id)
             }
         }
     }
 
-    override suspend fun deleteAll(): Result<Unit> {
+    override suspend fun delete(): Result<Unit> {
         return db.use {
             transaction {
-                permissionsQueries.deleteAll()
+                permissionsQueries.delete()
             }
         }
     }

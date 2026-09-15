@@ -11,11 +11,9 @@ import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import migrations.Diva_media
 
-@OptIn(ExperimentalUuidApi::class)
 class MediaStorageImpl(
     private val db: DivaDatabase<DivaDB>,
 ) : MediaStorage {

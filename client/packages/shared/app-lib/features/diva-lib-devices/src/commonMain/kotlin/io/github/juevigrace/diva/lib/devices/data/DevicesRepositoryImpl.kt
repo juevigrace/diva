@@ -6,17 +6,14 @@ import io.github.juevigrace.diva.lib.devices.domain.DevicesRepository
 import io.github.juevigrace.diva.lib.models.device.Device
 import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class DevicesRepositoryImpl(
     override val client: DivaClient,
     private val storage: DevicesStorage,
 ) : DevicesRepository {
-    override fun getDevices(): Flow<Result<List<Device>>> = storage.getAllFlow()
+    override fun getDevices(): Flow<Result<List<Device>>> = storage.findAllFlow()
 
-    override fun getDevice(id: Uuid): Flow<Result<Option<Device>>> = storage.getByIdFlow(id)
+    override fun getDevice(id: String): Flow<Result<Option<Device>>> = storage.findOneFlow(id)
 
     override suspend fun sync(): Result<Unit> {
         return Result.success(Unit)
@@ -24,5 +21,5 @@ class DevicesRepositoryImpl(
 
     override suspend fun save(device: Device): Result<Unit> = storage.upsert(device)
 
-    override suspend fun delete(id: Uuid): Result<Unit> = storage.delete(id)
+    override suspend fun delete(id: String): Result<Unit> = storage.deleteOne(id)
 }

@@ -9,35 +9,32 @@ import io.github.juevigrace.diva.lib.database.user.UserStorage
 import io.github.juevigrace.diva.lib.models.user.Role
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class UserStorageImpl(
     private val db: DivaDatabase<DivaSharedDB>,
 ) : UserStorage {
 
-    override suspend fun getAll(): Result<List<User>> {
+    override suspend fun findAll(): Result<List<User>> {
         return db.getList {
             userQueries.findAll(::mapToUser)
         }
     }
 
-    override fun getAllFlow(): Flow<Result<List<User>>> {
+    override fun findAllFlow(): Flow<Result<List<User>>> {
         return db.getListAsFlow {
             userQueries.findAll(::mapToUser)
         }
     }
 
-    override suspend fun getById(id: Uuid): Result<Option<User>> {
+    override suspend fun findOne(id: String): Result<Option<User>> {
         return db.getOne {
-            userQueries.findOneById(id.toString(), ::mapToUser)
+            userQueries.findOne(id, ::mapToUser)
         }
     }
 
-    override fun getByIdFlow(id: Uuid): Flow<Result<Option<User>>> {
+    override fun findOneFlow(id: String): Flow<Result<Option<User>>> {
         return db.getOneAsFlow {
-            userQueries.findOneById(id.toString(), ::mapToUser)
+            userQueries.findOne(id, ::mapToUser)
         }
     }
 
@@ -58,18 +55,18 @@ class UserStorageImpl(
         }
     }
 
-    override suspend fun delete(id: Uuid): Result<Unit> {
+    override suspend fun deleteOne(id: String): Result<Unit> {
         return db.use {
             transaction {
-                userQueries.deleteById(id.toString())
+                userQueries.deleteOne(id)
             }
         }
     }
 
-    override suspend fun deleteAll(): Result<Unit> {
+    override suspend fun delete(): Result<Unit> {
         return db.use {
             transaction {
-                userQueries.deleteAll()
+                userQueries.delete()
             }
         }
     }

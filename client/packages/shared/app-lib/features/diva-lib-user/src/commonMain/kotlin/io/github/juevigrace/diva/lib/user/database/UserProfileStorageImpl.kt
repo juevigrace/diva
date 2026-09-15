@@ -8,31 +8,36 @@ import io.github.juevigrace.diva.lib.database.DivaSharedDB
 import io.github.juevigrace.diva.lib.database.user.profile.UserProfileStorage
 import io.github.juevigrace.diva.lib.models.user.profile.UserProfile
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class UserProfileStorageImpl(
     private val db: DivaDatabase<DivaSharedDB>
 ) : UserProfileStorage {
 
-    override suspend fun getByUser(userId: Uuid): Result<Option<UserProfile>> {
+    override suspend fun findOne(userId: String): Result<Option<UserProfile>> {
         return db.getOne {
-            userProfilesQueries.findByUser(userId.toString(), ::mapToUserProfile)
+            userProfilesQueries.findOne(userId, ::mapToUserProfile)
         }
     }
 
-    override fun getByUserFlow(userId: Uuid): Flow<Result<Option<UserProfile>>> {
+    override fun findOneFlow(userId: String): Flow<Result<Option<UserProfile>>> {
         return db.getOneAsFlow {
-            userProfilesQueries.findByUser(userId.toString(), ::mapToUserProfile)
+            userProfilesQueries.findOne(userId, ::mapToUserProfile)
         }
     }
 
-    override suspend fun upsert(userId: Uuid, item: UserProfile): Result<Unit> {
+    override suspend fun deleteOne(userId: String): Result<Unit> {
+        return db.use {
+            transaction {
+                userProfilesQueries.deleteOne(userId)
+            }
+        }
+    }
+
+    override suspend fun upsert(userId: String, item: UserProfile): Result<Unit> {
         return db.use {
             transaction {
                 userProfilesQueries.upsert(
-                    user_id = userId.toString(),
+                    user_id = userId,
                     first_name = item.firstName,
                     last_name = item.lastName,
                     birth_date = item.birthDate.getOrNull(),
@@ -45,10 +50,10 @@ class UserProfileStorageImpl(
         }
     }
 
-    override suspend fun deleteAll(): Result<Unit> {
+    override suspend fun delete(): Result<Unit> {
         return db.use {
             transaction {
-                userProfilesQueries.deleteAll()
+                userProfilesQueries.delete()
             }
         }
     }

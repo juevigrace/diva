@@ -7,10 +7,8 @@ import com.diva.app.models.media.Media
 import com.diva.app.models.media.tag.Tag
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class MediaRepositoryImpl(
     private val storage: MediaStorage,
     private val mediaTagStorage: MediaTagStorage,

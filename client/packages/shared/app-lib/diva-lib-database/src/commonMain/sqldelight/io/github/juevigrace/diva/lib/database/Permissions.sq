@@ -2,7 +2,7 @@ upsert:
 INSERT OR REPLACE INTO diva_permissions (id, name, description, action, role_level, created_at, updated_at)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
-deleteAll:
+delete:
 DELETE FROM diva_permissions;
 
 findAll:
@@ -17,7 +17,7 @@ SELECT
   deleted_at AS deletedAt
 FROM diva_permissions;
 
-findOneById:
+findOne:
 SELECT
   id,
   name,
@@ -30,6 +30,6 @@ SELECT
 FROM diva_permissions
 WHERE id = ?;
 
-deleteById:
+deleteOne:
 DELETE FROM diva_permissions
 WHERE id = ?;

@@ -8,10 +8,8 @@ import com.diva.app.models.playback.ResumePoint
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class ResumePointStorageImpl(
     private val db: DivaDatabase<DivaDB>,
 ) : ResumePointStorage {

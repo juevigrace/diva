@@ -4,11 +4,9 @@ import com.diva.app.database.DivaDB
 import com.diva.app.database.collection.playlist.PlaylistContributorStorage
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.models.user.User
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import migrations.Diva_playlist_contributor
 
-@OptIn(ExperimentalUuidApi::class)
 class PlaylistContributorStorageImpl(
     private val db: DivaDatabase<DivaDB>,
 ) : PlaylistContributorStorage {

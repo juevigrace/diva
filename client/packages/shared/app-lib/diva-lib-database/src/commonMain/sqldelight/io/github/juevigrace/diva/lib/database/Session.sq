@@ -9,7 +9,7 @@ updateCurrent:
 UPDATE diva_session
 SET is_current = CASE WHEN id = ? THEN 1 ELSE 0 END;
 
-deleteAll:
+delete:
 DELETE FROM diva_session;
 
 findAll:
@@ -30,7 +30,7 @@ SELECT
   updated_at AS updatedAt
 FROM diva_session;
 
-findOneById:
+findOne:
 SELECT
   id,
   user_id AS userId,
@@ -68,6 +68,6 @@ SELECT
 FROM diva_session
 WHERE is_current = 1;
 
-deleteById:
+deleteOne:
 DELETE FROM diva_session
 WHERE id = ?;

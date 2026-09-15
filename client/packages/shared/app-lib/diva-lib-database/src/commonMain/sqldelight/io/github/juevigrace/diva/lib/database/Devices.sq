@@ -2,7 +2,7 @@ upsert:
 INSERT OR REPLACE INTO diva_devices (id, name, created_at, updated_at)
 VALUES (?, ?, ?, ?);
 
-deleteAll:
+delete:
 DELETE FROM diva_devices;
 
 findAll:
@@ -13,7 +13,7 @@ SELECT
   updated_at AS updatedAt
 FROM diva_devices;
 
-findOneById:
+findOne:
 SELECT
   id,
   name,
@@ -22,6 +22,6 @@ SELECT
 FROM diva_devices
 WHERE id = ?;
 
-deleteById:
+deleteOne:
 DELETE FROM diva_devices
 WHERE id = ?;

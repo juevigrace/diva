@@ -3,6 +3,7 @@ package io.github.juevigrace.diva.lib.ui.navigation
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
+// TODO: maybe move each graph to their corresponding module will add more flexibility at creating routes?
 @Serializable
 sealed interface Screens : NavKey {
 

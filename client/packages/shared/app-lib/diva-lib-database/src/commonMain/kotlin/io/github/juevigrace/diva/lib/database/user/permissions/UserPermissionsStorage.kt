@@ -3,24 +3,19 @@ package io.github.juevigrace.diva.lib.database.user.permissions
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.user.permissions.UserPermission
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 interface UserPermissionsStorage {
-    suspend fun getAllByUser(userId: Uuid): Result<List<UserPermission>>
+    suspend fun findAll(userId: String): Result<List<UserPermission>>
 
-    fun getAllByUserFlow(userId: Uuid): Flow<Result<List<UserPermission>>>
+    fun findAllFlow(userId: String): Flow<Result<List<UserPermission>>>
 
-    @OptIn(ExperimentalUuidApi::class)
-    suspend fun getById(permissionId: Uuid, userId: Uuid): Result<Option<UserPermission>>
+    suspend fun findOne(permissionId: String, userId: String): Result<Option<UserPermission>>
 
-    @OptIn(ExperimentalUuidApi::class)
-    fun getByIdFlow(permissionId: Uuid, userId: Uuid): Flow<Result<Option<UserPermission>>>
+    fun findOneFlow(permissionId: String, userId: String): Flow<Result<Option<UserPermission>>>
 
-    suspend fun upsert(userId: Uuid, item: UserPermission): Result<Unit>
+    suspend fun upsert(userId: String, item: UserPermission): Result<Unit>
 
-    @OptIn(ExperimentalUuidApi::class)
-    suspend fun delete(permissionId: Uuid, userId: Uuid): Result<Unit>
+    suspend fun deleteOne(permissionId: String, userId: String): Result<Unit>
 
-    suspend fun deleteAll(): Result<Unit>
+    suspend fun delete(): Result<Unit>
 }

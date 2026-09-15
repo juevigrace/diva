@@ -7,35 +7,32 @@ import io.github.juevigrace.diva.lib.database.user.devices.UserDevicesStorage
 import io.github.juevigrace.diva.lib.models.device.Device
 import io.github.juevigrace.diva.lib.models.user.device.UserDevice
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class UserDevicesStorageImpl(
     private val db: DivaDatabase<DivaSharedDB>
 ) : UserDevicesStorage {
 
-    override suspend fun getAllByUser(userId: Uuid): Result<List<UserDevice>> {
+    override suspend fun findAll(userId: String): Result<List<UserDevice>> {
         return db.getList {
-            userDevicesQueries.findAllByUser(userId.toString(), ::mapToUserDevice)
+            userDevicesQueries.findAll(userId, ::mapToUserDevice)
         }
     }
 
-    override fun getAllByUserFlow(userId: Uuid): Flow<Result<List<UserDevice>>> {
+    override fun findAllFlow(userId: String): Flow<Result<List<UserDevice>>> {
         return db.getListAsFlow {
-            userDevicesQueries.findAllByUser(userId.toString(), ::mapToUserDevice)
+            userDevicesQueries.findAll(userId, ::mapToUserDevice)
         }
     }
 
-    override suspend fun getById(userId: Uuid, deviceId: Uuid): Result<Option<UserDevice>> {
+    override suspend fun findOne(userId: String, deviceId: String): Result<Option<UserDevice>> {
         return db.getOne {
-            userDevicesQueries.findOneById(userId.toString(), deviceId.toString(), ::mapToUserDevice)
+            userDevicesQueries.findOne(userId, deviceId, ::mapToUserDevice)
         }
     }
 
-    override fun getByIdFlow(userId: Uuid, deviceId: Uuid): Flow<Result<Option<UserDevice>>> {
+    override fun findOneFlow(userId: String, deviceId: String): Flow<Result<Option<UserDevice>>> {
         return db.getOneAsFlow {
-            userDevicesQueries.findOneById(userId.toString(), deviceId.toString(), ::mapToUserDevice)
+            userDevicesQueries.findOne(userId, deviceId, ::mapToUserDevice)
         }
     }
 
@@ -43,8 +40,8 @@ class UserDevicesStorageImpl(
         return db.use {
             transaction {
                 userDevicesQueries.upsert(
-                    user_id = item.userId.toString(),
-                    device_id = item.device.id.toString(),
+                    user_id = item.userId,
+                    device_id = item.device.id,
                     created_at = item.createdAt,
                     updated_at = item.updatedAt
                 )
@@ -52,18 +49,18 @@ class UserDevicesStorageImpl(
         }
     }
 
-    override suspend fun delete(userId: Uuid, deviceId: Uuid): Result<Unit> {
+    override suspend fun deleteOne(userId: String, deviceId: String): Result<Unit> {
         return db.use {
             transaction {
-                userDevicesQueries.deleteById(userId.toString(), deviceId.toString())
+                userDevicesQueries.deleteOne(userId, deviceId)
             }
         }
     }
 
-    override suspend fun deleteAll(): Result<Unit> {
+    override suspend fun delete(): Result<Unit> {
         return db.use {
             transaction {
-                userDevicesQueries.deleteAll()
+                userDevicesQueries.delete()
             }
         }
     }

@@ -11,10 +11,8 @@ import com.diva.app.models.media.MediaMetadata
 import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
 import kotlinx.coroutines.flow.first
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class SearchRepositoryImpl(
     private val mediaRepository: MediaRepository,
     private val mediaMetadataRepository: MediaMetadataRepository,

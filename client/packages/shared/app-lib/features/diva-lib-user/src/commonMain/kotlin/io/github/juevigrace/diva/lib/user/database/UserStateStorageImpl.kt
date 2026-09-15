@@ -9,31 +9,36 @@ import io.github.juevigrace.diva.lib.database.user.state.UserStateStorage
 import io.github.juevigrace.diva.lib.models.user.UserStatus
 import io.github.juevigrace.diva.lib.models.user.state.UserState
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class UserStateStorageImpl(
     private val db: DivaDatabase<DivaSharedDB>
 ) : UserStateStorage {
 
-    override suspend fun getByUser(userId: Uuid): Result<Option<UserState>> {
+    override suspend fun findOne(userId: String): Result<Option<UserState>> {
         return db.getOne {
-            userStateQueries.findByUser(userId.toString(), ::mapToUserState)
+            userStateQueries.findOne(userId, ::mapToUserState)
         }
     }
 
-    override fun getByUserFlow(userId: Uuid): Flow<Result<Option<UserState>>> {
+    override fun findOneFlow(userId: String): Flow<Result<Option<UserState>>> {
         return db.getOneAsFlow {
-            userStateQueries.findByUser(userId.toString(), ::mapToUserState)
+            userStateQueries.findOne(userId, ::mapToUserState)
         }
     }
 
-    override suspend fun upsert(userId: Uuid, item: UserState): Result<Unit> {
+    override suspend fun deleteOne(userId: String): Result<Unit> {
+        return db.use {
+            transaction {
+                userStateQueries.deleteOne(userId)
+            }
+        }
+    }
+
+    override suspend fun upsert(userId: String, item: UserState): Result<Unit> {
         return db.use {
             transaction {
                 userStateQueries.upsert(
-                    user_id = userId.toString(),
+                    user_id = userId,
                     verified = item.verified,
                     status = item.status,
                     last_active_at = item.lastActiveAt.getOrNull() ?: 0L,
@@ -43,10 +48,10 @@ class UserStateStorageImpl(
         }
     }
 
-    override suspend fun deleteAll(): Result<Unit> {
+    override suspend fun delete(): Result<Unit> {
         return db.use {
             transaction {
-                userStateQueries.deleteAll()
+                userStateQueries.delete()
             }
         }
     }

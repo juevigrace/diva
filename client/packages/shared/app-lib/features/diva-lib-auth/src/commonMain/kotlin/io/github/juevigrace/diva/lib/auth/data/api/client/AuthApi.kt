@@ -25,18 +25,23 @@ class AuthApiImpl(
         return client.postAs<ApiResponse<SessionResponse>>(
             path = "/api/auth/signIn",
             body = dto,
-        ).map { it.data ?: error("Missing data in ApiResponse") }
+        ).map { res ->
+            // TODO: since server returns nil for error cases this is ok
+            //       but a better error handling using the status code
+            //       must be made
+            res.data ?: error(res.message)
+        }
     }
 
     override suspend fun signUp(dto: SignUpDto): Result<SessionResponse> {
         return client.postAs<ApiResponse<SessionResponse>>(
             path = "/api/auth/signUp",
             body = dto,
-        ).map { it.data ?: error("Missing data in ApiResponse") }
+        ).map { res -> res.data ?: error(res.message) }
     }
 
     override suspend fun signOut(dto: SessionDataDto, token: String): Result<Unit> {
-        return client.postAs<Unit>(
+        return client.postAs(
             path = "/api/auth/signOut",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
@@ -44,7 +49,7 @@ class AuthApiImpl(
     }
 
     override suspend fun ping(token: String): Result<Unit> {
-        return client.postAs<Unit>(
+        return client.postAs(
             path = "/api/auth/ping",
             headers = mapOf("Authorization" to "Bearer $token"),
         )
@@ -55,13 +60,13 @@ class AuthApiImpl(
             path = "/api/auth/refresh",
             body = dto,
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: error("Missing data in ApiResponse") }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun forgotPasswordConfirm(dto: ForgotPasswordConfirmDto): Result<SessionResponse> {
         return client.postAs<ApiResponse<SessionResponse>>(
             path = "/api/auth/forgot/password/confirm",
             body = dto,
-        ).map { it.data ?: error("Missing data in ApiResponse") }
+        ).map { it.data ?: error(it.message) }
     }
 }

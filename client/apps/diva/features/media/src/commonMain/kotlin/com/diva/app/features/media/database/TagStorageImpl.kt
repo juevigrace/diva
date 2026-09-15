@@ -8,11 +8,9 @@ import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import migrations.Diva_tag
 
-@OptIn(ExperimentalUuidApi::class)
 class TagStorageImpl(
     private val db: DivaDatabase<DivaDB>,
 ) : TagStorage {

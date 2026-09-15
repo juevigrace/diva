@@ -5,16 +5,13 @@ import io.github.juevigrace.diva.lib.core.Repository
 import io.github.juevigrace.diva.lib.models.user.state.UserState
 import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 interface UserStateRepository : Repository {
     val client: DivaClient
 
-    fun getState(userId: Uuid): Flow<Result<Option<UserState>>>
+    fun getState(userId: String): Flow<Result<Option<UserState>>>
 
-    suspend fun sync(userId: Uuid): Result<Unit>
+    suspend fun sync(userId: String): Result<Unit>
 
-    suspend fun save(userId: Uuid, state: UserState): Result<Unit>
+    suspend fun save(userId: String, state: UserState): Result<Unit>
 }

@@ -5,10 +5,8 @@ import com.diva.app.features.mix.domain.MixRepository
 import com.diva.app.models.collection.mix.Mix
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class MixRepositoryImpl(
     private val storage: MixMetadataStorage,
 ) : MixRepository {

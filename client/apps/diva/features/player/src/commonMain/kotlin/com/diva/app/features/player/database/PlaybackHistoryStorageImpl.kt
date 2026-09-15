@@ -7,10 +7,8 @@ import com.diva.app.models.media.Media
 import com.diva.app.models.playback.PlaybackHistory
 import io.github.juevigrace.diva.core.getOrElse
 import io.github.juevigrace.diva.database.DivaDatabase
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class PlaybackHistoryStorageImpl(
     private val db: DivaDatabase<DivaDB>,
 ) : PlaybackHistoryStorage {

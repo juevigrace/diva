@@ -10,27 +10,24 @@ import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class UserPermissionsRepositoryImpl(
     override val client: DivaClient,
     private val storage: UserPermissionsStorage,
     private val sessionRepository: SessionRepository,
     private val api: UserPermissionsApi,
 ) : UserPermissionsRepository {
-    override fun getPermissions(userId: Uuid): Flow<Result<List<UserPermission>>> = storage.getAllByUserFlow(userId)
+    override fun getPermissions(userId: String): Flow<Result<List<UserPermission>>> = storage.findAllFlow(userId)
 
-    override fun getPermission(permissionId: Uuid, userId: Uuid): Flow<Result<Option<UserPermission>>> =
-        storage.getByIdFlow(permissionId, userId)
+    override fun getPermission(permissionId: String, userId: String): Flow<Result<Option<UserPermission>>> =
+        storage.findOneFlow(permissionId, userId)
 
-    override suspend fun sync(userId: Uuid): Result<Unit> {
+    override suspend fun sync(userId: String): Result<Unit> {
         return withSession(
             sessionCall = sessionRepository::getCurrent,
             onFound = { session ->
                 api.list(
-                    uid = userId.toString(),
+                    uid = userId,
                     token = session.accessToken
                 ).mapCatching { responses ->
                     val results = responses.map {
@@ -53,9 +50,9 @@ class UserPermissionsRepositoryImpl(
     }
 
     override suspend fun save(
-        userId: Uuid,
+        userId: String,
         permission: UserPermission
     ): Result<Unit> = storage.upsert(userId, permission)
 
-    override suspend fun delete(permissionId: Uuid, userId: Uuid): Result<Unit> = storage.delete(permissionId, userId)
+    override suspend fun delete(permissionId: String, userId: String): Result<Unit> = storage.deleteOne(permissionId, userId)
 }

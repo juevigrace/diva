@@ -19,14 +19,14 @@ class UserActionsApiImpl(
         return client.getAs<ApiResponse<List<UserActionResponse>>>(
             path = "/api/user/$uid/actions",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: emptyList() }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun getByID(aid: String, token: String): Result<UserActionResponse> {
         return client.getAs<ApiResponse<UserActionResponse>>(
             path = "/api/user/actions/$aid",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: error("Missing data in ApiResponse") }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun delete(aid: String, token: String): Result<Unit> {

@@ -7,10 +7,8 @@ import com.diva.app.models.playback.ResumePoint
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 interface PlayerRepository : Repository {
     suspend fun getResumePoint(userId: Uuid, mediaId: Uuid): Result<Option<ResumePoint>>
 

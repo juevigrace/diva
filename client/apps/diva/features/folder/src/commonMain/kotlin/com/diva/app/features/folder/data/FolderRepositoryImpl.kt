@@ -7,10 +7,8 @@ import com.diva.app.models.folder.Folder
 import com.diva.app.models.media.Media
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class FolderRepositoryImpl(
     private val storage: FolderStorage,
     private val linkStorage: MediaFolderLinkStorage,

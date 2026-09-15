@@ -7,74 +7,71 @@ import io.github.juevigrace.diva.lib.database.user.actions.UserActionsStorage
 import io.github.juevigrace.diva.lib.models.actions.Actions
 import io.github.juevigrace.diva.lib.models.user.actions.UserAction
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class UserActionsStorageImpl(
     private val db: DivaDatabase<DivaSharedDB>
 ) : UserActionsStorage {
 
-    override suspend fun getById(id: Uuid): Result<Option<UserAction>> {
+    override suspend fun findOne(id: String): Result<Option<UserAction>> {
         return db.getOne {
-            userActionsQueries.findOneById(id.toString(), ::mapToUserAction)
+            userActionsQueries.findOne(id, ::mapToUserAction)
         }
     }
 
-    override fun getByIdFlow(id: Uuid): Flow<Result<Option<UserAction>>> {
+    override fun findOneFlow(id: String): Flow<Result<Option<UserAction>>> {
         return db.getOneAsFlow {
-            userActionsQueries.findOneById(id.toString(), ::mapToUserAction)
+            userActionsQueries.findOne(id, ::mapToUserAction)
         }
     }
 
-    override suspend fun getAllByUser(userId: Uuid): Result<List<UserAction>> {
+    override suspend fun findAll(userId: String): Result<List<UserAction>> {
         return db.getList {
-            userActionsQueries.findAllByUser(userId.toString(), ::mapToUserAction)
+            userActionsQueries.findAll(userId, ::mapToUserAction)
         }
     }
 
-    override fun getAllByUserFlow(userId: Uuid): Flow<Result<List<UserAction>>> {
+    override fun findAllFlow(userId: String): Flow<Result<List<UserAction>>> {
         return db.getListAsFlow {
-            userActionsQueries.findAllByUser(userId.toString(), ::mapToUserAction)
+            userActionsQueries.findAll(userId, ::mapToUserAction)
         }
     }
 
-    override suspend fun getByAction(userId: Uuid, action: Actions): Result<Option<UserAction>> {
+    override suspend fun findByAction(userId: String, action: Actions): Result<Option<UserAction>> {
         return db.getOne {
-            userActionsQueries.findOneByAction(userId.toString(), action, ::mapToUserAction)
+            userActionsQueries.findOneByAction(userId, action, ::mapToUserAction)
         }
     }
 
-    override fun getByActionFlow(userId: Uuid, action: Actions): Flow<Result<Option<UserAction>>> {
+    override fun findByActionFlow(userId: String, action: Actions): Flow<Result<Option<UserAction>>> {
         return db.getOneAsFlow {
-            userActionsQueries.findOneByAction(userId.toString(), action, ::mapToUserAction)
+            userActionsQueries.findOneByAction(userId, action, ::mapToUserAction)
         }
     }
 
-    override suspend fun upsert(userId: Uuid, item: UserAction): Result<Unit> {
+    override suspend fun upsert(userId: String, item: UserAction): Result<Unit> {
         return db.use {
             transaction {
                 userActionsQueries.upsert(
                     id = item.id,
                     name = item.action,
-                    user_id = userId.toString()
+                    user_id = userId
                 )
             }
         }
     }
 
-    override suspend fun delete(id: Uuid): Result<Unit> {
+    override suspend fun deleteOne(id: String): Result<Unit> {
         return db.use {
             transaction {
-                userActionsQueries.deleteById(id.toString())
+                userActionsQueries.deleteOne(id)
             }
         }
     }
 
-    override suspend fun deleteAll(): Result<Unit> {
+    override suspend fun delete(): Result<Unit> {
         return db.use {
             transaction {
-                userActionsQueries.deleteAll()
+                userActionsQueries.delete()
             }
         }
     }

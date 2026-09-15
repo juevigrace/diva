@@ -10,27 +10,24 @@ import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class UserDevicesRepositoryImpl(
     override val client: DivaClient,
     private val storage: UserDevicesStorage,
     private val sessionRepository: SessionRepository,
     private val api: UserDevicesApi,
 ) : UserDevicesRepository {
-    override fun getDevices(userId: Uuid): Flow<Result<List<UserDevice>>> = storage.getAllByUserFlow(userId)
+    override fun getDevices(userId: String): Flow<Result<List<UserDevice>>> = storage.findAllFlow(userId)
 
-    override fun getDevice(userId: Uuid, deviceId: Uuid): Flow<Result<Option<UserDevice>>> =
-        storage.getByIdFlow(userId, deviceId)
+    override fun getDevice(userId: String, deviceId: String): Flow<Result<Option<UserDevice>>> =
+        storage.findOneFlow(userId, deviceId)
 
-    override suspend fun sync(userId: Uuid): Result<Unit> {
+    override suspend fun sync(userId: String): Result<Unit> {
         return withSession(
             sessionCall = sessionRepository::getCurrent,
             onFound = { session ->
                 api.list(
-                    uid = userId.toString(),
+                    uid = userId,
                     token = session.accessToken
                 ).mapCatching { responses ->
                     val results = responses.map {
@@ -54,5 +51,5 @@ class UserDevicesRepositoryImpl(
 
     override suspend fun save(device: UserDevice): Result<Unit> = storage.upsert(device)
 
-    override suspend fun delete(userId: Uuid, deviceId: Uuid): Result<Unit> = storage.delete(userId, deviceId)
+    override suspend fun delete(userId: String, deviceId: String): Result<Unit> = storage.deleteOne(userId, deviceId)
 }

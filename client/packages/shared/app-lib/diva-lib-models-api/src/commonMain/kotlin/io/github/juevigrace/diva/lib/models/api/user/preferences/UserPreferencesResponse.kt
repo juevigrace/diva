@@ -10,8 +10,6 @@ import kotlin.js.ExperimentalJsExport
 
 @Serializable
 data class UserPreferencesResponse(
-    @SerialName("id")
-    val id: String,
     @SerialName("theme")
     val theme: String,
     @SerialName("onboarding_completed")

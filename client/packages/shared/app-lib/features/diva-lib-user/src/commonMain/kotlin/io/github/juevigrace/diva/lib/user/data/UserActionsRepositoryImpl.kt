@@ -11,27 +11,24 @@ import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class UserActionsRepositoryImpl(
     override val client: DivaClient,
     private val storage: UserActionsStorage,
     private val sessionRepository: SessionRepository,
     private val api: UserActionsApi,
 ) : UserActionsRepository {
-    override fun getActions(userId: Uuid): Flow<Result<List<UserAction>>> = storage.getAllByUserFlow(userId)
+    override fun getActions(userId: String): Flow<Result<List<UserAction>>> = storage.findAllFlow(userId)
 
-    override fun getAction(userId: Uuid, action: Actions): Flow<Result<Option<UserAction>>> =
-        storage.getByActionFlow(userId, action)
+    override fun getAction(userId: String, action: Actions): Flow<Result<Option<UserAction>>> =
+        storage.findByActionFlow(userId, action)
 
-    override suspend fun sync(userId: Uuid): Result<Unit> {
+    override suspend fun sync(userId: String): Result<Unit> {
         return withSession(
             sessionCall = sessionRepository::getCurrent,
             onFound = { session ->
                 api.list(
-                    uid = userId.toString(),
+                    uid = userId,
                     token = session.accessToken
                 ).mapCatching { responses ->
                     val results = responses.map {
@@ -53,7 +50,7 @@ class UserActionsRepositoryImpl(
         )
     }
 
-    override suspend fun save(userId: Uuid, action: UserAction): Result<Unit> = storage.upsert(userId, action)
+    override suspend fun save(userId: String, action: UserAction): Result<Unit> = storage.upsert(userId, action)
 
-    override suspend fun delete(id: Uuid): Result<Unit> = storage.delete(id)
+    override suspend fun delete(id: String): Result<Unit> = storage.deleteOne(id)
 }

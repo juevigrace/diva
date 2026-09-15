@@ -5,10 +5,8 @@ import com.diva.app.models.media.Media
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 interface FolderRepository : Repository {
     fun getFolders(userId: Uuid): Flow<Result<List<Folder>>>
 

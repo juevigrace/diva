@@ -21,14 +21,14 @@ class SessionsApiImpl(
         return client.getAs<ApiResponse<List<SessionResponse>>>(
             path = "/api/sessions",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: emptyList() }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun getByID(sid: String, token: String): Result<SessionResponse> {
         return client.getAs<ApiResponse<SessionResponse>>(
             path = "/api/sessions/$sid",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: error("Missing data in ApiResponse") }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun close(sid: String, token: String): Result<Unit> {

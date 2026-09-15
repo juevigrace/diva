@@ -10,10 +10,8 @@ import com.diva.app.models.folder.Folder
 import com.diva.app.models.media.Media
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class LibraryRepositoryImpl(
     private val favoriteStorage: FavoriteStorage,
     private val mediaRepository: MediaRepository,

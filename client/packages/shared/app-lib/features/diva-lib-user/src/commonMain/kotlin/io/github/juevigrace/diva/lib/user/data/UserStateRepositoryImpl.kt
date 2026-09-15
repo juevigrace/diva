@@ -10,24 +10,21 @@ import io.github.juevigrace.diva.lib.user.data.api.client.UserStateApi
 import io.github.juevigrace.diva.lib.user.domain.UserStateRepository
 import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class UserStateRepositoryImpl(
     override val client: DivaClient,
     private val storage: UserStateStorage,
     private val sessionRepository: SessionRepository,
     private val api: UserStateApi,
 ) : UserStateRepository {
-    override fun getState(userId: Uuid): Flow<Result<Option<UserState>>> = storage.getByUserFlow(userId)
+    override fun getState(userId: String): Flow<Result<Option<UserState>>> = storage.findOneFlow(userId)
 
-    override suspend fun sync(userId: Uuid): Result<Unit> {
+    override suspend fun sync(userId: String): Result<Unit> {
         return withSession(
             sessionCall = sessionRepository::getCurrent,
             onFound = { session ->
                 api.getState(
-                    uid = userId.toString(),
+                    uid = userId,
                     token = session.accessToken
                 ).mapCatching { option ->
                     option.map { storage.upsert(userId, UserState.fromResponse(it)).getOrThrow() }
@@ -37,5 +34,5 @@ class UserStateRepositoryImpl(
         )
     }
 
-    override suspend fun save(userId: Uuid, state: UserState): Result<Unit> = storage.upsert(userId, state)
+    override suspend fun save(userId: String, state: UserState): Result<Unit> = storage.upsert(userId, state)
 }

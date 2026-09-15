@@ -9,10 +9,8 @@ import io.github.juevigrace.diva.core.getOrThrow
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Clock
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class FavoriteStorageImpl(
     private val db: DivaDatabase<DivaDB>,
 ) : FavoriteStorage {

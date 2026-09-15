@@ -2,10 +2,10 @@ upsert:
 INSERT OR REPLACE INTO diva_user_permissions (permission_id, user_id, granted_by, granted, granted_at, expires_at, updated_at)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
-deleteAll:
+delete:
 DELETE FROM diva_user_permissions;
 
-findAllByUser:
+findAll:
 SELECT
   permission_id AS permissionId,
   user_id AS userId,
@@ -17,7 +17,7 @@ SELECT
 FROM diva_user_permissions
 WHERE user_id = ?;
 
-findOneById:
+findOne:
 SELECT
   permission_id AS permissionId,
   user_id AS userId,
@@ -29,6 +29,6 @@ SELECT
 FROM diva_user_permissions
 WHERE permission_id = ? AND user_id = ?;
 
-deleteById:
+deleteOne:
 DELETE FROM diva_user_permissions
 WHERE permission_id = ? AND user_id = ?;

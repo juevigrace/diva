@@ -2,7 +2,7 @@ upsert:
 INSERT OR REPLACE INTO diva_user (id, username, email, phone_number, password_hash, role, created_at, updated_at)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
-deleteAll:
+delete:
 DELETE FROM diva_user;
 
 findAll:
@@ -18,7 +18,7 @@ SELECT
   deleted_at AS deletedAt
 FROM diva_user;
 
-findOneById:
+findOne:
 SELECT
   id,
   username,
@@ -32,6 +32,6 @@ SELECT
 FROM diva_user
 WHERE id = ?;
 
-deleteById:
+deleteOne:
 DELETE FROM diva_user
 WHERE id = ?;

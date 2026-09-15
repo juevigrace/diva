@@ -25,14 +25,14 @@ class UserPermissionsApiImpl(
         return client.getAs<ApiResponse<List<UserPermissionResponse>>>(
             path = "/api/user/$uid/permissions",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: emptyList() }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun getByID(uid: String, pid: String, token: String): Result<UserPermissionResponse> {
         return client.getAs<ApiResponse<UserPermissionResponse>>(
             path = "/api/user/$uid/permissions/$pid",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: error("Missing data in ApiResponse") }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun create(uid: String, dto: CreateUserPermissionDto, token: String): Result<Unit> {

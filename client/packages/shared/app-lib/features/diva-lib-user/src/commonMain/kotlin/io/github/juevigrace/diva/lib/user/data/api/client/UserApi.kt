@@ -58,7 +58,7 @@ class UserApiImpl(
                 "limit" to pageSize.toString(),
             ),
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: error("Missing data in ApiResponse") }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun create(dto: CreateUserDto, token: String): Result<Unit> {
@@ -73,7 +73,7 @@ class UserApiImpl(
         return client.getAs<ApiResponse<UserResponse>>(
             path = "/api/user/$uid",
             headers = mapOf("Authorization" to "Bearer $token"),
-        ).map { it.data ?: error("Missing data in ApiResponse") }
+        ).map { it.data ?: error(it.message) }
     }
 
     override suspend fun updateEmail(uid: String, dto: UpdateEmailDto, token: String): Result<Unit> {

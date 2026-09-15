@@ -3,28 +3,25 @@ package io.github.juevigrace.diva.lib.database.session
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.session.Session
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 interface SessionStorage {
-    suspend fun getAll(): Result<List<Session>>
+    suspend fun findAll(): Result<List<Session>>
 
-    fun getAllFlow(): Flow<Result<List<Session>>>
+    fun findAllFlow(): Flow<Result<List<Session>>>
 
-    @OptIn(ExperimentalUuidApi::class)
-    suspend fun getById(id: Uuid): Result<Option<Session>>
+    suspend fun findOne(id: String): Result<Option<Session>>
 
-    suspend fun getCurrent(): Result<Option<Session>>
+    fun findOneFlow(id: String): Flow<Result<Option<Session>>>
 
-    fun getCurrentFlow(): Flow<Result<Option<Session>>>
+    suspend fun findCurrent(): Result<Option<Session>>
+
+    fun findCurrentFlow(): Flow<Result<Option<Session>>>
 
     suspend fun upsert(item: Session): Result<Unit>
 
-    @OptIn(ExperimentalUuidApi::class)
-    suspend fun delete(id: Uuid): Result<Unit>
+    suspend fun deleteOne(id: String): Result<Unit>
 
-    @OptIn(ExperimentalUuidApi::class)
-    suspend fun markCurrent(id: Uuid): Result<Unit>
+    suspend fun markCurrent(id: String): Result<Unit>
 
-    suspend fun deleteAll(): Result<Unit>
+    suspend fun delete(): Result<Unit>
 }

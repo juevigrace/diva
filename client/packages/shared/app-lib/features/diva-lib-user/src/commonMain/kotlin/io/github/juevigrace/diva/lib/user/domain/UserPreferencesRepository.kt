@@ -5,18 +5,15 @@ import io.github.juevigrace.diva.lib.core.Repository
 import io.github.juevigrace.diva.lib.models.user.preferences.UserPreferences
 import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 interface UserPreferencesRepository : Repository {
     val client: DivaClient
 
-    fun getPreferences(userId: Uuid): Flow<Result<Option<UserPreferences>>>
+    fun getPreferences(userId: String): Flow<Result<Option<UserPreferences>>>
 
-    suspend fun sync(userId: Uuid): Result<Unit>
+    suspend fun sync(userId: String): Result<Unit>
 
-    suspend fun save(userId: Uuid, preferences: UserPreferences): Result<Unit>
+    suspend fun save(userId: String, preferences: UserPreferences): Result<Unit>
 
-    suspend fun delete(id: Uuid): Result<Unit>
+    suspend fun delete(id: String): Result<Unit>
 }
