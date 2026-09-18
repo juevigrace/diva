@@ -1,7 +1,4 @@
-@file:OptIn(ExperimentalWasmDsl::class)
-
 import divabuild.internal.libs
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
     id("divabuild.library-base")

@@ -1,0 +1,13 @@
+import io.github.juevigrace.diva.lib.models.permission.PermissionAction;
+import io.github.juevigrace.diva.lib.models.user.Role;
+
+CREATE TABLE IF NOT EXISTS diva_permissions(
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    description TEXT NOT NULL DEFAULT '',
+    action TEXT AS PermissionAction NOT NULL UNIQUE,
+    role_level TEXT AS Role NOT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    deleted_at INTEGER DEFAULT NULL
+);

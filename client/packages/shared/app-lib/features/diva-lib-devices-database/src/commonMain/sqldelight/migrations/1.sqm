@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS diva_devices(
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL DEFAULT '',
+    model TEXT NOT NULL DEFAULT '',
+    platform TEXT NOT NULL DEFAULT '',
+    push_token TEXT DEFAULT NULL,
+    is_active INTEGER NOT NULL DEFAULT 0,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    deleted_at INTEGER DEFAULT NULL
+);

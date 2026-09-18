@@ -20,22 +20,28 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(libs.diva.database.sqlite)
-
+            implementation(projects.divaLibCore)
             implementation(projects.divaLibModelsCore)
+
+            implementation(projects.features.divaLibDevicesDatabase)
+            implementation(projects.features.divaLibPermissionsDatabase)
+            implementation(projects.features.divaLibSessionDatabase)
+            implementation(projects.features.divaLibUserDatabase)
         }
     }
 }
 
-
 sqldelight {
     databases {
-        create("DivaSharedDB") {
+        register("DivaSharedDB") {
             packageName.set("io.github.juevigrace.diva.lib.database")
-            schemaOutputDirectory.set(file("src/commonMain/sqldelight/databases"))
             generateAsync.set(true)
             deriveSchemaFromMigrations.set(true)
             verifyMigrations.set(true)
+            dependency(project(":features:diva-lib-session-database"))
+            dependency(project(":features:diva-lib-user-database"))
+            dependency(project(":features:diva-lib-permissions-database"))
+            dependency(project(":features:diva-lib-devices-database"))
         }
     }
 }

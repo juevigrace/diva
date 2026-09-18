@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProfileRepositoryImpl(
@@ -38,13 +37,12 @@ class ProfileRepositoryImpl(
             val userId = sessionResult.orNull()?.getOrNull()?.user?.id
                 ?: return@flatMapLatest flowOf(Result.success<Profile?>(null))
 
-            val userUuid = Uuid.parse(userId)
             combine(
-                userRepository.getUser(userUuid),
-                userProfileRepository.getProfile(userUuid),
-                userStateRepository.getState(userUuid),
-                userPreferencesRepository.getPreferences(userUuid),
-                userDevicesRepository.getDevices(userUuid),
+                userRepository.getUser(userId),
+                userProfileRepository.getProfile(userId),
+                userStateRepository.getState(userId),
+                userPreferencesRepository.getPreferences(userId),
+                userDevicesRepository.getDevices(userId),
             ) { userResult, profileResult, stateResult, preferencesResult, devicesResult ->
                 val user = userResult.orValue()
                 val profile = profileResult.orValue()

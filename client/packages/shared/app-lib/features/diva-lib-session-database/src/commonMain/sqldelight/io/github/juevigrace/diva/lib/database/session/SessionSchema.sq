@@ -1,0 +1,23 @@
+import io.github.juevigrace.diva.lib.models.session.SessionStatus;
+import io.github.juevigrace.diva.lib.models.session.SessionType;
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS diva_session(
+    id TEXT NOT NULL PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    access_token TEXT NOT NULL,
+    refresh_token TEXT NOT NULL,
+    device_id TEXT NOT NULL DEFAULT '',
+    is_current INTEGER AS Boolean NOT NULL DEFAULT 0,
+    type TEXT AS SessionType NOT NULL,
+    status TEXT AS SessionStatus NOT NULL,
+    ip_address TEXT NOT NULL DEFAULT '',
+    user_agent TEXT NOT NULL DEFAULT '',
+    access_expires_at INTEGER NOT NULL,
+    refresh_expires_at INTEGER NOT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    deleted_at INTEGER DEFAULT NULL,
+    FOREIGN KEY(user_id) REFERENCES diva_user(id) ON DELETE CASCADE,
+    FOREIGN KEY(device_id) REFERENCES diva_devices(id)
+);

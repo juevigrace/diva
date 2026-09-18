@@ -1,10 +1,10 @@
 package io.github.juevigrace.diva.lib.devices.di
 
-import io.github.juevigrace.diva.lib.database.SharedDatabase
-import io.github.juevigrace.diva.lib.database.devices.DevicesStorage
+import io.github.juevigrace.diva.lib.core.SharedDatabase
 import io.github.juevigrace.diva.lib.devices.data.DevicesRepositoryImpl
 import io.github.juevigrace.diva.lib.devices.data.api.client.DevicesApi
 import io.github.juevigrace.diva.lib.devices.data.api.client.DevicesApiImpl
+import io.github.juevigrace.diva.lib.devices.database.DevicesStorage
 import io.github.juevigrace.diva.lib.devices.database.DevicesStorageImpl
 import io.github.juevigrace.diva.lib.devices.domain.DevicesRepository
 import io.github.juevigrace.diva.lib.devices.presentation.viewmodel.DevicesViewModel

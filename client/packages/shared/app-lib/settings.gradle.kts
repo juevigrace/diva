@@ -52,4 +52,9 @@ include(":features:diva-lib-settings")
 include(":features:diva-lib-permissions")
 include(":features:diva-lib-devices")
 
+include(":features:diva-lib-session-database")
+include(":features:diva-lib-user-database")
+include(":features:diva-lib-permissions-database")
+include(":features:diva-lib-devices-database")
+
 includeBuild("../framework")

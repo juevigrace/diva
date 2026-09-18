@@ -2,7 +2,7 @@ package io.github.juevigrace.diva.lib.session.data
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrThrow
-import io.github.juevigrace.diva.lib.database.session.SessionStorage
+import io.github.juevigrace.diva.lib.session.database.SessionStorage
 import io.github.juevigrace.diva.lib.models.session.Session
 import io.github.juevigrace.diva.lib.session.data.api.client.SessionsApi
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository

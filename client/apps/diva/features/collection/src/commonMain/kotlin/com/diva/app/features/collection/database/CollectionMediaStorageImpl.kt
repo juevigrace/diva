@@ -9,7 +9,6 @@ import com.diva.app.models.media.MediaType
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.fold
 import io.github.juevigrace.diva.core.getOrElse
-import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlin.uuid.Uuid
 import migrations.Diva_collection_media

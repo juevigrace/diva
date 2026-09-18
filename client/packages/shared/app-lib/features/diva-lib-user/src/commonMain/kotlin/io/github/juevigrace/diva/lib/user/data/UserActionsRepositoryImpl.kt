@@ -1,7 +1,7 @@
 package io.github.juevigrace.diva.lib.user.data
 
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.lib.database.user.actions.UserActionsStorage
+import io.github.juevigrace.diva.lib.user.database.actions.UserActionsStorage
 import io.github.juevigrace.diva.lib.models.actions.Actions
 import io.github.juevigrace.diva.lib.models.user.actions.UserAction
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository

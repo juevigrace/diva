@@ -3,7 +3,7 @@ package io.github.juevigrace.diva.lib.user.data
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrDefault
 import io.github.juevigrace.diva.core.map
-import io.github.juevigrace.diva.lib.database.user.profile.UserProfileStorage
+import io.github.juevigrace.diva.lib.user.database.profile.UserProfileStorage
 import io.github.juevigrace.diva.lib.models.user.profile.UserProfile
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
 import io.github.juevigrace.diva.lib.user.data.api.client.UserProfileApi
