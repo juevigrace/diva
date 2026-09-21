@@ -23,7 +23,7 @@
     "clsx": "catalog:",
     "radix-ui": "catalog:",
     "tailwind-merge": "catalog:",
-    "diva-lib-models-core": "workspace:*"
+    "diva-lib-core-models": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "catalog:",

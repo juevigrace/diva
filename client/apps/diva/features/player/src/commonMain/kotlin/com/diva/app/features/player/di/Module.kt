@@ -1,6 +1,6 @@
 package com.diva.app.features.player.di
 
-import com.diva.app.database.AppDatabase
+import com.diva.app.core.AppDatabase
 import com.diva.app.database.player.PlayerSettingStorage
 import com.diva.app.database.playback.PlaybackHistoryStorage
 import com.diva.app.database.playback.ResumePointStorage

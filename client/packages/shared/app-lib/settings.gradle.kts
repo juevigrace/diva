@@ -40,8 +40,8 @@ include(":diva-lib-core")
 include(":diva-lib-database")
 include(":diva-lib-ui")
 
-include(":diva-lib-models-api")
-include(":diva-lib-models-core")
+include(":diva-lib-api-models")
+include(":diva-lib-core-models")
 
 include(":features:diva-lib-onboarding")
 include(":features:diva-lib-auth")

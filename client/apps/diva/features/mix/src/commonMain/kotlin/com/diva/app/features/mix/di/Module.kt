@@ -1,6 +1,6 @@
 package com.diva.app.features.mix.di
 
-import com.diva.app.database.AppDatabase
+import com.diva.app.core.AppDatabase
 import com.diva.app.database.collection.mix.MixMetadataStorage
 import com.diva.app.features.mix.data.MixRepositoryImpl
 import com.diva.app.features.mix.database.MixMetadataStorageImpl

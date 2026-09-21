@@ -7,12 +7,11 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.diva.lib.core)
-            implementation(libs.diva.lib.models.core)
 
             implementation(libs.diva.database.sqlite)
             implementation(libs.diva.lib.database)
 
-            implementation(projects.core.models)
+            implementation(projects.core)
         }
     }
 }

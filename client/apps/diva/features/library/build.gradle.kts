@@ -8,8 +8,8 @@ kotlin {
             implementation(libs.diva.lib.core)
             implementation(libs.diva.lib.database)
 
-            implementation(projects.core.models)
-            implementation(projects.core.database)
+            implementation(projects.core)
+            implementation(projects.database)
 
             implementation(projects.features.media)
             implementation(projects.features.folder)

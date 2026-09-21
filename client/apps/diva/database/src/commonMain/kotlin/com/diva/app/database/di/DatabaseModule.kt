@@ -1,6 +1,6 @@
 package com.diva.app.database.di
 
-import com.diva.app.database.AppDatabase
+import com.diva.app.core.AppDatabase
 import com.diva.app.database.DivaDB
 import com.diva.app.database.appDivaDBMapper
 import io.github.juevigrace.diva.database.DivaDatabase

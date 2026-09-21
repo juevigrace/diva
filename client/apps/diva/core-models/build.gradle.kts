@@ -12,16 +12,15 @@ kotlin {
         nodejs()
         binaries.library()
     }
-
     wasmJs {
         browser()
         nodejs()
         binaries.library()
     }
-
     sourceSets {
         commonMain.dependencies {
-            api(projects.divaLibCoreModels)
+            api(libs.diva.lib.core.models)
+            implementation(projects.apiModels)
         }
     }
 }

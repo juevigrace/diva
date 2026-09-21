@@ -1,6 +1,6 @@
 package com.diva.app.features.folder.di
 
-import com.diva.app.database.AppDatabase
+import com.diva.app.core.AppDatabase
 import com.diva.app.database.folder.FolderStorage
 import com.diva.app.database.folder.MediaFolderLinkStorage
 import com.diva.app.features.folder.data.FolderRepositoryImpl

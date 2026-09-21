@@ -79,8 +79,8 @@ diva-ui = { group = "io.github.juevigrace", name = "diva-ui", version.ref = "div
 diva-lib-core = { group = "io.github.juevigrace", name = "diva-lib-core", version.ref = "diva-lib" }
 diva-lib-database = { group = "io.github.juevigrace", name = "diva-lib-database", version.ref = "diva-lib" }
 diva-lib-ui = { group = "io.github.juevigrace", name = "diva-lib-ui", version.ref = "diva-lib" }
-diva-lib-models-api = { group = "io.github.juevigrace", name = "diva-lib-models-api", version.ref = "diva-lib" }
-diva-lib-models-core = { group = "io.github.juevigrace", name = "diva-lib-models-core", version.ref = "diva-lib" }
+diva-lib-api-models = { group = "io.github.juevigrace", name = "diva-lib-api-models", version.ref = "diva-lib" }
+diva-lib-core-models = { group = "io.github.juevigrace", name = "diva-lib-core-models", version.ref = "diva-lib" }
 diva-lib-auth = { group = "io.github.juevigrace", name = "diva-lib-auth", version.ref = "diva-lib" }
 diva-lib-user = { group = "io.github.juevigrace", name = "diva-lib-user", version.ref = "diva-lib" }
 diva-lib-session = { group = "io.github.juevigrace", name = "diva-lib-session", version.ref = "diva-lib" }

@@ -9,7 +9,7 @@ kotlin {
             implementation(libs.diva.lib.user)
             implementation(libs.diva.lib.session)
 
-            implementation(projects.core.models)
+            implementation(projects.core)
         }
     }
 }

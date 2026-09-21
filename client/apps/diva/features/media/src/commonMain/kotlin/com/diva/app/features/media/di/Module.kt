@@ -1,6 +1,6 @@
 package com.diva.app.features.media.di
 
-import com.diva.app.database.AppDatabase
+import com.diva.app.core.AppDatabase
 import com.diva.app.database.media.MediaMetadataStorage
 import com.diva.app.database.media.MediaStorage
 import com.diva.app.database.media.MediaTagStorage

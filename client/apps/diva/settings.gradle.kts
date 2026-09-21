@@ -44,11 +44,12 @@ include(
 include(":shared-ui")
 
 include(
-    ":core:models",
-    ":core:models-api",
-    ":core:database",
-    ":core:resources",
-    ":core:ui",
+    ":core",
+    ":core-models",
+    ":api-models",
+    ":database",
+    ":resources",
+    ":ui",
     ":features:home",
     ":features:library",
     ":features:media",

@@ -1,6 +1,6 @@
 package com.diva.app.features.server.di
 
-import com.diva.app.database.AppDatabase
+import com.diva.app.core.AppDatabase
 import com.diva.app.database.server.ServerStorage
 import com.diva.app.features.server.data.ServerRepositoryImpl
 import com.diva.app.features.server.database.ServerStorageImpl

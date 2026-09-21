@@ -26,10 +26,10 @@ kotlin {
 
             implementation(libs.diva.network)
 
-            implementation(projects.core.models)
-            implementation(projects.core.modelsApi)
-            implementation(projects.core.database)
-            implementation(projects.core.ui)
+            implementation(projects.core)
+            implementation(projects.apiModels)
+            implementation(projects.database)
+            implementation(projects.ui)
             implementation(projects.features.home)
             implementation(projects.features.server)
             implementation(projects.features.media)

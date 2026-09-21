@@ -21,7 +21,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.divaLibCore)
-            implementation(projects.divaLibModelsCore)
 
             implementation(projects.features.divaLibDevicesDatabase)
             implementation(projects.features.divaLibPermissionsDatabase)

@@ -23,7 +23,6 @@ kotlin {
             api(libs.diva.database.sqlite)
 
             implementation(projects.divaLibCore)
-            implementation(projects.divaLibModelsCore)
 
             implementation(projects.features.divaLibDevicesDatabase)
             implementation(projects.features.divaLibUserDatabase)

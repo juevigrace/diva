@@ -1,6 +1,6 @@
 package com.diva.app.features.collection.di
 
-import com.diva.app.database.AppDatabase
+import com.diva.app.core.AppDatabase
 import com.diva.app.database.collection.CollectionMediaStorage
 import com.diva.app.database.collection.CollectionStorage
 import com.diva.app.features.collection.data.CollectionRepositoryImpl

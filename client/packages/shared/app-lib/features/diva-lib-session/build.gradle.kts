@@ -6,8 +6,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.divaLibCore)
-            implementation(projects.divaLibModelsApi)
-            implementation(projects.divaLibModelsCore)
+            implementation(projects.divaLibApiModels)
 
             implementation(libs.diva.network)
 
