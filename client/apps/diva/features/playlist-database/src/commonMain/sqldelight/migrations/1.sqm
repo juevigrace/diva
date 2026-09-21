@@ -1,0 +1,26 @@
+import com.diva.app.models.collection.ModerationStatus;
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS diva_playlist_metadata(
+    collection_id TEXT NOT NULL PRIMARY KEY,
+    is_collaborative INTEGER AS Boolean NOT NULL DEFAULT 0,
+    allow_suggestions INTEGER AS Boolean NOT NULL DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS diva_playlist_contributor(
+    collection_id TEXT NOT NULL,
+    contributor_id TEXT NOT NULL DEFAULT '',
+    PRIMARY KEY (collection_id, contributor_id)
+);
+
+CREATE TABLE IF NOT EXISTS diva_playlist_suggestions(
+    id TEXT NOT NULL PRIMARY KEY,
+    collection_id TEXT NOT NULL,
+    suggester_id TEXT NOT NULL DEFAULT '',
+    media_id TEXT NOT NULL,
+    status TEXT AS ModerationStatus NOT NULL DEFAULT 'PENDING',
+    suggested_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_diva_playlist_suggestions_collection_id ON diva_playlist_suggestions (collection_id);
+CREATE INDEX IF NOT EXISTS idx_diva_playlist_contributor_collection_id ON diva_playlist_contributor (collection_id);

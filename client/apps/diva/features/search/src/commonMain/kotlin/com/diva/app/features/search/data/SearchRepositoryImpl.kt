@@ -11,7 +11,6 @@ import com.diva.app.models.media.MediaMetadata
 import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
 import kotlinx.coroutines.flow.first
-import kotlin.uuid.Uuid
 
 class SearchRepositoryImpl(
     private val mediaRepository: MediaRepository,
@@ -32,11 +31,11 @@ class SearchRepositoryImpl(
             ?: return Result.failure(IllegalStateException("No active session"))
 
         val media = mediaRepository.getMedia().first().getOrDefault(emptyList())
-        val folders = folderRepository.getFolders(Uuid.parse(session.user.id)).first().getOrDefault(emptyList())
+        val folders = folderRepository.getFolders(session.user.id).first().getOrDefault(emptyList())
         val collections = collectionRepository.getCollections().first().getOrDefault(emptyList())
 
         val metadataByMediaId = media.mapNotNull { item ->
-            val metadata = mediaMetadataRepository.getMetadata(Uuid.parse(item.id)).first()
+            val metadata = mediaMetadataRepository.getMetadata(item.id).first()
                 .orNull()?.getOrNull()
                 ?: return@mapNotNull null
             item.id to metadata

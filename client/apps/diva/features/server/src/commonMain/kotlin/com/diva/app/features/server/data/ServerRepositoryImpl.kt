@@ -1,11 +1,10 @@
 package com.diva.app.features.server.data
 
-import com.diva.app.database.server.ServerStorage
+import com.diva.app.features.server.database.ServerStorage
 import com.diva.app.features.server.domain.ServerRepository
 import com.diva.app.models.server.Server
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.Uuid
 
 class ServerRepositoryImpl(
     private val storage: ServerStorage,
@@ -13,7 +12,7 @@ class ServerRepositoryImpl(
 
     override fun getServers(): Flow<Result<List<Server>>> = storage.getAllFlow()
 
-    override fun getServer(id: Uuid): Flow<Result<Option<Server>>> = storage.getByIdFlow(id)
+    override fun getServer(id: String): Flow<Result<Option<Server>>> = storage.getByIdFlow(id)
 
     override suspend fun getEnabledServers(): Result<List<Server>> = storage.getEnabled()
 
@@ -23,7 +22,7 @@ class ServerRepositoryImpl(
 
     override suspend fun save(server: Server): Result<Unit> = storage.upsert(server)
 
-    override suspend fun delete(id: Uuid): Result<Unit> = storage.delete(id)
+    override suspend fun delete(id: String): Result<Unit> = storage.delete(id)
 
     override suspend fun deleteAll(): Result<Unit> = storage.deleteAll()
 }

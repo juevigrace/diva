@@ -1,0 +1,14 @@
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS diva_mix_metadata(
+    collection_id TEXT NOT NULL PRIMARY KEY,
+    algorithm_type TEXT NOT NULL DEFAULT 'trending',
+    time_window_hours INTEGER NOT NULL DEFAULT 24,
+    content_weight REAL NOT NULL DEFAULT 0.7,
+    freshness_weight REAL NOT NULL DEFAULT 0.3,
+    min_engagement_score INTEGER NOT NULL DEFAULT 10,
+    excluded_tags TEXT NOT NULL DEFAULT '',
+    auto_refresh INTEGER AS Boolean NOT NULL DEFAULT 1,
+    refresh_interval_seconds INTEGER NOT NULL DEFAULT 3600,
+    FOREIGN KEY(collection_id) REFERENCES diva_collection(id) ON DELETE CASCADE
+);

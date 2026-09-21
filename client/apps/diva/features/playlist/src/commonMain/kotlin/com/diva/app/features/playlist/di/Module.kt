@@ -1,12 +1,12 @@
 package com.diva.app.features.playlist.di
 
 import com.diva.app.core.AppDatabase
-import com.diva.app.database.collection.playlist.PlaylistContributorStorage
-import com.diva.app.database.collection.playlist.PlaylistMetadataStorage
-import com.diva.app.database.collection.playlist.PlaylistSuggestionsStorage
 import com.diva.app.features.playlist.data.PlaylistRepositoryImpl
+import com.diva.app.features.playlist.database.PlaylistContributorStorage
 import com.diva.app.features.playlist.database.PlaylistContributorStorageImpl
+import com.diva.app.features.playlist.database.PlaylistMetadataStorage
 import com.diva.app.features.playlist.database.PlaylistMetadataStorageImpl
+import com.diva.app.features.playlist.database.PlaylistSuggestionsStorage
 import com.diva.app.features.playlist.database.PlaylistSuggestionsStorageImpl
 import com.diva.app.features.playlist.domain.PlaylistRepository
 import com.diva.app.features.playlist.presentation.viewmodel.PlaylistViewModel

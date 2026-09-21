@@ -1,17 +1,16 @@
 package com.diva.app.features.media.data
 
-import com.diva.app.database.media.MediaMetadataStorage
+import com.diva.app.features.media.database.MediaMetadataStorage
 import com.diva.app.features.media.domain.MediaMetadataRepository
 import com.diva.app.models.media.MediaMetadata
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.Uuid
 
 class MediaMetadataRepositoryImpl(
     private val storage: MediaMetadataStorage,
 ) : MediaMetadataRepository {
 
-    override fun getMetadata(mediaId: Uuid): Flow<Result<Option<MediaMetadata>>> {
+    override fun getMetadata(mediaId: String): Flow<Result<Option<MediaMetadata>>> {
         return storage.getByMediaFlow(mediaId)
     }
 
@@ -21,5 +20,5 @@ class MediaMetadataRepositoryImpl(
 
     override suspend fun save(metadata: MediaMetadata): Result<Unit> = storage.upsert(metadata)
 
-    override suspend fun delete(mediaId: Uuid): Result<Unit> = storage.delete(mediaId)
+    override suspend fun delete(mediaId: String): Result<Unit> = storage.delete(mediaId)
 }

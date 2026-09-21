@@ -5,24 +5,23 @@ import com.diva.app.models.media.tag.Tag
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.Uuid
 
 interface MediaRepository : Repository {
     fun getMedia(): Flow<Result<List<Media>>>
 
-    fun getMedia(id: Uuid): Flow<Result<Option<Media>>>
+    fun getMedia(id: String): Flow<Result<Option<Media>>>
 
-    fun getTagsForMedia(mediaId: Uuid): Flow<Result<List<Tag>>>
+    fun getTagsForMedia(mediaId: String): Flow<Result<List<Tag>>>
 
-    suspend fun getMediaForTag(tagId: Uuid): Result<List<Media>>
+    suspend fun getMediaForTag(tagId: String): Result<List<Media>>
 
-    suspend fun addTag(mediaId: Uuid, tagId: Uuid): Result<Unit>
+    suspend fun addTag(mediaId: String, tagId: String): Result<Unit>
 
-    suspend fun removeTag(mediaId: Uuid, tagId: Uuid): Result<Unit>
+    suspend fun removeTag(mediaId: String, tagId: String): Result<Unit>
 
     suspend fun sync(): Result<Unit>
 
     suspend fun save(media: Media): Result<Unit>
 
-    suspend fun delete(id: Uuid): Result<Unit>
+    suspend fun delete(id: String): Result<Unit>
 }

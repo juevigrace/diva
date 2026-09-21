@@ -1,10 +1,10 @@
 package com.diva.app.features.collection.di
 
 import com.diva.app.core.AppDatabase
-import com.diva.app.database.collection.CollectionMediaStorage
-import com.diva.app.database.collection.CollectionStorage
 import com.diva.app.features.collection.data.CollectionRepositoryImpl
+import com.diva.app.features.collection.database.CollectionMediaStorage
 import com.diva.app.features.collection.database.CollectionMediaStorageImpl
+import com.diva.app.features.collection.database.CollectionStorage
 import com.diva.app.features.collection.database.CollectionStorageImpl
 import com.diva.app.features.collection.domain.CollectionRepository
 import com.diva.app.features.collection.presentation.viewmodel.CollectionViewModel

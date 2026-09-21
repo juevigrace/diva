@@ -1,0 +1,29 @@
+import com.diva.app.models.collection.CollectionType;
+import com.diva.app.models.collection.VisibilityType;
+
+CREATE TABLE IF NOT EXISTS diva_collection(
+    id TEXT NOT NULL PRIMARY KEY,
+    owner_id TEXT NOT NULL DEFAULT '',
+    name TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    collection_type TEXT AS CollectionType NOT NULL,
+    visibility TEXT AS VisibilityType NOT NULL DEFAULT 'PRIVATE',
+    cover_media_id TEXT DEFAULT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    deleted_at INTEGER DEFAULT NULL,
+    FOREIGN KEY(cover_media_id) REFERENCES diva_media(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS diva_collection_media(
+    collection_id TEXT NOT NULL,
+    media_id TEXT NOT NULL,
+    position INTEGER NOT NULL,
+    added_by TEXT NOT NULL DEFAULT '',
+    score REAL NOT NULL DEFAULT 0.0,
+    added_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    PRIMARY KEY (collection_id, media_id),
+    UNIQUE (collection_id, position),
+    FOREIGN KEY(collection_id) REFERENCES diva_collection(id) ON DELETE CASCADE,
+    FOREIGN KEY(media_id) REFERENCES diva_media(id) ON DELETE CASCADE
+);

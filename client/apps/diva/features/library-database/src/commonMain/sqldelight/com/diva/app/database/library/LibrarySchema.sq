@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS diva_favorite(
+    user_id TEXT NOT NULL,
+    media_id TEXT NOT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    PRIMARY KEY (user_id, media_id),
+    FOREIGN KEY(media_id) REFERENCES diva_media(id) ON DELETE CASCADE
+);

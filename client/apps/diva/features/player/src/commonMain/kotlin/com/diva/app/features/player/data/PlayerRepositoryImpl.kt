@@ -1,16 +1,15 @@
 package com.diva.app.features.player.data
 
-import com.diva.app.database.player.PlayerSettingStorage
-import com.diva.app.database.playback.PlaybackHistoryStorage
-import com.diva.app.database.playback.ResumePointStorage
+import com.diva.app.features.player.database.PlaybackHistoryStorage
+import com.diva.app.features.player.database.PlayerSettingStorage
+import com.diva.app.features.player.database.ResumePointStorage
 import com.diva.app.features.player.domain.PlayerRepository
 import com.diva.app.models.media.Media
-import com.diva.app.models.player.PlayerSetting
 import com.diva.app.models.playback.PlaybackHistory
 import com.diva.app.models.playback.ResumePoint
+import com.diva.app.models.player.PlayerSetting
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.Uuid
 
 class PlayerRepositoryImpl(
     private val resumePointStorage: ResumePointStorage,
@@ -18,7 +17,7 @@ class PlayerRepositoryImpl(
     private val settingStorage: PlayerSettingStorage,
 ) : PlayerRepository {
 
-    override suspend fun getResumePoint(userId: Uuid, mediaId: Uuid): Result<Option<ResumePoint>> {
+    override suspend fun getResumePoint(userId: String, mediaId: String): Result<Option<ResumePoint>> {
         return resumePointStorage.getByUserAndMedia(userId, mediaId)
     }
 
@@ -26,19 +25,19 @@ class PlayerRepositoryImpl(
         return resumePointStorage.upsert(item)
     }
 
-    override suspend fun deleteResumePoint(userId: Uuid, mediaId: Uuid): Result<Unit> {
+    override suspend fun deleteResumePoint(userId: String, mediaId: String): Result<Unit> {
         return resumePointStorage.delete(userId, mediaId)
     }
 
-    override suspend fun deleteCompletedByUser(userId: Uuid): Result<Unit> {
+    override suspend fun deleteCompletedByUser(userId: String): Result<Unit> {
         return resumePointStorage.deleteCompletedByUser(userId)
     }
 
-    override suspend fun getResumableByUser(userId: Uuid): Result<List<Media>> {
+    override suspend fun getResumableByUser(userId: String): Result<List<Media>> {
         return resumePointStorage.getResumableByUser(userId)
     }
 
-    override fun getResumableByUserFlow(userId: Uuid): Flow<Result<List<Media>>> {
+    override fun getResumableByUserFlow(userId: String): Flow<Result<List<Media>>> {
         return resumePointStorage.getResumableByUserFlow(userId)
     }
 
@@ -46,19 +45,19 @@ class PlayerRepositoryImpl(
         return historyStorage.record(item)
     }
 
-    override suspend fun getRecentByUser(userId: Uuid, limit: Long): Result<List<Media>> {
+    override suspend fun getRecentByUser(userId: String, limit: Long): Result<List<Media>> {
         return historyStorage.getRecentByUser(userId, limit)
     }
 
-    override suspend fun countCompletedByUser(userId: Uuid): Result<Long> {
+    override suspend fun countCompletedByUser(userId: String): Result<Long> {
         return historyStorage.countCompletedByUser(userId)
     }
 
-    override suspend fun getSetting(userId: Uuid): Result<Option<PlayerSetting>> {
+    override suspend fun getSetting(userId: String): Result<Option<PlayerSetting>> {
         return settingStorage.getByUser(userId)
     }
 
-    override fun getSettingFlow(userId: Uuid): Flow<Result<Option<PlayerSetting>>> {
+    override fun getSettingFlow(userId: String): Flow<Result<Option<PlayerSetting>>> {
         return settingStorage.getByUserFlow(userId)
     }
 
@@ -66,7 +65,7 @@ class PlayerRepositoryImpl(
         return settingStorage.upsert(item)
     }
 
-    override suspend fun resetSettings(userId: Uuid): Result<Unit> {
+    override suspend fun resetSettings(userId: String): Result<Unit> {
         return settingStorage.deleteByUser(userId)
     }
 

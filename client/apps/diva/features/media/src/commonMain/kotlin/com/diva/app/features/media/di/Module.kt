@@ -1,16 +1,16 @@
 package com.diva.app.features.media.di
 
 import com.diva.app.core.AppDatabase
-import com.diva.app.database.media.MediaMetadataStorage
-import com.diva.app.database.media.MediaStorage
-import com.diva.app.database.media.MediaTagStorage
-import com.diva.app.database.media.TagStorage
 import com.diva.app.features.media.data.MediaMetadataRepositoryImpl
 import com.diva.app.features.media.data.MediaRepositoryImpl
 import com.diva.app.features.media.data.TagRepositoryImpl
+import com.diva.app.features.media.database.MediaMetadataStorage
 import com.diva.app.features.media.database.MediaMetadataStorageImpl
+import com.diva.app.features.media.database.MediaStorage
 import com.diva.app.features.media.database.MediaStorageImpl
+import com.diva.app.features.media.database.MediaTagStorage
 import com.diva.app.features.media.database.MediaTagStorageImpl
+import com.diva.app.features.media.database.TagStorage
 import com.diva.app.features.media.database.TagStorageImpl
 import com.diva.app.features.media.domain.MediaMetadataRepository
 import com.diva.app.features.media.domain.MediaRepository

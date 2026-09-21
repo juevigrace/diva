@@ -1,0 +1,13 @@
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS diva_server(
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    base_url TEXT NOT NULL UNIQUE,
+    protocol TEXT NOT NULL DEFAULT 'http',
+    port INTEGER DEFAULT NULL,
+    enabled INTEGER AS Boolean NOT NULL DEFAULT 0,
+    last_connected_at INTEGER DEFAULT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now'))
+);

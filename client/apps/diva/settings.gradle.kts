@@ -63,5 +63,16 @@ include(
     ":features:profile",
 )
 
+include(
+    ":features:collection-database",
+    ":features:folder-database",
+    ":features:library-database",
+    ":features:media-database",
+    ":features:mix-database",
+    ":features:player-database",
+    ":features:playlist-database",
+    ":features:server-database",
+)
+
 includeBuild("../../packages/shared/framework")
 includeBuild("../../packages/shared/app-lib")

@@ -1,8 +1,8 @@
 package com.diva.app.features.library.di
 
 import com.diva.app.core.AppDatabase
-import com.diva.app.database.playback.FavoriteStorage
 import com.diva.app.features.library.data.LibraryRepositoryImpl
+import com.diva.app.features.library.database.FavoriteStorage
 import com.diva.app.features.library.database.FavoriteStorageImpl
 import com.diva.app.features.library.domain.LibraryRepository
 import com.diva.app.features.library.presentation.viewmodel.LibraryViewModel

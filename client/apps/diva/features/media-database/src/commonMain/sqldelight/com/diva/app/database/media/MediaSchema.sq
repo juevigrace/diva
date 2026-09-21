@@ -1,0 +1,55 @@
+import com.diva.app.models.collection.VisibilityType;
+import com.diva.app.models.media.MediaType;
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS diva_media(
+    id TEXT NOT NULL PRIMARY KEY,
+    submitted_by TEXT NOT NULL DEFAULT '',
+    media_type TEXT AS MediaType NOT NULL,
+    title TEXT NOT NULL,
+    uri TEXT NOT NULL,
+    mime_type TEXT NOT NULL DEFAULT '',
+    size_bytes INTEGER NOT NULL DEFAULT 0,
+    duration_ms INTEGER DEFAULT NULL,
+    width INTEGER NOT NULL DEFAULT 0,
+    height INTEGER NOT NULL DEFAULT 0,
+    alt_text TEXT NOT NULL DEFAULT '',
+    visibility TEXT AS VisibilityType NOT NULL DEFAULT 'PRIVATE',
+    sensitive_content INTEGER AS Boolean NOT NULL DEFAULT 0,
+    adult_content INTEGER AS Boolean NOT NULL DEFAULT 0,
+    published_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    fingerprint TEXT DEFAULT NULL UNIQUE,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    deleted_at INTEGER DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS diva_tag(
+    id TEXT NOT NULL PRIMARY KEY,
+    tag_name TEXT NOT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    deleted_at INTEGER DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS diva_media_tag(
+    media_id TEXT NOT NULL,
+    tag_id TEXT NOT NULL,
+    PRIMARY KEY (media_id, tag_id),
+    FOREIGN KEY(media_id) REFERENCES diva_media(id) ON DELETE CASCADE,
+    FOREIGN KEY(tag_id) REFERENCES diva_tag(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS diva_media_metadata(
+    media_id TEXT NOT NULL PRIMARY KEY,
+    album TEXT NOT NULL DEFAULT '',
+    artist TEXT NOT NULL DEFAULT '',
+    genre TEXT NOT NULL DEFAULT '',
+    year INTEGER DEFAULT NULL,
+    track_number INTEGER DEFAULT NULL,
+    disc_number INTEGER DEFAULT NULL,
+    cover_uri TEXT NOT NULL DEFAULT '',
+    lyrics TEXT NOT NULL DEFAULT '',
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    FOREIGN KEY(media_id) REFERENCES diva_media(id) ON DELETE CASCADE
+);

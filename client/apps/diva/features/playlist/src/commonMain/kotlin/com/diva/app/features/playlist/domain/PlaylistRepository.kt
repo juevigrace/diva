@@ -7,26 +7,25 @@ import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import io.github.juevigrace.diva.lib.models.user.User
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.Uuid
 
 interface PlaylistRepository : Repository {
-    suspend fun getPlaylist(collectionId: Uuid): Result<Option<Playlist>>
+    suspend fun getPlaylist(collectionId: String): Result<Option<Playlist>>
 
-    fun getPlaylistFlow(collectionId: Uuid): Flow<Result<Option<Playlist>>>
+    fun getPlaylistFlow(collectionId: String): Flow<Result<Option<Playlist>>>
 
-    suspend fun getContributors(collectionId: Uuid): Result<List<User>>
+    suspend fun getContributors(collectionId: String): Result<List<User>>
 
-    suspend fun addContributor(collectionId: Uuid, contributorId: Uuid): Result<Unit>
+    suspend fun addContributor(collectionId: String, contributorId: String): Result<Unit>
 
-    suspend fun removeContributor(collectionId: Uuid, contributorId: Uuid): Result<Unit>
+    suspend fun removeContributor(collectionId: String, contributorId: String): Result<Unit>
 
-    suspend fun getSuggestions(collectionId: Uuid): Result<List<PlaylistSuggestions>>
+    suspend fun getSuggestions(collectionId: String): Result<List<PlaylistSuggestions>>
 
-    suspend fun addSuggestion(collectionId: Uuid, item: PlaylistSuggestions): Result<Unit>
+    suspend fun addSuggestion(collectionId: String, item: PlaylistSuggestions): Result<Unit>
 
-    suspend fun updateSuggestionStatus(id: Uuid, status: ModerationStatus): Result<Unit>
+    suspend fun updateSuggestionStatus(id: String, status: ModerationStatus): Result<Unit>
 
-    suspend fun deleteSuggestion(id: Uuid): Result<Unit>
+    suspend fun deleteSuggestion(id: String): Result<Unit>
 
     suspend fun sync(): Result<Unit>
 

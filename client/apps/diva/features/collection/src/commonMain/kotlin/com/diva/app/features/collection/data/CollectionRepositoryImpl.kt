@@ -1,14 +1,13 @@
 package com.diva.app.features.collection.data
 
-import com.diva.app.database.collection.CollectionMediaStorage
-import com.diva.app.database.collection.CollectionStorage
+import com.diva.app.features.collection.database.CollectionMediaStorage
+import com.diva.app.features.collection.database.CollectionStorage
 import com.diva.app.features.collection.domain.CollectionRepository
 import com.diva.app.models.collection.Collection
 import com.diva.app.models.collection.CollectionMedia
 import com.diva.app.models.media.Media
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.Uuid
 
 class CollectionRepositoryImpl(
     private val storage: CollectionStorage,
@@ -17,31 +16,31 @@ class CollectionRepositoryImpl(
 
     override fun getCollections(): Flow<Result<List<Collection>>> = storage.getAllFlow()
 
-    override fun getCollection(id: Uuid): Flow<Result<Option<Collection>>> {
+    override fun getCollection(id: String): Flow<Result<Option<Collection>>> {
         return storage.getByIdFlow(id)
     }
 
-    override suspend fun getMediaForCollection(collectionId: Uuid): Result<List<Media>> {
+    override suspend fun getMediaForCollection(collectionId: String): Result<List<Media>> {
         return mediaStorage.getMediaForCollection(collectionId)
     }
 
-    override suspend fun addMedia(collectionId: Uuid, item: CollectionMedia): Result<Unit> {
+    override suspend fun addMedia(collectionId: String, item: CollectionMedia): Result<Unit> {
         return mediaStorage.add(collectionId, item)
     }
 
-    override suspend fun removeMedia(collectionId: Uuid, mediaId: Uuid): Result<Unit> {
+    override suspend fun removeMedia(collectionId: String, mediaId: String): Result<Unit> {
         return mediaStorage.remove(collectionId, mediaId)
     }
 
-    override suspend fun updateScore(collectionId: Uuid, mediaId: Uuid, score: Float): Result<Unit> {
+    override suspend fun updateScore(collectionId: String, mediaId: String, score: Float): Result<Unit> {
         return mediaStorage.updateScore(collectionId, mediaId, score)
     }
 
-    override suspend fun updatePosition(collectionId: Uuid, mediaId: Uuid, position: Int): Result<Unit> {
+    override suspend fun updatePosition(collectionId: String, mediaId: String, position: Int): Result<Unit> {
         return mediaStorage.updatePosition(collectionId, mediaId, position)
     }
 
-    override suspend fun countByCollection(collectionId: Uuid): Result<Long> {
+    override suspend fun countByCollection(collectionId: String): Result<Long> {
         return mediaStorage.countByCollection(collectionId)
     }
 
@@ -51,5 +50,5 @@ class CollectionRepositoryImpl(
 
     override suspend fun save(collection: Collection): Result<Unit> = storage.upsert(collection)
 
-    override suspend fun delete(id: Uuid): Result<Unit> = storage.delete(id)
+    override suspend fun delete(id: String): Result<Unit> = storage.delete(id)
 }

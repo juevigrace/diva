@@ -1,12 +1,12 @@
 package com.diva.app.features.player.di
 
 import com.diva.app.core.AppDatabase
-import com.diva.app.database.player.PlayerSettingStorage
-import com.diva.app.database.playback.PlaybackHistoryStorage
-import com.diva.app.database.playback.ResumePointStorage
 import com.diva.app.features.player.data.PlayerRepositoryImpl
+import com.diva.app.features.player.database.PlaybackHistoryStorage
 import com.diva.app.features.player.database.PlaybackHistoryStorageImpl
+import com.diva.app.features.player.database.PlayerSettingStorage
 import com.diva.app.features.player.database.PlayerSettingStorageImpl
+import com.diva.app.features.player.database.ResumePointStorage
 import com.diva.app.features.player.database.ResumePointStorageImpl
 import com.diva.app.features.player.domain.PlayerRepository
 import com.diva.app.features.player.presentation.viewmodel.PlayerViewModel

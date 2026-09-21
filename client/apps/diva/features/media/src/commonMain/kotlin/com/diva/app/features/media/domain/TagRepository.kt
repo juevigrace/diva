@@ -4,12 +4,11 @@ import com.diva.app.models.media.tag.Tag
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.Uuid
 
 interface TagRepository : Repository {
     fun getTags(): Flow<Result<List<Tag>>>
 
-    fun getTag(id: Uuid): Flow<Result<Option<Tag>>>
+    fun getTag(id: String): Flow<Result<Option<Tag>>>
 
     suspend fun getTagByName(name: String): Result<Option<Tag>>
 
@@ -17,5 +16,5 @@ interface TagRepository : Repository {
 
     suspend fun save(tag: Tag): Result<Unit>
 
-    suspend fun delete(id: Uuid): Result<Unit>
+    suspend fun delete(id: String): Result<Unit>
 }

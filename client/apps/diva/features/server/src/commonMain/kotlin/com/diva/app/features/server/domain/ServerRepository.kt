@@ -4,12 +4,11 @@ import com.diva.app.models.server.Server
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.Uuid
 
 interface ServerRepository : Repository {
     fun getServers(): Flow<Result<List<Server>>>
 
-    fun getServer(id: Uuid): Flow<Result<Option<Server>>>
+    fun getServer(id: String): Flow<Result<Option<Server>>>
 
     suspend fun getEnabledServers(): Result<List<Server>>
 
@@ -17,7 +16,7 @@ interface ServerRepository : Repository {
 
     suspend fun save(server: Server): Result<Unit>
 
-    suspend fun delete(id: Uuid): Result<Unit>
+    suspend fun delete(id: String): Result<Unit>
 
     suspend fun deleteAll(): Result<Unit>
 }
