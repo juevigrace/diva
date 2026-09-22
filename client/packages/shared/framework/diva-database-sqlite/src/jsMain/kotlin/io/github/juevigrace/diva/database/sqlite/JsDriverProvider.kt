@@ -24,6 +24,7 @@ class JsDriverProvider(
         return runCatching {
             createDefaultWebWorkerDriver().also { driver ->
                 schema.create(driver).await()
+                if (conf.foreignKeys) driver.execute(null, "PRAGMA foreign_keys = ON", 0).await()
             }
         }
     }

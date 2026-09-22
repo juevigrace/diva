@@ -5,5 +5,6 @@ import io.github.juevigrace.diva.database.config.DriverConf
 data class SqliteConf(
     val name: String,
     val inMemory: Boolean = false,
+    val foreignKeys: Boolean = false,
     override val properties: Map<String, String> = emptyMap(),
 ) : DriverConf

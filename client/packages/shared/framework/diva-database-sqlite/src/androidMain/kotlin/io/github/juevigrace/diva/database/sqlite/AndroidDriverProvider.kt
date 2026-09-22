@@ -1,6 +1,8 @@
 package io.github.juevigrace.diva.database.sqlite
 
 import android.content.Context
+import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteOpenHelper
 import app.cash.sqldelight.async.coroutines.synchronous
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
@@ -23,6 +25,7 @@ class AndroidDriverProvider(
                 schema = schema,
                 context = context,
                 name = if (conf.inMemory) null else conf.name,
+                callback = callback(schema),
             )
         }
     }
@@ -33,7 +36,15 @@ class AndroidDriverProvider(
                 schema = schema.synchronous(),
                 context = context,
                 name = if (conf.inMemory) null else conf.name,
+                callback = callback(schema.synchronous()),
             )
         }
     }
+
+    private fun callback(schema: SqlSchema<QueryResult.Value<Unit>>): SupportSQLiteOpenHelper.Callback =
+        object : AndroidSqliteDriver.Callback(schema) {
+            override fun onOpen(db: SupportSQLiteDatabase) {
+                db.setForeignKeyConstraintsEnabled(conf.foreignKeys)
+            }
+        }
 }

@@ -1,0 +1,6 @@
+insertPost:
+INSERT INTO post(user_id, title)
+VALUES (?, ?);
+
+selectAllPosts:
+SELECT * FROM post;

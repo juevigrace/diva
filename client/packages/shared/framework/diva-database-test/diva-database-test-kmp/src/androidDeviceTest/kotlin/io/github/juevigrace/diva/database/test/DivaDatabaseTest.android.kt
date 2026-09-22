@@ -7,5 +7,5 @@ import io.github.juevigrace.diva.database.sqlite.config.SqliteConf
 
 actual val provider: DriverProvider<SqliteConf> = AndroidDriverProvider(
     context = ApplicationProvider.getApplicationContext(),
-    conf = SqliteConf("test", inMemory = true),
+    conf = SqliteConf("test", inMemory = true, foreignKeys = true),
 )

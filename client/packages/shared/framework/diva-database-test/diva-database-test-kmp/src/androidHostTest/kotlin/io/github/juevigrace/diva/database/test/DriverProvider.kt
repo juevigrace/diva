@@ -11,7 +11,7 @@ import io.github.juevigrace.diva.database.sqlite.config.SqliteConf
 import io.github.juevigrace.diva.database.sqlite.exception.SqliteExceptionTransformer
 
 actual val provider: DriverProvider<SqliteConf> = object : DriverProvider<SqliteConf> {
-    override val conf = SqliteConf("test", inMemory = true)
+    override val conf = SqliteConf("test", inMemory = true, foreignKeys = true)
     override val transformer: DatabaseExceptionTransformer = SqliteExceptionTransformer
 
     override fun createSyncDriver(schema: SqlSchema<QueryResult.Value<Unit>>): Result<SqlDriver> {

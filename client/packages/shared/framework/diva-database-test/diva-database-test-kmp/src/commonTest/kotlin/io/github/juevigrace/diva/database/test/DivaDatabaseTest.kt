@@ -79,4 +79,28 @@ class DivaDatabaseTest {
         val close = db.close()
         assertTrue(close.isSuccess, "CLOSE ERROR: ${close.exceptionOrNull()}")
     }
+
+    @Test
+    fun test_foreignKeysRejectOrphanInsert() = runTest {
+        val db = createDatabase()
+        db.use {
+            val result = runCatching { postsQueries.insertPost(999_999L, "orphan post") }
+            assertTrue(result.isFailure, "Expected a foreign key violation when inserting a post with no matching user")
+        }
+        db.close()
+    }
+
+    @Test
+    fun test_foreignKeysCascadeOnDelete() = runTest {
+        val db = createDatabase()
+        db.use {
+            usersQueries.insertUser("Alice", "alice@test.com", 0)
+            val userId = usersQueries.selectAll().executeAsList()[0].id
+            postsQueries.insertPost(userId, "first post")
+            assertEquals(1, postsQueries.selectAllPosts().executeAsList().size)
+            usersQueries.deleteById(userId)
+            assertTrue(postsQueries.selectAllPosts().executeAsList().isEmpty())
+        }
+        db.close()
+    }
 }

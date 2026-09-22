@@ -9,6 +9,7 @@ import io.github.juevigrace.diva.database.driver.DriverProvider
 import io.github.juevigrace.diva.database.exception.DatabaseExceptionTransformer
 import io.github.juevigrace.diva.database.sqlite.config.SqliteConf
 import io.github.juevigrace.diva.database.sqlite.exception.SqliteExceptionTransformer
+import java.util.Properties
 
 class JvmSqliteDriverProvider(
     override val conf: SqliteConf,
@@ -19,6 +20,7 @@ class JvmSqliteDriverProvider(
         return runCatching {
             JdbcSqliteDriver(
                 url = url(),
+                properties = properties(),
                 schema = schema,
             )
         }
@@ -28,6 +30,7 @@ class JvmSqliteDriverProvider(
         return runCatching {
             JdbcSqliteDriver(
                 url = url(),
+                properties = properties(),
                 schema = schema.synchronous(),
             )
         }
@@ -39,5 +42,9 @@ class JvmSqliteDriverProvider(
         } else {
             "jdbc:sqlite:${conf.name}"
         }
+    }
+
+    private fun properties(): Properties = Properties().apply {
+        if (conf.foreignKeys) put("foreign_keys", "true")
     }
 }

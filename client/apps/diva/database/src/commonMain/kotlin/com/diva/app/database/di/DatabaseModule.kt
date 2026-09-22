@@ -21,7 +21,9 @@ fun databaseModule(): Module {
         single<DivaDatabase<DivaSharedDB>>(qualifier = SharedDatabase) {
             runBlocking {
                 DivaDatabase.createAsync(
-                    provider = get<DriverProvider<SqliteConf>> { parametersOf(SqliteConf(name = "diva_shared.db")) },
+                    provider = get<DriverProvider<SqliteConf>> {
+                        parametersOf(SqliteConf(name = "diva_shared.db", foreignKeys = true))
+                    },
                     schema = DivaSharedDB.Schema,
                     db = ::sharedDBMapper,
                 ).getOrThrow()
@@ -31,7 +33,9 @@ fun databaseModule(): Module {
         single<DivaDatabase<DivaDB>>(qualifier = AppDatabase) {
             runBlocking {
                 DivaDatabase.createAsync(
-                    provider = get<DriverProvider<SqliteConf>> { parametersOf(SqliteConf(name = "diva_app.db")) },
+                    provider = get<DriverProvider<SqliteConf>> {
+                        parametersOf(SqliteConf(name = "diva_app.db", foreignKeys = true))
+                    },
                     schema = DivaDB.Schema,
                     db = ::appDivaDBMapper,
                 ).getOrThrow()
