@@ -1,5 +1,5 @@
 plugins {
-    id("divabuild.library-app-shared")
+    id("divabuild.diva-app")
     alias(libs.plugins.sqldelight)
 }
 

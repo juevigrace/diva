@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
     id("divabuild.library-app")
+    id("divabuild.diva-app")
 }
 
 kotlin {
