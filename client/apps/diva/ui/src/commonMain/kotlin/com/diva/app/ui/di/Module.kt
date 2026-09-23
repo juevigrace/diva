@@ -1,12 +1,6 @@
 package com.diva.app.ui.di
 
-import com.diva.app.ui.navigation.HomeRoute
-import com.diva.app.ui.navigation.LibraryRoute
-import com.diva.app.ui.navigation.ProfileRoute
-import com.diva.app.ui.navigation.SearchRoute
 import io.github.juevigrace.diva.ui.dialog.DialogController
-import io.github.juevigrace.diva.ui.navigation.Navigator
-import io.github.juevigrace.diva.ui.navigation.TabNavigator
 import io.github.juevigrace.diva.ui.toast.Toaster
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -15,12 +9,5 @@ fun uiModule(): Module {
     return module {
         single<DialogController> { DialogController.create() }
         single<Toaster> { Toaster.create() }
-        single<Navigator> { Navigator.create(startDestination = HomeRoute) }
-        single<TabNavigator> {
-            TabNavigator.create(
-                tabs = listOf(HomeRoute, SearchRoute, LibraryRoute, ProfileRoute),
-                startTab = HomeRoute,
-            )
-        }
     }
 }

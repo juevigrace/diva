@@ -9,6 +9,7 @@ kotlin {
             implementation(libs.diva.lib.database)
 
             implementation(projects.core)
+            implementation(projects.resources)
             implementation(projects.features.libraryDatabase)
 
             implementation(projects.features.media)

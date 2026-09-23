@@ -22,8 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diva.app.features.profile.domain.Profile
+import com.diva.app.features.profile.presentation.events.ProfileEvents
 import com.diva.app.features.profile.presentation.viewmodel.ProfileViewModel
 import io.github.juevigrace.diva.ui.layout.Screen
+import io.github.juevigrace.diva.ui.navigation.BackHandler
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -31,6 +33,7 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = koinViewModel(),
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+    BackHandler { viewModel.onEvent(ProfileEvents.OnBack) }
 
     Screen { innerPadding ->
         val profile = state.value.profile ?: return@Screen

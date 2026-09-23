@@ -24,6 +24,7 @@ fun appModule(): Module {
     return module {
         includes(
             uiModule(),
+            navigationModule(),
             networkModule(),
             databaseModule(),
         )

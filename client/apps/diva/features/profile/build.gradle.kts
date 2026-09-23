@@ -10,6 +10,7 @@ kotlin {
             implementation(libs.diva.lib.session)
 
             implementation(projects.core)
+            implementation(projects.resources)
         }
     }
 }

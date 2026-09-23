@@ -17,6 +17,7 @@ import com.diva.app.features.search.presentation.viewmodel.SearchViewModel
 import com.diva.app.generated.resources.Res
 import com.diva.app.generated.resources.search
 import io.github.juevigrace.diva.ui.layout.Screen
+import io.github.juevigrace.diva.ui.navigation.BackHandler
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -25,6 +26,7 @@ fun SearchScreen(
     viewModel: SearchViewModel = koinViewModel(),
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+    BackHandler { viewModel.onEvent(SearchEvents.OnBack) }
 
     Screen(
         topBar = {
