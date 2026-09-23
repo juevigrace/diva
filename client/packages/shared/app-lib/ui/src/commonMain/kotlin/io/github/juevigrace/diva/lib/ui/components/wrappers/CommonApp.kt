@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import io.github.juevigrace.diva.lib.ui.navigation.Screens
 import io.github.juevigrace.diva.ui.DivaApp
 import io.github.juevigrace.diva.ui.layout.Screen
 import io.github.juevigrace.diva.ui.navigation.NavHost
@@ -18,7 +18,7 @@ import org.koin.compose.koinInject
 // TODO: this is useless for now
 @Composable
 fun CommonApp(
-    startDestination: Screens,
+    startDestination: NavKey,
     themeConfig: DivaThemeConfig = DivaThemeConfig(),
     screen: @Composable (content: @Composable (innerPadding: PaddingValues) -> Unit) -> Unit = { content ->
         Screen(content = content)
