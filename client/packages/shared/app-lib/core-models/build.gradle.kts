@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
     id("divabuild.app-lib")
+    id("divabuild.serialization")
 }
 
 kotlin {
@@ -17,11 +18,5 @@ kotlin {
         browser()
         nodejs()
         binaries.library()
-    }
-
-    sourceSets {
-        commonMain.dependencies {
-            implementation(projects.divaLibApiModels)
-        }
     }
 }

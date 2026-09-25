@@ -36,55 +36,35 @@ rootProject.name = "diva-lib"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
-include(":diva-lib-core")
-project(":diva-lib-core").projectDir = file("core")
+include(":core")
+include(":core-models")
+include(":database")
+include(":ui")
 
-include(":diva-lib-database")
-project(":diva-lib-database").projectDir = file("database")
+include(":features:auth:auth-core")
+include(":features:auth:auth-models")
 
-include(":diva-lib-ui")
-project(":diva-lib-ui").projectDir = file("ui")
+include(":features:devices:devices-core")
+include(":features:devices:devices-database")
+include(":features:devices:devices-models")
 
-include(":diva-lib-api-models")
-project(":diva-lib-api-models").projectDir = file("api-models")
+include(":features:onboarding:onboarding-core")
 
-include(":diva-lib-core-models")
-project(":diva-lib-core-models").projectDir = file("core-models")
+include(":features:permissions:permissions-core")
+include(":features:permissions:permissions-database")
+include(":features:permissions:permissions-models")
 
-include(":features:diva-lib-onboarding")
-project(":features:diva-lib-onboarding").projectDir = file("features/onboarding")
+include(":features:session:session-core")
+include(":features:session:session-database")
+include(":features:session:session-models")
 
-include(":features:diva-lib-auth")
-project(":features:diva-lib-auth").projectDir = file("features/auth")
+include(":features:settings:settings-core")
 
-include(":features:diva-lib-verification")
-project(":features:diva-lib-verification").projectDir = file("features/verification")
+include(":features:user:user-core")
+include(":features:user:user-database")
+include(":features:user:user-models")
 
-include(":features:diva-lib-session")
-project(":features:diva-lib-session").projectDir = file("features/session")
-
-include(":features:diva-lib-user")
-project(":features:diva-lib-user").projectDir = file("features/user")
-
-include(":features:diva-lib-settings")
-project(":features:diva-lib-settings").projectDir = file("features/settings")
-
-include(":features:diva-lib-permissions")
-project(":features:diva-lib-permissions").projectDir = file("features/permissions")
-
-include(":features:diva-lib-devices")
-project(":features:diva-lib-devices").projectDir = file("features/devices")
-
-include(":features:diva-lib-session-database")
-project(":features:diva-lib-session-database").projectDir = file("features/session/database")
-
-include(":features:diva-lib-user-database")
-project(":features:diva-lib-user-database").projectDir = file("features/user/database")
-
-include(":features:diva-lib-permissions-database")
-project(":features:diva-lib-permissions-database").projectDir = file("features/permissions/database")
-
-include(":features:diva-lib-devices-database")
-project(":features:diva-lib-devices-database").projectDir = file("features/devices/database")
+include(":features:verification:verification-core")
+include(":features:verification:verification-models")
 
 includeBuild("../framework")

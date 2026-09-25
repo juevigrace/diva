@@ -23,7 +23,6 @@
     "astro": "catalog:",
     "diva-ui": "workspace:*",
     "diva-lib-core-models": "workspace:*",
-    "diva-lib-api-models": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

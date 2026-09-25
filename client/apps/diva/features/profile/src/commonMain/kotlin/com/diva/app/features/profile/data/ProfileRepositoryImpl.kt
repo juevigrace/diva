@@ -34,7 +34,7 @@ class ProfileRepositoryImpl(
 
     override fun observeProfile(): Flow<Result<Profile?>> {
         return sessionRepository.getCurrentSession().flatMapLatest { sessionResult ->
-            val userId = sessionResult.orNull()?.getOrNull()?.user?.id
+            val userId = sessionResult.orNull()?.getOrNull()?.userId
                 ?: return@flatMapLatest flowOf(Result.success<Profile?>(null))
 
             combine(

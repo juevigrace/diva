@@ -31,7 +31,7 @@ class SearchRepositoryImpl(
             ?: return Result.failure(IllegalStateException("No active session"))
 
         val media = mediaRepository.getMedia().first().getOrDefault(emptyList())
-        val folders = folderRepository.getFolders(session.user.id).first().getOrDefault(emptyList())
+        val folders = folderRepository.getFolders(session.userId).first().getOrDefault(emptyList())
         val collections = collectionRepository.getCollections().first().getOrDefault(emptyList())
 
         val metadataByMediaId = media.mapNotNull { item ->

@@ -20,12 +20,15 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.divaLibCore)
+            implementation(projects.core)
 
-            implementation(projects.features.divaLibDevicesDatabase)
-            implementation(projects.features.divaLibPermissionsDatabase)
-            implementation(projects.features.divaLibSessionDatabase)
-            implementation(projects.features.divaLibUserDatabase)
+            implementation(projects.features.user.userModels)
+            implementation(projects.features.permissions.permissionsModels)
+
+            implementation(projects.features.devices.devicesDatabase)
+            implementation(projects.features.permissions.permissionsDatabase)
+            implementation(projects.features.session.sessionDatabase)
+            implementation(projects.features.user.userDatabase)
         }
     }
 }
@@ -37,10 +40,10 @@ sqldelight {
             generateAsync.set(true)
             deriveSchemaFromMigrations.set(true)
             verifyMigrations.set(true)
-            dependency(project(":features:diva-lib-session-database"))
-            dependency(project(":features:diva-lib-user-database"))
-            dependency(project(":features:diva-lib-permissions-database"))
-            dependency(project(":features:diva-lib-devices-database"))
+            dependency(project(":features:session:session-database"))
+            dependency(project(":features:user:user-database"))
+            dependency(project(":features:permissions:permissions-database"))
+            dependency(project(":features:devices:devices-database"))
         }
     }
 }

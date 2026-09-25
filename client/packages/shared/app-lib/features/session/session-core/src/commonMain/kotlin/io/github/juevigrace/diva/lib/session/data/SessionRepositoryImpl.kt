@@ -1,0 +1,59 @@
+package io.github.juevigrace.diva.lib.session.data
+
+import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.core.getOrThrow
+import io.github.juevigrace.diva.lib.session.database.SessionStorage
+import io.github.juevigrace.diva.lib.models.session.Session
+import io.github.juevigrace.diva.lib.models.session.toSession
+import io.github.juevigrace.diva.lib.session.data.api.client.SessionsApi
+import io.github.juevigrace.diva.lib.session.domain.SessionRepository
+import io.github.juevigrace.diva.network.client.DivaClient
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.Flow
+
+class SessionRepositoryImpl(
+    override val client: DivaClient,
+    private val storage: SessionStorage,
+    private val api: SessionsApi,
+) : SessionRepository {
+    override fun getSessions(): Flow<Result<List<Session>>> = storage.findAllFlow()
+
+    override fun getCurrentSession(): Flow<Result<Option<Session>>> = storage.findCurrentFlow()
+
+    override suspend fun getCurrent(): Result<Session> {
+        return storage.findCurrent().mapCatching { option ->
+            option.getOrThrow { error("No current session available") }
+        }
+    }
+
+    override suspend fun sync(): Result<Unit> {
+        return withSession(
+            sessionCall = this::getCurrent,
+            onFound = { current ->
+                api.listAll(current.accessToken).mapCatching { responses ->
+                    val results = responses.map {
+                        scope.async {
+                            storage.upsert(it.toSession())
+                        }
+                    }.awaitAll()
+
+                    val failures = results.mapNotNull { it.exceptionOrNull() }
+                    if (failures.isNotEmpty()) {
+                        val error = IllegalStateException(
+                            "Failed to upsert ${failures.size} of ${results.size} sessions"
+                        )
+                        failures.forEach(error::addSuppressed)
+                        throw error
+                    }
+                }
+            },
+        )
+    }
+
+    override suspend fun markCurrent(id: String): Result<Unit> = storage.markCurrent(id)
+
+    override suspend fun delete(id: String): Result<Unit> = storage.deleteOne(id)
+
+    override suspend fun deleteAll(): Result<Unit> = storage.delete()
+}
