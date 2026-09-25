@@ -13,14 +13,14 @@ kotlin {
 
             implementation(projects.core)
 
-            implementation(projects.features.collectionDatabase)
-            implementation(projects.features.folderDatabase)
-            implementation(projects.features.libraryDatabase)
-            implementation(projects.features.mediaDatabase)
-            implementation(projects.features.mixDatabase)
-            implementation(projects.features.playerDatabase)
-            implementation(projects.features.playlistDatabase)
-            implementation(projects.features.serverDatabase)
+            implementation(projects.features.collection.collectionDatabase)
+            implementation(projects.features.folder.folderDatabase)
+            implementation(projects.features.library.libraryDatabase)
+            implementation(projects.features.media.mediaDatabase)
+            implementation(projects.features.mix.mixDatabase)
+            implementation(projects.features.player.playerDatabase)
+            implementation(projects.features.playlist.playlistDatabase)
+            implementation(projects.features.server.serverDatabase)
         }
     }
 }
@@ -33,14 +33,14 @@ sqldelight {
             deriveSchemaFromMigrations.set(true)
             verifyMigrations.set(true)
 
-            dependency(project(":features:collection-database"))
-            dependency(project(":features:folder-database"))
-            dependency(project(":features:library-database"))
-            dependency(project(":features:media-database"))
-            dependency(project(":features:mix-database"))
-            dependency(project(":features:player-database"))
-            dependency(project(":features:playlist-database"))
-            dependency(project(":features:server-database"))
+            dependency(project(":features:collection:collection-database"))
+            dependency(project(":features:folder:folder-database"))
+            dependency(project(":features:library:library-database"))
+            dependency(project(":features:media:media-database"))
+            dependency(project(":features:mix:mix-database"))
+            dependency(project(":features:player:player-database"))
+            dependency(project(":features:playlist:playlist-database"))
+            dependency(project(":features:server:server-database"))
         }
     }
 }

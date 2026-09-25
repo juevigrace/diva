@@ -10,12 +10,12 @@ kotlin {
 
             implementation(projects.core)
             implementation(projects.resources)
-            implementation(projects.features.libraryDatabase)
+            implementation(projects.features.library.libraryDatabase)
 
-            implementation(projects.features.media)
-            implementation(projects.features.folder)
-            implementation(projects.features.player)
-            implementation(projects.features.server)
+            implementation(projects.features.media.mediaCore)
+            implementation(projects.features.folder.folderCore)
+            implementation(projects.features.player.playerCore)
+            implementation(projects.features.server.serverCore)
 
             implementation(libs.diva.network)
         }

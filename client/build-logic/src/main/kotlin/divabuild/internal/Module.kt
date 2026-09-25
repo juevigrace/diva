@@ -16,3 +16,5 @@ internal fun Project.moduleSlug(): String =
 internal fun String.dottedModuleId(): String = replace('-', '.')
 
 internal fun Project.moduleNamespace(prefix: String): String = "$prefix.${name.dottedModuleId()}"
+
+internal fun Project.appModuleNamespace(prefix: String): String = "$prefix.${moduleSlug().dottedModuleId()}"

@@ -9,7 +9,7 @@ kotlin {
             implementation(libs.diva.lib.database)
 
             implementation(projects.core)
-            implementation(projects.features.mediaDatabase)
+            implementation(projects.features.mix.mixDatabase)
 
             implementation(libs.diva.network)
         }

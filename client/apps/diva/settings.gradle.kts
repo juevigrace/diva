@@ -50,42 +50,34 @@ include(
     ":database",
     ":resources",
     ":ui",
-    ":features:home",
-    ":features:library",
-    ":features:media",
-    ":features:folder",
-    ":features:collection",
-    ":features:playlist",
-    ":features:mix",
-    ":features:player",
-    ":features:server",
-    ":features:search",
-    ":features:profile",
+    ":features:home:home-core",
+    ":features:library:library-core",
+    ":features:media:media-core",
+    ":features:folder:folder-core",
+    ":features:collection:collection-core",
+    ":features:playlist:playlist-core",
+    ":features:mix:mix-core",
+    ":features:player:player-core",
+    ":features:server:server-core",
+    ":features:search:search-core",
+    ":features:profile:profile-core",
 )
 
-include(":features:collection-database")
-project(":features:collection-database").projectDir = file("features/collection/database")
+include(":features:collection:collection-database")
 
-include(":features:folder-database")
-project(":features:folder-database").projectDir = file("features/folder/database")
+include(":features:folder:folder-database")
 
-include(":features:library-database")
-project(":features:library-database").projectDir = file("features/library/database")
+include(":features:library:library-database")
 
-include(":features:media-database")
-project(":features:media-database").projectDir = file("features/media/database")
+include(":features:media:media-database")
 
-include(":features:mix-database")
-project(":features:mix-database").projectDir = file("features/mix/database")
+include(":features:mix:mix-database")
 
-include(":features:player-database")
-project(":features:player-database").projectDir = file("features/player/database")
+include(":features:player:player-database")
 
-include(":features:playlist-database")
-project(":features:playlist-database").projectDir = file("features/playlist/database")
+include(":features:playlist:playlist-database")
 
-include(":features:server-database")
-project(":features:server-database").projectDir = file("features/server/database")
+include(":features:server:server-database")
 
 includeBuild("../../packages/shared/framework")
 

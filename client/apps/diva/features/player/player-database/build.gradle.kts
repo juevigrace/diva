@@ -10,7 +10,7 @@ kotlin {
 
             implementation(projects.core)
 
-            implementation(projects.features.mediaDatabase)
+            implementation(projects.features.media.mediaDatabase)
         }
     }
 }
@@ -18,13 +18,13 @@ kotlin {
 sqldelight {
     databases {
         register("DivaDB") {
-            packageName.set("com.diva.app.database.folder")
+            packageName.set("com.diva.app.database.player")
             schemaOutputDirectory.set(file("src/commonMain/sqldelight/databases"))
             generateAsync.set(true)
             deriveSchemaFromMigrations.set(true)
             verifyMigrations.set(true)
 
-            dependency(project(":features:media-database"))
+            dependency(project(":features:media:media-database"))
         }
     }
 }

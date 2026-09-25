@@ -11,9 +11,9 @@ kotlin {
             implementation(projects.core)
             implementation(projects.resources)
 
-            implementation(projects.features.media)
-            implementation(projects.features.folder)
-            implementation(projects.features.collection)
+            implementation(projects.features.media.mediaCore)
+            implementation(projects.features.folder.folderCore)
+            implementation(projects.features.collection.collectionCore)
         }
     }
 }

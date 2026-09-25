@@ -10,7 +10,7 @@ kotlin {
 
             implementation(projects.core)
 
-            implementation(projects.features.mediaDatabase)
+            implementation(projects.features.media.mediaDatabase)
         }
     }
 }
@@ -24,7 +24,7 @@ sqldelight {
             deriveSchemaFromMigrations.set(true)
             verifyMigrations.set(true)
 
-            dependency(project(":features:media-database"))
+            dependency(project(":features:media:media-database"))
         }
     }
 }
