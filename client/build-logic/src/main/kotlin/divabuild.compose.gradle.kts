@@ -2,7 +2,9 @@ import divabuild.internal.hasTarget
 import divabuild.internal.libs
 
 plugins {
-    id("divabuild.cmp")
+    id("divabuild.kmp")
+    id("org.jetbrains.compose")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 kotlin {
@@ -39,7 +41,6 @@ kotlin {
         sourceSets {
             androidMain.dependencies {
                 implementation(libs.androidx.activity.compose)
-//                implementation(libs.compose.ui.tooling)
             }
         }
     }

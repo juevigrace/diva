@@ -1,7 +1,7 @@
 import divabuild.internal.libs
 
 plugins {
-    id("divabuild.kmp-base")
+    id("divabuild.kmp")
 }
 
 kotlin {

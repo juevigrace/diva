@@ -8,7 +8,6 @@ dependencies {
     implementation(libs.jetbrains.compose.gradle.plugin)
     implementation(libs.compose.compiler.gradle.plugin)
     implementation(libs.kotlin.serialization.gradle.plugin)
-    implementation(libs.maven.publish)
     implementation(libs.secrets.gradle)
 
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))

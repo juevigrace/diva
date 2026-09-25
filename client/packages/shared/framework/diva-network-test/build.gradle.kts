@@ -3,8 +3,8 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    id("divabuild.library-framework")
-    id("divabuild.kmp-test")
+    id("divabuild.framework")
+    id("divabuild.test")
     id("divabuild.serialization")
 }
 

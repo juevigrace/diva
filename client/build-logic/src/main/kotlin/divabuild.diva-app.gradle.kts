@@ -1,10 +1,14 @@
+import divabuild.internal.libs
+import divabuild.internal.moduleNamespace
+
 plugins {
-    id("divabuild.diva-app-version")
     id("divabuild.library-app-shared")
 }
 
+version = libs.versions.diva.app.name
+
 kotlin {
     android {
-        namespace = "com.diva.app.${project.name.replace("-", ".")}"
+        namespace = project.moduleNamespace("com.diva.app")
     }
 }

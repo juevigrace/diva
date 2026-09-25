@@ -25,7 +25,6 @@ kotlinx-serialization = "1.11.0"
 koin = "4.2.2"
 ktor = "3.6.0"
 logback = "1.6.3"
-maven-publish = "0.37.0"
 nav3-ui = "1.1.1"
 sqldelight = "2.4.0"
 sqlite = "3.53.2.1"
@@ -65,7 +64,6 @@ compose-compiler-gradle-plugin = { module = "org.jetbrains.kotlin.plugin.compose
 jetbrains-compose-gradle-plugin = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "compose-multiplatform" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-serialization-gradle-plugin = { module = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
-maven-publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "maven-publish" }
 secrets-gradle = { group = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", name = "secrets-gradle-plugin", version.ref = "secrets" }
 
 ######### [DIVA DEPENDENCIES] #########

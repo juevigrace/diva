@@ -1,5 +1,5 @@
 plugins {
-    id("divabuild.library-framework-jvm")
+    id("divabuild.framework-jvm")
     alias(libs.plugins.sqldelight)
 }
 

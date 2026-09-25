@@ -1,6 +1,6 @@
 plugins {
-    id("divabuild.library-framework-ui")
-    id("divabuild.kmp-test")
+    id("divabuild.framework-ui")
+    id("divabuild.test")
 }
 
 kotlin {

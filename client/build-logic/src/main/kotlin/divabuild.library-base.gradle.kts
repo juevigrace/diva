@@ -1,6 +1,21 @@
+import divabuild.internal.libs
+
 plugins {
     id("divabuild.kmp")
-    id("divabuild.targets-android")
-    id("divabuild.targets-ios")
-    id("divabuild.targets-jvm")
+    id("divabuild.targets-mobile")
+}
+
+kotlin {
+    jvm()
+
+    sourceSets {
+        jvmMain.dependencies {
+            implementation(libs.logback.classic)
+            implementation(libs.kotlinx.coroutines.swing)
+        }
+    }
+}
+
+tasks.withType<Test>().configureEach {
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
 }

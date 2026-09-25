@@ -1,7 +1,7 @@
 import divabuild.internal.libs
 
 plugins {
-    id("divabuild.kmp-base")
+    id("divabuild.kmp")
     id("org.jetbrains.kotlin.plugin.serialization")
 }
 

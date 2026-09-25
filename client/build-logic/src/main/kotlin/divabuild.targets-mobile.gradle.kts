@@ -3,7 +3,7 @@ import divabuild.internal.libs
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id("divabuild.kmp-base")
+    id("divabuild.kmp")
     id("com.android.kotlin.multiplatform.library")
 }
 
@@ -36,6 +36,9 @@ kotlin {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
     }
+
+    iosArm64()
+    iosSimulatorArm64()
 
     sourceSets {
         androidMain.dependencies {

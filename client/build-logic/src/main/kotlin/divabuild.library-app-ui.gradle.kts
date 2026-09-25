@@ -1,20 +1,22 @@
-@file:OptIn(ExperimentalWasmDsl::class)
-
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import divabuild.internal.libs
 
 plugins {
-    id("divabuild.library-app-ui-shared")
-    id("divabuild.targets-web")
+    id("divabuild.library-app-shared")
+    id("divabuild.compose")
+    id("divabuild.serialization")
 }
 
 kotlin {
-    js {
-        browser()
-        binaries.executable()
-    }
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
 
-    wasmJs {
-        browser()
-        binaries.executable()
+            implementation(libs.diva.ui)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.koin.androidx.compose)
+        }
     }
 }

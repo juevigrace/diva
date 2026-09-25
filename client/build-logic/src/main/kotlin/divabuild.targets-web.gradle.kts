@@ -4,12 +4,12 @@ import divabuild.internal.libs
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    id("divabuild.kmp-base")
+    id("divabuild.kmp")
 }
 
 kotlin {
     js {
-        outputModuleName = project.name
+        outputModuleName = project.base.archivesName
         generateTypeScriptDefinitions()
         compilerOptions {
             target = "es2015"
@@ -18,7 +18,7 @@ kotlin {
     }
 
     wasmJs {
-        outputModuleName = project.name
+        outputModuleName = project.base.archivesName
         generateTypeScriptDefinitions()
         compilerOptions {
             target = "es2015"

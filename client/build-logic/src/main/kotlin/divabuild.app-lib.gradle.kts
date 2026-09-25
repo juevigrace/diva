@@ -1,26 +1,19 @@
+import divabuild.internal.dottedModuleId
+import divabuild.internal.libs
+import divabuild.internal.moduleSlug
+
 plugins {
-    base
-    id("divabuild.library-version-apps")
     id("divabuild.library-app")
 }
 
-val moduleSlug =
-    project.path.removePrefix(":").split(":").filter { it != "features" }.let { path ->
-        if (path.size == 1) {
-            path.first()
-        } else {
-            val feature = path.first()
-            val submodule = path.drop(1).joinToString("-").removePrefix("$feature-")
-            if (submodule == "core") feature else "$feature-$submodule"
-        }
-    }
+version = libs.versions.diva.lib
 
 base {
-    archivesName.set("diva-lib-$moduleSlug")
+    archivesName.set("diva-lib-${project.moduleSlug()}")
 }
 
 kotlin {
     android {
-        namespace = "io.github.juevigrace.${base.archivesName.get().replace('-', '.')}"
+        namespace = "io.github.juevigrace.${base.archivesName.get().dottedModuleId()}"
     }
 }
