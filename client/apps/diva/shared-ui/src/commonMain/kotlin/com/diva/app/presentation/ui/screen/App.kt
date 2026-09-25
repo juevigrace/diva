@@ -8,8 +8,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import com.diva.app.features.home.presentation.ui.components.navigation.HomeRoute
-import com.diva.app.features.home.presentation.ui.components.navigation.homeNav
+import com.diva.app.home.presentation.ui.components.navigation.HomeRoute
+import com.diva.app.home.presentation.ui.components.navigation.homeNav
 import com.diva.app.presentation.ui.theme.AppTypography
 import com.diva.app.presentation.ui.theme.darkScheme
 import com.diva.app.presentation.ui.theme.lightScheme
