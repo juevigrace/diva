@@ -1,14 +1,14 @@
 package io.github.juevigrace.diva.lib.user.data.api.client
 
 import io.github.juevigrace.diva.lib.models.api.ApiResponse
-import io.github.juevigrace.diva.lib.models.api.auth.forgot.password.UpdatePasswordDto
+import io.github.juevigrace.diva.lib.models.auth.api.password.UpdatePasswordDto
 import io.github.juevigrace.diva.lib.models.api.pagination.PaginatedResponse
-import io.github.juevigrace.diva.lib.models.api.user.CreateUserDto
-import io.github.juevigrace.diva.lib.models.api.user.UpdateEmailDto
-import io.github.juevigrace.diva.lib.models.api.user.UpdatePhoneNumberDto
-import io.github.juevigrace.diva.lib.models.api.user.UpdateRoleDto
-import io.github.juevigrace.diva.lib.models.api.user.UpdateUsernameDto
-import io.github.juevigrace.diva.lib.models.api.user.UserResponse
+import io.github.juevigrace.diva.lib.models.user.api.CreateUserDto
+import io.github.juevigrace.diva.lib.models.user.api.UpdateEmailDto
+import io.github.juevigrace.diva.lib.models.user.api.UpdatePhoneNumberDto
+import io.github.juevigrace.diva.lib.models.user.api.UpdateRoleDto
+import io.github.juevigrace.diva.lib.models.user.api.UpdateUsernameDto
+import io.github.juevigrace.diva.lib.models.user.api.UserResponse
 import io.github.juevigrace.diva.network.client.DivaClient
 import io.github.juevigrace.diva.network.client.deleteAs
 import io.github.juevigrace.diva.network.client.getAs

@@ -6,7 +6,9 @@ package io.github.juevigrace.diva.lib.models.user
 import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.lib.models.api.user.UserResponse
+import io.github.juevigrace.diva.lib.models.Role
+import io.github.juevigrace.diva.lib.models.user.api.UserResponse
+import io.github.juevigrace.diva.lib.models.safeRole
 import io.github.juevigrace.diva.lib.models.user.actions.UserAction
 import io.github.juevigrace.diva.lib.models.user.device.UserDevice
 import io.github.juevigrace.diva.lib.models.user.permissions.UserPermission

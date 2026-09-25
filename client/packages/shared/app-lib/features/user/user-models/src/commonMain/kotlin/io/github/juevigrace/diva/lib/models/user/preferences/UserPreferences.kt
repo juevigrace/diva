@@ -7,7 +7,7 @@ import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.Theme
-import io.github.juevigrace.diva.lib.models.api.user.preferences.UserPreferencesResponse
+import io.github.juevigrace.diva.lib.models.user.api.preferences.UserPreferencesResponse
 import io.github.juevigrace.diva.lib.models.safeValueOfTheme
 import kotlin.js.ExperimentalJsExport
 

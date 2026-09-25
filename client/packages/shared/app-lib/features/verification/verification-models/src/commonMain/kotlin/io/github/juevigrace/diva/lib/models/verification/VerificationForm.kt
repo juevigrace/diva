@@ -4,7 +4,7 @@
 package io.github.juevigrace.diva.lib.models.verification
 
 import io.github.juevigrace.diva.core.DivaJsExport
-import io.github.juevigrace.diva.lib.models.api.verification.VerifyActionDto
+import io.github.juevigrace.diva.lib.models.verification.api.VerifyActionDto
 import kotlin.js.ExperimentalJsExport
 
 data class VerificationForm(

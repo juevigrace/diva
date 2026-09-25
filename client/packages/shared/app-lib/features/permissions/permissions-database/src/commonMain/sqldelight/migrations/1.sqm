@@ -1,5 +1,5 @@
 import io.github.juevigrace.diva.lib.models.permission.PermissionAction;
-import io.github.juevigrace.diva.lib.models.user.Role;
+import io.github.juevigrace.diva.lib.models.Role;
 
 CREATE TABLE IF NOT EXISTS diva_permissions(
     id TEXT NOT NULL PRIMARY KEY,

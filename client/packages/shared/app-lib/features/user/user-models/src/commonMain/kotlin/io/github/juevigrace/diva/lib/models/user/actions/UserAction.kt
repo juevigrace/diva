@@ -8,7 +8,7 @@ import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.models.actions.Actions
 import io.github.juevigrace.diva.lib.models.actions.safeActionsValueOf
-import io.github.juevigrace.diva.lib.models.api.user.action.UserActionResponse
+import io.github.juevigrace.diva.lib.models.user.api.action.UserActionResponse
 import kotlin.js.ExperimentalJsExport
 
 data class UserAction(

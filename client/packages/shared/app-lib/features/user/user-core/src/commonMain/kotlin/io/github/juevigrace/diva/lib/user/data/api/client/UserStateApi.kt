@@ -3,9 +3,9 @@ package io.github.juevigrace.diva.lib.user.data.api.client
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.lib.models.api.ApiResponse
-import io.github.juevigrace.diva.lib.models.api.user.state.UpdateUserStatusDto
-import io.github.juevigrace.diva.lib.models.api.user.state.UpdateVerifiedDto
-import io.github.juevigrace.diva.lib.models.api.user.state.UserStateResponse
+import io.github.juevigrace.diva.lib.models.user.api.state.UpdateUserStatusDto
+import io.github.juevigrace.diva.lib.models.user.api.state.UpdateVerifiedDto
+import io.github.juevigrace.diva.lib.models.user.api.state.UserStateResponse
 import io.github.juevigrace.diva.network.client.DivaClient
 import io.github.juevigrace.diva.network.client.getAs
 import io.github.juevigrace.diva.network.client.patchAs

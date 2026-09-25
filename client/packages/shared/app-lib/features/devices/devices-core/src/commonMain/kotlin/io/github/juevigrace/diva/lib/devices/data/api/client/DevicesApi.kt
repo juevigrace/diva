@@ -1,7 +1,7 @@
 package io.github.juevigrace.diva.lib.devices.data.api.client
 
 import io.github.juevigrace.diva.lib.models.api.ApiResponse
-import io.github.juevigrace.diva.lib.models.api.device.DeviceResponse
+import io.github.juevigrace.diva.lib.models.device.api.DeviceResponse
 import io.github.juevigrace.diva.network.client.DivaClient
 import io.github.juevigrace.diva.network.client.getAs
 

@@ -7,7 +7,7 @@ import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.user.DivaSharedDB
 import io.github.juevigrace.diva.lib.models.permission.Permission
 import io.github.juevigrace.diva.lib.models.permission.PermissionAction
-import io.github.juevigrace.diva.lib.models.user.Role
+import io.github.juevigrace.diva.lib.models.Role
 import io.github.juevigrace.diva.lib.models.user.permissions.UserPermission
 import kotlinx.coroutines.flow.Flow
 

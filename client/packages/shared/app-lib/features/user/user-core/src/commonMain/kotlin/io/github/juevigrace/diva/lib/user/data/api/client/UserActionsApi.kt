@@ -1,7 +1,7 @@
 package io.github.juevigrace.diva.lib.user.data.api.client
 
 import io.github.juevigrace.diva.lib.models.api.ApiResponse
-import io.github.juevigrace.diva.lib.models.api.user.action.UserActionResponse
+import io.github.juevigrace.diva.lib.models.user.api.action.UserActionResponse
 import io.github.juevigrace.diva.network.client.DivaClient
 import io.github.juevigrace.diva.network.client.deleteAs
 import io.github.juevigrace.diva.network.client.getAs

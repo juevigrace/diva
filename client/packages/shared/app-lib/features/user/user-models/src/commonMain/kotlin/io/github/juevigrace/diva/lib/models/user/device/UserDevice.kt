@@ -4,7 +4,7 @@
 package io.github.juevigrace.diva.lib.models.user.device
 
 import io.github.juevigrace.diva.core.DivaJsExport
-import io.github.juevigrace.diva.lib.models.api.user.device.UserDeviceResponse
+import io.github.juevigrace.diva.lib.models.user.api.device.UserDeviceResponse
 import io.github.juevigrace.diva.lib.models.device.Device
 import kotlin.js.ExperimentalJsExport
 

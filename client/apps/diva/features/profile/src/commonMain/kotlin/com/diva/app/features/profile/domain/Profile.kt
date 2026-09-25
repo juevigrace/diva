@@ -1,7 +1,7 @@
 package com.diva.app.features.profile.domain
 
 import io.github.juevigrace.diva.lib.models.Theme
-import io.github.juevigrace.diva.lib.models.user.Role
+import io.github.juevigrace.diva.lib.models.Role
 import io.github.juevigrace.diva.lib.models.user.UserStatus
 
 data class Profile(

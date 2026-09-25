@@ -1,7 +1,7 @@
 package io.github.juevigrace.diva.lib.models.session
 
-import io.github.juevigrace.diva.lib.models.api.auth.session.SessionDataDto
-import io.github.juevigrace.diva.lib.models.api.auth.session.SessionResponse
+import io.github.juevigrace.diva.lib.models.session.api.SessionDataDto
+import io.github.juevigrace.diva.lib.models.session.api.SessionResponse
 
 fun SessionData.toSessionDataDto(): SessionDataDto {
     return SessionDataDto(

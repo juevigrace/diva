@@ -6,7 +6,7 @@ package io.github.juevigrace.diva.lib.models.user.profile
 import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.lib.models.api.user.profile.UserProfileResponse
+import io.github.juevigrace.diva.lib.models.user.api.profile.UserProfileResponse
 import kotlin.js.ExperimentalJsExport
 
 data class UserProfile(

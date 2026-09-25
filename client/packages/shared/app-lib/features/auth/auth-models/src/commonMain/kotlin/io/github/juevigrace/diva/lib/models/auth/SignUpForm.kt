@@ -4,8 +4,8 @@
 package io.github.juevigrace.diva.lib.models.auth
 
 import io.github.juevigrace.diva.core.DivaJsExport
-import io.github.juevigrace.diva.lib.models.api.auth.signup.SignUpDto
-import io.github.juevigrace.diva.lib.models.api.user.CreateUserDto
+import io.github.juevigrace.diva.lib.models.auth.api.signup.SignUpDto
+import io.github.juevigrace.diva.lib.models.user.api.CreateUserDto
 import io.github.juevigrace.diva.lib.models.session.SessionData
 import io.github.juevigrace.diva.lib.models.session.toSessionDataDto
 import kotlin.js.ExperimentalJsExport

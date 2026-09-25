@@ -6,10 +6,10 @@ package io.github.juevigrace.diva.lib.models.user.permissions
 import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.lib.models.api.user.permissions.UserPermissionResponse
+import io.github.juevigrace.diva.lib.models.user.api.permissions.UserPermissionResponse
 import io.github.juevigrace.diva.lib.models.permission.Permission
 import io.github.juevigrace.diva.lib.models.permission.PermissionAction
-import io.github.juevigrace.diva.lib.models.user.Role
+import io.github.juevigrace.diva.lib.models.Role
 import kotlin.js.ExperimentalJsExport
 
 data class UserPermission(

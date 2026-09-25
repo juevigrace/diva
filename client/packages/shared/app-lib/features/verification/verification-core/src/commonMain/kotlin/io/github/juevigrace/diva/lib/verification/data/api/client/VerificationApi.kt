@@ -1,7 +1,7 @@
 package io.github.juevigrace.diva.lib.verification.data.api.client
 
-import io.github.juevigrace.diva.lib.models.api.verification.RequestActionVerificationDto
-import io.github.juevigrace.diva.lib.models.api.verification.VerifyActionDto
+import io.github.juevigrace.diva.lib.models.verification.api.RequestActionVerificationDto
+import io.github.juevigrace.diva.lib.models.verification.api.VerifyActionDto
 import io.github.juevigrace.diva.network.client.DivaClient
 import io.github.juevigrace.diva.network.client.postAs
 
