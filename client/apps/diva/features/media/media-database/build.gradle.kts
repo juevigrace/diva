@@ -16,7 +16,7 @@ kotlin {
 sqldelight {
     databases {
         register("DivaDB") {
-            packageName.set("com.diva.app.database.media")
+            packageName.set("com.diva.app.media.database")
             schemaOutputDirectory.set(file("src/commonMain/sqldelight/databases"))
             generateAsync.set(true)
             deriveSchemaFromMigrations.set(true)

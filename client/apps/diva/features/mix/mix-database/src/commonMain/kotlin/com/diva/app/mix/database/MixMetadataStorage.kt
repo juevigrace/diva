@@ -1,6 +1,5 @@
 package com.diva.app.mix.database
 
-import com.diva.app.database.mix.DivaDB
 import com.diva.app.models.collection.Collection
 import com.diva.app.models.collection.mix.Mix
 import io.github.juevigrace.diva.core.Option

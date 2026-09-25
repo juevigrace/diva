@@ -1,6 +1,5 @@
 package com.diva.app.folder.database
 
-import com.diva.app.database.folder.DivaDB
 import com.diva.app.models.collection.VisibilityType
 import com.diva.app.models.folder.Folder
 import com.diva.app.models.media.Media

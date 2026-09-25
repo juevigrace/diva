@@ -1,6 +1,5 @@
 package com.diva.app.media.database
 
-import com.diva.app.database.media.DivaDB
 import com.diva.app.models.media.MediaMetadata
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull

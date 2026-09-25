@@ -1,6 +1,5 @@
 package com.diva.app.folder.database
 
-import com.diva.app.database.folder.DivaDB
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlin.time.Clock
 

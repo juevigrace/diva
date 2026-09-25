@@ -1,6 +1,5 @@
 package com.diva.app.playlist.database
 
-import com.diva.app.database.playlist.DivaDB
 import com.diva.app.models.collection.ModerationStatus
 import com.diva.app.models.collection.playlist.PlaylistSuggestions
 import com.diva.app.models.media.Media

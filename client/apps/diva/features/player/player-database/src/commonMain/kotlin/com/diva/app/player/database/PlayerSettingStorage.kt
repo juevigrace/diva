@@ -1,6 +1,5 @@
 package com.diva.app.player.database
 
-import com.diva.app.database.player.DivaDB
 import com.diva.app.models.player.PlayerSetting
 import com.diva.app.models.player.RepeatMode
 import io.github.juevigrace.diva.core.Option

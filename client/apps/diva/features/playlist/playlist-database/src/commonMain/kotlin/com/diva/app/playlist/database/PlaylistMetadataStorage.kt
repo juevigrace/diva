@@ -1,6 +1,5 @@
 package com.diva.app.playlist.database
 
-import com.diva.app.database.playlist.DivaDB
 import com.diva.app.models.collection.Collection
 import com.diva.app.models.collection.playlist.Playlist
 import io.github.juevigrace.diva.core.Option

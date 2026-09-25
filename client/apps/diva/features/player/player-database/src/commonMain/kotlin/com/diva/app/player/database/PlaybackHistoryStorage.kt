@@ -1,6 +1,5 @@
 package com.diva.app.player.database
 
-import com.diva.app.database.player.DivaDB
 import com.diva.app.models.collection.VisibilityType
 import com.diva.app.models.media.Media
 import com.diva.app.models.media.MediaType
