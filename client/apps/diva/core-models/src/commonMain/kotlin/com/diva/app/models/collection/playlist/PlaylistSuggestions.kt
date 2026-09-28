@@ -8,7 +8,7 @@ import com.diva.app.models.collection.ModerationStatus
 import com.diva.app.models.collection.safeModerationStatus
 import com.diva.app.models.media.Media
 import io.github.juevigrace.diva.core.DivaJsExport
-import io.github.juevigrace.diva.lib.models.user.User
+import io.github.juevigrace.diva.lib.user.models.User
 import kotlin.js.ExperimentalJsExport
 
 data class PlaylistSuggestions(

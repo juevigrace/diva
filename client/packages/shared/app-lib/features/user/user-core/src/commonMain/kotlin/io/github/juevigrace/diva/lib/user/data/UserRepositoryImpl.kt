@@ -1,8 +1,9 @@
 package io.github.juevigrace.diva.lib.user.data
 
 import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.lib.session.models.withSession
 import io.github.juevigrace.diva.lib.user.database.UserStorage
-import io.github.juevigrace.diva.lib.models.user.User
+import io.github.juevigrace.diva.lib.user.models.User
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
 import io.github.juevigrace.diva.lib.user.data.api.client.UserApi
 import io.github.juevigrace.diva.lib.user.domain.UserRepository
@@ -22,13 +23,12 @@ class UserRepositoryImpl(
     override suspend fun sync(): Result<Unit> {
         return withSession(
             sessionCall = sessionRepository::getCurrent,
-            onFound = { session ->
-                api.getByID(
-                    uid = session.userId,
-                    token = session.accessToken
-                ).mapCatching { storage.upsert(User.fromResponse(it)).getOrThrow() }
-            },
-        )
+        ) { session ->
+            api.getByID(
+                uid = session.userId,
+                token = session.accessToken
+            ).mapCatching { storage.upsert(User.fromResponse(it)).getOrThrow() }
+        }
     }
 
     override suspend fun save(user: User): Result<Unit> = storage.upsert(user)

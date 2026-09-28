@@ -1,8 +1,8 @@
 package com.diva.app.profile.domain
 
-import io.github.juevigrace.diva.lib.models.Theme
-import io.github.juevigrace.diva.lib.models.Role
-import io.github.juevigrace.diva.lib.models.user.UserStatus
+import io.github.juevigrace.diva.lib.user.preferences.models.Theme
+import io.github.juevigrace.diva.lib.core.models.Role
+import io.github.juevigrace.diva.lib.user.models.UserStatus
 
 data class Profile(
     val username: String = "",

@@ -2,7 +2,8 @@ package io.github.juevigrace.diva.lib.user.data
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.user.database.permissions.UserPermissionsStorage
-import io.github.juevigrace.diva.lib.models.user.permissions.UserPermission
+import io.github.juevigrace.diva.lib.user.permissions.models.UserPermission
+import io.github.juevigrace.diva.lib.session.models.withSession
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
 import io.github.juevigrace.diva.lib.user.data.api.client.UserPermissionsApi
 import io.github.juevigrace.diva.lib.user.domain.UserPermissionsRepository

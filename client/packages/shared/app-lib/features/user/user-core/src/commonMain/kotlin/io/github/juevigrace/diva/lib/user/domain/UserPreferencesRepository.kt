@@ -2,7 +2,7 @@ package io.github.juevigrace.diva.lib.user.domain
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
-import io.github.juevigrace.diva.lib.models.user.preferences.UserPreferences
+import io.github.juevigrace.diva.lib.user.preferences.models.UserPreferences
 import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.flow.Flow
 

@@ -5,8 +5,8 @@ import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.user.DivaSharedDB
-import io.github.juevigrace.diva.lib.models.Theme
-import io.github.juevigrace.diva.lib.models.user.preferences.UserPreferences
+import io.github.juevigrace.diva.lib.user.preferences.models.Theme
+import io.github.juevigrace.diva.lib.user.preferences.models.UserPreferences
 import kotlinx.coroutines.flow.Flow
 
 interface UserPreferencesStorage {

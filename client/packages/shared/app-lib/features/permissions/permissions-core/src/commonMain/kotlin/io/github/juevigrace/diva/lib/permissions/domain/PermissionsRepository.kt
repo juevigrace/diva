@@ -2,7 +2,7 @@ package io.github.juevigrace.diva.lib.permissions.domain
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
-import io.github.juevigrace.diva.lib.models.permission.Permission
+import io.github.juevigrace.diva.lib.permission.models.Permission
 import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.flow.Flow
 

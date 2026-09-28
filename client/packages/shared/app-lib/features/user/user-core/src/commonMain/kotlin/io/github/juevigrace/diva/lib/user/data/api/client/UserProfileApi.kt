@@ -2,10 +2,10 @@ package io.github.juevigrace.diva.lib.user.data.api.client
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.toOption
-import io.github.juevigrace.diva.lib.models.api.ApiResponse
-import io.github.juevigrace.diva.lib.models.user.api.profile.CreateProfileDto
-import io.github.juevigrace.diva.lib.models.user.api.profile.UpdateProfileDto
-import io.github.juevigrace.diva.lib.models.user.api.profile.UserProfileResponse
+import io.github.juevigrace.diva.lib.core.models.api.ApiResponse
+import io.github.juevigrace.diva.lib.user.profile.models.api.CreateProfileDto
+import io.github.juevigrace.diva.lib.user.profile.models.api.UpdateProfileDto
+import io.github.juevigrace.diva.lib.user.profile.models.api.UserProfileResponse
 import io.github.juevigrace.diva.network.client.DivaClient
 import io.github.juevigrace.diva.network.client.FormDataContent
 import io.github.juevigrace.diva.network.client.getAs

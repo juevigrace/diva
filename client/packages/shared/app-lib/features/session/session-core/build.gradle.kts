@@ -6,7 +6,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core)
-            implementation(projects.features.session.sessionModels)
+            api(projects.features.session.sessionModels)
 
             implementation(libs.diva.network)
 

@@ -1,0 +1,32 @@
+@file:OptIn(ExperimentalJsExport::class)
+@file:DivaJsExport
+
+package io.github.juevigrace.diva.lib.user.preferences.models
+
+import io.github.juevigrace.diva.core.DivaJsExport
+import io.github.juevigrace.diva.core.None
+import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.lib.user.preferences.models.api.UserPreferencesResponse
+import kotlin.js.ExperimentalJsExport
+
+data class UserPreferences(
+    val theme: Theme = Theme.SYSTEM,
+    val onboardingCompleted: Boolean = false,
+    val language: String = "en",
+    val lastSyncAt: Option<Long> = None,
+    val createdAt: Option<Long> = None,
+    val updatedAt: Option<Long> = None,
+) {
+    companion object {
+        fun fromResponse(response: UserPreferencesResponse): UserPreferences {
+            return UserPreferences(
+                theme = safeValueOfTheme(response.theme),
+                onboardingCompleted = response.onboardingCompleted,
+                language = response.language,
+                lastSyncAt = Option.of(response.lastSyncAt),
+                createdAt = Option.of(response.createdAt),
+                updatedAt = Option.of(response.updatedAt),
+            )
+        }
+    }
+}

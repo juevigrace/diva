@@ -7,7 +7,7 @@ import com.diva.app.models.playback.PlaybackHistory
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrElse
 import io.github.juevigrace.diva.database.DivaDatabase
-import io.github.juevigrace.diva.lib.models.user.User
+import io.github.juevigrace.diva.lib.user.models.User
 
 interface PlaybackHistoryStorage {
     suspend fun record(item: PlaybackHistory): Result<Unit>

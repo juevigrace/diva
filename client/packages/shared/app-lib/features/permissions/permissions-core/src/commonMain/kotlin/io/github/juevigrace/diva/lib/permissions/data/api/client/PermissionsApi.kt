@@ -1,10 +1,10 @@
 package io.github.juevigrace.diva.lib.permissions.data.api.client
 
-import io.github.juevigrace.diva.lib.models.api.ApiResponse
-import io.github.juevigrace.diva.lib.models.api.pagination.PaginatedResponse
-import io.github.juevigrace.diva.lib.models.permission.api.PermissionResponse
-import io.github.juevigrace.diva.lib.models.permission.api.UpdatePermissionDto
-import io.github.juevigrace.diva.lib.models.permission.api.UpdatePermissionRoleLevelDto
+import io.github.juevigrace.diva.lib.core.models.api.ApiResponse
+import io.github.juevigrace.diva.lib.core.models.api.pagination.PaginatedResponse
+import io.github.juevigrace.diva.lib.permission.models.api.PermissionResponse
+import io.github.juevigrace.diva.lib.permission.models.api.UpdatePermissionDto
+import io.github.juevigrace.diva.lib.permission.models.api.UpdatePermissionRoleLevelDto
 import io.github.juevigrace.diva.network.client.DivaClient
 import io.github.juevigrace.diva.network.client.getAs
 import io.github.juevigrace.diva.network.client.patchAs

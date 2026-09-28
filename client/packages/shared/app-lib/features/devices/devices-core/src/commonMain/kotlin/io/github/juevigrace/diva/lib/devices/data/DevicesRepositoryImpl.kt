@@ -3,7 +3,7 @@ package io.github.juevigrace.diva.lib.devices.data
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.devices.database.DevicesStorage
 import io.github.juevigrace.diva.lib.devices.domain.DevicesRepository
-import io.github.juevigrace.diva.lib.models.device.Device
+import io.github.juevigrace.diva.lib.device.models.Device
 import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.flow.Flow
 

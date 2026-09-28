@@ -86,7 +86,6 @@ includeBuild("../../packages/shared/app-lib") {
         val appLibModules =
             mapOf(
                 "diva-lib-core" to ":core",
-                "diva-lib-core-models" to ":core-models",
                 "diva-lib-database" to ":database",
                 "diva-lib-ui" to ":ui",
                 "diva-lib-auth" to ":features:auth:auth-core",

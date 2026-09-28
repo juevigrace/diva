@@ -2,8 +2,8 @@ package io.github.juevigrace.diva.lib.user.domain
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
-import io.github.juevigrace.diva.lib.models.actions.Actions
-import io.github.juevigrace.diva.lib.models.user.actions.UserAction
+import io.github.juevigrace.diva.lib.user.actions.models.Actions
+import io.github.juevigrace.diva.lib.user.actions.models.UserAction
 import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.flow.Flow
 

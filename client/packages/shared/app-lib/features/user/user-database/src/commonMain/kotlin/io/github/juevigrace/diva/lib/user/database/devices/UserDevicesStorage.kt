@@ -3,8 +3,8 @@ package io.github.juevigrace.diva.lib.user.database.devices
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.user.DivaSharedDB
-import io.github.juevigrace.diva.lib.models.device.Device
-import io.github.juevigrace.diva.lib.models.user.device.UserDevice
+import io.github.juevigrace.diva.lib.device.models.Device
+import io.github.juevigrace.diva.lib.user.device.models.UserDevice
 import kotlinx.coroutines.flow.Flow
 
 interface UserDevicesStorage {

@@ -5,7 +5,7 @@ import com.diva.app.models.collection.playlist.Playlist
 import com.diva.app.models.collection.playlist.PlaylistSuggestions
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
-import io.github.juevigrace.diva.lib.models.user.User
+import io.github.juevigrace.diva.lib.user.models.User
 import kotlinx.coroutines.flow.Flow
 
 interface PlaylistRepository : Repository {

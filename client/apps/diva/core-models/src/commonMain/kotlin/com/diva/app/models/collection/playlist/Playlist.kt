@@ -6,7 +6,7 @@ package com.diva.app.models.collection.playlist
 import com.diva.app.models.api.collection.playlist.response.PlaylistResponse
 import com.diva.app.models.collection.Collection
 import io.github.juevigrace.diva.core.DivaJsExport
-import io.github.juevigrace.diva.lib.models.user.User
+import io.github.juevigrace.diva.lib.user.models.User
 import kotlin.js.ExperimentalJsExport
 
 data class Playlist(

@@ -24,6 +24,7 @@ kotlin {
 
             implementation(projects.core)
 
+            implementation(projects.features.session.sessionModels)
             implementation(projects.features.devices.devicesDatabase)
             implementation(projects.features.user.userDatabase)
             implementation(projects.features.permissions.permissionsDatabase)

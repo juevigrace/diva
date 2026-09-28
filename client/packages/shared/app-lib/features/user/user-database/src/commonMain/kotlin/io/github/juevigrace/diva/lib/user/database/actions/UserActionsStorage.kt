@@ -3,8 +3,8 @@ package io.github.juevigrace.diva.lib.user.database.actions
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.user.DivaSharedDB
-import io.github.juevigrace.diva.lib.models.actions.Actions
-import io.github.juevigrace.diva.lib.models.user.actions.UserAction
+import io.github.juevigrace.diva.lib.user.actions.models.Actions
+import io.github.juevigrace.diva.lib.user.actions.models.UserAction
 import kotlinx.coroutines.flow.Flow
 
 interface UserActionsStorage {

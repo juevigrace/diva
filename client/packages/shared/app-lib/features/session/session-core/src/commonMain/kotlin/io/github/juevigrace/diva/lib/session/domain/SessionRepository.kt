@@ -2,7 +2,7 @@ package io.github.juevigrace.diva.lib.session.domain
 
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
-import io.github.juevigrace.diva.lib.models.session.Session
+import io.github.juevigrace.diva.lib.session.models.Session
 import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.flow.Flow
 

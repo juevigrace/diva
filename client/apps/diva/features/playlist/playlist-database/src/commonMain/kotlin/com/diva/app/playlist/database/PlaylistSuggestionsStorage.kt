@@ -4,7 +4,7 @@ import com.diva.app.models.collection.ModerationStatus
 import com.diva.app.models.collection.playlist.PlaylistSuggestions
 import com.diva.app.models.media.Media
 import io.github.juevigrace.diva.database.DivaDatabase
-import io.github.juevigrace.diva.lib.models.user.User
+import io.github.juevigrace.diva.lib.user.models.User
 import migrations.Diva_playlist_suggestions
 
 interface PlaylistSuggestionsStorage {

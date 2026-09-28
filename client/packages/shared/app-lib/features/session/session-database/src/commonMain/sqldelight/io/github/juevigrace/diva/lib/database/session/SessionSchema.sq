@@ -1,5 +1,5 @@
-import io.github.juevigrace.diva.lib.models.session.SessionStatus;
-import io.github.juevigrace.diva.lib.models.session.SessionType;
+import io.github.juevigrace.diva.lib.session.models.SessionStatus;
+import io.github.juevigrace.diva.lib.session.models.SessionType;
 import kotlin.Boolean;
 
 CREATE TABLE IF NOT EXISTS diva_session(

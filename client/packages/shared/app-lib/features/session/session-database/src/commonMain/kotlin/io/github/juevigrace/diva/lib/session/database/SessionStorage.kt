@@ -3,10 +3,10 @@ package io.github.juevigrace.diva.lib.session.database
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.session.DivaSharedDB
-import io.github.juevigrace.diva.lib.models.session.Session
-import io.github.juevigrace.diva.lib.models.session.SessionData
-import io.github.juevigrace.diva.lib.models.session.SessionStatus
-import io.github.juevigrace.diva.lib.models.session.SessionType
+import io.github.juevigrace.diva.lib.session.models.Session
+import io.github.juevigrace.diva.lib.session.models.SessionData
+import io.github.juevigrace.diva.lib.session.models.SessionStatus
+import io.github.juevigrace.diva.lib.session.models.SessionType
 import kotlinx.coroutines.flow.Flow
 
 interface SessionStorage {

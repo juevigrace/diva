@@ -1,7 +1,7 @@
 package com.diva.app.playlist.database
 
 import io.github.juevigrace.diva.database.DivaDatabase
-import io.github.juevigrace.diva.lib.models.user.User
+import io.github.juevigrace.diva.lib.user.models.User
 import migrations.Diva_playlist_contributor
 
 interface PlaylistContributorStorage {

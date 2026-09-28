@@ -5,8 +5,8 @@ import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.user.DivaSharedDB
-import io.github.juevigrace.diva.lib.models.Role
-import io.github.juevigrace.diva.lib.models.user.User
+import io.github.juevigrace.diva.lib.core.models.Role
+import io.github.juevigrace.diva.lib.user.models.User
 import kotlinx.coroutines.flow.Flow
 
 interface UserStorage {

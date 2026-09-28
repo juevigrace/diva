@@ -5,10 +5,10 @@ import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.database.user.DivaSharedDB
-import io.github.juevigrace.diva.lib.models.permission.Permission
-import io.github.juevigrace.diva.lib.models.permission.PermissionAction
-import io.github.juevigrace.diva.lib.models.Role
-import io.github.juevigrace.diva.lib.models.user.permissions.UserPermission
+import io.github.juevigrace.diva.lib.permission.models.Permission
+import io.github.juevigrace.diva.lib.permission.models.PermissionAction
+import io.github.juevigrace.diva.lib.core.models.Role
+import io.github.juevigrace.diva.lib.user.permissions.models.UserPermission
 import kotlinx.coroutines.flow.Flow
 
 interface UserPermissionsStorage {

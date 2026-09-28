@@ -1,9 +1,9 @@
 package io.github.juevigrace.diva.lib.user.data.api.client
 
-import io.github.juevigrace.diva.lib.models.api.ApiResponse
-import io.github.juevigrace.diva.lib.models.user.api.permissions.CreateUserPermissionDto
-import io.github.juevigrace.diva.lib.models.user.api.permissions.UpdateUserPermissionDto
-import io.github.juevigrace.diva.lib.models.user.api.permissions.UserPermissionResponse
+import io.github.juevigrace.diva.lib.core.models.api.ApiResponse
+import io.github.juevigrace.diva.lib.user.permissions.models.api.CreateUserPermissionDto
+import io.github.juevigrace.diva.lib.user.permissions.models.api.UpdateUserPermissionDto
+import io.github.juevigrace.diva.lib.user.permissions.models.api.UserPermissionResponse
 import io.github.juevigrace.diva.network.client.DivaClient
 import io.github.juevigrace.diva.network.client.deleteAs
 import io.github.juevigrace.diva.network.client.getAs

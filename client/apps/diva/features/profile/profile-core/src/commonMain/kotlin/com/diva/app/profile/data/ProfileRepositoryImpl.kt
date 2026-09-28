@@ -4,9 +4,9 @@ import com.diva.app.profile.domain.Profile
 import com.diva.app.profile.domain.ProfileRepository
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
-import io.github.juevigrace.diva.lib.models.Theme
-import io.github.juevigrace.diva.lib.models.Role
-import io.github.juevigrace.diva.lib.models.user.UserStatus
+import io.github.juevigrace.diva.lib.user.preferences.models.Theme
+import io.github.juevigrace.diva.lib.core.models.Role
+import io.github.juevigrace.diva.lib.user.models.UserStatus
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
 import io.github.juevigrace.diva.lib.user.domain.UserDevicesRepository
 import io.github.juevigrace.diva.lib.user.domain.UserPreferencesRepository
