@@ -14,7 +14,7 @@ compose {
             mainClass = "com.diva.app.MainKt"
 
             nativeDistributions {
-                targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+                targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.AppImage)
                 packageName = "com.diva.app"
                 packageVersion = libs.versions.diva.app.name.get()
             }

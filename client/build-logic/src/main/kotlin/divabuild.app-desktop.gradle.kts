@@ -1,3 +1,4 @@
+import divabuild.internal.buildLogicResourcesDir
 import divabuild.internal.libs
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.jetbrains.compose.reload.gradle.ComposeHotRun
@@ -12,6 +13,18 @@ plugins {
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+compose.desktop {
+    application {
+        buildTypes.release.proguard {
+            version.set(libs.versions.proguard.get())
+            configurationFiles.from(
+                buildLogicResourcesDir().resolve("proguard-rules.pro"),
+                project.file("proguard-rules.pro"),
+            )
+        }
     }
 }
 
