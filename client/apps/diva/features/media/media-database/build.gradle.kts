@@ -9,6 +9,9 @@ kotlin {
             api(libs.diva.database.sqlite)
 
             implementation(projects.core)
+
+            implementation(projects.features.media.mediaModels)
+            implementation(projects.features.collection.collectionModels)
         }
     }
 }

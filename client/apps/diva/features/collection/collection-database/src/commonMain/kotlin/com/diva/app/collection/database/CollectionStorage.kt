@@ -1,9 +1,9 @@
 package com.diva.app.collection.database
 
-import com.diva.app.models.collection.Collection
-import com.diva.app.models.collection.CollectionType
-import com.diva.app.models.collection.VisibilityType
-import com.diva.app.models.media.Media
+import com.diva.app.collection.models.Collection
+import com.diva.app.collection.models.CollectionType
+import com.diva.app.core.models.VisibilityType
+import com.diva.app.media.models.Media
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.core.map

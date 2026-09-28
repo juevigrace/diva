@@ -21,7 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.diva.app.profile.domain.Profile
+import com.diva.app.profile.models.Profile
 import com.diva.app.profile.presentation.events.ProfileEvents
 import com.diva.app.profile.presentation.viewmodel.ProfileViewModel
 import io.github.juevigrace.diva.ui.layout.Screen

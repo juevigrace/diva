@@ -1,7 +1,7 @@
 package com.diva.app.folder.domain
 
-import com.diva.app.models.folder.Folder
-import com.diva.app.models.media.Media
+import com.diva.app.folder.models.Folder
+import com.diva.app.media.models.Media
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow

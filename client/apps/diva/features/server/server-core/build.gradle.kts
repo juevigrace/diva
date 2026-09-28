@@ -11,6 +11,8 @@ kotlin {
             implementation(projects.core)
             implementation(projects.features.server.serverDatabase)
 
+            api(projects.features.server.serverModels)
+
             implementation(libs.diva.network)
         }
     }

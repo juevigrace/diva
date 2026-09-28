@@ -11,6 +11,8 @@ kotlin {
             implementation(projects.core)
             implementation(projects.features.playlist.playlistDatabase)
 
+            api(projects.features.collection.collectionModels)
+
             implementation(libs.diva.network)
         }
     }

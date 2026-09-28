@@ -12,6 +12,9 @@ kotlin {
             implementation(projects.resources)
             implementation(projects.features.library.libraryDatabase)
 
+            api(projects.features.folder.folderModels)
+            api(projects.features.media.mediaModels)
+
             implementation(projects.features.media.mediaCore)
             implementation(projects.features.folder.folderCore)
             implementation(projects.features.player.playerCore)

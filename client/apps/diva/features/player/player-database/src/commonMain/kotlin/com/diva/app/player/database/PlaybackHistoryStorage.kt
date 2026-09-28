@@ -1,9 +1,9 @@
 package com.diva.app.player.database
 
-import com.diva.app.models.collection.VisibilityType
-import com.diva.app.models.media.Media
-import com.diva.app.models.media.MediaType
-import com.diva.app.models.playback.PlaybackHistory
+import com.diva.app.core.models.VisibilityType
+import com.diva.app.media.models.Media
+import com.diva.app.media.models.MediaType
+import com.diva.app.player.playback.models.PlaybackHistory
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrElse
 import io.github.juevigrace.diva.database.DivaDatabase

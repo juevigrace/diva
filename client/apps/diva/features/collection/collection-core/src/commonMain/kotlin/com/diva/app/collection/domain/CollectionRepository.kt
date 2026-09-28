@@ -1,8 +1,8 @@
 package com.diva.app.collection.domain
 
-import com.diva.app.models.collection.Collection
-import com.diva.app.models.collection.CollectionMedia
-import com.diva.app.models.media.Media
+import com.diva.app.collection.models.Collection
+import com.diva.app.collection.models.CollectionMedia
+import com.diva.app.media.models.Media
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow

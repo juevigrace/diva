@@ -1,8 +1,8 @@
 package com.diva.app.media.database
 
-import com.diva.app.models.collection.VisibilityType
-import com.diva.app.models.media.Media
-import com.diva.app.models.media.MediaType
+import com.diva.app.core.models.VisibilityType
+import com.diva.app.media.models.Media
+import com.diva.app.media.models.MediaType
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.database.DivaDatabase

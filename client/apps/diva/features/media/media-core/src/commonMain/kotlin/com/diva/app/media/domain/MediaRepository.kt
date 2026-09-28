@@ -1,7 +1,7 @@
 package com.diva.app.media.domain
 
-import com.diva.app.models.media.Media
-import com.diva.app.models.media.tag.Tag
+import com.diva.app.media.models.Media
+import com.diva.app.media.tag.models.Tag
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow

@@ -11,6 +11,9 @@ kotlin {
             implementation(projects.core)
             implementation(projects.features.player.playerDatabase)
 
+            api(projects.features.media.mediaModels)
+            api(projects.features.player.playerModels)
+
             implementation(libs.diva.network)
         }
     }

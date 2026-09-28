@@ -1,6 +1,6 @@
 package com.diva.app.profile.data
 
-import com.diva.app.profile.domain.Profile
+import com.diva.app.profile.models.Profile
 import com.diva.app.profile.domain.ProfileRepository
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull

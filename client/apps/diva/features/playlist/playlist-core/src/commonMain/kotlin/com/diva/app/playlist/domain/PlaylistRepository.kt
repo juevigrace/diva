@@ -1,8 +1,8 @@
 package com.diva.app.playlist.domain
 
-import com.diva.app.models.collection.ModerationStatus
-import com.diva.app.models.collection.playlist.Playlist
-import com.diva.app.models.collection.playlist.PlaylistSuggestions
+import com.diva.app.collection.playlist.models.ModerationStatus
+import com.diva.app.collection.playlist.models.Playlist
+import com.diva.app.collection.playlist.models.PlaylistSuggestions
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import io.github.juevigrace.diva.lib.user.models.User

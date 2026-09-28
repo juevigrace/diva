@@ -1,4 +1,4 @@
-import com.diva.app.models.collection.ModerationStatus;
+import com.diva.app.collection.playlist.models.ModerationStatus;
 import kotlin.Boolean;
 
 CREATE TABLE IF NOT EXISTS diva_playlist_metadata(

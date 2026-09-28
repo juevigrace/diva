@@ -3,8 +3,8 @@ package com.diva.app.folder.data
 import com.diva.app.folder.database.FolderStorage
 import com.diva.app.folder.database.MediaFolderLinkStorage
 import com.diva.app.folder.domain.FolderRepository
-import com.diva.app.models.folder.Folder
-import com.diva.app.models.media.Media
+import com.diva.app.folder.models.Folder
+import com.diva.app.media.models.Media
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
 

@@ -12,6 +12,8 @@ kotlin {
 
             implementation(projects.core)
             implementation(projects.resources)
+
+            api(projects.features.profile.profileModels)
         }
     }
 }

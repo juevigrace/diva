@@ -1,4 +1,4 @@
-import com.diva.app.models.player.RepeatMode;
+import com.diva.app.player.models.RepeatMode;
 import kotlin.Boolean;
 
 CREATE TABLE IF NOT EXISTS diva_playback_history(

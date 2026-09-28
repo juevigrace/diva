@@ -1,5 +1,5 @@
-import com.diva.app.models.collection.CollectionType;
-import com.diva.app.models.collection.VisibilityType;
+import com.diva.app.collection.models.CollectionType;
+import com.diva.app.core.models.VisibilityType;
 
 CREATE TABLE IF NOT EXISTS diva_collection(
     id TEXT NOT NULL PRIMARY KEY,

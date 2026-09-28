@@ -1,6 +1,6 @@
 package com.diva.app.mix.domain
 
-import com.diva.app.models.collection.mix.Mix
+import com.diva.app.collection.mix.models.Mix
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow

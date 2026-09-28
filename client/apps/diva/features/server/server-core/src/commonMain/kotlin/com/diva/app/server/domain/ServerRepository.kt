@@ -1,6 +1,6 @@
 package com.diva.app.server.domain
 
-import com.diva.app.models.server.Server
+import com.diva.app.server.models.Server
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow

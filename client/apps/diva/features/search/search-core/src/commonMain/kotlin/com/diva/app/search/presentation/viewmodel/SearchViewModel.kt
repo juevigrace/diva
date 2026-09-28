@@ -1,7 +1,7 @@
 package com.diva.app.search.presentation.viewmodel
 
 import com.diva.app.search.domain.SearchRepository
-import com.diva.app.search.domain.SearchResults
+import com.diva.app.search.models.SearchResults
 import com.diva.app.search.presentation.events.SearchEvents
 import com.diva.app.search.presentation.state.SearchState
 import io.github.juevigrace.diva.ui.navigation.Navigator

@@ -11,6 +11,9 @@ kotlin {
             implementation(projects.core)
 
             implementation(projects.features.media.mediaDatabase)
+
+            implementation(projects.features.media.mediaModels)
+            implementation(projects.features.collection.collectionModels)
         }
     }
 }

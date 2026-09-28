@@ -1,7 +1,7 @@
 package com.diva.app.playlist.database
 
-import com.diva.app.models.collection.Collection
-import com.diva.app.models.collection.playlist.Playlist
+import com.diva.app.collection.models.Collection
+import com.diva.app.collection.playlist.models.Playlist
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow

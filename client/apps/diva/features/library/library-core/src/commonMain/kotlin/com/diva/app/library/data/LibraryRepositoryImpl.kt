@@ -6,8 +6,8 @@ import com.diva.app.library.domain.LibraryRepository
 import com.diva.app.media.domain.MediaRepository
 import com.diva.app.player.domain.PlayerRepository
 import com.diva.app.server.domain.ServerRepository
-import com.diva.app.models.folder.Folder
-import com.diva.app.models.media.Media
+import com.diva.app.folder.models.Folder
+import com.diva.app.media.models.Media
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 

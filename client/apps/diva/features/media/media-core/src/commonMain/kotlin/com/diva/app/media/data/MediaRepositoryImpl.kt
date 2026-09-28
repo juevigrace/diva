@@ -3,8 +3,8 @@ package com.diva.app.media.data
 import com.diva.app.media.database.MediaStorage
 import com.diva.app.media.database.MediaTagStorage
 import com.diva.app.media.domain.MediaRepository
-import com.diva.app.models.media.Media
-import com.diva.app.models.media.tag.Tag
+import com.diva.app.media.models.Media
+import com.diva.app.media.tag.models.Tag
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
 

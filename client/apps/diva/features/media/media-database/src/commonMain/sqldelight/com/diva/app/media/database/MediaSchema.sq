@@ -1,5 +1,5 @@
-import com.diva.app.models.collection.VisibilityType;
-import com.diva.app.models.media.MediaType;
+import com.diva.app.core.models.VisibilityType;
+import com.diva.app.media.models.MediaType;
 import kotlin.Boolean;
 
 CREATE TABLE IF NOT EXISTS diva_media(

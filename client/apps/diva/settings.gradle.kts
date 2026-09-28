@@ -45,22 +45,27 @@ include(":shared-ui")
 
 include(
     ":core",
-    ":core-models",
-    ":api-models",
     ":database",
     ":resources",
     ":ui",
     ":features:home:home-core",
     ":features:library:library-core",
     ":features:media:media-core",
+    ":features:media:media-models",
     ":features:folder:folder-core",
+    ":features:folder:folder-models",
     ":features:collection:collection-core",
+    ":features:collection:collection-models",
     ":features:playlist:playlist-core",
     ":features:mix:mix-core",
     ":features:player:player-core",
+    ":features:player:player-models",
     ":features:server:server-core",
+    ":features:server:server-models",
     ":features:search:search-core",
+    ":features:search:search-models",
     ":features:profile:profile-core",
+    ":features:profile:profile-models",
 )
 
 include(":features:collection:collection-database")

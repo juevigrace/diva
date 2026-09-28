@@ -1,7 +1,7 @@
 package com.diva.app.mix.database
 
-import com.diva.app.models.collection.Collection
-import com.diva.app.models.collection.mix.Mix
+import com.diva.app.collection.models.Collection
+import com.diva.app.collection.mix.models.Mix
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow

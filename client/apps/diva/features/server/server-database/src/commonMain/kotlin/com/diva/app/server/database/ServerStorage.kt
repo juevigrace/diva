@@ -1,6 +1,6 @@
 package com.diva.app.server.database
 
-import com.diva.app.models.server.Server
+import com.diva.app.server.models.Server
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.core.map

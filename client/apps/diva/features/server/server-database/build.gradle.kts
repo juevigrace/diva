@@ -9,6 +9,8 @@ kotlin {
             api(libs.diva.database.sqlite)
 
             implementation(projects.core)
+
+            implementation(projects.features.server.serverModels)
         }
     }
 }

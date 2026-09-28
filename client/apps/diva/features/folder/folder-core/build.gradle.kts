@@ -11,6 +11,9 @@ kotlin {
             implementation(projects.core)
             implementation(projects.features.folder.folderDatabase)
 
+            api(projects.features.folder.folderModels)
+            api(projects.features.media.mediaModels)
+
             implementation(libs.diva.network)
         }
     }

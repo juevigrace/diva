@@ -11,6 +11,9 @@ kotlin {
             implementation(projects.core)
             implementation(projects.resources)
 
+            api(projects.features.search.searchModels)
+            api(projects.features.media.mediaModels)
+
             implementation(projects.features.media.mediaCore)
             implementation(projects.features.folder.folderCore)
             implementation(projects.features.collection.collectionCore)

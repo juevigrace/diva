@@ -27,7 +27,6 @@ kotlin {
             implementation(libs.diva.network)
 
             implementation(projects.core)
-            implementation(projects.apiModels)
             implementation(projects.database)
             implementation(projects.ui)
             implementation(projects.features.home.homeCore)

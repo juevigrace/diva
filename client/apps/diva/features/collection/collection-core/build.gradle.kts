@@ -11,6 +11,9 @@ kotlin {
             implementation(projects.core)
             implementation(projects.features.collection.collectionDatabase)
 
+            api(projects.features.collection.collectionModels)
+            api(projects.features.media.mediaModels)
+
             implementation(libs.diva.network)
         }
     }

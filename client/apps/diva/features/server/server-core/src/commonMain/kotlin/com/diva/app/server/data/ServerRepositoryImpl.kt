@@ -2,7 +2,7 @@ package com.diva.app.server.data
 
 import com.diva.app.server.database.ServerStorage
 import com.diva.app.server.domain.ServerRepository
-import com.diva.app.models.server.Server
+import com.diva.app.server.models.Server
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
 

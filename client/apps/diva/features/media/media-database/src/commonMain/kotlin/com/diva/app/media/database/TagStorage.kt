@@ -1,6 +1,6 @@
 package com.diva.app.media.database
 
-import com.diva.app.models.media.tag.Tag
+import com.diva.app.media.tag.models.Tag
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.database.DivaDatabase

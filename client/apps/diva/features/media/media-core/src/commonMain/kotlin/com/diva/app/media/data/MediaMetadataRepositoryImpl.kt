@@ -2,7 +2,7 @@ package com.diva.app.media.data
 
 import com.diva.app.media.database.MediaMetadataStorage
 import com.diva.app.media.domain.MediaMetadataRepository
-import com.diva.app.models.media.MediaMetadata
+import com.diva.app.media.models.MediaMetadata
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
 

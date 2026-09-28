@@ -1,9 +1,9 @@
 package com.diva.app.player.domain
 
-import com.diva.app.models.media.Media
-import com.diva.app.models.playback.PlaybackHistory
-import com.diva.app.models.playback.ResumePoint
-import com.diva.app.models.player.PlayerSetting
+import com.diva.app.media.models.Media
+import com.diva.app.player.playback.models.PlaybackHistory
+import com.diva.app.player.playback.models.ResumePoint
+import com.diva.app.player.models.PlayerSetting
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow

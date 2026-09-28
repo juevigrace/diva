@@ -13,6 +13,10 @@ kotlin {
 
             implementation(projects.core)
 
+            implementation(projects.features.collection.collectionModels)
+            implementation(projects.features.media.mediaModels)
+            implementation(projects.features.player.playerModels)
+
             implementation(projects.features.collection.collectionDatabase)
             implementation(projects.features.folder.folderDatabase)
             implementation(projects.features.library.libraryDatabase)

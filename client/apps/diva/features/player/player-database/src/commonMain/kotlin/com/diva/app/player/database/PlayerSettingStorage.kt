@@ -1,7 +1,7 @@
 package com.diva.app.player.database
 
-import com.diva.app.models.player.PlayerSetting
-import com.diva.app.models.player.RepeatMode
+import com.diva.app.player.models.PlayerSetting
+import com.diva.app.player.models.RepeatMode
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
