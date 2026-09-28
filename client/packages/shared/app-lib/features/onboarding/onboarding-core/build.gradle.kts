@@ -7,6 +7,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core)
             implementation(projects.database)
+            implementation(projects.ui)
 
             implementation(libs.diva.network)
         }

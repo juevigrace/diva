@@ -20,11 +20,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(libs.diva.database.sqlite)
-
-            implementation(projects.core)
-
             implementation(projects.features.devices.devicesModels)
+
+            api(libs.diva.database.sqlite)
         }
     }
 }

@@ -5,8 +5,6 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core)
-            implementation(projects.database)
             implementation(projects.features.verification.verificationModels)
 
             implementation(libs.diva.network)

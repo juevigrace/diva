@@ -1,6 +1,7 @@
-package io.github.juevigrace.diva.lib.session.models
+package io.github.juevigrace.diva.lib.session.domain
 
 import io.github.juevigrace.diva.core.ioDispatcher
+import io.github.juevigrace.diva.lib.session.models.Session
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow

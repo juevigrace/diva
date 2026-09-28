@@ -24,7 +24,7 @@ kotlin {
         commonMain.dependencies {
             api(projects.core)
             implementation(projects.features.permissions.permissionsModels)
-            api(projects.features.devices.devicesModels)
+            implementation(projects.features.devices.devicesModels)
         }
     }
 }

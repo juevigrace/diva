@@ -5,12 +5,12 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core)
-            api(projects.features.session.sessionModels)
-
-            implementation(libs.diva.network)
+            implementation(projects.ui)
 
             implementation(projects.features.session.sessionDatabase)
+            implementation(projects.features.session.sessionModels)
+
+            implementation(libs.diva.network)
         }
     }
 }

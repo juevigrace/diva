@@ -11,6 +11,7 @@ import kotlin.time.Clock
 
 data class Session(
     val id: String,
+    // TODO: should delete the user id
     val userId: String,
     val accessToken: String,
     val refreshToken: String,

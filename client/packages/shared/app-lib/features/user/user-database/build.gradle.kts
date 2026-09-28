@@ -20,16 +20,14 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(libs.diva.database.sqlite)
-
-            implementation(projects.core)
-
-            implementation(projects.features.user.userModels)
             implementation(projects.features.devices.devicesModels)
             implementation(projects.features.permissions.permissionsModels)
+            implementation(projects.features.user.userModels)
 
             implementation(projects.features.devices.devicesDatabase)
             implementation(projects.features.permissions.permissionsDatabase)
+
+            api(libs.diva.database.sqlite)
         }
     }
 }

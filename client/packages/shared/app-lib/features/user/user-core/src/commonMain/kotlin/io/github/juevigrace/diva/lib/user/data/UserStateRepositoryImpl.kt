@@ -5,7 +5,7 @@ import io.github.juevigrace.diva.core.getOrDefault
 import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.lib.user.database.state.UserStateStorage
 import io.github.juevigrace.diva.lib.user.state.models.UserState
-import io.github.juevigrace.diva.lib.session.models.withSession
+import io.github.juevigrace.diva.lib.session.domain.withSession
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
 import io.github.juevigrace.diva.lib.user.data.api.client.UserStateApi
 import io.github.juevigrace.diva.lib.user.domain.UserStateRepository
