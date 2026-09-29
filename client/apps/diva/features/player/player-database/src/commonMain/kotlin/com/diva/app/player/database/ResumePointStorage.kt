@@ -31,8 +31,8 @@ class ResumePointStorageImpl(
         return db.getOne {
             resumePointQueries.findOneByMedia(userId, mediaId) { positionMs, updatedAt ->
                 ResumePoint(
-                    userId = userId,
-                    mediaId = mediaId,
+                    user = User(id = userId),
+                    media = Media(id = mediaId, title = "", uri = ""),
                     positionMs = positionMs,
                     updatedAt = updatedAt,
                 )
@@ -44,8 +44,8 @@ class ResumePointStorageImpl(
         return db.use {
             transaction {
                 resumePointQueries.upsert(
-                    user_id = item.userId,
-                    media_id = item.mediaId,
+                    user_id = item.user.id,
+                    media_id = item.media.id,
                     position_ms = item.positionMs,
                     updated_at = item.updatedAt,
                 )

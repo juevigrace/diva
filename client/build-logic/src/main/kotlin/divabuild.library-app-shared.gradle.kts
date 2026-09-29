@@ -9,7 +9,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.koin.core)
 
-            implementation(libs.diva.core)
+            api(libs.diva.core)
         }
 
         androidMain.dependencies {

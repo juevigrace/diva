@@ -22,8 +22,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.core)
-            api(libs.diva.lib.core)
-            api(libs.diva.lib.user)
+            api(libs.diva.lib.user.models)
             api(projects.features.media.mediaModels)
         }
     }

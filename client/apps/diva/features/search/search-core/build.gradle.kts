@@ -5,18 +5,16 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.diva.lib.core)
-            implementation(libs.diva.lib.session)
+            implementation(projects.ui)
 
-            implementation(projects.core)
-            implementation(projects.resources)
+            implementation(projects.features.search.searchModels)
 
-            api(projects.features.search.searchModels)
-            api(projects.features.media.mediaModels)
-
-            implementation(projects.features.media.mediaCore)
-            implementation(projects.features.folder.folderCore)
             implementation(projects.features.collection.collectionCore)
+            implementation(projects.features.folder.folderCore)
+            implementation(projects.features.media.mediaCore)
+
+            implementation(libs.diva.lib.session.core)
+            implementation(libs.diva.lib.session.models)
         }
     }
 }

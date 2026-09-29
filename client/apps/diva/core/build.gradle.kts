@@ -19,10 +19,4 @@ kotlin {
         nodejs()
         binaries.library()
     }
-
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.diva.lib.core)
-        }
-    }
 }

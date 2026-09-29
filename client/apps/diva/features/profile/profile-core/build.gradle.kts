@@ -5,15 +5,14 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.diva.lib.core)
-            implementation(libs.diva.lib.user)
-            implementation(libs.diva.lib.session)
+            implementation(projects.ui)
+
+            implementation(projects.features.profile.profileModels)
+
+            implementation(libs.diva.lib.session.core)
             implementation(libs.diva.lib.session.models)
 
-            implementation(projects.core)
-            implementation(projects.resources)
-
-            api(projects.features.profile.profileModels)
+            implementation(libs.diva.lib.user.core)
         }
     }
 }

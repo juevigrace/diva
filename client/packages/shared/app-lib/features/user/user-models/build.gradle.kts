@@ -23,8 +23,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.core)
-            implementation(projects.features.permissions.permissionsModels)
-            implementation(projects.features.devices.devicesModels)
+            api(projects.features.permissions.permissionsModels)
+            api(projects.features.devices.devicesModels)
         }
     }
 }

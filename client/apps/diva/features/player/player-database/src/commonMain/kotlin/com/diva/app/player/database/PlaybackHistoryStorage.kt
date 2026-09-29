@@ -24,8 +24,8 @@ class PlaybackHistoryStorageImpl(
             transaction {
                 playbackHistoryQueries.insert(
                     id = item.id,
-                    user_id = item.userId,
-                    media_id = item.mediaId,
+                    user_id = item.user.id,
+                    media_id = item.media.id,
                     played_at = item.playedAt,
                     position_ms = item.positionMs,
                     completed = item.completed,

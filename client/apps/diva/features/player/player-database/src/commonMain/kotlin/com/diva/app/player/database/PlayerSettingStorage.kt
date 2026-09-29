@@ -4,6 +4,7 @@ import com.diva.app.player.models.PlayerSetting
 import com.diva.app.player.models.RepeatMode
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
+import io.github.juevigrace.diva.lib.user.models.User
 import kotlinx.coroutines.flow.Flow
 
 interface PlayerSettingStorage {
@@ -34,7 +35,7 @@ class PlayerSettingStorageImpl(
         return db.use {
             transaction {
                 playerSettingQueries.upsert(
-                    user_id = item.userId,
+                    user_id = item.user.id,
                     volume = item.volume.toDouble(),
                     playback_speed = item.playbackSpeed.toDouble(),
                     repeat_mode = item.repeatMode,
@@ -69,7 +70,7 @@ class PlayerSettingStorageImpl(
         shuffle: Boolean,
         updatedAt: Long,
     ): PlayerSetting = PlayerSetting(
-        userId = userId,
+        user = User(id = userId),
         volume = volume.toFloat(),
         playbackSpeed = playbackSpeed.toFloat(),
         repeatMode = repeatMode,

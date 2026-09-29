@@ -20,7 +20,7 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            api(libs.diva.lib.core)
+            api(projects.core)
         }
     }
 }

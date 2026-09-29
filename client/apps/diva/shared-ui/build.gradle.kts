@@ -15,20 +15,10 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.diva.lib.core)
-            implementation(libs.diva.lib.database)
-            implementation(libs.diva.lib.ui)
-
-            implementation(libs.diva.lib.auth)
-            implementation(libs.diva.lib.user)
-            implementation(libs.diva.lib.session)
-            implementation(libs.diva.lib.settings)
-
-            implementation(libs.diva.network)
-
             implementation(projects.core)
             implementation(projects.database)
             implementation(projects.ui)
+
             implementation(projects.features.home.homeCore)
             implementation(projects.features.server.serverCore)
             implementation(projects.features.media.mediaCore)
@@ -40,6 +30,13 @@ kotlin {
             implementation(projects.features.library.libraryCore)
             implementation(projects.features.search.searchCore)
             implementation(projects.features.profile.profileCore)
+
+            implementation(libs.diva.lib.auth.core)
+            implementation(libs.diva.lib.user.core)
+            implementation(libs.diva.lib.session.core)
+            implementation(libs.diva.lib.settings.core)
+
+            implementation(libs.diva.network)
         }
     }
 }

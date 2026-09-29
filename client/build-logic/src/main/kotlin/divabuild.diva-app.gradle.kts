@@ -11,4 +11,10 @@ kotlin {
     android {
         namespace = project.appModuleNamespace("com.diva.app")
     }
+
+    sourceSets {
+        commonMain.dependencies {
+            api(libs.diva.lib.core)
+        }
+    }
 }

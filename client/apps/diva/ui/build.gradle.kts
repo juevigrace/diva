@@ -5,10 +5,8 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.diva.lib.ui)
-
-            api(projects.resources)
             implementation(projects.core)
+            api(projects.resources)
         }
     }
 }

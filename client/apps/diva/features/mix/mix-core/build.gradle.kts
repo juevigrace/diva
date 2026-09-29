@@ -5,10 +5,8 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.diva.lib.core)
-            implementation(libs.diva.lib.database)
+            implementation(projects.ui)
 
-            implementation(projects.core)
             implementation(projects.features.mix.mixDatabase)
 
             api(projects.features.collection.collectionModels)

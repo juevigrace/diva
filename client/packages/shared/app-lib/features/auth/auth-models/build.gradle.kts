@@ -23,8 +23,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.core)
-            implementation(projects.features.session.sessionModels)
-            implementation(projects.features.user.userModels)
+            api(projects.features.session.sessionModels)
+            api(projects.features.user.userModels)
         }
     }
 }

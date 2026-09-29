@@ -6,12 +6,9 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(libs.diva.database.sqlite)
-
-            implementation(projects.core)
-
             implementation(projects.features.media.mediaModels)
-            implementation(projects.features.collection.collectionModels)
+
+            api(libs.diva.database.sqlite)
         }
     }
 }

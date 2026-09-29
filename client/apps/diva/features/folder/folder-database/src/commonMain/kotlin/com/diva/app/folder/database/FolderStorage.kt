@@ -75,10 +75,10 @@ class FolderStorageImpl(
             transaction {
                 folderQueries.upsert(
                     id = item.id,
-                    user_id = item.userId,
+                    user_id = item.user.id,
                     name = item.name,
                     path = item.path,
-                    parent_id = item.parentId.getOrNull(),
+                    parent_id = item.parent.getOrNull()?.id,
                     scanned_at = item.scannedAt,
                     created_at = item.createdAt,
                     updated_at = item.updatedAt,
@@ -115,10 +115,10 @@ class FolderStorageImpl(
         deletedAt: Long?,
     ): Folder = Folder(
         id = id,
-        userId = userId,
+        user = User(id = userId),
         name = name,
         path = path,
-        parentId = Option.of(parentId),
+        parent = Option.of(parentId?.let { Folder(id = it, user = User(id = userId), name = "", path = "") }),
         scannedAt = scannedAt,
         createdAt = createdAt,
         updatedAt = updatedAt,
