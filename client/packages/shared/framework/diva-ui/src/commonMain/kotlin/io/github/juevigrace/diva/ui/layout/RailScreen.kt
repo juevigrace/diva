@@ -18,8 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import io.github.juevigrace.diva.ui.layout.navigation.LocalNavItemStyle
-import io.github.juevigrace.diva.ui.layout.navigation.NavItemStyle
+import io.github.juevigrace.diva.ui.layout.navigation.LocalNavStyle
+import io.github.juevigrace.diva.ui.layout.navigation.NavStyle
 import io.github.juevigrace.diva.ui.toast.ToasterHost
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +55,7 @@ fun RailScreen(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            CompositionLocalProvider(LocalNavItemStyle provides NavItemStyle.Rail) {
+            CompositionLocalProvider(LocalNavStyle provides NavStyle.Rail) {
                 NavigationRail(
                     modifier = Modifier,
                     containerColor = railContainerColor,

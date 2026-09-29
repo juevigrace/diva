@@ -2,6 +2,7 @@ package com.diva.app.presentation.ui.screen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -18,6 +19,8 @@ import io.github.juevigrace.diva.ui.DivaApp
 import io.github.juevigrace.diva.ui.layout.Screen
 import io.github.juevigrace.diva.ui.navigation.BackHandler
 import io.github.juevigrace.diva.ui.navigation.BackStack
+import io.github.juevigrace.diva.ui.navigation.LocalNavigator
+import io.github.juevigrace.diva.ui.navigation.LocalTabNavigator
 import io.github.juevigrace.diva.ui.navigation.NavHost
 import io.github.juevigrace.diva.ui.navigation.Navigator
 import io.github.juevigrace.diva.ui.navigation.TabNavigator
@@ -52,18 +55,23 @@ fun App() {
         toaster = koinInject(),
         dialogController = koinInject(),
     ) {
-        Screen { _ ->
-            NavHost(
-                modifier = Modifier.fillMaxSize(),
-                navigator = navigator,
-                entryDecorators = listOf(
-                    rememberSaveableStateHolderNavEntryDecorator(),
-                    rememberViewModelStoreNavEntryDecorator(),
-                ),
-                entryProvider = entryProvider {
-                    homeNav()
-                }
-            )
+        CompositionLocalProvider(
+            LocalNavigator provides navigator,
+            LocalTabNavigator provides tabNavigator,
+        ) {
+            Screen { _ ->
+                NavHost(
+                    modifier = Modifier.fillMaxSize(),
+                    navigator = navigator,
+                    entryDecorators = listOf(
+                        rememberSaveableStateHolderNavEntryDecorator(),
+                        rememberViewModelStoreNavEntryDecorator(),
+                    ),
+                    entryProvider = entryProvider {
+                        homeNav()
+                    }
+                )
+            }
         }
     }
 }
