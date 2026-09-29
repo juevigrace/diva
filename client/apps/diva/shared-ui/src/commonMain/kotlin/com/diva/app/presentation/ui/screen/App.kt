@@ -14,8 +14,6 @@ import com.diva.app.presentation.ui.theme.AppTypography
 import com.diva.app.presentation.ui.theme.darkScheme
 import com.diva.app.presentation.ui.theme.lightScheme
 import io.github.juevigrace.diva.core.getOrNull
-import io.github.juevigrace.diva.lib.auth.presentation.ui.components.navigation.authNav
-import io.github.juevigrace.diva.lib.settings.presentation.ui.components.navigation.settingsNav
 import io.github.juevigrace.diva.ui.DivaApp
 import io.github.juevigrace.diva.ui.layout.Screen
 import io.github.juevigrace.diva.ui.navigation.BackHandler
@@ -64,8 +62,6 @@ fun App() {
                 ),
                 entryProvider = entryProvider {
                     homeNav()
-                    settingsNav()
-                    authNav()
                 }
             )
         }
