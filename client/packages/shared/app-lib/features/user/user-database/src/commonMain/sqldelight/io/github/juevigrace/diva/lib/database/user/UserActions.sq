@@ -1,6 +1,6 @@
 upsert:
 INSERT OR REPLACE INTO diva_action (id, name, user_id)
-VALUES ?;
+VALUES (?, ?, ?);
 
 delete:
 DELETE FROM diva_action;

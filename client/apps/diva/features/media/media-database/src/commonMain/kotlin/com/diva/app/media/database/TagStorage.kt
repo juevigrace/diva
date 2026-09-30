@@ -5,7 +5,6 @@ import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
-import migrations.Diva_tag
 
 interface TagStorage {
     suspend fun getAll(): Result<List<Tag>>
@@ -53,13 +52,11 @@ class TagStorageImpl(
         return db.use {
             transaction {
                 tagQueries.upsert(
-                    Diva_tag(
-                        id = item.id,
-                        tag_name = item.name,
-                        created_at = item.createdAt,
-                        updated_at = item.updatedAt,
-                        deleted_at = item.deletedAt.getOrNull(),
-                    )
+                    id = item.id,
+                    tag_name = item.name,
+                    created_at = item.createdAt,
+                    updated_at = item.updatedAt,
+                    deleted_at = item.deletedAt.getOrNull(),
                 )
             }
         }

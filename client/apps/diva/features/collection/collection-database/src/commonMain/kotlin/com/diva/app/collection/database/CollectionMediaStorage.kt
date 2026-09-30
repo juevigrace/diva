@@ -8,7 +8,6 @@ import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrElse
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.user.models.User
-import migrations.Diva_collection_media
 
 
 interface CollectionMediaStorage {
@@ -35,14 +34,12 @@ class CollectionMediaStorageImpl(
         return db.use {
             transaction {
                 collectionMediaQueries.insert(
-                    Diva_collection_media(
-                        collection_id = collectionId,
-                        media_id = item.media.id,
-                        position = item.position.toLong(),
-                        added_by = item.addedBy.id,
-                        score = item.score.toDouble(),
-                        added_at = item.addedAt,
-                    )
+                    collection_id = collectionId,
+                    media_id = item.media.id,
+                    position = item.position.toLong(),
+                    added_by = item.addedBy.id,
+                    score = item.score.toDouble(),
+                    added_at = item.addedAt,
                 )
             }
         }

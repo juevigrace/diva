@@ -10,7 +10,6 @@ import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.user.models.User
 import kotlinx.coroutines.flow.Flow
-import migrations.Diva_collection
 
 interface CollectionStorage {
     suspend fun getAll(): Result<List<Collection>>
@@ -52,18 +51,16 @@ class CollectionStorageImpl(
         return db.use {
             transaction {
                 collectionQueries.upsert(
-                    Diva_collection(
-                        id = item.id,
-                        owner_id = item.owner.id,
-                        name = item.name,
-                        description = item.description,
-                        collection_type = item.collectionType,
-                        visibility = item.visibility,
-                        cover_media_id = item.coverMedia.map { it.id }.getOrNull(),
-                        created_at = item.createdAt,
-                        updated_at = item.updatedAt,
-                        deleted_at = item.deletedAt.getOrNull(),
-                    )
+                    id = item.id,
+                    owner_id = item.owner.id,
+                    name = item.name,
+                    description = item.description,
+                    collection_type = item.collectionType,
+                    visibility = item.visibility,
+                    cover_media_id = item.coverMedia.map { it.id }.getOrNull(),
+                    created_at = item.createdAt,
+                    updated_at = item.updatedAt,
+                    deleted_at = item.deletedAt.getOrNull(),
                 )
             }
         }

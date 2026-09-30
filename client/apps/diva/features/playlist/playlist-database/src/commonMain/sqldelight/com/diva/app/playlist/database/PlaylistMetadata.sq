@@ -1,6 +1,6 @@
 upsert:
-INSERT OR REPLACE INTO diva_playlist_metadata
-VALUES ?;
+INSERT OR REPLACE INTO diva_playlist_metadata (collection_id, is_collaborative, allow_suggestions)
+VALUES (?, ?, ?);
 
 deleteByCollection:
 DELETE FROM diva_playlist_metadata

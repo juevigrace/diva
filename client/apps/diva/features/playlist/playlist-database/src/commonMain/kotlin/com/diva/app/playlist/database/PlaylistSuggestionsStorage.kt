@@ -5,7 +5,6 @@ import com.diva.app.collection.playlist.models.PlaylistSuggestions
 import com.diva.app.media.models.Media
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.user.models.User
-import migrations.Diva_playlist_suggestions
 
 interface PlaylistSuggestionsStorage {
     suspend fun getByCollection(collectionId: String): Result<List<PlaylistSuggestions>>
@@ -31,14 +30,12 @@ class PlaylistSuggestionsStorageImpl(
         return db.use {
             transaction {
                 playlistSuggestionsQueries.insert(
-                    Diva_playlist_suggestions(
-                        id = item.id,
-                        collection_id = collectionId,
-                        suggester_id = item.suggesterId.id,
-                        media_id = item.mediaId.id,
-                        status = item.status,
-                        suggested_at = item.suggestedAt,
-                    )
+                    id = item.id,
+                    collection_id = collectionId,
+                    suggester_id = item.suggesterId.id,
+                    media_id = item.mediaId.id,
+                    status = item.status,
+                    suggested_at = item.suggestedAt,
                 )
             }
         }

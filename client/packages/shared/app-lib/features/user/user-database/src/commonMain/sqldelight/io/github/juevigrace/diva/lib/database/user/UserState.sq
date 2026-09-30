@@ -1,6 +1,6 @@
 upsert:
 INSERT OR REPLACE INTO diva_user_state (user_id, verified, status, last_active_at, updated_at)
-VALUES ?;
+VALUES (?, ?, ?, ?, ?);
 
 delete:
 DELETE FROM diva_user_state;

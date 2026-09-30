@@ -6,14 +6,14 @@ delete:
 DELETE FROM diva_favorite
 WHERE user_id = ? AND media_id = ?;
 
-findAll:
+findFavoritesByUser:
 SELECT media.*
 FROM diva_media AS media
 INNER JOIN diva_favorite AS fav ON fav.media_id = media.id
 WHERE fav.user_id = ? AND media.deleted_at IS NULL
 ORDER BY fav.created_at DESC;
 
-count:
+isFavorite:
 SELECT COUNT(*) AS count
 FROM diva_favorite
 WHERE user_id = ? AND media_id = ?;

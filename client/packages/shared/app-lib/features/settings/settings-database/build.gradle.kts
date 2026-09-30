@@ -22,6 +22,9 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.features.settings.settingsModels)
 
+            implementation(projects.features.devices.devicesDatabase)
+            implementation(projects.features.permissions.permissionsDatabase)
+
             implementation(projects.features.user.userModels)
             implementation(projects.features.user.userDatabase)
 
@@ -38,6 +41,9 @@ sqldelight {
             generateAsync.set(true)
             deriveSchemaFromMigrations.set(true)
             verifyMigrations.set(true)
+
+            dependency(project(":features:devices:devices-database"))
+            dependency(project(":features:permissions:permissions-database"))
             dependency(project(":features:user:user-database"))
         }
     }

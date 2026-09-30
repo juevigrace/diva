@@ -1,6 +1,6 @@
 insert:
-INSERT INTO diva_playlist_contributor
-VALUES ?;
+INSERT INTO diva_playlist_contributor (collection_id, contributor_id)
+VALUES (?, ?);
 
 delete:
 DELETE FROM diva_playlist_contributor

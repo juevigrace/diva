@@ -5,7 +5,6 @@ import com.diva.app.collection.playlist.models.Playlist
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
-import migrations.Diva_playlist_metadata
 
 interface PlaylistMetadataStorage {
     suspend fun getByCollection(collectionId: String): Result<Option<Playlist>>
@@ -33,11 +32,9 @@ class PlaylistMetadataStorageImpl(
         return db.use {
             transaction {
                 playlistMetadataQueries.upsert(
-                    Diva_playlist_metadata(
-                        collection_id = collectionId,
-                        is_collaborative = item.isCollaborative,
-                        allow_suggestions = item.allowSuggestions,
-                    )
+                    collection_id = collectionId,
+                    is_collaborative = item.isCollaborative,
+                    allow_suggestions = item.allowSuggestions,
                 )
             }
         }

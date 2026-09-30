@@ -1,6 +1,6 @@
 insert:
-INSERT INTO diva_playlist_suggestions
-VALUES ?;
+INSERT INTO diva_playlist_suggestions (id, collection_id, suggester_id, media_id, status, suggested_at)
+VALUES (?, ?, ?, ?, ?, ?);
 
 updateStatus:
 UPDATE diva_playlist_suggestions

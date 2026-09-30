@@ -1,6 +1,6 @@
 insert:
-INSERT INTO diva_collection_media
-VALUES ?;
+INSERT INTO diva_collection_media (collection_id, media_id, position, added_by, score, added_at)
+VALUES (?, ?, ?, ?, ?, ?);
 
 deleteOne:
 DELETE FROM diva_collection_media

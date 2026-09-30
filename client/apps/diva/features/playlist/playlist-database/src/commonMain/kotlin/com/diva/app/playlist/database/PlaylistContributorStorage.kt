@@ -2,7 +2,6 @@ package com.diva.app.playlist.database
 
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.user.models.User
-import migrations.Diva_playlist_contributor
 
 interface PlaylistContributorStorage {
     suspend fun getByCollection(collectionId: String): Result<List<User>>
@@ -30,10 +29,8 @@ class PlaylistContributorStorageImpl(
         return db.use {
             transaction {
                 playlistContributorQueries.insert(
-                    Diva_playlist_contributor(
-                        collection_id = collectionId,
-                        contributor_id = contributorId,
-                    )
+                    collection_id = collectionId,
+                    contributor_id = contributorId,
                 )
             }
         }

@@ -8,7 +8,6 @@ import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.lib.user.models.User
 import kotlinx.coroutines.flow.Flow
-import migrations.Diva_media
 
 interface MediaStorage {
     suspend fun getAll(): Result<List<Media>>
@@ -50,27 +49,25 @@ class MediaStorageImpl(
         return db.use {
             transaction {
                 mediaQueries.upsert(
-                    Diva_media(
-                        id = item.id,
-                        submitted_by = item.submittedBy.id,
-                        media_type = item.mediaType,
-                        title = item.title,
-                        uri = item.uri,
-                        mime_type = item.mimeType,
-                        size_bytes = item.sizeBytes,
-                        duration_ms = item.durationMs.getOrNull(),
-                        width = item.width.toLong(),
-                        height = item.height.toLong(),
-                        alt_text = item.altText,
-                        visibility = item.visibility,
-                        sensitive_content = item.sensitiveContent,
-                        adult_content = item.adultContent,
-                        published_at = item.publishedAt,
-                        fingerprint = item.fingerprint.getOrNull(),
-                        created_at = item.createdAt,
-                        updated_at = item.updatedAt,
-                        deleted_at = item.deletedAt.getOrNull(),
-                    )
+                    id = item.id,
+                    submitted_by = item.submittedBy.id,
+                    media_type = item.mediaType,
+                    title = item.title,
+                    uri = item.uri,
+                    mime_type = item.mimeType,
+                    size_bytes = item.sizeBytes,
+                    duration_ms = item.durationMs.getOrNull(),
+                    width = item.width.toLong(),
+                    height = item.height.toLong(),
+                    alt_text = item.altText,
+                    visibility = item.visibility,
+                    sensitive_content = item.sensitiveContent,
+                    adult_content = item.adultContent,
+                    published_at = item.publishedAt,
+                    fingerprint = item.fingerprint.getOrNull(),
+                    created_at = item.createdAt,
+                    updated_at = item.updatedAt,
+                    deleted_at = item.deletedAt.getOrNull(),
                 )
             }
         }

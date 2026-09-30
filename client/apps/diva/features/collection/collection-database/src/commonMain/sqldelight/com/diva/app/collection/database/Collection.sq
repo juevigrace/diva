@@ -1,6 +1,9 @@
 upsert:
-INSERT OR REPLACE INTO diva_collection
-VALUES ?;
+INSERT OR REPLACE INTO diva_collection (
+    id, owner_id, name, description, collection_type, visibility,
+    cover_media_id, created_at, updated_at, deleted_at
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 deleteById:
 DELETE FROM diva_collection

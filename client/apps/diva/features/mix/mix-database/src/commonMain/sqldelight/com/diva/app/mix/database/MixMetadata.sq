@@ -1,6 +1,9 @@
 upsert:
-INSERT OR REPLACE INTO diva_mix_metadata
-VALUES ?;
+INSERT OR REPLACE INTO diva_mix_metadata (
+    collection_id, algorithm_type, time_window_hours, content_weight, freshness_weight,
+    min_engagement_score, excluded_tags, auto_refresh, refresh_interval_seconds
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 deleteByCollection:
 DELETE FROM diva_mix_metadata

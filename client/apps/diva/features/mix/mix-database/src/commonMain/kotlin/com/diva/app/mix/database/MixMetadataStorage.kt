@@ -5,7 +5,6 @@ import com.diva.app.collection.mix.models.Mix
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
-import migrations.Diva_mix_metadata
 
 interface MixMetadataStorage {
     suspend fun getByCollection(collectionId: String): Result<Option<Mix>>
@@ -33,17 +32,15 @@ class MixMetadataStorageImpl(
         return db.use {
             transaction {
                 mixMetadataQueries.upsert(
-                    Diva_mix_metadata(
-                        collection_id = collectionId,
-                        algorithm_type = item.algorithmType,
-                        time_window_hours = item.timeWindowHours.toLong(),
-                        content_weight = item.contentWeight.toDouble(),
-                        freshness_weight = item.freshnessWeight.toDouble(),
-                        min_engagement_score = item.minEngagementScore.toLong(),
-                        excluded_tags = item.excludedTags,
-                        auto_refresh = item.autoRefresh,
-                        refresh_interval_seconds = item.refreshIntervalSeconds.toLong(),
-                    )
+                    collection_id = collectionId,
+                    algorithm_type = item.algorithmType,
+                    time_window_hours = item.timeWindowHours.toLong(),
+                    content_weight = item.contentWeight.toDouble(),
+                    freshness_weight = item.freshnessWeight.toDouble(),
+                    min_engagement_score = item.minEngagementScore.toLong(),
+                    excluded_tags = item.excludedTags,
+                    auto_refresh = item.autoRefresh,
+                    refresh_interval_seconds = item.refreshIntervalSeconds.toLong(),
                 )
             }
         }

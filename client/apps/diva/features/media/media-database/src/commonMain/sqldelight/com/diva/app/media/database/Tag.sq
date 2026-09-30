@@ -1,6 +1,6 @@
 upsert:
-INSERT OR REPLACE INTO diva_tag
-VALUES ?;
+INSERT OR REPLACE INTO diva_tag (id, tag_name, created_at, updated_at, deleted_at)
+VALUES (?, ?, ?, ?, ?);
 
 deleteById:
 DELETE FROM diva_tag

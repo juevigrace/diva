@@ -40,8 +40,9 @@ sqldelight {
             deriveSchemaFromMigrations.set(true)
             verifyMigrations.set(true)
 
-            dependency(project(":features:user:user-database"))
             dependency(project(":features:devices:devices-database"))
+            dependency(project(":features:permissions:permissions-database"))
+            dependency(project(":features:user:user-database"))
         }
     }
 }

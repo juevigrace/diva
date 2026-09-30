@@ -1,4 +1,3 @@
 CREATE TABLE IF NOT EXISTS diva_settings(
-    user_id TEXT NOT NULL PRIMARY KEY,
-    FOREIGN KEY (user_id) REFERENCES diva_user(id)
+    user_id TEXT NOT NULL PRIMARY KEY
 );

@@ -1,6 +1,6 @@
 upsert:
 INSERT OR REPLACE INTO diva_user_device (user_id, device_id, created_at, updated_at)
-VALUES ?;
+VALUES (?, ?, ?, ?);
 
 delete:
 DELETE FROM diva_user_device;
