@@ -12,10 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.diva.app.search.presentation.events.SearchEvents
-import com.diva.app.search.presentation.viewmodel.SearchViewModel
 import com.diva.app.generated.resources.Res
 import com.diva.app.generated.resources.search
+import com.diva.app.search.presentation.events.SearchEvents
+import com.diva.app.search.presentation.viewmodel.SearchViewModel
 import io.github.juevigrace.diva.ui.layout.Screen
 import io.github.juevigrace.diva.ui.navigation.BackHandler
 import org.jetbrains.compose.resources.stringResource

@@ -40,30 +40,46 @@ include(":core")
 include(":database")
 include(":ui")
 
-include(":features:auth:auth-core")
-include(":features:auth:auth-models")
+include(
+    ":features:auth:auth-core",
+    ":features:auth:auth-models"
+)
 
-include(":features:devices:devices-core")
-include(":features:devices:devices-database")
-include(":features:devices:devices-models")
+include(
+    ":features:devices:devices-core",
+    ":features:devices:devices-database",
+    ":features:devices:devices-models"
+)
 
 include(":features:onboarding:onboarding-core")
 
-include(":features:permissions:permissions-core")
-include(":features:permissions:permissions-database")
-include(":features:permissions:permissions-models")
+include(
+    ":features:permissions:permissions-core",
+    ":features:permissions:permissions-database",
+    ":features:permissions:permissions-models"
+)
 
-include(":features:session:session-core")
-include(":features:session:session-database")
-include(":features:session:session-models")
+include(
+    ":features:session:session-core",
+    ":features:session:session-database",
+    ":features:session:session-models"
+)
 
-include(":features:settings:settings-core")
+include(
+    ":features:settings:settings-core",
+    ":features:settings:settings-database",
+    ":features:settings:settings-models"
+)
 
-include(":features:user:user-core")
-include(":features:user:user-database")
-include(":features:user:user-models")
+include(
+    ":features:user:user-core",
+    ":features:user:user-database",
+    ":features:user:user-models"
+)
 
-include(":features:verification:verification-core")
-include(":features:verification:verification-models")
+include(
+    ":features:verification:verification-core",
+    ":features:verification:verification-models"
+)
 
 includeBuild("../framework")

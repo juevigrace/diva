@@ -5,8 +5,10 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core)
             implementation(projects.ui)
+
+            implementation(projects.features.settings.settingsDatabase)
+            implementation(projects.features.settings.settingsModels)
 
             implementation(libs.diva.network)
         }

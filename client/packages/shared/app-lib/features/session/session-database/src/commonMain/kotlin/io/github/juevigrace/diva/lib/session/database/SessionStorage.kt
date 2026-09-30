@@ -9,6 +9,7 @@ import io.github.juevigrace.diva.lib.session.models.SessionStatus
 import io.github.juevigrace.diva.lib.session.models.SessionType
 import kotlinx.coroutines.flow.Flow
 
+// TODO: rework this queries since users could have remote sessions and queries don't take it into account
 interface SessionStorage {
     suspend fun findAll(): Result<List<Session>>
 
