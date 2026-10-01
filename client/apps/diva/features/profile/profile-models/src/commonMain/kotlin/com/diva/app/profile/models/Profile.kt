@@ -1,13 +1,15 @@
 package com.diva.app.profile.models
 
+import io.github.juevigrace.diva.core.None
+import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.user.preferences.models.Theme
 import io.github.juevigrace.diva.lib.core.models.Role
 import io.github.juevigrace.diva.lib.user.models.UserStatus
 
 data class Profile(
     val username: String = "",
-    val email: String? = null,
-    val phoneNumber: String? = null,
+    val email: Option<String> = None,
+    val phoneNumber: Option<String> = None,
     val role: Role = Role.USER,
     val alias: String = "",
     val bio: String = "",

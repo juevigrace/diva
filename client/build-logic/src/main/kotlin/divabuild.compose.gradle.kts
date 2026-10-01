@@ -25,6 +25,7 @@ kotlin {
             implementation(libs.material3.adaptive.nav3)
             implementation(libs.material3.adaptive.navigation.suite)
             implementation(libs.material3.window.size)
+            implementation(libs.material.icons.extended)
             implementation(libs.window.core)
             implementation(libs.nav3.ui)
             implementation(libs.savedstate)

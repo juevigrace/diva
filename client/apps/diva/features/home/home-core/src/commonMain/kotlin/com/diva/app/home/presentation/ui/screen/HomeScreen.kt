@@ -1,5 +1,6 @@
 package com.diva.app.home.presentation.ui.screen
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,6 +27,8 @@ import com.diva.app.home.presentation.ui.components.navigation.HomeRoute
 import com.diva.app.home.presentation.viewmodel.HomeViewModel
 import com.diva.app.library.presentation.ui.components.navigation.LibraryRoute
 import com.diva.app.library.presentation.ui.screen.LibraryScreen
+import com.diva.app.player.presentation.ui.components.MiniPlayer
+import com.diva.app.player.presentation.viewmodel.PlayerViewModel
 import com.diva.app.profile.presentation.ui.components.navigation.ProfileRoute
 import com.diva.app.profile.presentation.ui.screen.ProfileScreen
 import com.diva.app.search.presentation.ui.components.navigation.SearchRoute
@@ -46,6 +49,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val playerViewModel: PlayerViewModel = koinViewModel()
+    val playerState by playerViewModel.state.collectAsStateWithLifecycle()
     val tabNavigator: TabNavigator = LocalTabNavigator.current
     val backStack by tabNavigator.backStack.collectAsStateWithLifecycle()
 
@@ -60,7 +65,12 @@ fun HomeScreen(
 
     AdaptiveScreen(
         bottomBar = {
-            BottomAppBar {
+            Column {
+                MiniPlayer(
+                    state = playerState,
+                    onEvent = playerViewModel::onEvent,
+                )
+                BottomAppBar {
                 tabNavigator.tabs.forEachIndexed { index, tab ->
                     NavigationBarItem(
                         modifier = Modifier.weight(1f),
@@ -76,6 +86,7 @@ fun HomeScreen(
                         label = { Text(stringResource(tab.title)) },
                         alwaysShowLabel = true,
                     )
+                }
                 }
             }
         },
@@ -134,6 +145,7 @@ fun HomeScreen(
                 entry<HomeRoute> {
                     HomeContent(
                         state = state,
+                        onEvent = viewModel::onEvent,
                     )
                 }
                 entry<SearchRoute> {

@@ -2,6 +2,7 @@ package com.diva.app.profile.data
 
 import com.diva.app.profile.models.Profile
 import com.diva.app.profile.domain.ProfileRepository
+import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.lib.user.preferences.models.Theme
@@ -49,9 +50,11 @@ class ProfileRepositoryImpl(
                 Result.success<Profile?>(
                     Profile(
                         username = user?.username ?: "",
-                        email = user?.email?.getOrNull(),
+                        email = user?.email ?: None,
                         phoneNumber = profile?.phoneNumber?.takeIf { it.isNotBlank() }
-                            ?: user?.phoneNumber?.getOrNull(),
+                            ?.let { Option.of(it) }
+                            ?: user?.phoneNumber
+                            ?: None,
                         role = user?.role ?: Role.USER,
                         alias = profile?.alias ?: "",
                         bio = profile?.bio ?: "",
