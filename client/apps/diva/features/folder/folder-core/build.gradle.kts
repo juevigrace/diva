@@ -9,8 +9,11 @@ kotlin {
 
             implementation(projects.features.folder.folderDatabase)
             implementation(projects.features.folder.folderModels)
+            implementation(projects.features.collection.collectionModels)
 
             implementation(projects.features.media.mediaModels)
+            implementation(projects.features.media.mediaCore)
+            implementation(projects.features.player.playerCore)
 
             implementation(libs.diva.network)
         }

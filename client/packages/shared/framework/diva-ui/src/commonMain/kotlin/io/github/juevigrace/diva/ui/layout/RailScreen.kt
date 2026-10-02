@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import io.github.juevigrace.diva.ui.layout.navigation.LocalNavStyle
 import io.github.juevigrace.diva.ui.layout.navigation.NavStyle
 
@@ -26,6 +27,7 @@ import io.github.juevigrace.diva.ui.layout.navigation.NavStyle
 fun RailScreen(
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit = {},
+    bottomBar: @Composable () -> Unit = {},
     navContent: @Composable ColumnScope.() -> Unit,
     railContainerColor: Color = NavigationRailDefaults.ContainerColor,
     railContentColor: Color = contentColorFor(railContainerColor),
@@ -42,6 +44,7 @@ fun RailScreen(
     Screen(
         modifier = modifier,
         topBar = topBar,
+        bottomBar = bottomBar,
         floatingActionButton = floatingActionButton,
         floatingActionButtonPosition = floatingActionButtonPosition,
         snackBarHost = snackBarHost,
@@ -69,7 +72,9 @@ fun RailScreen(
                     .weight(1f)
                     .fillMaxSize(),
             ) {
-                content(innerPadding)
+                // The Row above already consumed innerPadding, so content must not
+                // apply it again or every slot gets double-inset.
+                content(PaddingValues(0.dp))
             }
         }
     }

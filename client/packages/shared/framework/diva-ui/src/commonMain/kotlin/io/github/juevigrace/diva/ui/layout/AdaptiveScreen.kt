@@ -78,6 +78,7 @@ fun AdaptiveScreen(
             modifier = modifier,
             topBar = topBar,
             navContent = navContent,
+            bottomBar = bottomBar,
             floatingActionButton = floatingActionButton,
             floatingActionButtonPosition = floatingActionButtonPosition,
             snackBarHost = snackBarHost,

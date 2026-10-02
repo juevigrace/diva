@@ -4,15 +4,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -20,21 +27,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import com.diva.app.folder.presentation.ui.components.FoldersContent
+import com.diva.app.folder.presentation.ui.components.navigation.FolderRoute
+import com.diva.app.folder.presentation.ui.components.navigation.FoldersRoute
+import com.diva.app.folder.presentation.viewmodel.FolderViewModel
+import com.diva.app.generated.resources.Res
+import com.diva.app.generated.resources.folders
+import com.diva.app.generated.resources.home
+import com.diva.app.generated.resources.library
+import com.diva.app.generated.resources.profile
 import com.diva.app.home.presentation.ui.components.HomeContent
 import com.diva.app.home.presentation.ui.components.navigation.HomeRoute
 import com.diva.app.home.presentation.viewmodel.HomeViewModel
+import com.diva.app.library.presentation.ui.components.LibraryContent
 import com.diva.app.library.presentation.ui.components.navigation.LibraryRoute
-import com.diva.app.library.presentation.ui.screen.LibraryScreen
+import com.diva.app.library.presentation.viewmodel.LibraryViewModel
 import com.diva.app.player.presentation.ui.components.MiniPlayer
 import com.diva.app.player.presentation.viewmodel.PlayerViewModel
+import com.diva.app.profile.presentation.ui.components.ProfileContent
 import com.diva.app.profile.presentation.ui.components.navigation.ProfileRoute
-import com.diva.app.profile.presentation.ui.screen.ProfileScreen
-import com.diva.app.search.presentation.ui.components.navigation.SearchRoute
-import com.diva.app.search.presentation.ui.screen.SearchScreen
+import com.diva.app.profile.presentation.viewmodel.ProfileViewModel
+import com.diva.app.search.presentation.events.SearchEvents
+import com.diva.app.search.presentation.state.SearchState
+import com.diva.app.search.presentation.ui.components.SearchField
+import com.diva.app.search.presentation.ui.components.SearchResultsContent
+import com.diva.app.search.presentation.ui.components.navigation.SearchResultsRoute
+import com.diva.app.search.presentation.viewmodel.SearchViewModel
 import io.github.juevigrace.diva.ui.layout.AdaptiveScreen
-import io.github.juevigrace.diva.ui.layout.navigation.LocalNavStyle
+import io.github.juevigrace.diva.ui.layout.adaptiveNavigationStyle
 import io.github.juevigrace.diva.ui.layout.navigation.NavStyle
 import io.github.juevigrace.diva.ui.navigation.LocalTabNavigator
 import io.github.juevigrace.diva.ui.navigation.TabNavHost
@@ -44,6 +67,19 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
+/**
+ * Container for every tab. It owns the adaptive chrome: the bottom bar, the rail or
+ * drawer, and a single top bar that swaps based on whichever destination is on top of
+ * the active tab's stack.
+ *
+ * Tab content is state driven and free of [io.github.juevigrace.diva.ui.layout.Screen]
+ * wrappers, so a tab can push sub destinations and still share one top bar.
+ *
+ * The search and folder view models are resolved here rather than inside their entries
+ * on purpose. Nav3 gives every entry its own ViewModelStore, so a view model created in
+ * the content would be a different instance from the one the top bar reads.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
@@ -51,8 +87,23 @@ fun HomeScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val playerViewModel: PlayerViewModel = koinViewModel()
     val playerState by playerViewModel.state.collectAsStateWithLifecycle()
+    val libraryViewModel: LibraryViewModel = koinViewModel()
+    val libraryState by libraryViewModel.state.collectAsStateWithLifecycle()
+    val profileViewModel: ProfileViewModel = koinViewModel()
+    val profileState by profileViewModel.state.collectAsStateWithLifecycle()
+    val searchViewModel: SearchViewModel = koinViewModel()
+    val searchState by searchViewModel.state.collectAsStateWithLifecycle()
+    val folderViewModel: FolderViewModel = koinViewModel()
+    val folderState by folderViewModel.state.collectAsStateWithLifecycle()
+
     val tabNavigator: TabNavigator = LocalTabNavigator.current
     val backStack by tabNavigator.backStack.collectAsStateWithLifecycle()
+    val topEntry = backStack.currentBackStack.lastOrNull()
+
+    // The folder browser follows the destination it was pushed for, not the tab.
+    LaunchedEffect(topEntry) {
+        folderViewModel.onEnter((topEntry as? FolderRoute)?.folderId)
+    }
 
     val selectedTabIndex = remember(backStack.selectedTab) {
         tabNavigator.tabs
@@ -63,7 +114,23 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
+    // Resolved once here rather than through LocalNavStyle: the top bar sits outside the
+    // provider scope that AdaptiveScreen installs for the rail and drawers.
+    val style = adaptiveNavigationStyle()
+
     AdaptiveScreen(
+        style = style,
+        topBar = {
+            HomeTopBar(
+                topEntry = topEntry,
+                isExpanded = style == NavStyle.Rail,
+                searchState = searchState,
+                onSearchEvent = searchViewModel::onEvent,
+                onBack = tabNavigator::pop,
+                onOpenSearch = { tabNavigator.navigate(SearchResultsRoute) },
+                folderTitle = folderState.title,
+            )
+        },
         bottomBar = {
             Column {
                 MiniPlayer(
@@ -92,7 +159,6 @@ fun HomeScreen(
         },
         drawerState = drawerState,
         navContent = {
-            val style = LocalNavStyle.current
             tabNavigator.tabs.forEachIndexed { index, tab ->
                 when (style) {
                     NavStyle.ModalDrawer, NavStyle.PermanentDrawer -> {
@@ -148,16 +214,100 @@ fun HomeScreen(
                         onEvent = viewModel::onEvent,
                     )
                 }
-                entry<SearchRoute> {
-                    SearchScreen()
+                entry<SearchResultsRoute> {
+                    SearchResultsContent(
+                        state = searchState,
+                        onEvent = searchViewModel::onEvent,
+                    )
+                }
+                entry<FoldersRoute> {
+                    FoldersContent(
+                        state = folderState,
+                        onEvent = folderViewModel::onEvent,
+                    )
+                }
+                entry<FolderRoute> {
+                    FoldersContent(
+                        state = folderState,
+                        onEvent = folderViewModel::onEvent,
+                    )
                 }
                 entry<LibraryRoute> {
-                    LibraryScreen()
+                    LibraryContent(
+                        state = libraryState,
+                        onEvent = libraryViewModel::onEvent,
+                    )
                 }
                 entry<ProfileRoute> {
-                    ProfileScreen()
+                    ProfileContent(
+                        state = profileState,
+                        onEvent = profileViewModel::onEvent,
+                    )
                 }
             }
         )
+    }
+}
+
+/**
+ * One top bar for all tabs, chosen by the destination on top of the active stack.
+ *
+ * Search is an action rather than a tab: on expanded layouts the field sits inline on
+ * Home the way it does on the web, and on compact layouts it is reached from an icon
+ * that pushes [SearchResultsRoute]. Once pushed, the field grows a back affordance.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeTopBar(
+    topEntry: NavKey?,
+    isExpanded: Boolean,
+    searchState: SearchState,
+    onSearchEvent: (SearchEvents) -> Unit,
+    onBack: () -> Unit,
+    onOpenSearch: () -> Unit,
+    folderTitle: String,
+) {
+    when (topEntry) {
+        HomeRoute -> if (isExpanded) {
+            SearchField(
+                state = searchState,
+                onEvent = onSearchEvent,
+                modifier = Modifier.padding(top = 8.dp),
+            )
+        } else {
+            TopAppBar(
+                title = { Text(stringResource(Res.string.home)) },
+                actions = {
+                    IconButton(onClick = onOpenSearch) {
+                        Icon(Icons.Filled.Search, contentDescription = "Search")
+                    }
+                },
+            )
+        }
+
+        SearchResultsRoute -> SearchField(
+            state = searchState,
+            onEvent = onSearchEvent,
+            onBack = onBack,
+            requestFocus = !isExpanded,
+            modifier = Modifier.padding(top = 8.dp),
+        )
+
+        FoldersRoute -> TopAppBar(title = { Text(stringResource(Res.string.folders)) })
+
+        is FolderRoute -> TopAppBar(
+            title = { Text(folderTitle) },
+            navigationIcon = {
+                IconButton(onClick = onBack) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                }
+            },
+        )
+
+        LibraryRoute -> TopAppBar(title = { Text(stringResource(Res.string.library)) })
+
+        ProfileRoute -> TopAppBar(title = { Text(stringResource(Res.string.profile)) })
+
+        else -> {}
     }
 }

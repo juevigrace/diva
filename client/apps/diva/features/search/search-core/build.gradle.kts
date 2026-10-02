@@ -12,6 +12,7 @@ kotlin {
             implementation(projects.features.collection.collectionCore)
             implementation(projects.features.folder.folderCore)
             implementation(projects.features.media.mediaCore)
+            implementation(projects.features.player.playerCore)
 
             implementation(libs.diva.lib.session.core)
             implementation(libs.diva.lib.session.models)

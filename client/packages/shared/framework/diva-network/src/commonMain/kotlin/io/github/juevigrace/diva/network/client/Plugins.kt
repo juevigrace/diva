@@ -8,7 +8,6 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.DurationUnit
 
 fun <C : HttpClientEngineConfig> HttpClientConfig<C>.defaultConfig() {
     install(Logging) {
@@ -17,8 +16,8 @@ fun <C : HttpClientEngineConfig> HttpClientConfig<C>.defaultConfig() {
     }
 
     install(HttpTimeout) {
-        requestTimeoutMillis = 30.seconds.toLong(DurationUnit.SECONDS)
-        connectTimeoutMillis = 10.seconds.toLong(DurationUnit.SECONDS)
-        socketTimeoutMillis = 10.seconds.toLong(DurationUnit.SECONDS)
+        requestTimeoutMillis = 30.seconds.inWholeMilliseconds
+        connectTimeoutMillis = 10.seconds.inWholeMilliseconds
+        socketTimeoutMillis = 10.seconds.inWholeMilliseconds
     }
 }

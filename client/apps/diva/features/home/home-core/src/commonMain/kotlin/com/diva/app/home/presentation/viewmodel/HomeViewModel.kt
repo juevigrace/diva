@@ -5,7 +5,7 @@ import com.diva.app.home.presentation.state.HomeState
 import com.diva.app.home.presentation.state.mockHomeState
 import com.diva.app.library.presentation.ui.components.navigation.LibraryRoute
 import com.diva.app.player.presentation.ui.components.navigation.PlayerRoute
-import com.diva.app.search.presentation.ui.components.navigation.SearchRoute
+import com.diva.app.search.presentation.ui.components.navigation.SearchResultsRoute
 import io.github.juevigrace.diva.ui.navigation.Navigator
 import io.github.juevigrace.diva.ui.navigation.TabNavigator
 import io.github.juevigrace.diva.ui.viewmodel.DivaViewModel
@@ -27,7 +27,7 @@ class HomeViewModel(
             is HomeEvents.OnOpenMedia -> navigator.navigate(
                 PlayerRoute(mediaType = event.media.mediaType)
             )
-            HomeEvents.OnOpenSearch -> tabNavigator.selectTab(SearchRoute)
+            HomeEvents.OnOpenSearch -> tabNavigator.navigate(SearchResultsRoute)
             HomeEvents.OnOpenLibrary -> tabNavigator.selectTab(LibraryRoute)
         }
     }

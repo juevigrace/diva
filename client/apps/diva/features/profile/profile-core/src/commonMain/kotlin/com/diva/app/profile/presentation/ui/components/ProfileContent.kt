@@ -1,4 +1,4 @@
-package com.diva.app.profile.presentation.ui.screen
+package com.diva.app.profile.presentation.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,48 +24,34 @@ import androidx.compose.material.icons.filled.Devices
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diva.app.profile.models.Profile
 import com.diva.app.profile.presentation.events.ProfileEvents
 import com.diva.app.profile.presentation.state.ProfileQuickStat
-import com.diva.app.profile.presentation.viewmodel.ProfileViewModel
+import com.diva.app.profile.presentation.state.ProfileState
 import com.diva.app.ui.components.Artwork
 import io.github.juevigrace.diva.core.getOrDefault
 import io.github.juevigrace.diva.lib.ui.components.carousel.Carousel
-import io.github.juevigrace.diva.ui.layout.Screen
-import io.github.juevigrace.diva.ui.navigation.BackHandler
-import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(
-    viewModel: ProfileViewModel = koinViewModel(),
+fun ProfileContent(
+    state: ProfileState,
+    onEvent: (ProfileEvents) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    BackHandler { viewModel.onEvent(ProfileEvents.OnBack) }
-
-    Screen(
-        topBar = {
-            TopAppBar(title = { Text(text = "Profile") })
-        },
-    ) { innerPadding ->
-        val profile = state.profile ?: return@Screen
+    val profile = state.profile
+    if (profile != null) {
         Column(
-            modifier = Modifier
-                .padding(innerPadding)
+            modifier = modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(bottom = 32.dp),
@@ -82,27 +67,27 @@ fun ProfileScreen(
             NavigationRow(
                 icon = Icons.Filled.Settings,
                 title = "Settings",
-                onClick = { viewModel.onEvent(ProfileEvents.OnOpenSettings) },
+                onClick = { onEvent(ProfileEvents.OnOpenSettings) },
             )
             NavigationRow(
                 icon = Icons.Filled.ManageAccounts,
                 title = "Account",
-                onClick = { viewModel.onEvent(ProfileEvents.OnOpenAccount) },
+                onClick = { onEvent(ProfileEvents.OnOpenAccount) },
             )
             NavigationRow(
                 icon = Icons.Filled.Devices,
                 title = "Devices",
-                onClick = { viewModel.onEvent(ProfileEvents.OnOpenDevices) },
+                onClick = { onEvent(ProfileEvents.OnOpenDevices) },
             )
             NavigationRow(
                 icon = Icons.Filled.Key,
                 title = "Permissions",
-                onClick = { viewModel.onEvent(ProfileEvents.OnOpenPermissions) },
+                onClick = { onEvent(ProfileEvents.OnOpenPermissions) },
             )
             NavigationRow(
                 icon = Icons.AutoMirrored.Filled.Logout,
                 title = "Sign out",
-                onClick = { viewModel.onEvent(ProfileEvents.OnSignOut) },
+                onClick = { onEvent(ProfileEvents.OnSignOut) },
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -140,6 +125,7 @@ fun ProfileScreen(
         }
     }
 }
+
 
 @Composable
 private fun ProfileHeader(profile: Profile) {

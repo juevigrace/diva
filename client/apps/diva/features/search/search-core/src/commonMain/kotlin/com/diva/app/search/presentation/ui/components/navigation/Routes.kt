@@ -1,21 +1,15 @@
 package com.diva.app.search.presentation.ui.components.navigation
 
 import androidx.navigation3.runtime.NavKey
-import com.diva.app.generated.resources.Res
-import com.diva.app.generated.resources.ic_search
-import com.diva.app.generated.resources.search
-import io.github.juevigrace.diva.ui.navigation.Tab
 import kotlinx.serialization.Serializable
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.StringResource
 
+/**
+ * Search is not a tab, it is a destination pushed on top of whichever tab is
+ * currently active, so the back stack returns the user to the tab they came from.
+ * The query lives in [com.diva.app.search.presentation.state.SearchState], which is
+ * owned by the view model hoisted above the tab host.
+ */
 @Serializable
-data object Search : NavKey, Tab {
-    override val route: NavKey
-        get() = this
+data object SearchResults : NavKey
 
-    override val icon: DrawableResource = Res.drawable.ic_search
-    override val title: StringResource = Res.string.search
-}
-
-typealias SearchRoute = Search
+typealias SearchResultsRoute = SearchResults

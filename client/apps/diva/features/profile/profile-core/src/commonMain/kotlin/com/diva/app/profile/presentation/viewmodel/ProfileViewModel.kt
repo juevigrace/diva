@@ -31,7 +31,6 @@ class ProfileViewModel(
 
     fun onEvent(event: ProfileEvents) {
         when (event) {
-            ProfileEvents.OnBack -> navigator.pop()
             ProfileEvents.OnOpenSettings -> navigator.navigate(SettingsRoute)
             ProfileEvents.OnOpenAccount -> navigator.navigate(AccountRoute)
             ProfileEvents.OnOpenDevices -> navigator.navigate(DevicesRoute)
