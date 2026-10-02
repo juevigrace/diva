@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.DrawerDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PermanentDrawerSheet
@@ -20,9 +19,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import io.github.juevigrace.diva.ui.layout.navigation.LocalNavStyle
 import io.github.juevigrace.diva.ui.layout.navigation.NavStyle
-import io.github.juevigrace.diva.ui.toast.ToasterHost
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermanentDrawerScreen(
     modifier: Modifier = Modifier,
@@ -36,7 +33,7 @@ fun PermanentDrawerScreen(
     bottomBar: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     floatingActionButtonPosition: FabPosition = FabPosition.End,
-    snackBarHost: @Composable () -> Unit = { ToasterHost() },
+    snackBarHost: @Composable () -> Unit = {},
     containerColor: Color = MaterialTheme.colorScheme.background,
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,

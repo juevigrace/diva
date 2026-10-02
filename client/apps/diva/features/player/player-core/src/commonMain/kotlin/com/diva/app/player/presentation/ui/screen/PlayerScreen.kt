@@ -23,12 +23,13 @@ import androidx.compose.material.icons.filled.Lyrics
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.RepeatOne
 import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,14 +50,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diva.app.player.models.RepeatMode
 import com.diva.app.player.presentation.events.PlayerEvents
-import com.diva.app.player.presentation.viewmodel.PlayerViewModel
-import com.diva.app.ui.components.Artwork
 import com.diva.app.player.presentation.ui.util.durationLabel
 import com.diva.app.player.presentation.ui.util.formatDuration
+import com.diva.app.player.presentation.viewmodel.PlayerViewModel
+import com.diva.app.ui.components.Artwork
 import io.github.juevigrace.diva.ui.layout.Screen
 import io.github.juevigrace.diva.ui.navigation.BackHandler
 import org.koin.compose.viewmodel.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlayerScreen(
     viewModel: PlayerViewModel = koinViewModel(),
@@ -74,35 +76,36 @@ fun PlayerScreen(
     Screen(
         containerColor = Color.Transparent,
         topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                IconButton(onClick = { viewModel.onEvent(PlayerEvents.OnBack) }) {
-                    Icon(Icons.Filled.ExpandMore, contentDescription = "Collapse")
+            CenterAlignedTopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { viewModel.onEvent(PlayerEvents.OnBack) }) {
+                        Icon(Icons.Filled.ExpandMore, contentDescription = "Collapse")
+                    }
+                },
+                title = {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp, alignment = Alignment.CenterVertically),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Text(
+                            text = "NOW PLAYING",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Text(
+                            text = state.metadata.album,
+                            style = MaterialTheme.typography.labelLarge,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { }) {
+                        Icon(Icons.Filled.MoreVert, contentDescription = "More")
+                    }
                 }
-                Column(
-                    modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(
-                        text = "NOW PLAYING",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                    Text(
-                        text = state.metadata.album,
-                        style = MaterialTheme.typography.labelLarge,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
-                IconButton(onClick = { }) {
-                    Icon(Icons.Filled.MoreVert, contentDescription = "More")
-                }
-            }
+            )
         },
     ) { innerPadding ->
         LazyColumn(

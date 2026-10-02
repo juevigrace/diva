@@ -10,9 +10,7 @@ import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import io.github.juevigrace.diva.ui.toast.ToasterHost
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Screen(
     modifier: Modifier = Modifier,
@@ -20,7 +18,7 @@ fun Screen(
     bottomBar: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     floatingActionButtonPosition: FabPosition = FabPosition.End,
-    snackBarHost: @Composable () -> Unit = { ToasterHost() },
+    snackBarHost: @Composable () -> Unit = {},
     containerColor: Color = MaterialTheme.colorScheme.background,
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,

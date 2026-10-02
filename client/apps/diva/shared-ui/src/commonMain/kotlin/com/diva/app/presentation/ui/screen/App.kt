@@ -27,6 +27,7 @@ import io.github.juevigrace.diva.ui.navigation.Navigator
 import io.github.juevigrace.diva.ui.navigation.TabNavigator
 import io.github.juevigrace.diva.ui.theme.DivaThemeConfig
 import io.github.juevigrace.diva.ui.theme.ThemeScheme
+import io.github.juevigrace.diva.ui.toast.ToasterHost
 import org.koin.compose.koinInject
 
 @Composable
@@ -60,7 +61,9 @@ fun App() {
             LocalNavigator provides navigator,
             LocalTabNavigator provides tabNavigator,
         ) {
-            Screen { _ ->
+            Screen(
+                snackBarHost = { ToasterHost() }
+            ) { _ ->
                 NavHost(
                     modifier = Modifier.fillMaxSize(),
                     navigator = navigator,

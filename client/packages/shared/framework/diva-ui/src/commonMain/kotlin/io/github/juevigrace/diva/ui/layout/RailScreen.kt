@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import io.github.juevigrace.diva.ui.layout.navigation.LocalNavStyle
 import io.github.juevigrace.diva.ui.layout.navigation.NavStyle
-import io.github.juevigrace.diva.ui.toast.ToasterHost
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +33,7 @@ fun RailScreen(
     railWindowInsets: WindowInsets = NavigationRailDefaults.windowInsets,
     floatingActionButton: @Composable () -> Unit = {},
     floatingActionButtonPosition: FabPosition = FabPosition.End,
-    snackBarHost: @Composable () -> Unit = { ToasterHost() },
+    snackBarHost: @Composable () -> Unit = {},
     containerColor: Color = MaterialTheme.colorScheme.background,
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,

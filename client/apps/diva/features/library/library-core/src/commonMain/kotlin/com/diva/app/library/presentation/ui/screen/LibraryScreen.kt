@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,10 +24,12 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -47,6 +50,7 @@ import io.github.juevigrace.diva.ui.layout.Screen
 import io.github.juevigrace.diva.ui.navigation.BackHandler
 import org.koin.compose.viewmodel.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LibraryScreen(
     viewModel: LibraryViewModel = koinViewModel(),
@@ -54,21 +58,18 @@ fun LibraryScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     BackHandler { viewModel.onEvent(LibraryEvents.OnBack) }
 
-    Screen { innerPadding ->
+    Screen(
+        topBar = {
+            TopAppBar(title = { Text(text = "Library") })
+        },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+    ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize(),
             contentPadding = PaddingValues(bottom = 24.dp),
         ) {
-            item {
-                Text(
-                    text = "Library",
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(start = 20.dp, top = 16.dp, end = 20.dp),
-                )
-            }
-
             item {
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
