@@ -71,22 +71,22 @@ fun HomeScreen(
                     onEvent = playerViewModel::onEvent,
                 )
                 BottomAppBar {
-                tabNavigator.tabs.forEachIndexed { index, tab ->
-                    NavigationBarItem(
-                        modifier = Modifier.weight(1f),
-                        selected = selectedTabIndex == index,
-                        onClick = { tabNavigator.selectTab(tab) },
-                        icon = {
-                            Icon(
-                                modifier = Modifier.size(24.dp),
-                                painter = painterResource(tab.icon),
-                                contentDescription = stringResource(tab.title),
-                            )
-                        },
-                        label = { Text(stringResource(tab.title)) },
-                        alwaysShowLabel = true,
-                    )
-                }
+                    tabNavigator.tabs.forEachIndexed { index, tab ->
+                        NavigationBarItem(
+                            modifier = Modifier.weight(1f),
+                            selected = selectedTabIndex == index,
+                            onClick = { tabNavigator.selectTab(tab) },
+                            icon = {
+                                Icon(
+                                    modifier = Modifier.size(24.dp),
+                                    painter = painterResource(tab.icon),
+                                    contentDescription = stringResource(tab.title),
+                                )
+                            },
+                            label = { Text(stringResource(tab.title)) },
+                            alwaysShowLabel = true,
+                        )
+                    }
                 }
             }
         },

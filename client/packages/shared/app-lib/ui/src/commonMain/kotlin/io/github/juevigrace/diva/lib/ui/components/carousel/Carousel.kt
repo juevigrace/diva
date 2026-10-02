@@ -24,8 +24,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -38,11 +36,13 @@ private val Arrows = 32.dp
 private val ArrowGutter = 4.dp
 
 /**
- * Horizontally paged row with edge arrows and edge fades.
+ * Horizontally paged row with edge arrows.
  *
- * Adds desktop affordances the pager lacks on its own: wheel scrolling,
- * click-and-drag panning, and arrow buttons. Fades and arrows only appear
- * while there is more content in that direction.
+ * Wheel scrolling is deliberately not handled: the row lives inside a vertical
+ * scroll container, so intercepting wheel events stole the page scroll and
+ * broke it. Paging is left to the touch gesture the pager already has, plus
+ * click-and-drag and arrow buttons on pointer platforms. See [CarouselDefaults]
+ * for the per-platform defaults.
  *
  * @param pageCount total number of pages.
  * @param visiblePages how many pages fit at once, used only to decide whether
@@ -50,6 +50,10 @@ private val ArrowGutter = 4.dp
  * @param pageSize width of a single page.
  * @param contentPadding padding applied outside the first and last page.
  * @param pageSpacing gap between pages.
+ * @param arrowsEnabled show the edge arrows, defaulting to the platform
+ *   preference.
+ * @param dragScrollEnabled enable click-and-drag panning, defaulting to the
+ *   platform preference.
  */
 @Composable
 fun Carousel(
@@ -59,12 +63,19 @@ fun Carousel(
     pageSize: Dp,
     contentPadding: PaddingValues = PaddingValues(horizontal = 20.dp),
     pageSpacing: Dp = 12.dp,
+    arrowsEnabled: Boolean = CarouselDefaults.arrowsEnabled,
+    dragScrollEnabled: Boolean = CarouselDefaults.dragScrollEnabled,
     state: PagerState = rememberPagerState { pageCount },
     content: @Composable (Int) -> Unit,
 ) {
     if (pageCount <= 0) return
 
     val scope = rememberCoroutineScope()
+    val pagerModifier = if (dragScrollEnabled) {
+        modifier.dragScroll(state, scope)
+    } else {
+        modifier
+    }
 
     Box(modifier = modifier) {
         HorizontalPager(
@@ -72,14 +83,12 @@ fun Carousel(
             contentPadding = contentPadding,
             pageSpacing = pageSpacing,
             pageSize = PageSize.Fixed(pageSize),
-            modifier = Modifier
-                .mouseScroll(state, scope)
-                .dragScroll(state, scope),
+            modifier = pagerModifier,
         ) { page ->
             content(page)
         }
 
-        if (pageCount > visiblePages) {
+        if (arrowsEnabled && pageCount > visiblePages) {
             CarouselArrow(
                 edge = Edge.Start,
                 enabled = state.canScrollBackward,
@@ -140,27 +149,14 @@ private fun BoxScope.CarouselArrow(edge: Edge, enabled: Boolean, onClick: () -> 
     }
 }
 
-/** Desktop wheel scrolling; the pager's own gesture handling is touch-only. */
-private fun Modifier.mouseScroll(
-    state: PagerState,
-    scope: CoroutineScope,
-): Modifier = pointerInput(state) {
-    awaitPointerEventScope {
-        while (true) {
-            val event = awaitPointerEvent(PointerEventPass.Main)
-            if (event.type != PointerEventType.Scroll) continue
-            val delta = event.changes.fold(0f) { acc, change ->
-                acc + change.scrollDelta.x + change.scrollDelta.y
-            }
-            if (delta != 0f) {
-                scope.launch { state.scrollBy(delta) }
-                event.changes.forEach { it.consume() }
-            }
-        }
-    }
-}
-
-/** Desktop click-and-drag panning, matching the touch gesture mobile already gets. */
+/**
+ * Click-and-drag panning for pointer platforms, which the pager does not
+ * provide on its own.
+ *
+ * Only horizontal drags are consumed, and only after the gesture has passed the
+ * drag threshold, so a vertical drag still reaches the enclosing vertical
+ * scroll container.
+ */
 private fun Modifier.dragScroll(
     state: PagerState,
     scope: CoroutineScope,
