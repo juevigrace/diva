@@ -39,66 +39,72 @@ import com.diva.app.media.models.Media
 import com.diva.app.player.presentation.ui.util.durationLabel
 import com.diva.app.ui.components.Artwork
 import io.github.juevigrace.diva.lib.ui.components.carousel.Carousel
+import io.github.juevigrace.diva.ui.layout.Screen
 
 @Composable
 fun HomeContent(
     state: HomeState,
     onEvent: (HomeEvents) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(bottom = 24.dp),
-    ) {
-        item {
-            Column(modifier = Modifier.padding(start = 20.dp, top = 16.dp, end = 20.dp)) {
-                Text(
-                    text = state.greeting,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                Text(
-                    text = state.title,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
-        }
+    Screen(
+        topBar = {
 
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                AssistChip(
-                    onClick = { onEvent(HomeEvents.OnOpenSearch) },
-                    label = { Text("Search") },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp),
-                        )
-                    },
-                )
-                AssistChip(
-                    onClick = { onEvent(HomeEvents.OnOpenLibrary) },
-                    label = { Text("Your library") },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.LibraryMusic,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp),
-                        )
-                    },
-                )
+        },
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 24.dp),
+        ) {
+            item {
+                Column(modifier = Modifier.padding(start = 20.dp, top = 16.dp, end = 20.dp)) {
+                    Text(
+                        text = state.greeting,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Text(
+                        text = state.title,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
             }
-        }
 
-        items(state.sections, key = { it.id }) { section ->
-            HomeRow(section = section, onEvent = onEvent)
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    AssistChip(
+                        onClick = { onEvent(HomeEvents.OnOpenSearch) },
+                        label = { Text("Search") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Search,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                            )
+                        },
+                    )
+                    AssistChip(
+                        onClick = { onEvent(HomeEvents.OnOpenLibrary) },
+                        label = { Text("Your library") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.LibraryMusic,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                            )
+                        },
+                    )
+                }
+            }
+
+            items(state.sections, key = { it.id }) { section ->
+                HomeRow(section = section, onEvent = onEvent)
+            }
         }
     }
 }

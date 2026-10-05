@@ -1,10 +1,11 @@
 package io.github.juevigrace.diva.ui.test
 
 import androidx.navigation3.runtime.NavKey
-import io.github.juevigrace.diva.core.getOrNull
+import io.github.juevigrace.diva.ui.navigation.BackStack
 import io.github.juevigrace.diva.ui.navigation.Navigator
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -23,7 +24,6 @@ class NavigatorTest {
         val nav = navigator("home")
         assertEquals(TestKey("home"), nav.backStack.value.startDestination)
         assertEquals(listOf(TestKey("home")), nav.backStack.value.entries)
-        assertTrue(nav.backStack.value.current.isSome)
     }
 
     @Test
@@ -110,10 +110,24 @@ class NavigatorTest {
     @Test
     fun currentReflectsTopOfStack() {
         val nav = navigator("home")
-        assertEquals(TestKey("home"), nav.backStack.value.current.getOrNull())
+        assertEquals(TestKey("home"), nav.backStack.value.current)
         nav.navigate(TestKey("search"))
-        assertEquals(TestKey("search"), nav.backStack.value.current.getOrNull())
+        assertEquals(TestKey("search"), nav.backStack.value.current)
         nav.pop()
-        assertEquals(TestKey("home"), nav.backStack.value.current.getOrNull())
+        assertEquals(TestKey("home"), nav.backStack.value.current)
+    }
+
+    /**
+     * NavDisplay hard-fails on an empty backstack, so `current` is derived rather than optional
+     * and the non-empty invariant is enforced on every construction, `copy()` included.
+     */
+    @Test
+    fun requiresAtLeastOneEntry() {
+        assertFailsWith<IllegalArgumentException> {
+            BackStack(TestKey("home"), emptyList())
+        }
+        assertFailsWith<IllegalArgumentException> {
+            BackStack(TestKey("home"), listOf(TestKey("home"))).copy(entries = emptyList())
+        }
     }
 }

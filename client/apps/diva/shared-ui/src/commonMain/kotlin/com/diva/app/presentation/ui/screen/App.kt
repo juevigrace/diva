@@ -15,7 +15,6 @@ import com.diva.app.player.presentation.ui.components.navigation.playerNav
 import com.diva.app.presentation.ui.theme.AppTypography
 import com.diva.app.presentation.ui.theme.darkScheme
 import com.diva.app.presentation.ui.theme.lightScheme
-import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.ui.DivaApp
 import io.github.juevigrace.diva.ui.layout.Screen
 import io.github.juevigrace.diva.ui.navigation.BackHandler
@@ -35,10 +34,12 @@ fun App() {
     val navigator: Navigator = koinInject()
     val backStack: BackStack by navigator.backStack.collectAsStateWithLifecycle()
     val tabNavigator: TabNavigator = koinInject()
-    val tabBackStack by tabNavigator.backStack.collectAsStateWithLifecycle()
+    val tabBackStack by tabNavigator.tabBackStack.collectAsStateWithLifecycle()
+    // The tab navigator's own linear stack, which is not the root navigator's backStack above.
+    val tabEntries by tabNavigator.backStack.collectAsStateWithLifecycle()
 
     BackHandler(
-        enabled = backStack.current.getOrNull() == HomeRoute && (tabBackStack.canPop || tabBackStack.canPopTab),
+        enabled = backStack.current == HomeRoute && (tabEntries.canPop || tabBackStack.canPopTab),
         onBack = {
             if (!tabNavigator.pop()) {
                 tabNavigator.popTab()

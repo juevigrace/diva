@@ -4,14 +4,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationRailItem
@@ -19,26 +15,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import com.diva.app.folder.presentation.ui.components.FoldersContent
 import com.diva.app.folder.presentation.ui.components.navigation.FolderRoute
 import com.diva.app.folder.presentation.ui.components.navigation.FoldersRoute
 import com.diva.app.folder.presentation.viewmodel.FolderViewModel
-import com.diva.app.generated.resources.Res
-import com.diva.app.generated.resources.folders
-import com.diva.app.generated.resources.home
-import com.diva.app.generated.resources.library
-import com.diva.app.generated.resources.profile
 import com.diva.app.home.presentation.ui.components.HomeContent
 import com.diva.app.home.presentation.ui.components.navigation.HomeRoute
 import com.diva.app.home.presentation.viewmodel.HomeViewModel
@@ -50,9 +38,6 @@ import com.diva.app.player.presentation.viewmodel.PlayerViewModel
 import com.diva.app.profile.presentation.ui.components.ProfileContent
 import com.diva.app.profile.presentation.ui.components.navigation.ProfileRoute
 import com.diva.app.profile.presentation.viewmodel.ProfileViewModel
-import com.diva.app.search.presentation.events.SearchEvents
-import com.diva.app.search.presentation.state.SearchState
-import com.diva.app.search.presentation.ui.components.SearchField
 import com.diva.app.search.presentation.ui.components.SearchResultsContent
 import com.diva.app.search.presentation.ui.components.navigation.SearchResultsRoute
 import com.diva.app.search.presentation.viewmodel.SearchViewModel
@@ -97,19 +82,7 @@ fun HomeScreen(
     val folderState by folderViewModel.state.collectAsStateWithLifecycle()
 
     val tabNavigator: TabNavigator = LocalTabNavigator.current
-    val backStack by tabNavigator.backStack.collectAsStateWithLifecycle()
-    val topEntry = backStack.currentBackStack.lastOrNull()
-
-    // The folder browser follows the destination it was pushed for, not the tab.
-    LaunchedEffect(topEntry) {
-        folderViewModel.onEnter((topEntry as? FolderRoute)?.folderId)
-    }
-
-    val selectedTabIndex = remember(backStack.selectedTab) {
-        tabNavigator.tabs
-            .indexOfFirst { it.route == backStack.selectedTab }
-            .coerceAtLeast(0)
-    }
+    val tabBackStack by tabNavigator.tabBackStack.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -120,17 +93,6 @@ fun HomeScreen(
 
     AdaptiveScreen(
         style = style,
-        topBar = {
-            HomeTopBar(
-                topEntry = topEntry,
-                isExpanded = style == NavStyle.Rail,
-                searchState = searchState,
-                onSearchEvent = searchViewModel::onEvent,
-                onBack = tabNavigator::pop,
-                onOpenSearch = { tabNavigator.navigate(SearchResultsRoute) },
-                folderTitle = folderState.title,
-            )
-        },
         bottomBar = {
             Column {
                 MiniPlayer(
@@ -138,10 +100,10 @@ fun HomeScreen(
                     onEvent = playerViewModel::onEvent,
                 )
                 BottomAppBar {
-                    tabNavigator.tabs.forEachIndexed { index, tab ->
+                    tabNavigator.tabs.forEach { tab ->
                         NavigationBarItem(
                             modifier = Modifier.weight(1f),
-                            selected = selectedTabIndex == index,
+                            selected = tabBackStack.selectedTab == tab,
                             onClick = { tabNavigator.selectTab(tab) },
                             icon = {
                                 Icon(
@@ -159,13 +121,13 @@ fun HomeScreen(
         },
         drawerState = drawerState,
         navContent = {
-            tabNavigator.tabs.forEachIndexed { index, tab ->
+            tabNavigator.tabs.forEach { tab ->
                 when (style) {
                     NavStyle.ModalDrawer, NavStyle.PermanentDrawer -> {
                         NavigationDrawerItem(
                             modifier = Modifier.weight(1f),
                             label = { Text(stringResource(tab.title)) },
-                            selected = selectedTabIndex == index,
+                            selected = tabBackStack.selectedTab == tab,
                             onClick = {
                                 tabNavigator.selectTab(tab)
                                 if (style == NavStyle.ModalDrawer) {
@@ -183,7 +145,7 @@ fun HomeScreen(
                     }
                     NavStyle.Rail -> {
                         NavigationRailItem(
-                            selected = selectedTabIndex == index,
+                            selected = tabBackStack.selectedTab == tab,
                             onClick = { tabNavigator.selectTab(tab) },
                             icon = {
                                 Icon(
@@ -199,9 +161,9 @@ fun HomeScreen(
                 }
             }
         },
-    ) { innerPadding ->
+    ) { _ ->
         TabNavHost(
-            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             tabNavigator = tabNavigator,
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
@@ -246,68 +208,5 @@ fun HomeScreen(
                 }
             }
         )
-    }
-}
-
-/**
- * One top bar for all tabs, chosen by the destination on top of the active stack.
- *
- * Search is an action rather than a tab: on expanded layouts the field sits inline on
- * Home the way it does on the web, and on compact layouts it is reached from an icon
- * that pushes [SearchResultsRoute]. Once pushed, the field grows a back affordance.
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun HomeTopBar(
-    topEntry: NavKey?,
-    isExpanded: Boolean,
-    searchState: SearchState,
-    onSearchEvent: (SearchEvents) -> Unit,
-    onBack: () -> Unit,
-    onOpenSearch: () -> Unit,
-    folderTitle: String,
-) {
-    when (topEntry) {
-        HomeRoute -> if (isExpanded) {
-            SearchField(
-                state = searchState,
-                onEvent = onSearchEvent,
-                modifier = Modifier.padding(top = 8.dp),
-            )
-        } else {
-            TopAppBar(
-                title = { Text(stringResource(Res.string.home)) },
-                actions = {
-                    IconButton(onClick = onOpenSearch) {
-                        Icon(Icons.Filled.Search, contentDescription = "Search")
-                    }
-                },
-            )
-        }
-
-        SearchResultsRoute -> SearchField(
-            state = searchState,
-            onEvent = onSearchEvent,
-            onBack = onBack,
-            requestFocus = !isExpanded,
-            modifier = Modifier.padding(top = 8.dp),
-        )
-
-        FoldersRoute -> TopAppBar(title = { Text(stringResource(Res.string.folders)) })
-
-        is FolderRoute -> TopAppBar(
-            title = { Text(folderTitle) },
-            navigationIcon = {
-                IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                }
-            },
-        )
-
-        LibraryRoute -> TopAppBar(title = { Text(stringResource(Res.string.library)) })
-
-        ProfileRoute -> TopAppBar(title = { Text(stringResource(Res.string.profile)) })
-
-        else -> {}
     }
 }

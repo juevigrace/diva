@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Folder
@@ -117,7 +118,7 @@ private fun Breadcrumbs(
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .clip()
+                    .clip(RoundedCornerShape(4.dp))
                     .clickable { onEvent(FolderEvents.OnNavigateToBreadcrumb("")) }
                     .padding(horizontal = 8.dp, vertical = 4.dp),
             )
@@ -132,7 +133,7 @@ private fun Breadcrumbs(
                     MaterialTheme.colorScheme.primary
                 },
                 modifier = Modifier
-                    .clip()
+                    .clip(RoundedCornerShape(4.dp))
                     .clickable { onEvent(FolderEvents.OnNavigateToBreadcrumb(folder.id)) }
                     .padding(horizontal = 8.dp, vertical = 4.dp),
             )

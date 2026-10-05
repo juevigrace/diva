@@ -43,7 +43,7 @@ data class FolderState(
     val currentFolderId: String? = null,
     val breadcrumbs: List<Folder> = emptyList(),
     val entries: List<FolderEntry> = emptyList(),
-    val selectedIds: Set<String> = emptyList(),
+    val selectedIds: Set<String> = emptySet(),
     val draft: CollectionDraft? = null,
 ) {
     val isSelectionMode: Boolean

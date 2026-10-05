@@ -30,11 +30,12 @@ import androidx.navigation3.ui.defaultPredictivePopTransitionSpec
 import androidx.navigation3.ui.defaultTransitionSpec
 import androidx.navigationevent.NavigationEvent
 import androidx.savedstate.serialization.SavedStateConfiguration
-import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
+import kotlin.collections.plus
 
 interface Navigator {
     val backStack: StateFlow<BackStack>
@@ -55,25 +56,34 @@ data class BackStack(
     val startDestination: NavKey,
     val entries: List<NavKey>,
 ) {
-    val current: Option<NavKey>
-        get() = Option.of(entries.lastOrNull())
+    init {
+        require(entries.isNotEmpty()) {
+            "BackStack must hold at least one entry; NavDisplay requires a non-empty backstack"
+        }
+    }
+
+    val current: NavKey
+        get() = entries.last()
+
+    val canPop: Boolean
+        get() = entries.size > 1
 }
 
-@Stable
-internal class NavigatorImpl(startDestination: NavKey) : Navigator {
+abstract class BaseNavigator(startDestination: NavKey) : Navigator {
+    private val _backStack = MutableStateFlow<BackStack>(
+        BackStack(startDestination = startDestination, entries = listOf(startDestination))
+    )
     override val backStack: StateFlow<BackStack>
-        field = MutableStateFlow(
-            BackStack(startDestination = startDestination, entries = listOf(startDestination))
-        )
+        get() = _backStack.asStateFlow()
 
-    internal fun syncFromBackStack(entries: List<NavKey>) {
-        backStack.update { state ->
+    internal fun setEntries(entries: List<NavKey>) {
+        _backStack.update { state ->
             state.copy(entries = entries)
         }
     }
 
     override fun navigate(destination: NavKey, launchSingleTop: Boolean) {
-        backStack.update { state ->
+        _backStack.update { state ->
             if (launchSingleTop && state.entries.lastOrNull() == destination) {
                 return@update state
             }
@@ -83,7 +93,7 @@ internal class NavigatorImpl(startDestination: NavKey) : Navigator {
 
     override fun pop(): Boolean {
         var popped = false
-        backStack.update { state ->
+        _backStack.update { state ->
             if (state.entries.size <= 1) {
                 return@update state
             }
@@ -94,7 +104,7 @@ internal class NavigatorImpl(startDestination: NavKey) : Navigator {
     }
 
     override fun popUntil(destination: NavKey) {
-        backStack.update { state ->
+        _backStack.update { state ->
             val index = state.entries.lastIndexOf(destination)
             if (index == -1) {
                 return@update state
@@ -104,7 +114,7 @@ internal class NavigatorImpl(startDestination: NavKey) : Navigator {
     }
 
     override fun replaceTop(destination: NavKey) {
-        backStack.update { state ->
+        _backStack.update { state ->
             if (state.entries.isEmpty() || state.entries.last() == destination) {
                 return@update state
             }
@@ -113,11 +123,14 @@ internal class NavigatorImpl(startDestination: NavKey) : Navigator {
     }
 
     override fun replaceAll(destination: NavKey) {
-        backStack.update { state ->
+        _backStack.update { state ->
             state.copy(entries = listOf(destination))
         }
     }
 }
+
+@Stable
+internal class NavigatorImpl(startDestination: NavKey) : BaseNavigator(startDestination = startDestination)
 
 val LocalNavigator = staticCompositionLocalOf<Navigator> { error("No Navigator provided") }
 
@@ -137,7 +150,7 @@ fun rememberNavigator(
             snapshotFlow { navBackStack.toList() }
                 .distinctUntilChanged()
                 .collect { entries ->
-                    navigator.syncFromBackStack(entries)
+                    navigator.setEntries(entries)
                 }
         }
     }
