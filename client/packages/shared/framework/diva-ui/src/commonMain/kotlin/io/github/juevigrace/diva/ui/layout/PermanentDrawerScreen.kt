@@ -39,9 +39,9 @@ fun PermanentDrawerScreen(
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (innerPadding: PaddingValues) -> Unit,
 ) {
-    PermanentNavigationDrawer(
-        drawerContent = {
-            CompositionLocalProvider(LocalNavStyle provides NavStyle.PermanentDrawer) {
+    CompositionLocalProvider(LocalNavStyle provides NavStyle.PermanentDrawer) {
+        PermanentNavigationDrawer(
+            drawerContent = {
                 PermanentDrawerSheet(
                     drawerShape = drawerShape,
                     drawerContainerColor = drawerContainerColor,
@@ -50,20 +50,20 @@ fun PermanentDrawerScreen(
                     windowInsets = drawerWindowInsets,
                     content = navContent,
                 )
-            }
-        },
-    ) {
-        Screen(
-            modifier = modifier,
-            topBar = topBar,
-            bottomBar = bottomBar,
-            floatingActionButton = floatingActionButton,
-            floatingActionButtonPosition = floatingActionButtonPosition,
-            snackBarHost = snackBarHost,
-            containerColor = containerColor,
-            contentColor = contentColor,
-            contentWindowInsets = contentWindowInsets,
-            content = content,
-        )
+            },
+        ) {
+            Screen(
+                modifier = modifier,
+                topBar = topBar,
+                bottomBar = bottomBar,
+                floatingActionButton = floatingActionButton,
+                floatingActionButtonPosition = floatingActionButtonPosition,
+                snackBarHost = snackBarHost,
+                containerColor = containerColor,
+                contentColor = contentColor,
+                contentWindowInsets = contentWindowInsets,
+                content = content,
+            )
+        }
     }
 }

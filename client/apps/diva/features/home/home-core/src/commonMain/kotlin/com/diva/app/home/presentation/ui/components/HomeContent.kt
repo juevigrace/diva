@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,34 +23,79 @@ import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diva.app.home.presentation.events.HomeEvents
 import com.diva.app.home.presentation.state.HomeSection
-import com.diva.app.home.presentation.state.HomeState
+import com.diva.app.home.presentation.viewmodel.HomeViewModel
 import com.diva.app.media.models.Media
 import com.diva.app.player.presentation.ui.util.durationLabel
+import com.diva.app.search.presentation.events.SearchEvents
+import com.diva.app.search.presentation.state.SearchState
+import com.diva.app.search.presentation.ui.components.SearchField
 import com.diva.app.ui.components.Artwork
 import io.github.juevigrace.diva.lib.ui.components.carousel.Carousel
 import io.github.juevigrace.diva.ui.layout.Screen
+import io.github.juevigrace.diva.ui.window.rememberWindowInfo
+import org.koin.compose.viewmodel.koinViewModel
 
+/**
+ * The home tab root. Named `HomeContent` rather than `HomeScreen` because
+ * [com.diva.app.home.presentation.ui.screen.HomeScreen] is the tab host.
+ *
+ * The search state is a parameter because it is the same instance the search results
+ * destination renders, so a query typed here survives the push. The home view model is
+ * resolved here instead, since nothing else reads it.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
-    state: HomeState,
-    onEvent: (HomeEvents) -> Unit,
+    searchState: SearchState,
+    onSearchEvent: (SearchEvents) -> Unit,
+    viewModel: HomeViewModel = koinViewModel(),
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val onEvent = viewModel::onEvent
+    val windowInfo = rememberWindowInfo()
+
     Screen(
         topBar = {
-
+            TopAppBar(
+                title = {
+                    if (windowInfo.widthSizeClass == WindowWidthSizeClass.Expanded) {
+                        SearchField(
+                            state = searchState,
+                            onEvent = onSearchEvent,
+                            modifier = Modifier.padding(top = 8.dp),
+                        )
+                    } else {
+                        Text(text = "Home")
+                    }
+                },
+                actions = {
+                    if (windowInfo.widthSizeClass != WindowWidthSizeClass.Expanded) {
+                        IconButton(onClick = { onEvent(HomeEvents.OnOpenSearch) }) {
+                            Icon(Icons.Filled.Search, contentDescription = "Search")
+                        }
+                    }
+                },
+            )
         },
+        contentWindowInsets = WindowInsets(0),
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier.padding(innerPadding).fillMaxSize(),

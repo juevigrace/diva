@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,103 +25,124 @@ import androidx.compose.material.icons.filled.Devices
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.diva.app.generated.resources.Res
+import com.diva.app.generated.resources.profile
 import com.diva.app.profile.models.Profile
 import com.diva.app.profile.presentation.events.ProfileEvents
 import com.diva.app.profile.presentation.state.ProfileQuickStat
-import com.diva.app.profile.presentation.state.ProfileState
+import com.diva.app.profile.presentation.viewmodel.ProfileViewModel
 import com.diva.app.ui.components.Artwork
 import io.github.juevigrace.diva.core.getOrDefault
 import io.github.juevigrace.diva.lib.ui.components.carousel.Carousel
+import io.github.juevigrace.diva.ui.layout.Screen
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
+/**
+ * The profile tab root. Nothing else reads the profile state, so the view model is
+ * resolved here rather than hoisted by the tab host.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileContent(
-    state: ProfileState,
-    onEvent: (ProfileEvents) -> Unit,
-    modifier: Modifier = Modifier,
+fun ProfileScreen(
+    viewModel: ProfileViewModel = koinViewModel(),
 ) {
-    val profile = state.profile
-    if (profile != null) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(bottom = 32.dp),
-        ) {
-            ProfileHeader(profile = profile)
-            Spacer(modifier = Modifier.height(8.dp))
-            StatsRow(stats = state.stats)
-            Spacer(modifier = Modifier.height(16.dp))
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 20.dp))
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val onEvent = viewModel::onEvent
 
-            SectionTitle(text = "Manage")
+    Screen(
+        topBar = { TopAppBar(title = { Text(stringResource(Res.string.profile)) }) },
+        contentWindowInsets = WindowInsets(0),
+    ) { innerPadding ->
+        val profile = state.profile
+        if (profile != null) {
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(bottom = 32.dp),
+            ) {
+                ProfileHeader(profile = profile)
+                Spacer(modifier = Modifier.height(8.dp))
+                StatsRow(stats = state.stats)
+                Spacer(modifier = Modifier.height(16.dp))
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 20.dp))
 
-            NavigationRow(
-                icon = Icons.Filled.Settings,
-                title = "Settings",
-                onClick = { onEvent(ProfileEvents.OnOpenSettings) },
-            )
-            NavigationRow(
-                icon = Icons.Filled.ManageAccounts,
-                title = "Account",
-                onClick = { onEvent(ProfileEvents.OnOpenAccount) },
-            )
-            NavigationRow(
-                icon = Icons.Filled.Devices,
-                title = "Devices",
-                onClick = { onEvent(ProfileEvents.OnOpenDevices) },
-            )
-            NavigationRow(
-                icon = Icons.Filled.Key,
-                title = "Permissions",
-                onClick = { onEvent(ProfileEvents.OnOpenPermissions) },
-            )
-            NavigationRow(
-                icon = Icons.AutoMirrored.Filled.Logout,
-                title = "Sign out",
-                onClick = { onEvent(ProfileEvents.OnSignOut) },
-            )
+                SectionTitle(text = "Manage")
 
-            Spacer(modifier = Modifier.height(16.dp))
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 20.dp))
-
-            InfoSection(
-                title = "Account details",
-                rows = listOf(
-                    "Email" to profile.email.getOrDefault(""),
-                    "Phone" to profile.phoneNumber.getOrDefault(""),
-                    "Role" to profile.role.name,
-                    "Status" to profile.status.name,
-                    "Verified" to profile.verified.toString(),
-                    "Theme" to profile.theme.name,
-                    "Language" to profile.language,
-                ),
-            )
-
-            InfoSection(
-                title = "Linked devices",
-                rows = profile.devices.map { device ->
-                    device to ""
-                },
-                emptyText = "No devices linked yet.",
-            )
-
-            if (state.recentMedia.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(24.dp))
-                SectionTitle(text = "Recently played")
-                RecentRow(
-                    titles = state.recentMedia.map { it.title },
-                    onSelect = { },
+                NavigationRow(
+                    icon = Icons.Filled.Settings,
+                    title = "Settings",
+                    onClick = { onEvent(ProfileEvents.OnOpenSettings) },
                 )
+                NavigationRow(
+                    icon = Icons.Filled.ManageAccounts,
+                    title = "Account",
+                    onClick = { onEvent(ProfileEvents.OnOpenAccount) },
+                )
+                NavigationRow(
+                    icon = Icons.Filled.Devices,
+                    title = "Devices",
+                    onClick = { onEvent(ProfileEvents.OnOpenDevices) },
+                )
+                NavigationRow(
+                    icon = Icons.Filled.Key,
+                    title = "Permissions",
+                    onClick = { onEvent(ProfileEvents.OnOpenPermissions) },
+                )
+                NavigationRow(
+                    icon = Icons.AutoMirrored.Filled.Logout,
+                    title = "Sign out",
+                    onClick = { onEvent(ProfileEvents.OnSignOut) },
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 20.dp))
+
+                InfoSection(
+                    title = "Account details",
+                    rows = listOf(
+                        "Email" to profile.email.getOrDefault(""),
+                        "Phone" to profile.phoneNumber.getOrDefault(""),
+                        "Role" to profile.role.name,
+                        "Status" to profile.status.name,
+                        "Verified" to profile.verified.toString(),
+                        "Theme" to profile.theme.name,
+                        "Language" to profile.language,
+                    ),
+                )
+
+                InfoSection(
+                    title = "Linked devices",
+                    rows = profile.devices.map { device ->
+                        device to ""
+                    },
+                    emptyText = "No devices linked yet.",
+                )
+
+                if (state.recentMedia.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    SectionTitle(text = "Recently played")
+                    RecentRow(
+                        titles = state.recentMedia.map { it.title },
+                        onSelect = { },
+                    )
+                }
             }
         }
     }

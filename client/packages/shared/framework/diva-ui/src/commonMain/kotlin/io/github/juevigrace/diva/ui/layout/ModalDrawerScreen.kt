@@ -44,12 +44,12 @@ fun ModalDrawerScreen(
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (innerPadding: PaddingValues) -> Unit,
 ) {
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        gesturesEnabled = gesturesEnabled,
-        scrimColor = scrimColor,
-        drawerContent = {
-            CompositionLocalProvider(LocalNavStyle provides NavStyle.ModalDrawer) {
+    CompositionLocalProvider(LocalNavStyle provides NavStyle.ModalDrawer) {
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            gesturesEnabled = gesturesEnabled,
+            scrimColor = scrimColor,
+            drawerContent = {
                 ModalDrawerSheet(
                     drawerState = drawerState,
                     drawerShape = drawerShape,
@@ -59,20 +59,20 @@ fun ModalDrawerScreen(
                     windowInsets = drawerWindowInsets,
                     content = navContent,
                 )
-            }
-        },
-    ) {
-        Screen(
-            modifier = modifier,
-            topBar = topBar,
-            bottomBar = bottomBar,
-            floatingActionButton = floatingActionButton,
-            floatingActionButtonPosition = floatingActionButtonPosition,
-            snackBarHost = snackBarHost,
-            containerColor = containerColor,
-            contentColor = contentColor,
-            contentWindowInsets = contentWindowInsets,
-            content = content,
-        )
+            },
+        ) {
+            Screen(
+                modifier = modifier,
+                topBar = topBar,
+                bottomBar = bottomBar,
+                floatingActionButton = floatingActionButton,
+                floatingActionButtonPosition = floatingActionButtonPosition,
+                snackBarHost = snackBarHost,
+                containerColor = containerColor,
+                contentColor = contentColor,
+                contentWindowInsets = contentWindowInsets,
+                content = content,
+            )
+        }
     }
 }

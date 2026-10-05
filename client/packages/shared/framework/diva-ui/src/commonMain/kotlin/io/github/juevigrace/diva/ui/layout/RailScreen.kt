@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import io.github.juevigrace.diva.ui.layout.navigation.LocalNavStyle
 import io.github.juevigrace.diva.ui.layout.navigation.NavStyle
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RailScreen(
     modifier: Modifier = Modifier,
@@ -41,23 +40,23 @@ fun RailScreen(
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (innerPadding: PaddingValues) -> Unit,
 ) {
-    Screen(
-        modifier = modifier,
-        topBar = topBar,
-        bottomBar = bottomBar,
-        floatingActionButton = floatingActionButton,
-        floatingActionButtonPosition = floatingActionButtonPosition,
-        snackBarHost = snackBarHost,
-        containerColor = containerColor,
-        contentColor = contentColor,
-        contentWindowInsets = contentWindowInsets,
-    ) { innerPadding ->
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-        ) {
-            CompositionLocalProvider(LocalNavStyle provides NavStyle.Rail) {
+    CompositionLocalProvider(LocalNavStyle provides NavStyle.Rail) {
+        Screen(
+            modifier = modifier,
+            topBar = topBar,
+            bottomBar = bottomBar,
+            floatingActionButton = floatingActionButton,
+            floatingActionButtonPosition = floatingActionButtonPosition,
+            snackBarHost = snackBarHost,
+            containerColor = containerColor,
+            contentColor = contentColor,
+            contentWindowInsets = contentWindowInsets,
+        ) { innerPadding ->
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+            ) {
                 NavigationRail(
                     modifier = Modifier,
                     containerColor = railContainerColor,
@@ -66,15 +65,15 @@ fun RailScreen(
                     windowInsets = railWindowInsets,
                     content = navContent,
                 )
-            }
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize(),
-            ) {
-                // The Row above already consumed innerPadding, so content must not
-                // apply it again or every slot gets double-inset.
-                content(PaddingValues(0.dp))
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize(),
+                ) {
+                    // The Row above already consumed innerPadding, so content must not
+                    // apply it again or every slot gets double-inset.
+                    content(PaddingValues(0.dp))
+                }
             }
         }
     }

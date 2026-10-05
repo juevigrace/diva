@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.PlayArrow
@@ -30,12 +32,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,56 +52,117 @@ import com.diva.app.folder.presentation.state.CollectionDraft
 import com.diva.app.folder.presentation.state.CollectionDraftType
 import com.diva.app.folder.presentation.state.FolderEntry
 import com.diva.app.folder.presentation.state.FolderState
+import com.diva.app.generated.resources.Res
+import com.diva.app.generated.resources.folders
 import com.diva.app.ui.components.Artwork
+import io.github.juevigrace.diva.ui.layout.Screen
+import org.jetbrains.compose.resources.stringResource
 
+/**
+ * The folders tab root. Titled after the tab itself because at the root there is no
+ * directory to name, and [FolderState.title] falls back to the same string.
+ */
 @Composable
-fun FoldersContent(
+fun FoldersScreen(
     state: FolderState,
     onEvent: (FolderEvents) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
-        Breadcrumbs(state = state, onEvent = onEvent)
+    FoldersScaffold(
+        title = stringResource(Res.string.folders),
+        onBack = null,
+        state = state,
+        onEvent = onEvent,
+    )
+}
 
-        if (state.isSelectionMode) {
-            SelectionBar(state = state, onEvent = onEvent)
-        }
+/**
+ * A single directory pushed on top of the folders tab. Titled after the directory being
+ * browsed and given a back affordance, since [onBack] pops the tab stack.
+ */
+@Composable
+fun FolderDetailScreen(
+    state: FolderState,
+    onEvent: (FolderEvents) -> Unit,
+    onBack: () -> Unit,
+) {
+    FoldersScaffold(
+        title = state.title,
+        onBack = onBack,
+        state = state,
+        onEvent = onEvent,
+    )
+}
 
-        if (state.isEmpty) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(
-                    text = "This folder is empty.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FoldersScaffold(
+    title: String,
+    onBack: (() -> Unit)?,
+    state: FolderState,
+    onEvent: (FolderEvents) -> Unit,
+) {
+    Screen(
+        topBar = {
+            TopAppBar(
+                title = { Text(title) },
+                navigationIcon = {
+                    if (onBack != null) {
+                        IconButton(onClick = onBack) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        }
+                    }
+                },
+            )
+        },
+        contentWindowInsets = WindowInsets(0),
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+        ) {
+            Breadcrumbs(state = state, onEvent = onEvent)
+
+            if (state.isSelectionMode) {
+                SelectionBar(state = state, onEvent = onEvent)
             }
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = 24.dp, top = 4.dp),
-            ) {
-                items(state.entries, key = { it.id }) { entry ->
-                    when (entry) {
-                        is FolderEntry.Directory -> DirectoryRow(
-                            entry = entry,
-                            selected = entry.id in state.selectedIds,
-                            selectionMode = state.isSelectionMode,
-                            onEvent = onEvent,
-                        )
-                        is FolderEntry.File -> FileRow(
-                            entry = entry,
-                            selected = entry.id in state.selectedIds,
-                            selectionMode = state.isSelectionMode,
-                            onEvent = onEvent,
-                        )
+
+            if (state.isEmpty) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "This folder is empty.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = 24.dp, top = 4.dp),
+                ) {
+                    items(state.entries, key = { it.id }) { entry ->
+                        when (entry) {
+                            is FolderEntry.Directory -> DirectoryRow(
+                                entry = entry,
+                                selected = entry.id in state.selectedIds,
+                                selectionMode = state.isSelectionMode,
+                                onEvent = onEvent,
+                            )
+                            is FolderEntry.File -> FileRow(
+                                entry = entry,
+                                selected = entry.id in state.selectedIds,
+                                selectionMode = state.isSelectionMode,
+                                onEvent = onEvent,
+                            )
+                        }
                     }
                 }
             }
         }
-    }
 
-    state.draft?.let { draft ->
-        CollectionDraftSheet(draft = draft, onEvent = onEvent)
+        state.draft?.let { draft ->
+            CollectionDraftSheet(draft = draft, onEvent = onEvent)
+        }
     }
 }
 
