@@ -1,12 +1,10 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package io.github.juevigrace.diva.lib.user.device.models
 
 import io.github.juevigrace.diva.core.DivaJsExport
-import io.github.juevigrace.diva.lib.user.device.models.api.UserDeviceResponse
 import io.github.juevigrace.diva.lib.device.models.Device
-import kotlin.js.ExperimentalJsExport
+import io.github.juevigrace.diva.lib.user.device.models.api.UserDeviceResponse
 
 data class UserDevice(
     val userId: String,

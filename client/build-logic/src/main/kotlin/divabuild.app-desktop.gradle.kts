@@ -1,6 +1,5 @@
 import divabuild.internal.buildLogicResourcesDir
 import divabuild.internal.libs
-import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.jetbrains.compose.reload.gradle.ComposeHotRun
 
 plugins {

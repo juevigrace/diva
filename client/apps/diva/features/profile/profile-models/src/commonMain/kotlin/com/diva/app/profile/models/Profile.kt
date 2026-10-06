@@ -2,9 +2,9 @@ package com.diva.app.profile.models
 
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.lib.user.preferences.models.Theme
 import io.github.juevigrace.diva.lib.core.models.Role
 import io.github.juevigrace.diva.lib.user.models.UserStatus
+import io.github.juevigrace.diva.lib.user.preferences.models.Theme
 
 data class Profile(
     val username: String = "",

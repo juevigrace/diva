@@ -4,10 +4,10 @@ import com.diva.app.collection.domain.CollectionRepository
 import com.diva.app.folder.domain.FolderRepository
 import com.diva.app.media.domain.MediaMetadataRepository
 import com.diva.app.media.domain.MediaRepository
-import com.diva.app.search.domain.SearchRepository
-import com.diva.app.search.models.SearchResults
 import com.diva.app.media.models.Media
 import com.diva.app.media.models.MediaMetadata
+import com.diva.app.search.domain.SearchRepository
+import com.diva.app.search.models.SearchResults
 import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
 import kotlinx.coroutines.flow.first

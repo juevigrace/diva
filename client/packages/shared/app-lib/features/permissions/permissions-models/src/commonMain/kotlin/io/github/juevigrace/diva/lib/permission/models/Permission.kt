@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package io.github.juevigrace.diva.lib.permission.models
@@ -6,10 +5,9 @@ package io.github.juevigrace.diva.lib.permission.models
 import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.lib.permission.models.api.PermissionResponse
 import io.github.juevigrace.diva.lib.core.models.Role
 import io.github.juevigrace.diva.lib.core.models.safeRole
-import kotlin.js.ExperimentalJsExport
+import io.github.juevigrace.diva.lib.permission.models.api.PermissionResponse
 
 data class Permission(
     val id: String,

@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package com.diva.app.media.models
@@ -11,7 +10,6 @@ import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.user.models.User
-import kotlin.js.ExperimentalJsExport
 import kotlin.time.Clock
 
 data class Media(

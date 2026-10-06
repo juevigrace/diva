@@ -1,19 +1,19 @@
 package com.diva.app.profile.data
 
-import com.diva.app.profile.models.Profile
 import com.diva.app.profile.domain.ProfileRepository
+import com.diva.app.profile.models.Profile
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
-import io.github.juevigrace.diva.lib.user.preferences.models.Theme
 import io.github.juevigrace.diva.lib.core.models.Role
-import io.github.juevigrace.diva.lib.user.models.UserStatus
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
 import io.github.juevigrace.diva.lib.user.domain.UserDevicesRepository
 import io.github.juevigrace.diva.lib.user.domain.UserPreferencesRepository
 import io.github.juevigrace.diva.lib.user.domain.UserProfileRepository
 import io.github.juevigrace.diva.lib.user.domain.UserRepository
 import io.github.juevigrace.diva.lib.user.domain.UserStateRepository
+import io.github.juevigrace.diva.lib.user.models.UserStatus
+import io.github.juevigrace.diva.lib.user.preferences.models.Theme
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine

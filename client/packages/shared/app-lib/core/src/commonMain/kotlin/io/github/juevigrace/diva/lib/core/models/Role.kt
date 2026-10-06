@@ -1,10 +1,8 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package io.github.juevigrace.diva.lib.core.models
 
 import io.github.juevigrace.diva.core.DivaJsExport
-import kotlin.js.ExperimentalJsExport
 
 enum class Role {
     ADMIN,

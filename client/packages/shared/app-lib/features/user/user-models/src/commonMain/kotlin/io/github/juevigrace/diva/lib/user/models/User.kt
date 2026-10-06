@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package io.github.juevigrace.diva.lib.user.models
@@ -7,15 +6,14 @@ import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.models.Role
-import io.github.juevigrace.diva.lib.user.models.api.UserResponse
 import io.github.juevigrace.diva.lib.core.models.safeRole
 import io.github.juevigrace.diva.lib.user.actions.models.UserAction
 import io.github.juevigrace.diva.lib.user.device.models.UserDevice
+import io.github.juevigrace.diva.lib.user.models.api.UserResponse
 import io.github.juevigrace.diva.lib.user.permissions.models.UserPermission
 import io.github.juevigrace.diva.lib.user.preferences.models.UserPreferences
 import io.github.juevigrace.diva.lib.user.profile.models.UserProfile
 import io.github.juevigrace.diva.lib.user.state.models.UserState
-import kotlin.js.ExperimentalJsExport
 import kotlin.time.Clock
 
 data class User(

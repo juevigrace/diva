@@ -1,12 +1,12 @@
 package com.diva.app.playlist.data
 
+import com.diva.app.collection.playlist.models.ModerationStatus
+import com.diva.app.collection.playlist.models.Playlist
+import com.diva.app.collection.playlist.models.PlaylistSuggestions
 import com.diva.app.playlist.database.PlaylistContributorStorage
 import com.diva.app.playlist.database.PlaylistMetadataStorage
 import com.diva.app.playlist.database.PlaylistSuggestionsStorage
 import com.diva.app.playlist.domain.PlaylistRepository
-import com.diva.app.collection.playlist.models.ModerationStatus
-import com.diva.app.collection.playlist.models.Playlist
-import com.diva.app.collection.playlist.models.PlaylistSuggestions
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.lib.user.models.User

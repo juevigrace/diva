@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package com.diva.app.collection.mix.models
@@ -6,7 +5,6 @@ package com.diva.app.collection.mix.models
 import com.diva.app.collection.mix.models.api.MixResponse
 import com.diva.app.collection.models.Collection
 import io.github.juevigrace.diva.core.DivaJsExport
-import kotlin.js.ExperimentalJsExport
 
 data class Mix(
     val collection: Collection,

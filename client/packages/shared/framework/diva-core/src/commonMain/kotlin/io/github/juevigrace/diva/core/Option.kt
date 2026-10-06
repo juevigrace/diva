@@ -1,9 +1,7 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package io.github.juevigrace.diva.core
 
-import kotlin.js.ExperimentalJsExport
 
 sealed class Option<out T : Any> {
     val isSome: Boolean

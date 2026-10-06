@@ -1,13 +1,13 @@
 package com.diva.app.player.data
 
+import com.diva.app.media.models.Media
 import com.diva.app.player.database.PlaybackHistoryStorage
 import com.diva.app.player.database.PlayerSettingStorage
 import com.diva.app.player.database.ResumePointStorage
 import com.diva.app.player.domain.PlayerRepository
-import com.diva.app.media.models.Media
+import com.diva.app.player.models.PlayerSetting
 import com.diva.app.player.playback.models.PlaybackHistory
 import com.diva.app.player.playback.models.ResumePoint
-import com.diva.app.player.models.PlayerSetting
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
 

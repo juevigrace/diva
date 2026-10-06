@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package io.github.juevigrace.diva.lib.user.state.models
@@ -6,10 +5,9 @@ package io.github.juevigrace.diva.lib.user.state.models
 import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.lib.user.state.models.api.UserStateResponse
 import io.github.juevigrace.diva.lib.user.models.UserStatus
 import io.github.juevigrace.diva.lib.user.models.safeUserStatus
-import kotlin.js.ExperimentalJsExport
+import io.github.juevigrace.diva.lib.user.state.models.api.UserStateResponse
 
 data class UserState(
     val verified: Boolean = false,

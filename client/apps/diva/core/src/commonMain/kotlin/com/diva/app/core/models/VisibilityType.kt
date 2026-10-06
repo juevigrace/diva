@@ -1,10 +1,8 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package com.diva.app.core.models
 
 import io.github.juevigrace.diva.core.DivaJsExport
-import kotlin.js.ExperimentalJsExport
 
 enum class VisibilityType {
     PUBLIC,

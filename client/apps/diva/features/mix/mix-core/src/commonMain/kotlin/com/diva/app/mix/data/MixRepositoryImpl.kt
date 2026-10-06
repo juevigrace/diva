@@ -1,8 +1,8 @@
 package com.diva.app.mix.data
 
+import com.diva.app.collection.mix.models.Mix
 import com.diva.app.mix.database.MixMetadataStorage
 import com.diva.app.mix.domain.MixRepository
-import com.diva.app.collection.mix.models.Mix
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.flow.Flow
 

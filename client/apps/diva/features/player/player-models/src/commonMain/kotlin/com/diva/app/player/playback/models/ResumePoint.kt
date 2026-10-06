@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package com.diva.app.player.playback.models
@@ -6,7 +5,6 @@ package com.diva.app.player.playback.models
 import com.diva.app.media.models.Media
 import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.lib.user.models.User
-import kotlin.js.ExperimentalJsExport
 import kotlin.time.Clock
 
 data class ResumePoint(

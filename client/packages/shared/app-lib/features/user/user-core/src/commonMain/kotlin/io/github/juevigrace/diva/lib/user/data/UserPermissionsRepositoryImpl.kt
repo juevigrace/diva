@@ -1,12 +1,12 @@
 package io.github.juevigrace.diva.lib.user.data
 
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.lib.user.database.permissions.UserPermissionsStorage
-import io.github.juevigrace.diva.lib.user.permissions.models.UserPermission
-import io.github.juevigrace.diva.lib.session.domain.withSession
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
+import io.github.juevigrace.diva.lib.session.domain.withSession
 import io.github.juevigrace.diva.lib.user.data.api.client.UserPermissionsApi
+import io.github.juevigrace.diva.lib.user.database.permissions.UserPermissionsStorage
 import io.github.juevigrace.diva.lib.user.domain.UserPermissionsRepository
+import io.github.juevigrace.diva.lib.user.permissions.models.UserPermission
 import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

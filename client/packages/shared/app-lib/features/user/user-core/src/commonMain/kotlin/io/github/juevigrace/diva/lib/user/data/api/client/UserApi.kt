@@ -1,7 +1,7 @@
 package io.github.juevigrace.diva.lib.user.data.api.client
 
-import io.github.juevigrace.diva.lib.core.models.api.ApiResponse
 import io.github.juevigrace.diva.lib.auth.models.api.UpdatePasswordDto
+import io.github.juevigrace.diva.lib.core.models.api.ApiResponse
 import io.github.juevigrace.diva.lib.core.models.api.pagination.PaginatedResponse
 import io.github.juevigrace.diva.lib.user.models.api.CreateUserDto
 import io.github.juevigrace.diva.lib.user.models.api.UpdateEmailDto

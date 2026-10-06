@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package io.github.juevigrace.diva.lib.user.profile.models
@@ -7,7 +6,6 @@ import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.user.profile.models.api.UserProfileResponse
-import kotlin.js.ExperimentalJsExport
 
 data class UserProfile(
     val firstName: String = "",

@@ -6,7 +6,6 @@ import io.github.juevigrace.diva.lib.verification.presentation.state.Verificatio
 import io.github.juevigrace.diva.ui.navigation.Navigator
 import io.github.juevigrace.diva.ui.viewmodel.DivaViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 
 class VerificationViewModel(

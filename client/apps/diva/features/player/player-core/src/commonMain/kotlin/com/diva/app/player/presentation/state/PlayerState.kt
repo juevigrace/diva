@@ -2,10 +2,10 @@ package com.diva.app.player.presentation.state
 
 import com.diva.app.media.models.Media
 import com.diva.app.media.models.MediaMetadata
-import io.github.juevigrace.diva.core.getOrNull
-import io.github.juevigrace.diva.lib.user.models.User
 import com.diva.app.player.models.PlayerSetting
 import com.diva.app.player.models.RepeatMode
+import io.github.juevigrace.diva.core.getOrNull
+import io.github.juevigrace.diva.lib.user.models.User
 
 data class PlayerState(
     val title: String = "Player",

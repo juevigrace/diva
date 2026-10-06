@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package io.github.juevigrace.diva.lib.core.models.api.pagination
@@ -6,7 +5,6 @@ package io.github.juevigrace.diva.lib.core.models.api.pagination
 import io.github.juevigrace.diva.core.DivaJsExport
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlin.js.ExperimentalJsExport
 
 @Serializable
 data class PaginationInfo(

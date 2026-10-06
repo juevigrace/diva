@@ -3,12 +3,12 @@ package io.github.juevigrace.diva.lib.user.data
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrDefault
 import io.github.juevigrace.diva.core.map
-import io.github.juevigrace.diva.lib.user.database.profile.UserProfileStorage
-import io.github.juevigrace.diva.lib.user.profile.models.UserProfile
-import io.github.juevigrace.diva.lib.session.domain.withSession
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
+import io.github.juevigrace.diva.lib.session.domain.withSession
 import io.github.juevigrace.diva.lib.user.data.api.client.UserProfileApi
+import io.github.juevigrace.diva.lib.user.database.profile.UserProfileStorage
 import io.github.juevigrace.diva.lib.user.domain.UserProfileRepository
+import io.github.juevigrace.diva.lib.user.profile.models.UserProfile
 import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.flow.Flow
 

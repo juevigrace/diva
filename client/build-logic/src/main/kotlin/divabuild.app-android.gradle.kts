@@ -1,6 +1,5 @@
 import divabuild.internal.buildLogicResourcesDir
 import divabuild.internal.libs
-import org.gradle.api.JavaVersion
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {

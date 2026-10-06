@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package io.github.juevigrace.diva.lib.session.models
@@ -6,7 +5,6 @@ package io.github.juevigrace.diva.lib.session.models
 import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.lib.session.models.api.SessionDataDto
 import io.github.juevigrace.diva.lib.session.models.api.SessionResponse
-import kotlin.js.ExperimentalJsExport
 import kotlin.time.Clock
 
 data class Session(

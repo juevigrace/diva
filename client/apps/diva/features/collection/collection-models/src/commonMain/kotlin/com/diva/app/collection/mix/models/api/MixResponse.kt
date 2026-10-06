@@ -1,11 +1,8 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package com.diva.app.collection.mix.models.api
 
-import com.diva.app.collection.models.api.CollectionResponse
 import io.github.juevigrace.diva.core.DivaJsExport
-import kotlin.js.ExperimentalJsExport
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

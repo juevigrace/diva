@@ -1,11 +1,11 @@
 package io.github.juevigrace.diva.lib.user.data
 
 import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.lib.session.domain.SessionRepository
+import io.github.juevigrace.diva.lib.session.domain.withSession
+import io.github.juevigrace.diva.lib.user.data.api.client.UserDevicesApi
 import io.github.juevigrace.diva.lib.user.database.devices.UserDevicesStorage
 import io.github.juevigrace.diva.lib.user.device.models.UserDevice
-import io.github.juevigrace.diva.lib.session.domain.withSession
-import io.github.juevigrace.diva.lib.session.domain.SessionRepository
-import io.github.juevigrace.diva.lib.user.data.api.client.UserDevicesApi
 import io.github.juevigrace.diva.lib.user.domain.UserDevicesRepository
 import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.async

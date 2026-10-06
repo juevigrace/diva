@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package com.diva.app.media.tag.models
@@ -7,7 +6,6 @@ import com.diva.app.media.tag.models.api.TagResponse
 import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
-import kotlin.js.ExperimentalJsExport
 import kotlin.time.Clock
 
 data class Tag(

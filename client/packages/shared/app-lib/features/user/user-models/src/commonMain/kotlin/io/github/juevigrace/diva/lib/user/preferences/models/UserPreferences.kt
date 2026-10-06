@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalJsExport::class)
 @file:DivaJsExport
 
 package io.github.juevigrace.diva.lib.user.preferences.models
@@ -7,7 +6,6 @@ import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.user.preferences.models.api.UserPreferencesResponse
-import kotlin.js.ExperimentalJsExport
 
 data class UserPreferences(
     val theme: Theme = Theme.SYSTEM,

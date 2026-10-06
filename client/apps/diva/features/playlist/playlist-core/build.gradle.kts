@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.projects
-
 plugins {
     id("divabuild.diva-app-ui")
 }

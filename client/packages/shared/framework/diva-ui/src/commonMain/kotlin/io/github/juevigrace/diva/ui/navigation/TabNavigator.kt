@@ -34,10 +34,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import kotlin.collections.dropLast
-import kotlin.collections.last
-import kotlin.collections.plus
-import kotlin.collections.take
 
 interface TabNavigator : Navigator {
     val tabs: List<Tab>

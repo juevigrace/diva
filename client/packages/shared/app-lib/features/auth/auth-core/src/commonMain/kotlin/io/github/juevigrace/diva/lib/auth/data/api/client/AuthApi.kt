@@ -1,11 +1,11 @@
 package io.github.juevigrace.diva.lib.auth.data.api.client
 
-import io.github.juevigrace.diva.lib.core.models.api.ApiResponse
 import io.github.juevigrace.diva.lib.auth.models.api.ForgotPasswordConfirmDto
-import io.github.juevigrace.diva.lib.session.models.api.SessionDataDto
-import io.github.juevigrace.diva.lib.session.models.api.SessionResponse
 import io.github.juevigrace.diva.lib.auth.models.api.SignInDto
 import io.github.juevigrace.diva.lib.auth.models.api.SignUpDto
+import io.github.juevigrace.diva.lib.core.models.api.ApiResponse
+import io.github.juevigrace.diva.lib.session.models.api.SessionDataDto
+import io.github.juevigrace.diva.lib.session.models.api.SessionResponse
 import io.github.juevigrace.diva.network.client.DivaClient
 import io.github.juevigrace.diva.network.client.postAs
 
