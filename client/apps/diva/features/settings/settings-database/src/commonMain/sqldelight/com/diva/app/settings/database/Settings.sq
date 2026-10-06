@@ -1,0 +1,12 @@
+upsert:
+INSERT OR REPLACE INTO diva_settings (user_id, port, host, is_desktop)
+VALUES (?, ?, ?, ?);
+
+findByUser:
+SELECT *
+FROM diva_settings
+WHERE user_id = ?;
+
+deleteByUser:
+DELETE FROM diva_settings
+WHERE user_id = ?;

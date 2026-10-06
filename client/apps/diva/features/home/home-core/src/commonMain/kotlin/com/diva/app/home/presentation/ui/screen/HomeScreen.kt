@@ -1,10 +1,14 @@
 package com.diva.app.home.presentation.ui.screen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,6 +20,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,19 +54,6 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-/**
- * Container for every tab. It owns the adaptive chrome only: the bottom bar and the rail
- * or drawer. Every destination below it is a self contained screen that brings its own
- * [io.github.juevigrace.diva.ui.layout.Screen] and top bar, so there is nothing left to
- * swap out centrally.
- *
- * Three view models are resolved here rather than inside their entries on purpose. Nav3
- * gives every entry its own ViewModelStore, so a view model created inside an entry is a
- * different instance from the one another entry reads:
- *  - the player, because its mini player sits in the bottom bar, outside the nav host;
- *  - search, shared by the home tab's inline field and the search results destination;
- *  - folders, shared by the tab root and the pushed directory detail.
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
@@ -79,6 +71,20 @@ fun HomeScreen() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     AdaptiveScreen(
+        topBar = {
+            // TODO: have only this on desktop
+            CenterAlignedTopAppBar(
+                title = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+
+                    }
+                }
+            )
+        },
         bottomBar = {
             val style = LocalNavStyle.current
             Column {
@@ -101,7 +107,6 @@ fun HomeScreen() {
                                     )
                                 },
                                 label = { Text(stringResource(tab.title)) },
-                                alwaysShowLabel = true,
                             )
                         }
                     }

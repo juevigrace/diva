@@ -10,7 +10,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +32,7 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlin.collections.dropLast
 import kotlin.collections.last
@@ -107,6 +107,12 @@ internal class TabNavigatorImpl(
     /**
      * Points the navigator at [history]'s last tab and swaps [backStack] over to that tab's
      * stack, saving the outgoing tab's stack so it comes back when the user returns to it.
+     *
+     * The two writes below must stay adjacent with no suspension between them. The app's back
+     * handler derives `enabled` from both flows at once, so anything that yields in between lets
+     * it see the tab history already pointing at the new tab while the linear stack still holds
+     * the outgoing one — back handling then breaks silently rather than visibly. Both are
+     * synchronous `MutableStateFlow` writes today, which is what makes that hold.
      */
     private fun switchTo(history: List<Tab>) {
         val target = history.last()
@@ -142,6 +148,15 @@ internal class TabNavigatorImpl(
         return true
     }
 
+    /**
+     * Collapses [TabBackStack.tabHistory] down to the selected tab, leaving every other tab's
+     * stack parked in [TabBackStack.savedStacks] where [selectTab] picks it up again.
+     *
+     * Call [selectTab] *before* this, never after. Clearing first pins the history to the
+     * current tab, so a later [selectTab] pushes onto that pin and re-enables back out of the
+     * root that was just meant to become the bottom of the stack. Nothing in production calls
+     * this yet, so the ordering trap is unguarded by callers.
+     */
     override fun clearTabHistory() {
         tabBackStack.update { state ->
             state.copy(tabHistory = listOf(state.selectedTab))
@@ -196,6 +211,22 @@ internal class TabNavigatorImpl(
 
 val LocalTabNavigator = staticCompositionLocalOf<TabNavigator> { error("No TabNavigator provided") }
 
+/**
+ * Remembers a [TabNavigator] whose stack survives process death.
+ *
+ * The saved stack is applied while the navigator is still being created rather than from an
+ * effect, so [TabNavHost] never draws the fresh default for a frame before the restore lands.
+ * Afterwards the linear stack is mirrored back into [navBackStack], mutated in place because
+ * `rememberSaveable` holds that instance and serializes it as-is when the platform saves.
+ *
+ * Only the selected tab's linear stack round-trips. [TabBackStack.tabHistory] and
+ * [TabBackStack.savedStacks] are not persisted, so after restoration the user resumes on the
+ * tab they were on but cannot tab back to the ones they visited before it, and any other tab
+ * returns to its root rather than to the stack it was left on.
+ *
+ * [configuration] must carry a `SerializersModule` registering every [NavKey] subtype, or
+ * `rememberNavBackStack` rejects the default module outright.
+ */
 @Composable
 fun rememberTabNavigator(
     tabs: List<Tab>,
@@ -207,13 +238,21 @@ fun rememberTabNavigator(
     } else {
         null
     }
-    val navigator = remember(tabs, startTab) { TabNavigatorImpl(tabs, startTab) }
+    val navigator = remember(navBackStack, tabs, startTab) {
+        TabNavigatorImpl(tabs, startTab).also { nav ->
+            navBackStack?.let { nav.restoreFrom(it.toList()) }
+        }
+    }
     if (navBackStack != null) {
-        LaunchedEffect(navigator) {
-            snapshotFlow { navBackStack.toList() }
+        LaunchedEffect(navBackStack, navigator) {
+            navigator.backStack
+                .map { it.entries }
                 .distinctUntilChanged()
                 .collect { entries ->
-                    navigator.restoreFrom(entries)
+                    if (navBackStack.toList() != entries) {
+                        navBackStack.clear()
+                        navBackStack.addAll(entries)
+                    }
                 }
         }
     }

@@ -27,7 +27,6 @@ kotlin {
             implementation(projects.features.devices.devicesDatabase)
             implementation(projects.features.permissions.permissionsDatabase)
             implementation(projects.features.session.sessionDatabase)
-            implementation(projects.features.settings.settingsDatabase)
             implementation(projects.features.user.userDatabase)
         }
     }
@@ -43,7 +42,6 @@ sqldelight {
             dependency(project(":features:devices:devices-database"))
             dependency(project(":features:permissions:permissions-database"))
             dependency(project(":features:session:session-database"))
-            dependency(project(":features:settings:settings-database"))
             dependency(project(":features:user:user-database"))
         }
     }

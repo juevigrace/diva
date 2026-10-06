@@ -67,7 +67,6 @@ include(
 
 include(
     ":features:settings:settings-core",
-    ":features:settings:settings-database",
     ":features:settings:settings-models"
 )
 

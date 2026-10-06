@@ -15,7 +15,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core)
+            api(projects.core)
             implementation(projects.database)
             implementation(projects.ui)
 
@@ -30,6 +30,7 @@ kotlin {
             implementation(projects.features.library.libraryCore)
             implementation(projects.features.search.searchCore)
             implementation(projects.features.profile.profileCore)
+            implementation(projects.features.settings.settingsCore)
 
             implementation(libs.diva.lib.auth.core)
             implementation(libs.diva.lib.user.core)

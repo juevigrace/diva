@@ -1,14 +1,12 @@
 package io.github.juevigrace.diva.core
 
-import kotlin.js.ExperimentalJsExport
-
 /**
  * Annotation to export declarations to JavaScript.
  *
  * This is a wrapper around [kotlin.js.JsExport] that is safely ignored by other platforms,
  * including WasmJS where declaration-level [kotlin.js.JsExport] is restricted to functions.
  */
-@OptIn(ExperimentalMultiplatform::class, ExperimentalJsExport::class)
+@OptIn(ExperimentalMultiplatform::class)
 @OptionalExpectation
 @Target(
     AnnotationTarget.CLASS,

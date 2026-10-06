@@ -92,6 +92,7 @@ diva-lib-session-core = { group = "io.github.juevigrace", name = "diva-lib-sessi
 diva-lib-session-database = { group = "io.github.juevigrace", name = "diva-lib-session-database", version.ref = "diva-lib" }
 diva-lib-session-models = { group = "io.github.juevigrace", name = "diva-lib-session-models", version.ref = "diva-lib" }
 diva-lib-settings-core = { group = "io.github.juevigrace", name = "diva-lib-settings-core", version.ref = "diva-lib" }
+diva-lib-settings-models = { group = "io.github.juevigrace", name = "diva-lib-settings-models", version.ref = "diva-lib" }
 diva-lib-user-core = { group = "io.github.juevigrace", name = "diva-lib-user-core", version.ref = "diva-lib" }
 diva-lib-user-database = { group = "io.github.juevigrace", name = "diva-lib-user-database", version.ref = "diva-lib" }
 diva-lib-user-models = { group = "io.github.juevigrace", name = "diva-lib-user-models", version.ref = "diva-lib" }

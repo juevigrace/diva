@@ -1,5 +1,5 @@
 plugins {
-    id("divabuild.app-lib-ui")
+    id("divabuild.diva-app-ui")
 }
 
 kotlin {
@@ -7,7 +7,10 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.ui)
 
+            implementation(projects.features.settings.settingsDatabase)
             implementation(projects.features.settings.settingsModels)
+
+            implementation(libs.diva.lib.settings.core)
 
             implementation(libs.diva.network)
         }

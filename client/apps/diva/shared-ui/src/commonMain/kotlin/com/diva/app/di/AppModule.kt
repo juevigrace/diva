@@ -12,10 +12,10 @@ import com.diva.app.playlist.di.playlistModule
 import com.diva.app.profile.di.profileModule
 import com.diva.app.search.di.searchModule
 import com.diva.app.server.di.serverModule
+import com.diva.app.settings.di.settingsModule
 import com.diva.app.ui.di.uiModule
 import io.github.juevigrace.diva.lib.auth.di.authModule
 import io.github.juevigrace.diva.lib.session.di.sessionModule
-import io.github.juevigrace.diva.lib.settings.di.settingsModule
 import io.github.juevigrace.diva.lib.user.di.userModule
 import org.koin.core.module.Module
 import org.koin.dsl.module

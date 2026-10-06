@@ -10,7 +10,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +33,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlin.collections.plus
 
@@ -134,6 +134,20 @@ internal class NavigatorImpl(startDestination: NavKey) : BaseNavigator(startDest
 
 val LocalNavigator = staticCompositionLocalOf<Navigator> { error("No Navigator provided") }
 
+/**
+ * Remembers a [Navigator] whose stack survives process death.
+ *
+ * The saved stack is applied while the navigator is still being created rather than from an
+ * effect, so the restored entries are in place before the first frame instead of landing one
+ * frame after the fresh default has already been drawn.
+ *
+ * Afterwards the navigator's stack is mirrored back into [navBackStack]. That instance is
+ * mutated in place and never replaced: `rememberSaveable` holds it and serializes it as-is when
+ * the platform saves, so assigning a new list would silently never be persisted.
+ *
+ * [configuration] must carry a `SerializersModule` registering every [NavKey] subtype, or
+ * `rememberNavBackStack` rejects the default module outright.
+ */
 @Composable
 fun rememberNavigator(
     startDestination: NavKey,
@@ -144,13 +158,21 @@ fun rememberNavigator(
     } else {
         null
     }
-    val navigator = remember { NavigatorImpl(startDestination) }
+    val navigator = remember(navBackStack) {
+        NavigatorImpl(startDestination).also { nav ->
+            navBackStack?.let { nav.setEntries(it.toList()) }
+        }
+    }
     if (navBackStack != null) {
-        LaunchedEffect(navBackStack) {
-            snapshotFlow { navBackStack.toList() }
+        LaunchedEffect(navBackStack, navigator) {
+            navigator.backStack
+                .map { it.entries }
                 .distinctUntilChanged()
                 .collect { entries ->
-                    navigator.setEntries(entries)
+                    if (navBackStack.toList() != entries) {
+                        navBackStack.clear()
+                        navBackStack.addAll(entries)
+                    }
                 }
         }
     }

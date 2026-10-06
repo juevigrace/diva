@@ -64,6 +64,9 @@ include(
     ":features:server:server-models",
     ":features:search:search-core",
     ":features:search:search-models",
+    ":features:settings:settings-core",
+    ":features:settings:settings-database",
+    ":features:settings:settings-models",
     ":features:profile:profile-core",
     ":features:profile:profile-models",
 )
@@ -106,6 +109,7 @@ includeBuild("../../packages/shared/app-lib") {
                 "diva-lib-session-database" to ":features:session:session-database",
                 "diva-lib-session-models" to ":features:session:session-models",
                 "diva-lib-settings-core" to ":features:settings:settings-core",
+                "diva-lib-settings-models" to ":features:settings:settings-models",
                 "diva-lib-user-core" to ":features:user:user-core",
                 "diva-lib-user-database" to ":features:user:user-database",
                 "diva-lib-user-models" to ":features:user:user-models",

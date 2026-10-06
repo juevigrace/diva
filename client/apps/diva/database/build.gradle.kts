@@ -20,6 +20,7 @@ kotlin {
             implementation(projects.features.player.playerDatabase)
             implementation(projects.features.playlist.playlistDatabase)
             implementation(projects.features.server.serverDatabase)
+            implementation(projects.features.settings.settingsDatabase)
         }
     }
 }
@@ -40,6 +41,7 @@ sqldelight {
             dependency(project(":features:player:player-database"))
             dependency(project(":features:playlist:playlist-database"))
             dependency(project(":features:server:server-database"))
+            dependency(project(":features:settings:settings-database"))
         }
     }
 }

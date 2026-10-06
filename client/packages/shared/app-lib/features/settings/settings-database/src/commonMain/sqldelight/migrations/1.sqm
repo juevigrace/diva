@@ -1,3 +1,0 @@
-CREATE TABLE IF NOT EXISTS diva_settings(
-    user_id TEXT NOT NULL PRIMARY KEY
-);
