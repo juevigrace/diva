@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.lib.settings.presentation.events.SettingsEvents
 import io.github.juevigrace.diva.lib.settings.presentation.viewmodel.SettingsViewModel
 import io.github.juevigrace.diva.ui.layout.LoadingContent
@@ -32,6 +33,7 @@ fun SettingsScreen(
         if (state.isLoading) {
             LoadingContent(modifier = Modifier.padding(innerPadding).fillMaxSize())
         } else {
+            val settings = state.settings.getOrNull()
             Box(
                 modifier = Modifier.padding(innerPadding).fillMaxSize(),
                 contentAlignment = Alignment.Center,
@@ -46,6 +48,23 @@ fun SettingsScreen(
                         text = "Manage your preferences.",
                         style = MaterialTheme.typography.bodyMedium,
                     )
+                    if (settings != null) {
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            text = "Server",
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            text = "${settings.protocol}://${settings.host}:${settings.port.getOrNull() ?: "-"}",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text = if (settings.isDesktop) "Desktop layout" else "Mobile layout",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
                 }
             }
         }

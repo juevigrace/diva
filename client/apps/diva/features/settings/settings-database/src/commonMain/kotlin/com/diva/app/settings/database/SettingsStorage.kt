@@ -29,6 +29,7 @@ class SettingsStorageImpl(
                     port = item.port.map { it.toLong() }.getOrNull(),
                     host = item.host,
                     is_desktop = item.isDesktop,
+                    protocol = item.protocol,
                 )
             }
         }
@@ -47,7 +48,9 @@ class SettingsStorageImpl(
         port: Long?,
         host: String,
         isDesktop: Boolean,
+        protocol: String,
     ): AppSettings = DivaSettings(
+        protocol = protocol,
         port = Option.of(port?.toInt()),
         host = host,
         isDesktop = isDesktop,

@@ -2,6 +2,8 @@ package com.diva.app
 
 import android.app.Application
 import com.diva.app.di.appModule
+import com.diva.app.settings.models.DivaSettings
+import io.github.juevigrace.diva.core.Option
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -13,7 +15,15 @@ class DivaApp : Application() {
         startKoin {
             androidLogger()
             androidContext(this@DivaApp)
-            modules(appModule())
+            modules(
+                appModule(
+                    DivaSettings(
+                        protocol = "http",
+                        port = Option.of(8080),
+                        host = "localhost",
+                    )
+                )
+            )
         }
     }
 }

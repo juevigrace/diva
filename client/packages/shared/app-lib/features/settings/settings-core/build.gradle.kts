@@ -9,6 +9,9 @@ kotlin {
 
             implementation(projects.features.settings.settingsModels)
 
+            implementation(projects.features.session.sessionCore)
+            implementation(projects.features.session.sessionModels)
+
             implementation(libs.diva.network)
         }
     }

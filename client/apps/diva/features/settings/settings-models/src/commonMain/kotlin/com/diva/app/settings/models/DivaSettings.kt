@@ -7,7 +7,8 @@ import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.settings.models.AppSettings
 
 data class DivaSettings(
+    override val protocol: String = "http",
     override val port: Option<Int>,
     override val host: String,
-    override val isDesktop: Boolean,
+    override val isDesktop: Boolean = false,
 ) : AppSettings

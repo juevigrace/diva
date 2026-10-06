@@ -4,5 +4,6 @@ CREATE TABLE IF NOT EXISTS diva_settings(
     user_id TEXT NOT NULL PRIMARY KEY,
     port INTEGER DEFAULT NULL,
     host TEXT NOT NULL DEFAULT '',
-    is_desktop INTEGER AS Boolean NOT NULL DEFAULT 0
+    is_desktop INTEGER AS Boolean NOT NULL DEFAULT 0,
+    protocol TEXT NOT NULL DEFAULT 'http'
 );

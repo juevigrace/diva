@@ -3,7 +3,6 @@ package com.diva.app.di
 import io.github.juevigrace.diva.network.client.DivaClient
 import io.github.juevigrace.diva.network.client.defaultConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -32,9 +31,6 @@ fun networkModule(): Module {
                 installOrReplace(Logging) {
                     logger = Logger.DEFAULT
                     level = LogLevel.ALL
-                }
-                defaultRequest {
-                    url("http://localhost:8080/")
                 }
                 // TODO: if intervals need to be set split module in platform-specific modules
                 install(WebSockets)

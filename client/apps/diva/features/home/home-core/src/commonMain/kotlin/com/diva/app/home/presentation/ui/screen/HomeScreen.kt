@@ -72,18 +72,20 @@ fun HomeScreen() {
 
     AdaptiveScreen(
         topBar = {
-            // TODO: have only this on desktop
-            CenterAlignedTopAppBar(
-                title = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
+            // read the actual settings state
+            if (true) {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
 
+                        }
                     }
-                }
-            )
+                )
+            }
         },
         bottomBar = {
             val style = LocalNavStyle.current

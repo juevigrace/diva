@@ -27,6 +27,8 @@ class SessionRepositoryImpl(
         }
     }
 
+    override suspend fun save(session: Session): Result<Unit> = storage.upsert(session)
+
     override suspend fun sync(): Result<Unit> {
         return withSession(
             sessionCall = this::getCurrent,

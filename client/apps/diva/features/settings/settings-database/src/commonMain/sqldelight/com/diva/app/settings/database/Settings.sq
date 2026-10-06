@@ -1,6 +1,6 @@
 upsert:
-INSERT OR REPLACE INTO diva_settings (user_id, port, host, is_desktop)
-VALUES (?, ?, ?, ?);
+INSERT OR REPLACE INTO diva_settings (user_id, port, host, is_desktop, protocol)
+VALUES (?, ?, ?, ?, ?);
 
 findByUser:
 SELECT *

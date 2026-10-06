@@ -15,6 +15,8 @@ interface SessionRepository : Repository {
 
     suspend fun getCurrent(): Result<Session>
 
+    suspend fun save(session: Session): Result<Unit>
+
     suspend fun sync(): Result<Unit>
 
     suspend fun markCurrent(id: String): Result<Unit>
