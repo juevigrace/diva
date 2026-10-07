@@ -3,15 +3,14 @@ package com.diva.app.collection.domain
 import com.diva.app.collection.models.Collection
 import com.diva.app.collection.models.CollectionMedia
 import com.diva.app.media.models.Media
-import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow
 
 
 interface CollectionRepository : Repository {
-    fun getCollections(): Flow<Result<List<Collection>>>
+    fun observe(): Flow<Result<List<Collection>>>
 
-    fun getCollection(id: String): Flow<Result<Option<Collection>>>
+    fun observe(id: String): Flow<Result<Collection>>
 
     suspend fun getMediaForCollection(collectionId: String): Result<List<Media>>
 
@@ -27,7 +26,7 @@ interface CollectionRepository : Repository {
 
     suspend fun sync(): Result<Unit>
 
-    suspend fun save(collection: Collection): Result<Unit>
+    suspend fun upsert(collection: Collection): Result<Unit>
 
     suspend fun delete(id: String): Result<Unit>
 }

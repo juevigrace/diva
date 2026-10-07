@@ -18,6 +18,9 @@ kotlin {
             implementation(projects.features.player.playerCore)
 
             implementation(projects.features.server.serverCore)
+
+            implementation(libs.diva.lib.session.core)
+            implementation(libs.diva.lib.session.models)
         }
     }
 }

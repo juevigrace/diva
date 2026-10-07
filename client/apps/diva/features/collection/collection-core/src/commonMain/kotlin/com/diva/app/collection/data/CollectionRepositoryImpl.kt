@@ -6,18 +6,21 @@ import com.diva.app.collection.domain.CollectionRepository
 import com.diva.app.collection.models.Collection
 import com.diva.app.collection.models.CollectionMedia
 import com.diva.app.media.models.Media
-import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.core.getOrThrow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class CollectionRepositoryImpl(
     private val storage: CollectionStorage,
     private val mediaStorage: CollectionMediaStorage,
 ) : CollectionRepository {
 
-    override fun getCollections(): Flow<Result<List<Collection>>> = storage.getAllFlow()
+    override fun observe(): Flow<Result<List<Collection>>> = storage.getAllFlow()
 
-    override fun getCollection(id: String): Flow<Result<Option<Collection>>> {
-        return storage.getByIdFlow(id)
+    override fun observe(id: String): Flow<Result<Collection>> = storage.getByIdFlow(id).map { result ->
+        result.mapCatching { option ->
+            option.getOrThrow { IllegalStateException("No collection '$id'") }
+        }
     }
 
     override suspend fun getMediaForCollection(collectionId: String): Result<List<Media>> {
@@ -48,7 +51,7 @@ class CollectionRepositoryImpl(
         return Result.success(Unit)
     }
 
-    override suspend fun save(collection: Collection): Result<Unit> = storage.upsert(collection)
+    override suspend fun upsert(collection: Collection): Result<Unit> = storage.upsert(collection)
 
     override suspend fun delete(id: String): Result<Unit> = storage.delete(id)
 }

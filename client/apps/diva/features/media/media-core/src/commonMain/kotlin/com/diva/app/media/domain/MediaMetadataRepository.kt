@@ -5,11 +5,11 @@ import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow
 
 interface MediaMetadataRepository : Repository {
-    fun getMetadata(mediaId: String): Flow<Result<MediaMetadata>>
+    fun observe(mediaId: String): Flow<Result<MediaMetadata>>
 
     suspend fun sync(): Result<Unit>
 
-    suspend fun save(metadata: MediaMetadata): Result<Unit>
+    suspend fun upsert(metadata: MediaMetadata): Result<Unit>
 
     suspend fun delete(mediaId: String): Result<Unit>
 }

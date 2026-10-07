@@ -27,13 +27,13 @@ class SearchRepositoryImpl(
             return Result.success(SearchResults())
         }
 
-        return withSession(sessionRepository::getCurrent) { session ->
-            val media = mediaRepository.getMedia().first().getOrDefault(emptyList())
-            val folders = folderRepository.getFolders(session.userId).first().getOrDefault(emptyList())
-            val collections = collectionRepository.getCollections().first().getOrDefault(emptyList())
+        return withSession(sessionRepository::get) { session ->
+            val media = mediaRepository.observe().first().getOrDefault(emptyList())
+            val folders = folderRepository.observe().first().getOrDefault(emptyList())
+            val collections = collectionRepository.observe().first().getOrDefault(emptyList())
 
             val metadataByMediaId = media.associate { item ->
-                val metadata = mediaMetadataRepository.getMetadata(item.id).first().getOrNull()
+                val metadata = mediaMetadataRepository.observe(item.id).first().getOrNull()
                 item.id to metadata
             }
 

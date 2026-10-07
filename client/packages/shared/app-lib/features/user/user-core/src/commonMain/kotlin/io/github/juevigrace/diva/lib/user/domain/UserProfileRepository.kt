@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 interface UserProfileRepository : Repository {
     val client: DivaClient
 
-    fun getProfile(userId: String): Flow<Result<UserProfile>>
+    fun observe(): Flow<Result<UserProfile>>
 
-    suspend fun sync(userId: String): Result<Unit>
+    suspend fun sync(): Result<Unit>
 
-    suspend fun save(userId: String, profile: UserProfile): Result<Unit>
+    suspend fun upsert(profile: UserProfile): Result<Unit>
 }

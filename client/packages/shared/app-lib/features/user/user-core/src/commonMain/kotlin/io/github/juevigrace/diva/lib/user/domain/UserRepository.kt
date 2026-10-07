@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.Flow
 interface UserRepository : Repository {
     val client: DivaClient
 
-    fun getUsers(): Flow<Result<List<User>>>
+    fun observe(): Flow<Result<List<User>>>
 
-    fun getUser(id: String): Flow<Result<User>>
+    fun observe(id: String): Flow<Result<User>>
 
     suspend fun sync(): Result<Unit>
 
-    suspend fun save(user: User): Result<Unit>
+    suspend fun upsert(user: User): Result<Unit>
 
     suspend fun delete(id: String): Result<Unit>
 }

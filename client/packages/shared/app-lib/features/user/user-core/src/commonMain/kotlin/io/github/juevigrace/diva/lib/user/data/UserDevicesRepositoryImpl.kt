@@ -1,9 +1,9 @@
 package io.github.juevigrace.diva.lib.user.data
 
-import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.core.getOrThrow
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
+import io.github.juevigrace.diva.lib.session.domain.observeSession
 import io.github.juevigrace.diva.lib.session.domain.withSession
-import io.github.juevigrace.diva.lib.session.domain.withSessionFlow
 import io.github.juevigrace.diva.lib.user.data.api.client.UserDevicesApi
 import io.github.juevigrace.diva.lib.user.database.devices.UserDevicesStorage
 import io.github.juevigrace.diva.lib.user.device.models.UserDevice
@@ -20,26 +20,25 @@ class UserDevicesRepositoryImpl(
     private val sessionRepository: SessionRepository,
     private val api: UserDevicesApi,
 ) : UserDevicesRepository {
-    override fun getDevices(): Flow<Result<List<UserDevice>>> {
-        return withSessionFlow(sessionRepository::getCurrent) { session ->
-            storage.findAllFlow(session.userId).collect { result -> emit(result) }
-        }
+    override fun observe(): Flow<Result<List<UserDevice>>> = observeSession(sessionRepository::observe) { session ->
+        storage.findAllFlow(session.userId)
     }
 
-    override fun getDevice(deviceId: String): Flow<Result<UserDevice>> {
-        return withSessionFlow(sessionRepository::getCurrent) { session ->
-            storage.findOneFlow(session.userId, deviceId).collect { result ->
+    override fun observe(deviceId: String): Flow<Result<UserDevice>> =
+        observeSession(sessionRepository::observe) { session ->
+            storage.findOneFlow(session.userId, deviceId).map { result ->
+                result.mapCatching { option ->
+                    option.getOrThrow { IllegalStateException("No device '$deviceId' for user '${session.userId}'") }
+                }
             }
         }
-    }
-
 
     override suspend fun sync(): Result<Unit> {
         return withSession(
-            sessionCall = sessionRepository::getCurrent,
+            sessionCall = sessionRepository::get,
             onFound = { session ->
                 api.list(
-                    uid = userId,
+                    uid = session.userId,
                     token = session.accessToken
                 ).mapCatching { responses ->
                     val results = responses.map {
@@ -61,7 +60,9 @@ class UserDevicesRepositoryImpl(
         )
     }
 
-    override suspend fun save(device: UserDevice): Result<Unit> = storage.upsert(device)
+    override suspend fun upsert(device: UserDevice): Result<Unit> = storage.upsert(device)
 
-    override suspend fun delete(userId: String, deviceId: String): Result<Unit> = storage.deleteOne(userId, deviceId)
+    override suspend fun delete(deviceId: String): Result<Unit> = withSession(sessionRepository::get) { session ->
+        storage.deleteOne(session.userId, deviceId)
+    }
 }

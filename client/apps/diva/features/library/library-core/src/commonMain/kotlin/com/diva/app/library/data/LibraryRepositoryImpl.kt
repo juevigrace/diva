@@ -1,53 +1,31 @@
 package com.diva.app.library.data
 
-import com.diva.app.folder.domain.FolderRepository
-import com.diva.app.folder.models.Folder
 import com.diva.app.library.database.FavoriteStorage
 import com.diva.app.library.domain.LibraryRepository
-import com.diva.app.media.domain.MediaRepository
 import com.diva.app.media.models.Media
-import com.diva.app.player.domain.PlayerRepository
-import com.diva.app.server.domain.ServerRepository
+import io.github.juevigrace.diva.lib.session.domain.SessionRepository
+import io.github.juevigrace.diva.lib.session.domain.observeSession
+import io.github.juevigrace.diva.lib.session.domain.withSession
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 
 class LibraryRepositoryImpl(
     private val favoriteStorage: FavoriteStorage,
-    private val mediaRepository: MediaRepository,
-    private val playerRepository: PlayerRepository,
-    private val folderRepository: FolderRepository,
-    private val serverRepository: ServerRepository,
+    private val sessionRepository: SessionRepository,
 ) : LibraryRepository {
 
-    override fun getFavorites(userId: String): Flow<Result<List<Media>>> {
-        return favoriteStorage.getFavoritesByUserFlow(userId)
+    override fun observe(): Flow<Result<List<Media>>> = observeSession(sessionRepository::observe) { session ->
+        favoriteStorage.getFavoritesByUserFlow(session.userId)
     }
 
-    override suspend fun toggleFavorite(userId: String, mediaId: String): Result<Unit> {
-        return favoriteStorage.toggle(userId, mediaId)
+    override suspend fun toggleFavorite(mediaId: String): Result<Unit> = withSession(sessionRepository::get) { session ->
+        favoriteStorage.toggle(session.userId, mediaId)
     }
 
-    override suspend fun removeFavorite(userId: String, mediaId: String): Result<Unit> {
-        return favoriteStorage.remove(userId, mediaId)
+    override suspend fun removeFavorite(mediaId: String): Result<Unit> = withSession(sessionRepository::get) { session ->
+        favoriteStorage.remove(session.userId, mediaId)
     }
 
-    override suspend fun isFavorite(userId: String, mediaId: String): Result<Boolean> {
-        return favoriteStorage.isFavorite(userId, mediaId)
-    }
-
-    override suspend fun getRecent(userId: String, limit: Long): Result<List<Media>> {
-        return playerRepository.getRecentByUser(userId, limit)
-    }
-
-    override suspend fun getResumable(userId: String): Result<List<Media>> {
-        return playerRepository.getResumableByUser(userId)
-    }
-
-    override suspend fun getFolders(userId: String): Result<List<Folder>> {
-        return folderRepository.getFolders(userId).firstOrNull() ?: Result.success(emptyList())
-    }
-
-    override suspend fun sync(): Result<Unit> {
-        return serverRepository.sync()
+    override suspend fun isFavorite(mediaId: String): Result<Boolean> = withSession(sessionRepository::get) { session ->
+        favoriteStorage.isFavorite(session.userId, mediaId)
     }
 }

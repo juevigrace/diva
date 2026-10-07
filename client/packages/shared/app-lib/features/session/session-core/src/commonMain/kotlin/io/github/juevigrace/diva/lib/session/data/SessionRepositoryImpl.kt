@@ -17,13 +17,13 @@ class SessionRepositoryImpl(
     private val storage: SessionStorage,
     private val api: SessionsApi,
 ) : SessionRepository {
-    override suspend fun getCurrent(): Result<Session> {
+    override suspend fun get(): Result<Session> {
         return storage.findCurrent().mapCatching { option ->
             option.getOrThrow { error("No current session available") }
         }
     }
 
-    override fun getCurrentFlow(): Flow<Result<Session>> {
+    override fun observe(): Flow<Result<Session>> {
         return storage.findCurrentFlow().map { result ->
             result.mapCatching { option ->
                 option.getOrThrow { error("No current session available") }
@@ -33,11 +33,11 @@ class SessionRepositoryImpl(
 
     override fun getSessions(): Flow<Result<List<Session>>> = storage.findAllFlow()
 
-    override suspend fun save(session: Session): Result<Unit> = storage.upsert(session)
+    override suspend fun upsert(session: Session): Result<Unit> = storage.upsert(session)
 
     override suspend fun sync(): Result<Unit> {
         return withSession(
-            sessionCall = this::getCurrent,
+            sessionCall = ::get,
             onFound = { current ->
                 api.listAll(current.accessToken).mapCatching { responses ->
                     val results = responses.map {

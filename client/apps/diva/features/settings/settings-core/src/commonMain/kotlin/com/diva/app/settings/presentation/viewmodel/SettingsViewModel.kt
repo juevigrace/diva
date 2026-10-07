@@ -33,10 +33,8 @@ class SettingsViewModel(
 
     private suspend fun observeSettings() {
         repository.observe().collect { result ->
-            result.map { settings ->
-                state.update { state ->
-                    state.copy(settings = Option.of(settings))
-                }
+            state.update { state ->
+                state.copy(settings = Option.of(result.getOrNull()))
             }
         }
     }

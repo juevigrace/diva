@@ -5,26 +5,35 @@ import com.diva.app.folder.database.MediaFolderLinkStorage
 import com.diva.app.folder.domain.FolderRepository
 import com.diva.app.folder.models.Folder
 import com.diva.app.media.models.Media
-import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.core.getOrThrow
+import io.github.juevigrace.diva.lib.session.domain.SessionRepository
+import io.github.juevigrace.diva.lib.session.domain.observeSession
+import io.github.juevigrace.diva.lib.session.domain.withSession
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class FolderRepositoryImpl(
     private val storage: FolderStorage,
     private val linkStorage: MediaFolderLinkStorage,
+    private val sessionRepository: SessionRepository,
 ) : FolderRepository {
 
-    override fun getFolders(userId: String): Flow<Result<List<Folder>>> {
-        return storage.getByUserFlow(userId)
+    override fun observe(): Flow<Result<List<Folder>>> = observeSession(sessionRepository::observe) { session ->
+        storage.getByUserFlow(session.userId)
     }
 
-    override fun getFolder(id: String): Flow<Result<Option<Folder>>> = storage.getByIdFlow(id)
-
-    override fun getRoots(userId: String): Flow<Result<List<Folder>>> {
-        return storage.getRootsFlow(userId)
+    override fun observe(id: String): Flow<Result<Folder>> = storage.getByIdFlow(id).map { result ->
+        result.mapCatching { option ->
+            option.getOrThrow { IllegalStateException("No folder '$id'") }
+        }
     }
 
-    override suspend fun getChildren(userId: String, parentId: String): Result<List<Folder>> {
-        return storage.getChildren(userId, parentId)
+    override fun observeRoots(): Flow<Result<List<Folder>>> = observeSession(sessionRepository::observe) { session ->
+        storage.getRootsFlow(session.userId)
+    }
+
+    override suspend fun getChildren(parentId: String): Result<List<Folder>> = withSession(sessionRepository::get) { session ->
+        storage.getChildren(session.userId, parentId)
     }
 
     override suspend fun getMediaByFolder(folderId: String): Result<List<Media>> {
@@ -43,7 +52,7 @@ class FolderRepositoryImpl(
         return Result.success(Unit)
     }
 
-    override suspend fun save(folder: Folder): Result<Unit> = storage.upsert(folder)
+    override suspend fun upsert(folder: Folder): Result<Unit> = storage.upsert(folder)
 
     override suspend fun delete(id: String): Result<Unit> = storage.delete(id)
 

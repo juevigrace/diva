@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.Flow
 interface UserDevicesRepository : Repository {
     val client: DivaClient
 
-    fun getDevices(): Flow<Result<List<UserDevice>>>
+    fun observe(): Flow<Result<List<UserDevice>>>
 
-    fun getDevice(deviceId: String): Flow<Result<UserDevice>>
+    fun observe(deviceId: String): Flow<Result<UserDevice>>
 
     suspend fun sync(): Result<Unit>
 
-    suspend fun save(device: UserDevice): Result<Unit>
+    suspend fun upsert(device: UserDevice): Result<Unit>
 
-    suspend fun delete(userId: String, deviceId: String): Result<Unit>
+    suspend fun delete(deviceId: String): Result<Unit>
 }

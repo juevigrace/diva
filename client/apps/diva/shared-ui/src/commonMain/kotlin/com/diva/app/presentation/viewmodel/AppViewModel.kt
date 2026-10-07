@@ -44,10 +44,7 @@ class AppViewModel(
     init {
         runBlocking {
             seed()
-            val settings = sessionRepository.getCurrent().mapCatching { session ->
-                settingsRepository.get(session.userId).getOrThrow()
-            }
-            publish(settings)
+            publish(settingsRepository.get())
         }
         scope.launch { observeSettings() }
     }
@@ -60,24 +57,24 @@ class AppViewModel(
     }
 
     private suspend fun seedUser() {
-        if (userRepository.getUser(LOCAL_USER_ID).first().getOrNull()?.isSome == true) return
-        userRepository.save(User(id = LOCAL_USER_ID, username = LOCAL_USERNAME, role = Role.USER))
+        if (userRepository.observe(LOCAL_USER_ID).first().getOrNull() != null) return
+        userRepository.upsert(User(id = LOCAL_USER_ID, username = LOCAL_USERNAME, role = Role.USER))
     }
 
     private suspend fun seedDevice() {
-        if (devicesRepository.getDevice(LOCAL_DEVICE_ID).first().getOrNull()?.isSome == true) return
+        if (devicesRepository.observe(LOCAL_DEVICE_ID).first().getOrNull() != null) return
         val now = Clock.System.now().toEpochMilliseconds()
         // TODO: get actual device name
         val deviceName = LOCAL_USERNAME
-        devicesRepository.save(
+        devicesRepository.upsert(
             Device(id = LOCAL_DEVICE_ID, name = deviceName, createdAt = now, updatedAt = now),
         )
     }
 
     private suspend fun seedSession() {
-        if (sessionRepository.getCurrentFlow().first().getOrNull()?.isSome == true) return
+        if (sessionRepository.observe().first().getOrNull() != null) return
         val now = Clock.System.now().toEpochMilliseconds()
-        sessionRepository.save(
+        sessionRepository.upsert(
             Session(
                 id = LOCAL_SESSION_ID,
                 userId = LOCAL_USER_ID,
@@ -96,19 +93,14 @@ class AppViewModel(
     }
 
     private suspend fun seedSettings() {
-        if (settingsRepository.get(LOCAL_USER_ID).isSuccess) return
-        settingsRepository.upsert(LOCAL_USER_ID, defaults)
+        if (settingsRepository.get().isSuccess) return
+        settingsRepository.upsert(defaults)
     }
 
     private suspend fun observeSettings() {
-        sessionRepository.getCurrent().fold(
-            onSuccess = { session ->
-                settingsRepository.observe(session.userId).collect { result ->
-                    publish(result)
-                }
-            },
-            onFailure = { },
-        )
+        settingsRepository.observe().collect { result ->
+            publish(result)
+        }
     }
 
     private fun publish(settings: Result<AppSettings>) {

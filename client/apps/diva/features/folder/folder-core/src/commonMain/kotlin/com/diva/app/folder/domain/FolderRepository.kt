@@ -2,18 +2,17 @@ package com.diva.app.folder.domain
 
 import com.diva.app.folder.models.Folder
 import com.diva.app.media.models.Media
-import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow
 
 interface FolderRepository : Repository {
-    fun getFolders(userId: String): Flow<Result<List<Folder>>>
+    fun observe(): Flow<Result<List<Folder>>>
 
-    fun getFolder(id: String): Flow<Result<Option<Folder>>>
+    fun observe(id: String): Flow<Result<Folder>>
 
-    fun getRoots(userId: String): Flow<Result<List<Folder>>>
+    fun observeRoots(): Flow<Result<List<Folder>>>
 
-    suspend fun getChildren(userId: String, parentId: String): Result<List<Folder>>
+    suspend fun getChildren(parentId: String): Result<List<Folder>>
 
     suspend fun getMediaByFolder(folderId: String): Result<List<Media>>
 
@@ -23,7 +22,7 @@ interface FolderRepository : Repository {
 
     suspend fun sync(): Result<Unit>
 
-    suspend fun save(folder: Folder): Result<Unit>
+    suspend fun upsert(folder: Folder): Result<Unit>
 
     suspend fun delete(id: String): Result<Unit>
 

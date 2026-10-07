@@ -1,6 +1,5 @@
 package io.github.juevigrace.diva.lib.user.domain
 
-import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import io.github.juevigrace.diva.lib.user.actions.models.Actions
 import io.github.juevigrace.diva.lib.user.actions.models.UserAction
@@ -10,13 +9,13 @@ import kotlinx.coroutines.flow.Flow
 interface UserActionsRepository : Repository {
     val client: DivaClient
 
-    fun getActions(userId: String): Flow<Result<List<UserAction>>>
+    fun observe(): Flow<Result<List<UserAction>>>
 
-    fun getAction(userId: String, action: Actions): Flow<Result<Option<UserAction>>>
+    fun observe(action: Actions): Flow<Result<UserAction>>
 
-    suspend fun sync(userId: String): Result<Unit>
+    suspend fun sync(): Result<Unit>
 
-    suspend fun save(userId: String, action: UserAction): Result<Unit>
+    suspend fun upsert(action: UserAction): Result<Unit>
 
     suspend fun delete(id: String): Result<Unit>
 }

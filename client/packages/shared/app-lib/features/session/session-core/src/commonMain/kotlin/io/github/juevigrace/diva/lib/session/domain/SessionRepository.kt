@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.Flow
 interface SessionRepository : Repository {
     val client: DivaClient
 
-    suspend fun getCurrent(): Result<Session>
+    suspend fun get(): Result<Session>
 
-    fun getCurrentFlow(): Flow<Result<Session>>
+    fun observe(): Flow<Result<Session>>
 
     fun getSessions(): Flow<Result<List<Session>>>
 
-    suspend fun save(session: Session): Result<Unit>
+    suspend fun upsert(session: Session): Result<Unit>
 
     suspend fun sync(): Result<Unit>
 

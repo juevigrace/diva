@@ -1,6 +1,6 @@
 package io.github.juevigrace.diva.lib.user.data
 
-import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.core.getOrThrow
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
 import io.github.juevigrace.diva.lib.session.domain.withSession
 import io.github.juevigrace.diva.lib.user.data.api.client.UserApi
@@ -9,6 +9,7 @@ import io.github.juevigrace.diva.lib.user.domain.UserRepository
 import io.github.juevigrace.diva.lib.user.models.User
 import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
     override val client: DivaClient,
@@ -16,13 +17,17 @@ class UserRepositoryImpl(
     private val sessionRepository: SessionRepository,
     private val api: UserApi,
 ) : UserRepository {
-    override fun getUsers(): Flow<Result<List<User>>> = storage.findAllFlow()
+    override fun observe(): Flow<Result<List<User>>> = storage.findAllFlow()
 
-    override fun getUser(id: String): Flow<Result<Option<User>>> = storage.findOneFlow(id)
+    override fun observe(id: String): Flow<Result<User>> = storage.findOneFlow(id).map { result ->
+        result.mapCatching { option ->
+            option.getOrThrow { IllegalStateException("No user '$id'") }
+        }
+    }
 
     override suspend fun sync(): Result<Unit> {
         return withSession(
-            sessionCall = sessionRepository::getCurrent,
+            sessionCall = sessionRepository::get,
         ) { session ->
             api.getByID(
                 uid = session.userId,
@@ -31,7 +36,7 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun save(user: User): Result<Unit> = storage.upsert(user)
+    override suspend fun upsert(user: User): Result<Unit> = storage.upsert(user)
 
     override suspend fun delete(id: String): Result<Unit> = storage.deleteOne(id)
 }

@@ -51,9 +51,10 @@ class FolderViewModel(
      * current directory is never clobbered by a recomposition.
      */
     fun onEnter(folderId: String?) {
-        val key = key(folderId)
-        if (key == key(state.value.currentFolderId)) return
-        scopes[key(state.value.currentFolderId)] = state.value
+        val key = folderId.orEmpty()
+        val currentKey = state.value.currentFolderId.orEmpty()
+        if (key == currentKey) return
+        scopes[currentKey] = state.value
         state.value = scopes.getOrPut(key) { openScope(folderId) }
     }
 
@@ -87,7 +88,7 @@ class FolderViewModel(
 
     private fun update(block: (FolderState) -> FolderState) {
         state.update(block)
-        scopes[key(state.value.currentFolderId)] = state.value
+        scopes[state.value.currentFolderId.orEmpty()] = state.value
     }
 
     private fun updateDraft(block: (CollectionDraft) -> CollectionDraft) {
@@ -99,6 +100,4 @@ class FolderViewModel(
         breadcrumbs = folderBreadcrumbs(folderId),
         entries = folderEntries(folderId.orEmpty()),
     )
-
-    private fun key(folderId: String?): String = folderId.orEmpty()
 }

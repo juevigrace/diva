@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
 interface UserPreferencesRepository : Repository {
     val client: DivaClient
 
-    fun getPreferences(userId: String): Flow<Result<UserPreferences>>
+    fun observe(): Flow<Result<UserPreferences>>
 
-    suspend fun sync(userId: String): Result<Unit>
+    suspend fun sync(): Result<Unit>
 
-    suspend fun save(userId: String, preferences: UserPreferences): Result<Unit>
+    suspend fun upsert(preferences: UserPreferences): Result<Unit>
 
-    suspend fun delete(id: String): Result<Unit>
+    suspend fun delete(userId: String): Result<Unit>
 }

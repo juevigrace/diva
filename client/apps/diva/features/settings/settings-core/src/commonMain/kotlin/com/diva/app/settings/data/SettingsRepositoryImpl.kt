@@ -15,7 +15,7 @@ class SettingsRepositoryImpl(
     private val sRepository: SessionRepository,
 ) : SettingsRepository {
     override suspend fun get(): Result<AppSettings> {
-        return withSession(sRepository::getCurrent) { s ->
+        return withSession(sRepository::get) { s ->
             storage.getByUser(s.userId).mapCatching {
                 it.getOrThrow { IllegalStateException("No settings for user '${s.userId}'") }
             }
@@ -23,7 +23,7 @@ class SettingsRepositoryImpl(
     }
 
     override fun observe(): Flow<Result<AppSettings>> {
-        return observeSession(sRepository::getCurrentFlow) { s ->
+        return observeSession(sRepository::observe) { s ->
             storage.getByUserFlow(s.userId).map { result ->
                 result.mapCatching { opt ->
                     opt.getOrThrow { IllegalStateException("No settings for user '${s.userId}'") }
@@ -33,7 +33,7 @@ class SettingsRepositoryImpl(
     }
 
     override suspend fun upsert(settings: AppSettings): Result<Unit> {
-        return withSession(sRepository::getCurrent) { s ->
+        return withSession(sRepository::get) { s ->
             storage.upsert(s.userId, settings)
         }
     }

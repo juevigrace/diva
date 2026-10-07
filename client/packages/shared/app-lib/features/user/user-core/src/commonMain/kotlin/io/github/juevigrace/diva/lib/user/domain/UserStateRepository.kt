@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 interface UserStateRepository : Repository {
     val client: DivaClient
 
-    fun getState(userId: String): Flow<Result<UserState>>
+    fun observe(): Flow<Result<UserState>>
 
-    suspend fun sync(userId: String): Result<Unit>
+    suspend fun sync(): Result<Unit>
 
-    suspend fun save(userId: String, state: UserState): Result<Unit>
+    suspend fun upsert(state: UserState): Result<Unit>
 }

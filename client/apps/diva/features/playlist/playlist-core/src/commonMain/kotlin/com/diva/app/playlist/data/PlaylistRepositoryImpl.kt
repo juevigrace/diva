@@ -7,7 +7,7 @@ import com.diva.app.playlist.database.PlaylistContributorStorage
 import com.diva.app.playlist.database.PlaylistMetadataStorage
 import com.diva.app.playlist.database.PlaylistSuggestionsStorage
 import com.diva.app.playlist.domain.PlaylistRepository
-import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.core.getOrThrow
 import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.lib.user.models.User
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +19,7 @@ class PlaylistRepositoryImpl(
     private val suggestionsStorage: PlaylistSuggestionsStorage,
 ) : PlaylistRepository {
 
-    override suspend fun getPlaylist(collectionId: String): Result<Option<Playlist>> {
+    override suspend fun get(collectionId: String): Result<Playlist> {
         val metadata = metadataStorage.getByCollection(collectionId)
         val contributors = contributorStorage.getByCollection(collectionId)
         val suggestions = suggestionsStorage.getByCollection(collectionId)
@@ -31,11 +31,13 @@ class PlaylistRepositoryImpl(
                     suggestions = suggestions.getOrElse { emptyList() },
                 )
             }
+        }.mapCatching { option ->
+            option.getOrThrow { IllegalStateException("No playlist for collection '$collectionId'") }
         }
     }
 
-    override fun getPlaylistFlow(collectionId: String): Flow<Result<Option<Playlist>>> {
-        return flow { emit(getPlaylist(collectionId)) }
+    override fun observe(collectionId: String): Flow<Result<Playlist>> {
+        return flow { emit(get(collectionId)) }
     }
 
     override suspend fun getContributors(collectionId: String): Result<List<User>> {
@@ -70,7 +72,7 @@ class PlaylistRepositoryImpl(
         return Result.success(Unit)
     }
 
-    override suspend fun save(playlist: Playlist): Result<Unit> {
+    override suspend fun upsert(playlist: Playlist): Result<Unit> {
         val collectionId = playlist.collection.id
         return metadataStorage.upsert(collectionId, playlist)
             .onSuccess {

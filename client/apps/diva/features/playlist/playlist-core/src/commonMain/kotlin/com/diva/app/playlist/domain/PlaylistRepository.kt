@@ -3,15 +3,14 @@ package com.diva.app.playlist.domain
 import com.diva.app.collection.playlist.models.ModerationStatus
 import com.diva.app.collection.playlist.models.Playlist
 import com.diva.app.collection.playlist.models.PlaylistSuggestions
-import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import io.github.juevigrace.diva.lib.user.models.User
 import kotlinx.coroutines.flow.Flow
 
 interface PlaylistRepository : Repository {
-    suspend fun getPlaylist(collectionId: String): Result<Option<Playlist>>
+    suspend fun get(collectionId: String): Result<Playlist>
 
-    fun getPlaylistFlow(collectionId: String): Flow<Result<Option<Playlist>>>
+    fun observe(collectionId: String): Flow<Result<Playlist>>
 
     suspend fun getContributors(collectionId: String): Result<List<User>>
 
@@ -29,5 +28,5 @@ interface PlaylistRepository : Repository {
 
     suspend fun sync(): Result<Unit>
 
-    suspend fun save(playlist: Playlist): Result<Unit>
+    suspend fun upsert(playlist: Playlist): Result<Unit>
 }
