@@ -2,6 +2,7 @@
 
 package io.github.juevigrace.diva.core
 
+import kotlin.js.JsName
 
 sealed class Option<out T : Any> {
     val isSome: Boolean
@@ -11,7 +12,14 @@ sealed class Option<out T : Any> {
         get() = this is None
 
     companion object {
+        @JsName("of")
         fun <T : Any> of(value: T?): Option<T> = value?.let { Some(it) } ?: None
+
+        @JsName("some")
+        fun <T : Any> some(value: T): Option<T> = Some(value)
+
+        @JsName("none")
+        fun <T : Any> none(): Option<T> = None
     }
 }
 

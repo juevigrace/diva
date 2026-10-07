@@ -1,6 +1,5 @@
 package io.github.juevigrace.diva.lib.user.domain
 
-import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import io.github.juevigrace.diva.lib.user.models.User
 import io.github.juevigrace.diva.network.client.DivaClient
@@ -11,7 +10,7 @@ interface UserRepository : Repository {
 
     fun getUsers(): Flow<Result<List<User>>>
 
-    fun getUser(id: String): Flow<Result<Option<User>>>
+    fun getUser(id: String): Flow<Result<User>>
 
     suspend fun sync(): Result<Unit>
 

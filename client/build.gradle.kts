@@ -10,10 +10,12 @@ abstract class BuildAllTask @Inject constructor(
 
     @TaskAction
     fun build() {
+        val currentJavaHome = System.getProperty("java.home")
         buildRoots.get().forEach { dir ->
             execOperations.exec {
                 workingDir = dir.asFile
-                commandLine("./gradlew", "build")
+                environment("JAVA_HOME", currentJavaHome)
+                commandLine("./gradlew", "build", "-Dorg.gradle.java.home=$currentJavaHome")
             }.rethrowFailure()
         }
     }

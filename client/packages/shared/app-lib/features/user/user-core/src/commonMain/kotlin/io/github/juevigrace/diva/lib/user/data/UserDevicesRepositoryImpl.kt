@@ -3,6 +3,7 @@ package io.github.juevigrace.diva.lib.user.data
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
 import io.github.juevigrace.diva.lib.session.domain.withSession
+import io.github.juevigrace.diva.lib.session.domain.withSessionFlow
 import io.github.juevigrace.diva.lib.user.data.api.client.UserDevicesApi
 import io.github.juevigrace.diva.lib.user.database.devices.UserDevicesStorage
 import io.github.juevigrace.diva.lib.user.device.models.UserDevice
@@ -11,6 +12,7 @@ import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class UserDevicesRepositoryImpl(
     override val client: DivaClient,
@@ -18,12 +20,21 @@ class UserDevicesRepositoryImpl(
     private val sessionRepository: SessionRepository,
     private val api: UserDevicesApi,
 ) : UserDevicesRepository {
-    override fun getDevices(userId: String): Flow<Result<List<UserDevice>>> = storage.findAllFlow(userId)
+    override fun getDevices(): Flow<Result<List<UserDevice>>> {
+        return withSessionFlow(sessionRepository::getCurrent) { session ->
+            storage.findAllFlow(session.userId).collect { result -> emit(result) }
+        }
+    }
 
-    override fun getDevice(userId: String, deviceId: String): Flow<Result<Option<UserDevice>>> =
-        storage.findOneFlow(userId, deviceId)
+    override fun getDevice(deviceId: String): Flow<Result<UserDevice>> {
+        return withSessionFlow(sessionRepository::getCurrent) { session ->
+            storage.findOneFlow(session.userId, deviceId).collect { result ->
+            }
+        }
+    }
 
-    override suspend fun sync(userId: String): Result<Unit> {
+
+    override suspend fun sync(): Result<Unit> {
         return withSession(
             sessionCall = sessionRepository::getCurrent,
             onFound = { session ->

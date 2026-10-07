@@ -1,12 +1,11 @@
 package com.diva.app.media.domain
 
 import com.diva.app.media.models.MediaMetadata
-import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow
 
 interface MediaMetadataRepository : Repository {
-    fun getMetadata(mediaId: String): Flow<Result<Option<MediaMetadata>>>
+    fun getMetadata(mediaId: String): Flow<Result<MediaMetadata>>
 
     suspend fun sync(): Result<Unit>
 

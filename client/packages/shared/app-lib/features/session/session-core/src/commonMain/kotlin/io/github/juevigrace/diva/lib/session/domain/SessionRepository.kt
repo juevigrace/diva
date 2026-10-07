@@ -1,6 +1,5 @@
 package io.github.juevigrace.diva.lib.session.domain
 
-import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import io.github.juevigrace.diva.lib.session.models.Session
 import io.github.juevigrace.diva.network.client.DivaClient
@@ -9,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
 interface SessionRepository : Repository {
     val client: DivaClient
 
-    fun getSessions(): Flow<Result<List<Session>>>
-
-    fun getCurrentSession(): Flow<Result<Option<Session>>>
-
     suspend fun getCurrent(): Result<Session>
+
+    fun getCurrentFlow(): Flow<Result<Session>>
+
+    fun getSessions(): Flow<Result<List<Session>>>
 
     suspend fun save(session: Session): Result<Unit>
 

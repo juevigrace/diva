@@ -4,9 +4,9 @@ import com.diva.app.profile.domain.ProfileRepository
 import com.diva.app.profile.models.Profile
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.lib.core.models.Role
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
+import io.github.juevigrace.diva.lib.session.domain.observeSession
 import io.github.juevigrace.diva.lib.user.domain.UserDevicesRepository
 import io.github.juevigrace.diva.lib.user.domain.UserPreferencesRepository
 import io.github.juevigrace.diva.lib.user.domain.UserProfileRepository
@@ -14,13 +14,9 @@ import io.github.juevigrace.diva.lib.user.domain.UserRepository
 import io.github.juevigrace.diva.lib.user.domain.UserStateRepository
 import io.github.juevigrace.diva.lib.user.models.UserStatus
 import io.github.juevigrace.diva.lib.user.preferences.models.Theme
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class ProfileRepositoryImpl(
     private val sessionRepository: SessionRepository,
     private val userRepository: UserRepository,
@@ -29,25 +25,21 @@ class ProfileRepositoryImpl(
     private val userPreferencesRepository: UserPreferencesRepository,
     private val userDevicesRepository: UserDevicesRepository,
 ) : ProfileRepository {
-
-    override fun observeProfile(): Flow<Result<Profile?>> {
-        return sessionRepository.getCurrentSession().flatMapLatest { sessionResult ->
-            val userId = sessionResult.orNull()?.getOrNull()?.userId
-                ?: return@flatMapLatest flowOf(Result.success<Profile?>(null))
-
+    override fun observeProfile(): Flow<Result<Profile>> {
+        return observeSession(sessionRepository::getCurrentFlow) {session ->
             combine(
-                userRepository.getUser(userId),
-                userProfileRepository.getProfile(userId),
-                userStateRepository.getState(userId),
-                userPreferencesRepository.getPreferences(userId),
-                userDevicesRepository.getDevices(userId),
+                userRepository.getUser(session.userId),
+                userProfileRepository.getProfile(session.userId),
+                userStateRepository.getState(session.userId),
+                userPreferencesRepository.getPreferences(session.userId),
+                userDevicesRepository.getDevices(),
             ) { userResult, profileResult, stateResult, preferencesResult, devicesResult ->
-                val user = userResult.orValue()
-                val profile = profileResult.orValue()
-                val state = stateResult.orValue()
-                val preferences = preferencesResult.orValue()
+                val user = userResult.getOrNull()
+                val profile = profileResult.getOrNull()
+                val state = stateResult.getOrNull()
+                val preferences = preferencesResult.getOrNull()
 
-                Result.success<Profile?>(
+                Result.success(
                     Profile(
                         username = user?.username ?: "",
                         email = user?.email ?: None,
@@ -63,16 +55,10 @@ class ProfileRepositoryImpl(
                         status = state?.status ?: UserStatus.ACTIVE,
                         theme = preferences?.theme ?: Theme.SYSTEM,
                         language = preferences?.language ?: "en",
-                        devices = devicesResult.orEmpty().map { it.device.name },
+                        devices = devicesResult.getOrDefault(defaultValue = emptyList()).map { it.device.name },
                     )
                 )
             }
         }
     }
 }
-
-private fun <T> Result<T>.orNull(): T? = fold(onSuccess = { it }, onFailure = { null })
-
-private fun <T : Any> Result<Option<T>>.orValue(): T? = orNull()?.getOrNull()
-
-private fun <T> Result<List<T>>.orEmpty(): List<T> = getOrDefault(emptyList())

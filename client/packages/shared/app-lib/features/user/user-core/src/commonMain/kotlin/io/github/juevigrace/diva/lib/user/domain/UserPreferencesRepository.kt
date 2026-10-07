@@ -1,6 +1,5 @@
 package io.github.juevigrace.diva.lib.user.domain
 
-import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.lib.core.Repository
 import io.github.juevigrace.diva.lib.user.preferences.models.UserPreferences
 import io.github.juevigrace.diva.network.client.DivaClient
@@ -9,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserPreferencesRepository : Repository {
     val client: DivaClient
 
-    fun getPreferences(userId: String): Flow<Result<Option<UserPreferences>>>
+    fun getPreferences(userId: String): Flow<Result<UserPreferences>>
 
     suspend fun sync(userId: String): Result<Unit>
 

@@ -6,6 +6,7 @@ import io.github.juevigrace.diva.lib.core.models.Role
 import io.github.juevigrace.diva.lib.user.models.UserStatus
 import io.github.juevigrace.diva.lib.user.preferences.models.Theme
 
+// todo: remove this and just use User
 data class Profile(
     val username: String = "",
     val email: Option<String> = None,

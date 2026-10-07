@@ -14,6 +14,7 @@ kotlin {
         compilerOptions {
             target = "es2015"
             freeCompilerArgs.add("-Xes-long-as-bigint")
+            optIn.add("kotlin.js.ExperimentalJsExport")
         }
     }
 

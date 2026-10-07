@@ -16,7 +16,7 @@ import com.diva.app.presentation.ui.theme.AppTypography
 import com.diva.app.presentation.ui.theme.darkScheme
 import com.diva.app.presentation.ui.theme.lightScheme
 import com.diva.app.presentation.viewmodel.AppViewModel
-import io.github.juevigrace.diva.lib.settings.presentation.ui.components.navigation.settingsNav
+import com.diva.app.settings.presentation.ui.components.navigation.settingsNav
 import io.github.juevigrace.diva.ui.DivaApp
 import io.github.juevigrace.diva.ui.layout.Screen
 import io.github.juevigrace.diva.ui.navigation.BackHandler
@@ -29,8 +29,6 @@ import io.github.juevigrace.diva.ui.navigation.TabNavigator
 import io.github.juevigrace.diva.ui.theme.DivaThemeConfig
 import io.github.juevigrace.diva.ui.theme.ThemeScheme
 import io.github.juevigrace.diva.ui.toast.ToasterHost
-import io.ktor.http.parameters
-import io.ktor.http.parametersOf
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf

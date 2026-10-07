@@ -1,6 +1,5 @@
 package io.github.juevigrace.diva.lib.session.data
 
-import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrThrow
 import io.github.juevigrace.diva.lib.session.data.api.client.SessionsApi
 import io.github.juevigrace.diva.lib.session.database.SessionStorage
@@ -11,21 +10,28 @@ import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class SessionRepositoryImpl(
     override val client: DivaClient,
     private val storage: SessionStorage,
     private val api: SessionsApi,
 ) : SessionRepository {
-    override fun getSessions(): Flow<Result<List<Session>>> = storage.findAllFlow()
-
-    override fun getCurrentSession(): Flow<Result<Option<Session>>> = storage.findCurrentFlow()
-
     override suspend fun getCurrent(): Result<Session> {
         return storage.findCurrent().mapCatching { option ->
             option.getOrThrow { error("No current session available") }
         }
     }
+
+    override fun getCurrentFlow(): Flow<Result<Session>> {
+        return storage.findCurrentFlow().map { result ->
+            result.mapCatching { option ->
+                option.getOrThrow { error("No current session available") }
+            }
+        }
+    }
+
+    override fun getSessions(): Flow<Result<List<Session>>> = storage.findAllFlow()
 
     override suspend fun save(session: Session): Result<Unit> = storage.upsert(session)
 

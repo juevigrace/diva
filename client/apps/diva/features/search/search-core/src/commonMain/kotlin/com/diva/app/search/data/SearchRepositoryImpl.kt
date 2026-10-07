@@ -10,6 +10,7 @@ import com.diva.app.search.domain.SearchRepository
 import com.diva.app.search.models.SearchResults
 import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
+import io.github.juevigrace.diva.lib.session.domain.withSession
 import kotlinx.coroutines.flow.first
 
 class SearchRepositoryImpl(
@@ -26,40 +27,36 @@ class SearchRepositoryImpl(
             return Result.success(SearchResults())
         }
 
-        val session = sessionRepository.getCurrentSession().first()
-            .orNull()?.getOrNull()
-            ?: return Result.failure(IllegalStateException("No active session"))
+        return withSession(sessionRepository::getCurrent) { session ->
+            val media = mediaRepository.getMedia().first().getOrDefault(emptyList())
+            val folders = folderRepository.getFolders(session.userId).first().getOrDefault(emptyList())
+            val collections = collectionRepository.getCollections().first().getOrDefault(emptyList())
 
-        val media = mediaRepository.getMedia().first().getOrDefault(emptyList())
-        val folders = folderRepository.getFolders(session.userId).first().getOrDefault(emptyList())
-        val collections = collectionRepository.getCollections().first().getOrDefault(emptyList())
+            val metadataByMediaId = media.associate { item ->
+                val metadata = mediaMetadataRepository.getMetadata(item.id).first().getOrNull()
+                item.id to metadata
+            }
 
-        val metadataByMediaId = media.mapNotNull { item ->
-            val metadata = mediaMetadataRepository.getMetadata(item.id).first()
-                .orNull()?.getOrNull()
-                ?: return@mapNotNull null
-            item.id to metadata
-        }.toMap()
+            val matchedMedia = media.filter { item ->
+                mediaMatches(item, metadataByMediaId[item.id], term)
+            }
+            val matchedFolders = folders.filter { folder ->
+                folder.name.contains(term, ignoreCase = true) ||
+                    folder.path.contains(term, ignoreCase = true)
+            }
+            val matchedCollections = collections.filter { collection ->
+                collection.name.contains(term, ignoreCase = true) ||
+                    collection.description.contains(term, ignoreCase = true)
+            }
 
-        val matchedMedia = media.filter { item ->
-            mediaMatches(item, metadataByMediaId[item.id], term)
-        }
-        val matchedFolders = folders.filter { folder ->
-            folder.name.contains(term, ignoreCase = true) ||
-                folder.path.contains(term, ignoreCase = true)
-        }
-        val matchedCollections = collections.filter { collection ->
-            collection.name.contains(term, ignoreCase = true) ||
-                collection.description.contains(term, ignoreCase = true)
-        }
-
-        return Result.success(
-            SearchResults(
-                media = matchedMedia,
-                folders = matchedFolders,
-                collections = matchedCollections,
+            Result.success(
+                SearchResults(
+                    media = matchedMedia,
+                    folders = matchedFolders,
+                    collections = matchedCollections,
+                )
             )
-        )
+        }
     }
 
     private fun mediaMatches(media: Media, metadata: MediaMetadata?, term: String): Boolean {
@@ -70,5 +67,3 @@ class SearchRepositoryImpl(
             metadata?.genre?.contains(term, ignoreCase = true) == true
     }
 }
-
-private fun <T> Result<T>.orNull(): T? = fold(onSuccess = { it }, onFailure = { null })

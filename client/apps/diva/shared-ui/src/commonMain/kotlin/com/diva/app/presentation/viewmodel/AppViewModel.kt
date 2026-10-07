@@ -1,6 +1,7 @@
 package com.diva.app.presentation.viewmodel
 
 import com.diva.app.presentation.state.AppState
+import com.diva.app.settings.domain.SettingsRepository
 import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.lib.core.models.Role
 import io.github.juevigrace.diva.lib.device.models.Device
@@ -10,7 +11,6 @@ import io.github.juevigrace.diva.lib.session.models.Session
 import io.github.juevigrace.diva.lib.session.models.SessionData
 import io.github.juevigrace.diva.lib.session.models.SessionStatus
 import io.github.juevigrace.diva.lib.session.models.SessionType
-import io.github.juevigrace.diva.lib.settings.domain.SettingsRepository
 import io.github.juevigrace.diva.lib.settings.models.AppSettings
 import io.github.juevigrace.diva.lib.user.domain.UserRepository
 import io.github.juevigrace.diva.lib.user.models.User
@@ -75,7 +75,7 @@ class AppViewModel(
     }
 
     private suspend fun seedSession() {
-        if (sessionRepository.getCurrentSession().first().getOrNull()?.isSome == true) return
+        if (sessionRepository.getCurrentFlow().first().getOrNull()?.isSome == true) return
         val now = Clock.System.now().toEpochMilliseconds()
         sessionRepository.save(
             Session(

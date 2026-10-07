@@ -1,4 +1,4 @@
-package io.github.juevigrace.diva.lib.settings.presentation.ui.screen
+package com.diva.app.settings.presentation.ui.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,9 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.diva.app.settings.presentation.events.SettingsEvents
+import com.diva.app.settings.presentation.viewmodel.SettingsViewModel
 import io.github.juevigrace.diva.core.getOrNull
-import io.github.juevigrace.diva.lib.settings.presentation.events.SettingsEvents
-import io.github.juevigrace.diva.lib.settings.presentation.viewmodel.SettingsViewModel
 import io.github.juevigrace.diva.ui.layout.LoadingContent
 import io.github.juevigrace.diva.ui.layout.Screen
 import io.github.juevigrace.diva.ui.navigation.BackHandler

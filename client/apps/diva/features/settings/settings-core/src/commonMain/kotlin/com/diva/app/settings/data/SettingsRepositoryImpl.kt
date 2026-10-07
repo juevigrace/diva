@@ -1,28 +1,40 @@
 package com.diva.app.settings.data
 
+import com.diva.app.settings.database.SettingsStorage
+import com.diva.app.settings.domain.SettingsRepository
 import io.github.juevigrace.diva.core.getOrThrow
-import io.github.juevigrace.diva.lib.settings.domain.SettingsRepository
+import io.github.juevigrace.diva.lib.session.domain.SessionRepository
+import io.github.juevigrace.diva.lib.session.domain.observeSession
+import io.github.juevigrace.diva.lib.session.domain.withSession
 import io.github.juevigrace.diva.lib.settings.models.AppSettings
-import io.github.juevigrace.diva.lib.settings.models.SettingsStorage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class SettingsRepositoryImpl(
     private val storage: SettingsStorage,
+    private val sRepository: SessionRepository,
 ) : SettingsRepository {
-
-    override suspend fun get(userId: String): Result<AppSettings> =
-        storage.getByUser(userId).mapCatching {
-            it.getOrThrow { IllegalStateException("No settings for user '$userId'") }
-        }
-
-    override fun observe(userId: String): Flow<Result<AppSettings>> =
-        storage.getByUserFlow(userId).map { result ->
-            result.mapCatching {
-                it.getOrThrow { IllegalStateException("No settings for user '$userId'") }
+    override suspend fun get(): Result<AppSettings> {
+        return withSession(sRepository::getCurrent) { s ->
+            storage.getByUser(s.userId).mapCatching {
+                it.getOrThrow { IllegalStateException("No settings for user '${s.userId}'") }
             }
         }
+    }
 
-    override suspend fun upsert(userId: String, settings: AppSettings): Result<Unit> =
-        storage.upsert(userId, settings)
+    override fun observe(): Flow<Result<AppSettings>> {
+        return observeSession(sRepository::getCurrentFlow) { s ->
+            storage.getByUserFlow(s.userId).map { result ->
+                result.mapCatching { opt ->
+                    opt.getOrThrow { IllegalStateException("No settings for user '${s.userId}'") }
+                }
+            }
+        }
+    }
+
+    override suspend fun upsert(settings: AppSettings): Result<Unit> {
+        return withSession(sRepository::getCurrent) { s ->
+            storage.upsert(s.userId, settings)
+        }
+    }
 }
