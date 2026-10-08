@@ -1,4 +1,4 @@
-package com.diva.app.profile.presentation.ui.components
+package com.diva.app.profile.presentation.ui.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -40,6 +40,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diva.app.generated.resources.Res
 import com.diva.app.generated.resources.profile
 import com.diva.app.profile.presentation.events.ProfileEvents
+import com.diva.app.profile.presentation.ui.components.InfoSection
+import com.diva.app.profile.presentation.ui.components.NavigationRow
+import com.diva.app.profile.presentation.ui.components.SectionTitle
 import com.diva.app.profile.presentation.viewmodel.ProfileViewModel
 import com.diva.app.ui.components.Artwork
 import io.github.juevigrace.diva.core.getOrDefault

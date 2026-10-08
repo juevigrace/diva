@@ -1,4 +1,4 @@
-package com.diva.app.search.presentation.ui.components
+package com.diva.app.search.presentation.ui.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +29,9 @@ import com.diva.app.search.presentation.state.SearchState
 import com.diva.app.search.presentation.state.collectionTypeTag
 import com.diva.app.search.presentation.state.folderTag
 import com.diva.app.search.presentation.state.mediaTypeTag
+import com.diva.app.search.presentation.ui.components.IconResultRow
+import com.diva.app.search.presentation.ui.components.SearchField
+import com.diva.app.search.presentation.ui.components.SectionHeader
 import com.diva.app.ui.components.Artwork
 import com.diva.app.ui.components.TypeBadge
 import io.github.juevigrace.diva.ui.layout.Screen

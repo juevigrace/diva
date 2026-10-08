@@ -1,4 +1,4 @@
-package com.diva.app.feed.presentation.ui.components
+package com.diva.app.feed.presentation.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

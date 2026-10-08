@@ -4,7 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import com.diva.app.feed.presentation.ui.components.FeedScreen
+import com.diva.app.feed.presentation.ui.screen.FeedScreen
 import com.diva.app.feed.presentation.viewmodel.FeedViewModel
 import org.koin.compose.viewmodel.koinViewModel
 

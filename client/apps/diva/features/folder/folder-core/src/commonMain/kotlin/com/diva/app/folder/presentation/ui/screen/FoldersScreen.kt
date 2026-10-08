@@ -1,8 +1,9 @@
-package com.diva.app.folder.presentation.ui.components
+package com.diva.app.folder.presentation.ui.screen
 
 import androidx.compose.runtime.Composable
 import com.diva.app.folder.presentation.events.FolderEvents
 import com.diva.app.folder.presentation.state.FolderState
+import com.diva.app.folder.presentation.ui.components.FoldersScaffold
 import com.diva.app.generated.resources.Res
 import com.diva.app.generated.resources.folders
 import org.jetbrains.compose.resources.stringResource

@@ -1,4 +1,4 @@
-package com.diva.app.library.presentation.ui.components
+package com.diva.app.library.presentation.ui.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
