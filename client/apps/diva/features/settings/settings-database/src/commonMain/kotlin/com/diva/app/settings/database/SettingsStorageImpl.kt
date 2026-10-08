@@ -1,17 +1,15 @@
 package com.diva.app.settings.database
 
-import com.diva.app.settings.models.DivaSettings
+import com.diva.app.settings.models.AppSettings
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.core.map
 import io.github.juevigrace.diva.database.DivaDatabase
-import io.github.juevigrace.diva.lib.settings.models.AppSettings
 import kotlinx.coroutines.flow.Flow
 
 class SettingsStorageImpl(
     private val db: DivaDatabase<DivaDB>,
-) : SettingsStorage {
-
+) : SettingsStorage<AppSettings> {
     override suspend fun getByUser(userId: String): Result<Option<AppSettings>> {
         return db.getOne { settingsQueries.findByUser(userId, ::mapToAppSettings) }
     }
@@ -48,7 +46,7 @@ class SettingsStorageImpl(
         host: String,
         isDesktop: Boolean,
         protocol: String,
-    ): AppSettings = DivaSettings(
+    ): AppSettings = AppSettings(
         protocol = protocol,
         port = Option.of(port?.toInt()),
         host = host,

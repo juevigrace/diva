@@ -26,7 +26,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.diva.app.search.presentation.events.SearchEvents
 import com.diva.app.search.presentation.state.SearchState
-import com.diva.app.search.presentation.state.TypeTag
 import com.diva.app.search.presentation.state.collectionTypeTag
 import com.diva.app.search.presentation.state.folderTag
 import com.diva.app.search.presentation.state.mediaTypeTag
@@ -54,7 +53,6 @@ fun SearchResultsScreen(
             SearchField(
                 state = state,
                 onEvent = onEvent,
-                onBack = onBack,
                 requestFocus = !isExpanded,
                 modifier = Modifier.padding(top = 8.dp),
             )
@@ -104,12 +102,52 @@ fun SearchResultsScreen(
                 if (results.media.isNotEmpty()) {
                     item { SectionHeader(title = "Media", count = results.media.size) }
                     items(results.media, key = { it.id }) { item ->
-                        MediaResultRow(
-                            title = item.title,
-                            subtitle = item.mimeType,
-                            tag = mediaTypeTag(item.mediaType),
-                            onClick = { onEvent(SearchEvents.OnOpenMedia(item)) },
-                        )
+                        val tag = mediaTypeTag(item.mediaType)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onEvent(SearchEvents.OnOpenMedia(item)) }
+                                .padding(horizontal = 20.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Artwork(
+                                seed = item.title,
+                                modifier = Modifier.size(44.dp),
+                                shape = MaterialTheme.shapes.small,
+                            )
+                            Column(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(horizontal = 12.dp),
+                            ) {
+                                Text(
+                                    text = item.title,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                ) {
+                                    TypeBadge(label = tag.label, icon = tag.icon)
+                                    if (item.mimeType.isNotBlank()) {
+                                        Text(
+                                            text = item.mimeType,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                        )
+                                    }
+                                }
+                            }
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.QueueMusic,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
                     }
                 }
                 if (results.collections.isNotEmpty()) {
@@ -134,121 +172,6 @@ fun SearchResultsScreen(
                         )
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun SectionHeader(title: String, count: Int) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 20.dp, top = 12.dp, end = 20.dp, bottom = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(text = title, style = MaterialTheme.typography.titleMedium)
-        Text(
-            text = count.toString(),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
-}
-
-@Composable
-private fun MediaResultRow(
-    title: String,
-    subtitle: String,
-    tag: TypeTag,
-    onClick: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 20.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Artwork(
-            seed = title,
-            modifier = Modifier.size(44.dp),
-            shape = MaterialTheme.shapes.small,
-        )
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 12.dp),
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                TypeBadge(label = tag.label, icon = tag.icon)
-                if (subtitle.isNotBlank()) {
-                    Text(
-                        text = subtitle,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
-            }
-        }
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.QueueMusic,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
-}
-
-@Composable
-private fun IconResultRow(
-    tag: TypeTag,
-    title: String,
-    subtitle: String,
-    onClick: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 20.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        TypeBadge(
-            label = tag.label,
-            icon = tag.icon,
-            modifier = Modifier.size(width = 84.dp, height = 32.dp),
-        )
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = 16.dp),
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            if (subtitle.isNotBlank()) {
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
             }
         }
     }

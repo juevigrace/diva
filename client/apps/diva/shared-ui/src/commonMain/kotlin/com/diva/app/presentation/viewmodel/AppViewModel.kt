@@ -2,6 +2,7 @@ package com.diva.app.presentation.viewmodel
 
 import com.diva.app.presentation.state.AppState
 import com.diva.app.settings.domain.SettingsRepository
+import com.diva.app.settings.models.AppSettings
 import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.lib.core.models.Role
 import io.github.juevigrace.diva.lib.device.models.Device
@@ -11,7 +12,7 @@ import io.github.juevigrace.diva.lib.session.models.Session
 import io.github.juevigrace.diva.lib.session.models.SessionData
 import io.github.juevigrace.diva.lib.session.models.SessionStatus
 import io.github.juevigrace.diva.lib.session.models.SessionType
-import io.github.juevigrace.diva.lib.settings.models.AppSettings
+import io.github.juevigrace.diva.lib.settings.models.Settings
 import io.github.juevigrace.diva.lib.user.domain.UserRepository
 import io.github.juevigrace.diva.lib.user.models.User
 import io.github.juevigrace.diva.network.client.DivaClient
@@ -103,11 +104,11 @@ class AppViewModel(
         }
     }
 
-    private fun publish(settings: Result<AppSettings>) {
+    private fun publish(settings: Result<Settings>) {
         settings.onSuccess(::applyNetworkConfig)
     }
 
-    private fun applyNetworkConfig(settings: AppSettings) {
+    private fun applyNetworkConfig(settings: Settings) {
         val baseUrl = buildBaseUrl(settings)
         if (baseUrl == appliedBaseUrl) return
         appliedBaseUrl = baseUrl
@@ -116,7 +117,7 @@ class AppViewModel(
         }
     }
 
-    private fun buildBaseUrl(settings: AppSettings): String {
+    private fun buildBaseUrl(settings: Settings): String {
         val protocol = settings.protocol.ifBlank { "http" }
         val host = settings.host.ifBlank { "localhost" }
         val port = settings.port.getOrNull()

@@ -10,7 +10,7 @@ kotlin {
             implementation(projects.features.settings.settingsDatabase)
             implementation(projects.features.settings.settingsModels)
 
-            implementation(libs.diva.lib.settings.core)
+            api(libs.diva.lib.settings.core)
             implementation(libs.diva.lib.session.core)
             implementation(libs.diva.lib.session.models)
 

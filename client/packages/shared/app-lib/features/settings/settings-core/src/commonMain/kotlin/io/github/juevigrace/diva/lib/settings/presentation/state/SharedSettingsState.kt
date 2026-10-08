@@ -1,9 +1,9 @@
 package io.github.juevigrace.diva.lib.settings.presentation.state
 
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.lib.settings.models.AppSettings
+import io.github.juevigrace.diva.lib.settings.models.Settings
 
 interface SharedSettingsState {
-    val settings: Option<AppSettings>
+    val settings: Option<Settings>
     val isLoading: Boolean
 }

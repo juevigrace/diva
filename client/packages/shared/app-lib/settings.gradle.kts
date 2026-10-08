@@ -38,6 +38,7 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
 include(":core")
 include(":database")
+include(":resources")
 include(":ui")
 
 include(

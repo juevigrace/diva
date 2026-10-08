@@ -6,7 +6,7 @@ import io.github.juevigrace.diva.ui.navigation.Navigator
 import io.github.juevigrace.diva.ui.viewmodel.DivaViewModel
 import kotlinx.coroutines.flow.StateFlow
 
-abstract class SharedSettingsViewModel<R : SharedSettingsRepository, S : SharedSettingsState>(
+abstract class SharedSettingsViewModel<R : SharedSettingsRepository<*>, S : SharedSettingsState>(
     protected open val repository: R,
     protected open val navigator: Navigator,
 ) : DivaViewModel() {

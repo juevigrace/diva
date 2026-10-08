@@ -4,11 +4,11 @@ package com.diva.app.settings.models
 
 import io.github.juevigrace.diva.core.DivaJsExport
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.lib.settings.models.AppSettings
+import io.github.juevigrace.diva.lib.settings.models.Settings
 
-data class DivaSettings(
+data class AppSettings(
     override val protocol: String = "http",
-    override val port: Option<Int>,
-    override val host: String,
+    override val port: Option<Int> = Option.of(8080),
+    override val host: String = "localhost",
     override val isDesktop: Boolean = false,
-) : AppSettings
+) : Settings

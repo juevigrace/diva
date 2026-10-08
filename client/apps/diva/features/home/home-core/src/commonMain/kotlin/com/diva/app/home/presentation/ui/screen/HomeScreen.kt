@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationRailItem
@@ -27,23 +29,28 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import com.diva.app.feed.presentation.ui.components.FeedScreen
+import com.diva.app.feed.presentation.ui.components.navigation.FeedRoute
+import com.diva.app.feed.presentation.viewmodel.FeedViewModel
 import com.diva.app.folder.presentation.ui.components.FolderDetailScreen
 import com.diva.app.folder.presentation.ui.components.FoldersScreen
 import com.diva.app.folder.presentation.ui.components.navigation.FolderRoute
 import com.diva.app.folder.presentation.ui.components.navigation.FoldersRoute
 import com.diva.app.folder.presentation.viewmodel.FolderViewModel
-import com.diva.app.home.presentation.ui.components.HomeContent
-import com.diva.app.home.presentation.ui.components.navigation.HomeRoute
+import com.diva.app.home.presentation.state.HomeState
+import com.diva.app.home.presentation.viewmodel.HomeViewModel
 import com.diva.app.library.presentation.ui.components.LibraryScreen
 import com.diva.app.library.presentation.ui.components.navigation.LibraryRoute
 import com.diva.app.player.presentation.ui.components.MiniPlayer
 import com.diva.app.player.presentation.viewmodel.PlayerViewModel
 import com.diva.app.profile.presentation.ui.components.ProfileScreen
 import com.diva.app.profile.presentation.ui.components.navigation.ProfileRoute
+import com.diva.app.search.presentation.ui.components.SearchField
 import com.diva.app.search.presentation.ui.components.SearchResultsScreen
 import com.diva.app.search.presentation.ui.components.navigation.SearchResultsRoute
 import com.diva.app.search.presentation.viewmodel.SearchViewModel
 import io.github.juevigrace.diva.ui.layout.AdaptiveScreen
+import io.github.juevigrace.diva.ui.layout.adaptiveNavigationStyle
 import io.github.juevigrace.diva.ui.layout.navigation.LocalNavStyle
 import io.github.juevigrace.diva.ui.layout.navigation.NavStyle
 import io.github.juevigrace.diva.ui.navigation.LocalTabNavigator
@@ -56,13 +63,19 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    viewModel: HomeViewModel = koinViewModel(),
+) {
+    val state: HomeState by viewModel.state.collectAsStateWithLifecycle()
+
     val playerViewModel: PlayerViewModel = koinViewModel()
     val playerState by playerViewModel.state.collectAsStateWithLifecycle()
     val searchViewModel: SearchViewModel = koinViewModel()
     val searchState by searchViewModel.state.collectAsStateWithLifecycle()
     val folderViewModel: FolderViewModel = koinViewModel()
     val folderState by folderViewModel.state.collectAsStateWithLifecycle()
+    val feedViewModel: FeedViewModel = koinViewModel()
+    val feedState by feedViewModel.state.collectAsStateWithLifecycle()
 
     val tabNavigator: TabNavigator = LocalTabNavigator.current
     val tabBackStack by tabNavigator.tabBackStack.collectAsStateWithLifecycle()
@@ -71,17 +84,34 @@ fun HomeScreen() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     AdaptiveScreen(
+        style = if (state.settings.isDesktop) NavStyle.Rail else adaptiveNavigationStyle(),
         topBar = {
-            // read the actual settings state
-            if (true) {
+            if (state.settings.isDesktop) {
                 CenterAlignedTopAppBar(
                     title = {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
+                            IconButton(
+                                onClick = {
+                                    tabNavigator.selectTab(LibraryRoute)
+                                    tabNavigator.clearTabHistory()
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(LibraryRoute.icon),
+                                    contentDescription = stringResource(LibraryRoute.title),
+                                    modifier = Modifier.size(24.dp),
+                                )
+                            }
 
+                            SearchField(
+                                modifier = Modifier.width(300.dp),
+                                state = searchState,
+                                onEvent = searchViewModel::onEvent,
+                            )
                         }
                     }
                 )
@@ -169,10 +199,13 @@ fun HomeScreen() {
                 rememberViewModelStoreNavEntryDecorator(),
             ),
             entryProvider = entryProvider {
-                entry<HomeRoute> {
-                    HomeContent(
-                        searchState = searchState,
-                        onSearchEvent = searchViewModel::onEvent,
+                entry<LibraryRoute> {
+                    LibraryScreen()
+                }
+                entry<FeedRoute> {
+                    FeedScreen(
+                        state = feedState,
+                        onEvent = feedViewModel::onEvent,
                     )
                 }
                 entry<SearchResultsRoute> {
@@ -195,9 +228,6 @@ fun HomeScreen() {
                         onEvent = folderViewModel::onEvent,
                         onBack = { tabNavigator.pop() },
                     )
-                }
-                entry<LibraryRoute> {
-                    LibraryScreen()
                 }
                 entry<ProfileRoute> {
                     ProfileScreen()

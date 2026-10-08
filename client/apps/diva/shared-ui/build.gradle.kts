@@ -20,6 +20,7 @@ kotlin {
             implementation(projects.ui)
 
             implementation(projects.features.home.homeCore)
+            implementation(projects.features.feed.feedCore)
             implementation(projects.features.server.serverCore)
             implementation(projects.features.media.mediaCore)
             implementation(projects.features.folder.folderCore)
@@ -39,6 +40,9 @@ kotlin {
             implementation(libs.diva.lib.session.core)
             implementation(libs.diva.lib.session.models)
             implementation(libs.diva.lib.settings.core)
+            implementation(libs.diva.lib.permissions.core)
+            implementation(libs.diva.lib.onboarding.core)
+            implementation(libs.diva.lib.verification.core)
 
             implementation(libs.diva.network)
         }

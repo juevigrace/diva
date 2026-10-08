@@ -1,12 +1,9 @@
 package com.diva.app.search.presentation.ui.components
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -16,13 +13,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import com.diva.app.generated.resources.Res
 import com.diva.app.generated.resources.search
 import com.diva.app.search.presentation.events.SearchEvents
@@ -37,12 +32,12 @@ import org.jetbrains.compose.resources.stringResource
  * plain field. [requestFocus] is used by compact layouts, where search is opened
  * from an icon and the field should take the keyboard immediately.
  */
+// TODO: refactor and make it all purpose
 @Composable
 fun SearchField(
     state: SearchState,
     onEvent: (SearchEvents) -> Unit,
     modifier: Modifier = Modifier,
-    onBack: (() -> Unit)? = null,
     requestFocus: Boolean = false,
 ) {
     val focusRequester = FocusRequester()
@@ -55,47 +50,33 @@ fun SearchField(
         }
     }
 
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        if (onBack != null) {
-            IconButton(onClick = onBack) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
+    OutlinedTextField(
+        modifier = modifier.focusRequester(focusRequester),
+        value = state.query,
+        onValueChange = { onEvent(SearchEvents.OnQueryChange(it)) },
+        textStyle = MaterialTheme.typography.bodyLarge,
+        placeholder = { Text(text = stringResource(Res.string.search)) },
+        singleLine = true,
+        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+        trailingIcon = {
+            if (!state.isQueryEmpty) {
+                IconButton(onClick = { onEvent(SearchEvents.OnClear) }) {
+                    Icon(Icons.Filled.Close, contentDescription = "Clear")
+                }
+            }
+        },
+        supportingText =
+        if (state.totalResults > 0) {
+            {
+                Text(
+                    text = if (state.totalResults == 1) "1 result" else "${state.totalResults} results",
+                    style = MaterialTheme.typography.labelSmall,
                 )
             }
-        }
-
-        OutlinedTextField(
-            value = state.query,
-            onValueChange = { onEvent(SearchEvents.OnQueryChange(it)) },
-            placeholder = { Text(text = stringResource(Res.string.search)) },
-            singleLine = true,
-            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
-            trailingIcon = {
-                if (!state.isQueryEmpty) {
-                    IconButton(onClick = { onEvent(SearchEvents.OnClear) }) {
-                        Icon(Icons.Filled.Close, contentDescription = "Clear")
-                    }
-                }
-            },
-            supportingText = {
-                val total = state.totalResults
-                if (total > 0) {
-                    Text(
-                        text = if (total == 1) "1 result" else "$total results",
-                        style = MaterialTheme.typography.labelSmall,
-                    )
-                }
-            },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = { keyboard?.hide() }),
-            modifier = Modifier
-                .weight(1f)
-                .focusRequester(focusRequester)
-                .padding(end = if (onBack == null) 16.dp else 8.dp),
-        )
-    }
+        } else {
+            null
+        },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(onSearch = { keyboard?.hide() }),
+    )
 }

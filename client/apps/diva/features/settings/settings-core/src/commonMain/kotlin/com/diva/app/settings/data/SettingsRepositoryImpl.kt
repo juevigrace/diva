@@ -2,16 +2,16 @@ package com.diva.app.settings.data
 
 import com.diva.app.settings.database.SettingsStorage
 import com.diva.app.settings.domain.SettingsRepository
+import com.diva.app.settings.models.AppSettings
 import io.github.juevigrace.diva.core.getOrThrow
 import io.github.juevigrace.diva.lib.session.domain.SessionRepository
 import io.github.juevigrace.diva.lib.session.domain.observeSession
 import io.github.juevigrace.diva.lib.session.domain.withSession
-import io.github.juevigrace.diva.lib.settings.models.AppSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class SettingsRepositoryImpl(
-    private val storage: SettingsStorage,
+    private val storage: SettingsStorage<AppSettings>,
     private val sRepository: SessionRepository,
 ) : SettingsRepository {
     override suspend fun get(): Result<AppSettings> {

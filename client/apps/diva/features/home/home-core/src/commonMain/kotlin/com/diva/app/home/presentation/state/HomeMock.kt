@@ -1,5 +1,6 @@
 package com.diva.app.home.presentation.state
 
+import com.diva.app.home.presentation.ui.models.HomeSection
 import com.diva.app.media.models.Media
 import com.diva.app.media.models.MediaType
 import io.github.juevigrace.diva.core.Option
@@ -36,10 +37,14 @@ private val CATALOG = listOf(
     media("v-02", "Rooftop Take", 341_000L, MediaType.VIDEO),
 )
 
+// TODO: make these actual sections and fetch collections based on each
 internal fun mockHomeState(): HomeState = HomeState(
     sections = listOf(
         HomeSection("made-for-you", "Made for you", CATALOG.take(6)),
         HomeSection("recent", "Pick up where you left off", CATALOG.drop(3).take(6)),
-        HomeSection("videos", "Watch something", CATALOG.filter { it.mediaType == MediaType.VIDEO }),
+        HomeSection(
+            "videos",
+            "Watch something",
+            CATALOG.filter { it.mediaType == MediaType.VIDEO }),
     ),
 )

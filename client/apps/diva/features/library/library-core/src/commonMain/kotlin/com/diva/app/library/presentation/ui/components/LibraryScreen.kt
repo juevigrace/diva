@@ -36,16 +36,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diva.app.generated.resources.Res
 import com.diva.app.generated.resources.library
 import com.diva.app.library.presentation.events.LibraryEvents
 import com.diva.app.library.presentation.state.LibraryFilter
-import com.diva.app.library.presentation.state.LibrarySection
 import com.diva.app.library.presentation.viewmodel.LibraryViewModel
-import com.diva.app.media.models.Media
 import com.diva.app.player.presentation.ui.util.durationLabel
 import com.diva.app.ui.components.Artwork
 import io.github.juevigrace.diva.lib.ui.components.carousel.Carousel
@@ -127,11 +124,98 @@ fun LibraryScreen(
             }
 
             items(state.sections, key = { it.id }) { section ->
-                MediaSection(
-                    section = section,
-                    favoriteIds = state.favoriteIds,
-                    onEvent = onEvent,
-                )
+                Column(modifier = Modifier.padding(bottom = 8.dp)) {
+                    Text(
+                        text = section.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 20.dp, top = 8.dp, end = 20.dp, bottom = 8.dp),
+                    )
+
+                    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+                        val spacing = 12.dp
+                        val gutter = 40.dp
+                        val visible = maxOf(
+                            1,
+                            ((maxWidth - gutter + spacing) / (140.dp + spacing)).toInt(),
+                        )
+                        val cardWidth = ((maxWidth - gutter - spacing * (visible - 1)) / visible)
+                            .coerceIn(96.dp, 140.dp)
+
+                        Carousel(
+                            pageCount = section.media.size,
+                            visiblePages = visible,
+                            pageSize = cardWidth,
+                            pageSpacing = spacing,
+                            modifier = Modifier.fillMaxWidth(),
+                        ) { page ->
+                            val media = section.media[page]
+                            Column(
+                                modifier = Modifier
+                                    .width(cardWidth)
+                                    .clickable { onEvent(LibraryEvents.OnOpenMedia(media)) },
+                            ) {
+                                Box(
+                                    modifier = Modifier.fillMaxWidth().aspectRatio(1f),
+                                ) {
+                                    Artwork(
+                                        seed = media.title,
+                                        modifier = Modifier.fillMaxSize(),
+                                        shape = MaterialTheme.shapes.large,
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = media.title,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                                Text(
+                                    text = media.durationMs.durationLabel(),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    IconButton(
+                                        onClick = { onEvent(LibraryEvents.OnToggleFavorite(media)) },
+                                        modifier = Modifier.size(28.dp),
+                                    ) {
+                                        Icon(
+                                            imageVector = if (media.id in state.favoriteIds) {
+                                                Icons.Filled.Favorite
+                                            } else {
+                                                Icons.Filled.FavoriteBorder
+                                            },
+                                            contentDescription = if (media.id in state.favoriteIds) {
+                                                "Unfavourite"
+                                            } else {
+                                                "Favourite"
+                                            },
+                                            tint = if (media.id in state.favoriteIds) {
+                                                MaterialTheme.colorScheme.primary
+                                            } else {
+                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                            },
+                                            modifier = Modifier.size(16.dp),
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Icon(
+                                        imageVector = Icons.Filled.PlayArrow,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.size(16.dp),
+                                    )
+                                    Text(
+                                        text = media.mediaType.name.lowercase(),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             if (state.isEmpty) {
@@ -144,112 +228,6 @@ fun LibraryScreen(
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun MediaSection(
-    section: LibrarySection,
-    favoriteIds: Set<String>,
-    onEvent: (LibraryEvents) -> Unit,
-) {
-    Column(modifier = Modifier.padding(bottom = 8.dp)) {
-        Text(
-            text = section.title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 20.dp, top = 8.dp, end = 20.dp, bottom = 8.dp),
-        )
-
-        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-            val spacing = 12.dp
-            val gutter = 40.dp
-            val visible = maxOf(
-                1,
-                ((maxWidth - gutter + spacing) / (140.dp + spacing)).toInt(),
-            )
-            val cardWidth = ((maxWidth - gutter - spacing * (visible - 1)) / visible)
-                .coerceIn(96.dp, 140.dp)
-
-            Carousel(
-                pageCount = section.media.size,
-                visiblePages = visible,
-                pageSize = cardWidth,
-                pageSpacing = spacing,
-                modifier = Modifier.fillMaxWidth(),
-            ) { page ->
-                MediaCard(
-                    media = section.media[page],
-                    width = cardWidth,
-                    isFavorite = section.media[page].id in favoriteIds,
-                    onEvent = onEvent,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun MediaCard(
-    media: Media,
-    width: Dp,
-    isFavorite: Boolean,
-    onEvent: (LibraryEvents) -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .width(width)
-            .clickable { onEvent(LibraryEvents.OnOpenMedia(media)) },
-    ) {
-        Box(
-            modifier = Modifier.fillMaxWidth().aspectRatio(1f),
-        ) {
-            Artwork(
-                seed = media.title,
-                modifier = Modifier.fillMaxSize(),
-                shape = MaterialTheme.shapes.large,
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = media.title,
-            style = MaterialTheme.typography.bodyMedium,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Text(
-            text = media.durationMs.durationLabel(),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(
-                onClick = { onEvent(LibraryEvents.OnToggleFavorite(media)) },
-                modifier = Modifier.size(28.dp),
-            ) {
-                Icon(
-                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                    contentDescription = if (isFavorite) "Unfavourite" else "Favourite",
-                    tint = if (isFavorite) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    },
-                    modifier = Modifier.size(16.dp),
-                )
-            }
-            Spacer(modifier = Modifier.width(4.dp))
-            Icon(
-                imageVector = Icons.Filled.PlayArrow,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(16.dp),
-            )
-            Text(
-                text = media.mediaType.name.lowercase(),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
         }
     }
 }
