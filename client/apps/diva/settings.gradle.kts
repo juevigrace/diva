@@ -49,7 +49,6 @@ include(
     ":resources",
     ":ui",
     ":features:home:home-core",
-    ":features:feed:feed-core",
     ":features:library:library-core",
     ":features:media:media-core",
     ":features:media:media-models",

@@ -1,6 +1,5 @@
 package com.diva.app.di
 
-import com.diva.app.feed.presentation.ui.components.navigation.FeedRoute
 import com.diva.app.folder.presentation.ui.components.navigation.FoldersRoute
 import com.diva.app.home.presentation.ui.components.navigation.HomeRoute
 import com.diva.app.library.presentation.ui.components.navigation.LibraryRoute
@@ -15,8 +14,8 @@ fun navigationModule(): Module {
         single<Navigator> { Navigator.create(startDestination = HomeRoute) }
         single<TabNavigator> {
             TabNavigator.create(
-                tabs = listOf(LibraryRoute, FeedRoute, FoldersRoute, ProfileRoute),
-                startTab = LibraryRoute,
+                tabs = listOf(HomeRoute, LibraryRoute, FoldersRoute, ProfileRoute),
+                startTab = HomeRoute,
             )
         }
     }

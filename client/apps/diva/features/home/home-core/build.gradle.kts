@@ -12,7 +12,6 @@ kotlin {
             implementation(projects.features.settings.settingsCore)
             implementation(projects.features.settings.settingsModels)
 
-            implementation(projects.features.feed.feedCore)
             implementation(projects.features.library.libraryCore)
             implementation(projects.features.search.searchCore)
             implementation(projects.features.profile.profileCore)

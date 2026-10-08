@@ -29,9 +29,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import com.diva.app.feed.presentation.ui.components.navigation.feedNav
 import com.diva.app.folder.presentation.ui.components.navigation.folderNav
 import com.diva.app.home.presentation.state.HomeState
+import com.diva.app.home.presentation.ui.components.navigation.homeTabNav
 import com.diva.app.home.presentation.viewmodel.HomeViewModel
 import com.diva.app.library.presentation.ui.components.navigation.LibraryRoute
 import com.diva.app.library.presentation.ui.components.navigation.libraryNav
@@ -187,8 +187,8 @@ fun HomeScreen(
                 rememberViewModelStoreNavEntryDecorator(),
             ),
             entryProvider = entryProvider {
+                homeTabNav(viewModel)
                 libraryNav()
-                feedNav()
                 searchNav(searchViewModel)
                 folderNav()
                 profileNav()

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="home">Home</string>
-    <string name="feed">Feed</string>
     <string name="search">Search</string>
     <string name="library">Library</string>
     <string name="profile">Profile</string>

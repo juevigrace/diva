@@ -20,7 +20,6 @@ kotlin {
             implementation(projects.ui)
 
             implementation(projects.features.home.homeCore)
-            implementation(projects.features.feed.feedCore)
             implementation(projects.features.server.serverCore)
             implementation(projects.features.media.mediaCore)
             implementation(projects.features.folder.folderCore)

@@ -3,7 +3,6 @@ package com.diva.app.di
 import com.diva.app.collection.di.collectionModule
 import com.diva.app.database.di.databaseModule
 import com.diva.app.folder.di.folderModule
-import com.diva.app.feed.di.feedModule
 import com.diva.app.home.di.homeModule
 import com.diva.app.library.di.libraryModule
 import com.diva.app.media.di.mediaModule
@@ -49,7 +48,6 @@ fun appModule(settings: AppSettings): Module {
         )
         includes(
             homeModule(),
-            feedModule(),
             serverModule(),
             mediaModule(),
             folderModule(),
