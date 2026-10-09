@@ -68,7 +68,6 @@ include(
     ":features:settings:settings-database",
     ":features:settings:settings-models",
     ":features:profile:profile-core",
-    ":features:profile:profile-models",
 )
 
 include(":features:collection:collection-database")

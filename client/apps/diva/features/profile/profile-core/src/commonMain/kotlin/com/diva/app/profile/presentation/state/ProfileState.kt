@@ -1,7 +1,7 @@
 package com.diva.app.profile.presentation.state
 
-import com.diva.app.media.models.Media
-import com.diva.app.profile.models.Profile
+import io.github.juevigrace.diva.lib.core.models.Role
+import io.github.juevigrace.diva.lib.user.models.User
 
 data class ProfileQuickStat(
     val label: String,
@@ -9,7 +9,6 @@ data class ProfileQuickStat(
 )
 
 data class ProfileState(
-    val profile: Profile? = null,
+    val user: User = User(id = "", username = "", role = Role.USER),
     val stats: List<ProfileQuickStat> = emptyList(),
-    val recentMedia: List<Media> = emptyList(),
 )

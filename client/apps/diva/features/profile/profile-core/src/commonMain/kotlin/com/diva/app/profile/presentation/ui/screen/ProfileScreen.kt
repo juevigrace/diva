@@ -43,6 +43,9 @@ import com.diva.app.profile.presentation.viewmodel.ProfileViewModel
 import com.diva.app.ui.components.Artwork
 import com.diva.app.ui.components.ArtworkPlaceholder
 import io.github.juevigrace.diva.core.getOrDefault
+import io.github.juevigrace.diva.core.map
+import io.github.juevigrace.diva.lib.user.models.UserStatus
+import io.github.juevigrace.diva.lib.user.preferences.models.Theme
 import io.github.juevigrace.diva.ui.layout.Screen
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -63,8 +66,8 @@ fun ProfileScreen(
         topBar = { TopAppBar(title = { Text(stringResource(Res.string.profile)) }) },
         contentWindowInsets = WindowInsets(0),
     ) { innerPadding ->
-        val profile = state.profile
-        if (profile != null) {
+        val user = state.user
+        if (user.id.isNotBlank()) {
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
@@ -78,17 +81,17 @@ fun ProfileScreen(
                             modifier = Modifier.size(72.dp),
                             shape = MaterialTheme.shapes.large,
                         ) {
-                            ArtworkPlaceholder(alt = profile.username, modifier = Modifier.fillMaxSize())
+                            ArtworkPlaceholder(alt = user.username, modifier = Modifier.fillMaxSize())
                         }
                         Spacer(modifier = Modifier.width(16.dp))
                         Column(modifier = Modifier.weight(1f)) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(
-                                    text = profile.username,
+                                    text = user.username,
                                     style = MaterialTheme.typography.headlineSmall,
                                     fontWeight = FontWeight.SemiBold,
                                 )
-                                if (profile.verified) {
+                                if (user.state.map { it.verified }.getOrDefault(false)) {
                                     Spacer(modifier = Modifier.width(6.dp))
                                     Icon(
                                         imageVector = Icons.Filled.CheckCircle,
@@ -98,18 +101,18 @@ fun ProfileScreen(
                                     )
                                 }
                             }
-                            if (profile.alias.isNotBlank()) {
+                            if (user.profile.map { it.alias }.getOrDefault("").isNotBlank()) {
                                 Text(
-                                    text = profile.alias,
+                                    text = user.profile.map { it.alias }.getOrDefault(""),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
                             }
                         }
                     }
-                    if (profile.bio.isNotBlank()) {
+                    if (user.profile.map { it.bio }.getOrDefault("").isNotBlank()) {
                         Spacer(modifier = Modifier.height(12.dp))
-                        Text(text = profile.bio, style = MaterialTheme.typography.bodyMedium)
+                        Text(text = user.profile.map { it.bio }.getOrDefault(""), style = MaterialTheme.typography.bodyMedium)
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -174,21 +177,19 @@ fun ProfileScreen(
                 InfoSection(
                     title = "Account details",
                     rows = listOf(
-                        "Email" to profile.email.getOrDefault(""),
-                        "Phone" to profile.phoneNumber.getOrDefault(""),
-                        "Role" to profile.role.name,
-                        "Status" to profile.status.name,
-                        "Verified" to profile.verified.toString(),
-                        "Theme" to profile.theme.name,
-                        "Language" to profile.language,
+                        "Email" to user.email.getOrDefault(""),
+                        "Phone" to (user.profile.map { it.phoneNumber }.getOrDefault("").takeIf { it.isNotBlank() } ?: user.phoneNumber.getOrDefault("")),
+                        "Role" to user.role.name,
+                        "Status" to user.state.map { it.status.name }.getOrDefault(UserStatus.ACTIVE.name),
+                        "Verified" to user.state.map { it.verified }.getOrDefault(false).toString(),
+                        "Theme" to user.preferences.map { it.theme.name }.getOrDefault(Theme.SYSTEM.name),
+                        "Language" to user.preferences.map { it.language }.getOrDefault("en"),
                     ),
                 )
 
                 InfoSection(
                     title = "Linked devices",
-                    rows = profile.devices.map { device ->
-                        device to ""
-                    },
+                    rows = user.devices.map { it.device.name to "" },
                     emptyText = "No devices linked yet.",
                 )
             }

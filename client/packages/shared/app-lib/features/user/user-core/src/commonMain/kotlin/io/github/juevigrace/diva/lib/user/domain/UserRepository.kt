@@ -2,12 +2,9 @@ package io.github.juevigrace.diva.lib.user.domain
 
 import io.github.juevigrace.diva.lib.core.Repository
 import io.github.juevigrace.diva.lib.user.models.User
-import io.github.juevigrace.diva.network.client.DivaClient
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository : Repository {
-    val client: DivaClient
-
     fun observe(): Flow<Result<List<User>>>
 
     fun observeCurrent(): Flow<Result<User>>
