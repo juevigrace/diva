@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
@@ -16,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import io.github.juevigrace.diva.ui.layout.navigation.LocalNavStyle
 import io.github.juevigrace.diva.ui.layout.navigation.NavStyle
 
@@ -50,7 +52,9 @@ fun RailScreen(
             contentWindowInsets = contentWindowInsets,
         ) { innerPadding ->
             Row(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
             ) {
                 NavigationRail(
                     containerColor = railContainerColor,
@@ -64,7 +68,9 @@ fun RailScreen(
                         .weight(1f)
                         .fillMaxSize(),
                 ) {
-                    content(innerPadding)
+                    // The Row above already consumed innerPadding, so content must not
+                    // apply it again or every slot gets double-inset.
+                    content(PaddingValues(0.dp))
                 }
             }
         }

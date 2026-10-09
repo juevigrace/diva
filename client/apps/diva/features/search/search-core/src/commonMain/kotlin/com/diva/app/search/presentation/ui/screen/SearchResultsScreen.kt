@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,6 +34,7 @@ import com.diva.app.search.presentation.ui.components.IconResultRow
 import com.diva.app.search.presentation.ui.components.SearchField
 import com.diva.app.search.presentation.ui.components.SectionHeader
 import com.diva.app.ui.components.Artwork
+import com.diva.app.ui.components.ArtworkPlaceholder
 import com.diva.app.ui.components.TypeBadge
 import io.github.juevigrace.diva.ui.layout.Screen
 import io.github.juevigrace.diva.ui.window.rememberWindowInfo
@@ -114,10 +116,11 @@ fun SearchResultsScreen(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Artwork(
-                                alt = item.title,
                                 modifier = Modifier.size(44.dp),
                                 shape = MaterialTheme.shapes.small,
-                            )
+                            ) {
+                                ArtworkPlaceholder(alt = item.title, modifier = Modifier.fillMaxSize())
+                            }
                             Column(
                                 modifier = Modifier
                                     .weight(1f)

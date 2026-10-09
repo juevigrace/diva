@@ -69,10 +69,11 @@ private fun ColumnScope.Body(
             .aspectRatio(1f),
     ) {
         Artwork(
-            alt = alt,
             modifier = Modifier.fillMaxSize(),
             shape = RectangleShape,
-        )
+        ) {
+            ArtworkPlaceholder(alt = alt, modifier = Modifier.fillMaxSize())
+        }
     }
     content()
 }

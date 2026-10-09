@@ -53,6 +53,7 @@ import com.diva.app.folder.presentation.state.CollectionDraftType
 import com.diva.app.folder.presentation.state.FolderEntry
 import com.diva.app.folder.presentation.state.FolderState
 import com.diva.app.ui.components.Artwork
+import com.diva.app.ui.components.ArtworkPlaceholder
 import io.github.juevigrace.diva.ui.layout.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -235,10 +236,11 @@ fun FoldersScaffold(
                                         Spacer(modifier = Modifier.width(12.dp))
                                     }
                                     Artwork(
-                                        alt = entry.name,
                                         modifier = Modifier.size(40.dp),
                                         shape = MaterialTheme.shapes.small,
-                                    )
+                                    ) {
+                                        ArtworkPlaceholder(alt = entry.name, modifier = Modifier.fillMaxSize())
+                                    }
                                     Column(
                                         modifier = Modifier
                                             .weight(1f)

@@ -3,8 +3,10 @@ package com.diva.app.home.presentation.ui.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.BottomAppBar
@@ -28,6 +30,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import com.diva.app.folder.presentation.ui.components.navigation.folderNav
 import com.diva.app.home.presentation.state.HomeState
 import com.diva.app.home.presentation.ui.components.HomeContent
+import com.diva.app.home.presentation.ui.components.navigation.HomeRoute
 import com.diva.app.home.presentation.ui.components.navigation.bars.HomeNavContent
 import com.diva.app.home.presentation.ui.components.navigation.homeNav
 import com.diva.app.home.presentation.viewmodel.HomeViewModel
@@ -70,6 +73,7 @@ fun HomeScreen(
 
     AdaptiveScreen(
         style = if (state.settings.isDesktop) NavStyle.Rail else adaptiveNavigationStyle(),
+        contentWindowInsets = WindowInsets(0),
         topBar = {
             if (state.settings.isDesktop) {
                 CenterAlignedTopAppBar(
@@ -81,13 +85,13 @@ fun HomeScreen(
                         ) {
                             IconButton(
                                 onClick = {
-                                    tabNavigator.selectTab(LibraryRoute)
+                                    tabNavigator.selectTab(HomeRoute)
                                     tabNavigator.clearTabHistory()
                                 }
                             ) {
                                 Icon(
-                                    painter = painterResource(LibraryRoute.icon),
-                                    contentDescription = stringResource(LibraryRoute.title),
+                                    painter = painterResource(HomeRoute.icon),
+                                    contentDescription = stringResource(HomeRoute.title),
                                     modifier = Modifier.size(24.dp),
                                 )
                             }
@@ -137,9 +141,9 @@ fun HomeScreen(
         navContent = {
             HomeNavContent(drawerState = drawerState)
         },
-    ) { _ ->
+    ) { innerPadding ->
         TabNavHost(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.padding(innerPadding).fillMaxSize(),
             tabNavigator = tabNavigator,
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),

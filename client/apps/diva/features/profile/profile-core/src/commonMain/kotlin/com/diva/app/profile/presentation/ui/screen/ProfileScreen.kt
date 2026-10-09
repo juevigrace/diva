@@ -41,6 +41,7 @@ import com.diva.app.profile.presentation.ui.components.NavigationRow
 import com.diva.app.profile.presentation.ui.components.SectionTitle
 import com.diva.app.profile.presentation.viewmodel.ProfileViewModel
 import com.diva.app.ui.components.Artwork
+import com.diva.app.ui.components.ArtworkPlaceholder
 import io.github.juevigrace.diva.core.getOrDefault
 import io.github.juevigrace.diva.ui.layout.Screen
 import org.jetbrains.compose.resources.stringResource
@@ -74,10 +75,11 @@ fun ProfileScreen(
                 Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Artwork(
-                            alt = profile.username,
                             modifier = Modifier.size(72.dp),
                             shape = MaterialTheme.shapes.large,
-                        )
+                        ) {
+                            ArtworkPlaceholder(alt = profile.username, modifier = Modifier.fillMaxSize())
+                        }
                         Spacer(modifier = Modifier.width(16.dp))
                         Column(modifier = Modifier.weight(1f)) {
                             Row(verticalAlignment = Alignment.CenterVertically) {

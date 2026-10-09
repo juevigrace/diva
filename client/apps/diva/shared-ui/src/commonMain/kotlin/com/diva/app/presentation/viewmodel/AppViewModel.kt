@@ -58,7 +58,7 @@ class AppViewModel(
     }
 
     private suspend fun seedUser() {
-        if (userRepository.observeCurrent(LOCAL_USER_ID).first().getOrNull() != null) return
+        if (userRepository.observeCurrent().first().getOrNull() != null) return
         userRepository.upsert(User(id = LOCAL_USER_ID, username = LOCAL_USERNAME, role = Role.USER))
     }
 

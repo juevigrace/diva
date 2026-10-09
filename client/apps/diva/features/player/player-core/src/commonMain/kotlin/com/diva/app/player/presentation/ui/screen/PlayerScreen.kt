@@ -54,6 +54,7 @@ import com.diva.app.player.presentation.ui.util.durationLabel
 import com.diva.app.player.presentation.ui.util.formatDuration
 import com.diva.app.player.presentation.viewmodel.PlayerViewModel
 import com.diva.app.ui.components.Artwork
+import com.diva.app.ui.components.ArtworkPlaceholder
 import io.github.juevigrace.diva.ui.layout.Screen
 import io.github.juevigrace.diva.ui.navigation.BackHandler
 import org.koin.compose.viewmodel.koinViewModel
@@ -117,13 +118,14 @@ fun PlayerScreen(
         ) {
             item {
                 Artwork(
-                    alt = state.media.title,
                     modifier = Modifier
                         .padding(horizontal = 32.dp, vertical = 8.dp)
                         .fillMaxWidth()
                         .aspectRatio(1f),
                     shape = MaterialTheme.shapes.extraLarge,
-                )
+                ) {
+                    ArtworkPlaceholder(alt = state.media.title, modifier = Modifier.fillMaxSize())
+                }
             }
 
             item {
@@ -313,10 +315,11 @@ fun PlayerScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Artwork(
-                        alt = media.title,
                         modifier = Modifier.size(48.dp),
                         shape = MaterialTheme.shapes.small,
-                    )
+                    ) {
+                        ArtworkPlaceholder(alt = media.title, modifier = Modifier.fillMaxSize())
+                    }
                     Column(
                         modifier = Modifier
                             .weight(1f)

@@ -3,7 +3,6 @@ package com.diva.app.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -46,7 +45,7 @@ fun ArtworkPlaceholder(
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
     textStyle: TextStyle = LocalTextStyle.current,
     autoSize: TextAutoSize? = TextAutoSize.StepBased(
-        minFontSize = MaterialTheme.typography.labelMedium.fontSize,
+        minFontSize = MaterialTheme.typography.labelSmall.fontSize,
         maxFontSize = MaterialTheme.typography.displayMedium.fontSize,
     ),
     contentAlignment: Alignment = Alignment.Center,
@@ -71,23 +70,19 @@ fun ArtworkPlaceholder(
 /**
  * A general-purpose thumbnail renderer for media and collections.
  *
- * When [image] is provided it is drawn (clipped to [shape]) in place of the gradient
- * + initial [placeholder]. The renderer is loader-agnostic: supply a slot backed by
+ * When [image] is provided it is drawn (clipped to [shape]) in place of the
+ * [placeholder] fallback. The renderer is loader-agnostic: supply a slot backed by
  * whatever image source you use (e.g. a network image loader or a local painter).
  *
- * @param alt The item title/description, used as the fallback initial and gradient seed.
  * @param image Optional slot drawing the item's assigned image.
- * @param placeholder Fallback shown when [image] is null; defaults to [ArtworkPlaceholder].
+ * @param placeholder Fallback shown when [image] is null, typically an [ArtworkPlaceholder].
  */
 @Composable
 fun Artwork(
-    alt: String,
     modifier: Modifier = Modifier,
     shape: Shape = MaterialTheme.shapes.small,
     image: (@Composable BoxScope.() -> Unit)? = null,
-    placeholder: @Composable BoxScope.() -> Unit = {
-        ArtworkPlaceholder(alt, modifier = Modifier.fillMaxSize())
-    },
+    placeholder: @Composable BoxScope.() -> Unit,
 ) {
     Box(
         modifier = modifier.clip(shape),
