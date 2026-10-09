@@ -117,7 +117,7 @@ fun PlayerScreen(
         ) {
             item {
                 Artwork(
-                    seed = state.media.title,
+                    alt = state.media.title,
                     modifier = Modifier
                         .padding(horizontal = 32.dp, vertical = 8.dp)
                         .fillMaxWidth()
@@ -313,7 +313,7 @@ fun PlayerScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Artwork(
-                        seed = media.title,
+                        alt = media.title,
                         modifier = Modifier.size(48.dp),
                         shape = MaterialTheme.shapes.small,
                     )

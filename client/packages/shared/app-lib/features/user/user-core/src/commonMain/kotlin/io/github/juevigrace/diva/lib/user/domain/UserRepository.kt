@@ -10,7 +10,7 @@ interface UserRepository : Repository {
 
     fun observe(): Flow<Result<List<User>>>
 
-    fun observe(id: String): Flow<Result<User>>
+    fun observeCurrent(): Flow<Result<User>>
 
     suspend fun sync(): Result<Unit>
 

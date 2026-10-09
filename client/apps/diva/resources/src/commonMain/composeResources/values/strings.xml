@@ -5,4 +5,6 @@
     <string name="library">Library</string>
     <string name="profile">Profile</string>
     <string name="folders">Folders</string>
+    <string name="add_to_favorites">Add to favorites</string>
+    <string name="remove_from_favorites">Remove from favorites</string>
 </resources>

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.BottomAppBar
@@ -15,13 +14,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -31,7 +27,9 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import com.diva.app.folder.presentation.ui.components.navigation.folderNav
 import com.diva.app.home.presentation.state.HomeState
-import com.diva.app.home.presentation.ui.components.navigation.homeTabNav
+import com.diva.app.home.presentation.ui.components.HomeContent
+import com.diva.app.home.presentation.ui.components.navigation.bars.HomeNavContent
+import com.diva.app.home.presentation.ui.components.navigation.homeNav
 import com.diva.app.home.presentation.viewmodel.HomeViewModel
 import com.diva.app.library.presentation.ui.components.navigation.LibraryRoute
 import com.diva.app.library.presentation.ui.components.navigation.libraryNav
@@ -48,7 +46,7 @@ import io.github.juevigrace.diva.ui.layout.navigation.NavStyle
 import io.github.juevigrace.diva.ui.navigation.LocalTabNavigator
 import io.github.juevigrace.diva.ui.navigation.TabNavHost
 import io.github.juevigrace.diva.ui.navigation.TabNavigator
-import kotlinx.coroutines.launch
+import io.github.juevigrace.diva.ui.window.rememberWindowInfo
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -68,7 +66,6 @@ fun HomeScreen(
     val tabNavigator: TabNavigator = LocalTabNavigator.current
     val tabBackStack by tabNavigator.tabBackStack.collectAsStateWithLifecycle()
 
-    val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     AdaptiveScreen(
@@ -107,27 +104,30 @@ fun HomeScreen(
         },
         bottomBar = {
             val style = LocalNavStyle.current
-            Column {
-                MiniPlayer(
-                    state = playerState,
-                    onEvent = playerViewModel::onEvent,
-                )
-                if (style == NavStyle.BottomBar) {
-                    BottomAppBar {
-                        tabNavigator.tabs.forEach { tab ->
-                            NavigationBarItem(
-                                modifier = Modifier.weight(1f),
-                                selected = tabBackStack.selectedTab == tab,
-                                onClick = { tabNavigator.selectTab(tab) },
-                                icon = {
-                                    Icon(
-                                        modifier = Modifier.size(24.dp),
-                                        painter = painterResource(tab.icon),
-                                        contentDescription = stringResource(tab.title),
-                                    )
-                                },
-                                label = { Text(stringResource(tab.title)) },
-                            )
+            val windowInfo = rememberWindowInfo()
+            if (windowInfo.isPortrait) {
+                Column {
+                    MiniPlayer(
+                        state = playerState,
+                        onEvent = playerViewModel::onEvent,
+                    )
+                    if (style == NavStyle.BottomBar) {
+                        BottomAppBar {
+                            tabNavigator.tabs.forEach { tab ->
+                                NavigationBarItem(
+                                    modifier = Modifier.weight(1f),
+                                    selected = tabBackStack.selectedTab == tab,
+                                    onClick = { tabNavigator.selectTab(tab) },
+                                    icon = {
+                                        Icon(
+                                            modifier = Modifier.size(24.dp),
+                                            painter = painterResource(tab.icon),
+                                            contentDescription = stringResource(tab.title),
+                                        )
+                                    },
+                                    label = { Text(stringResource(tab.title)) },
+                                )
+                            }
                         }
                     }
                 }
@@ -135,62 +135,25 @@ fun HomeScreen(
         },
         drawerState = drawerState,
         navContent = {
-            val style = LocalNavStyle.current
-            tabNavigator.tabs.forEach { tab ->
-                when (style) {
-                    NavStyle.ModalDrawer, NavStyle.PermanentDrawer -> {
-                        NavigationDrawerItem(
-                            modifier = Modifier.weight(1f),
-                            label = { Text(stringResource(tab.title)) },
-                            selected = tabBackStack.selectedTab == tab,
-                            onClick = {
-                                tabNavigator.selectTab(tab)
-                                if (style == NavStyle.ModalDrawer) {
-                                    scope.launch { drawerState.close() }
-                                }
-                            },
-                            icon = {
-                                Icon(
-                                    modifier = Modifier.size(24.dp),
-                                    painter = painterResource(tab.icon),
-                                    contentDescription = stringResource(tab.title),
-                                )
-                            },
-                        )
-                    }
-                    NavStyle.Rail -> {
-                        NavigationRailItem(
-                            selected = tabBackStack.selectedTab == tab,
-                            onClick = { tabNavigator.selectTab(tab) },
-                            icon = {
-                                Icon(
-                                    modifier = Modifier.size(24.dp),
-                                    painter = painterResource(tab.icon),
-                                    contentDescription = stringResource(tab.title),
-                                )
-                            },
-                            label = { Text(stringResource(tab.title)) },
-                        )
-                    }
-                    NavStyle.BottomBar -> {}
-                }
-            }
+            HomeNavContent(drawerState = drawerState)
         },
-    ) { innerPadding ->
+    ) { _ ->
         TabNavHost(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
+            modifier = Modifier.fillMaxSize(),
             tabNavigator = tabNavigator,
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
                 rememberViewModelStoreNavEntryDecorator(),
             ),
             entryProvider = entryProvider {
-                homeTabNav(viewModel)
+                homeNav {
+                    HomeContent(state = state, onEvent = viewModel::onEvent)
+                }
                 libraryNav()
+                // todo: make this show as a tab in mobile
                 searchNav(searchViewModel)
                 folderNav()
+                // TODO: move profile out here and replace with more tab
                 profileNav()
             }
         )

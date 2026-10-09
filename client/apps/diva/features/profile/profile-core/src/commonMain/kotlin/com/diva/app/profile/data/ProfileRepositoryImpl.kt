@@ -26,9 +26,9 @@ class ProfileRepositoryImpl(
     private val userDevicesRepository: UserDevicesRepository,
 ) : ProfileRepository {
     override fun observe(): Flow<Result<Profile>> {
-        return observeSession(sessionRepository::observe) { session ->
+        return observeSession(sessionRepository::observe) {
             combine(
-                userRepository.observe(session.userId),
+                userRepository.observeCurrent(),
                 userProfileRepository.observe(),
                 userStateRepository.observe(),
                 userPreferencesRepository.observe(),

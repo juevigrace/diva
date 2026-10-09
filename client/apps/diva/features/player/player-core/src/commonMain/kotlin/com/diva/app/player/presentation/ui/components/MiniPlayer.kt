@@ -43,7 +43,7 @@ fun MiniPlayer(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Artwork(
-                seed = state.media.title,
+                alt = state.media.title,
                 modifier = Modifier.size(44.dp),
                 shape = MaterialTheme.shapes.small,
             )

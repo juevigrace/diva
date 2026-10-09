@@ -114,7 +114,7 @@ fun SearchResultsScreen(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Artwork(
-                                seed = item.title,
+                                alt = item.title,
                                 modifier = Modifier.size(44.dp),
                                 shape = MaterialTheme.shapes.small,
                             )

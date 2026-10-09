@@ -1,14 +1,10 @@
 package com.diva.app.profile.presentation.ui.screen
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -46,7 +42,6 @@ import com.diva.app.profile.presentation.ui.components.SectionTitle
 import com.diva.app.profile.presentation.viewmodel.ProfileViewModel
 import com.diva.app.ui.components.Artwork
 import io.github.juevigrace.diva.core.getOrDefault
-import io.github.juevigrace.diva.lib.ui.components.carousel.Carousel
 import io.github.juevigrace.diva.ui.layout.Screen
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -79,10 +74,9 @@ fun ProfileScreen(
                 Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Artwork(
-                            seed = profile.username,
+                            alt = profile.username,
                             modifier = Modifier.size(72.dp),
                             shape = MaterialTheme.shapes.large,
-                            contentDescription = profile.username,
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Column(modifier = Modifier.weight(1f)) {
@@ -195,40 +189,6 @@ fun ProfileScreen(
                     },
                     emptyText = "No devices linked yet.",
                 )
-
-                if (state.recentMedia.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(24.dp))
-                    SectionTitle(text = "Recently played")
-                    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-                        val spacing = 12.dp
-                        val gutter = 40.dp
-                        val visible = maxOf(1, ((maxWidth - gutter + spacing) / (140.dp + spacing)).toInt())
-                        val cardWidth = ((maxWidth - gutter - spacing * (visible - 1)) / visible)
-                            .coerceIn(96.dp, 140.dp)
-
-                        Carousel(
-                            pageCount = state.recentMedia.size,
-                            visiblePages = visible,
-                            pageSize = cardWidth,
-                            pageSpacing = spacing,
-                            modifier = Modifier.fillMaxWidth(),
-                        ) { page ->
-                            Box(
-                                modifier = Modifier
-                                    .width(cardWidth)
-                                    .aspectRatio(1f)
-                                    .clickable { },
-                            ) {
-                                Artwork(
-                                    seed = state.recentMedia[page].title,
-                                    modifier = Modifier.fillMaxSize(),
-                                    shape = MaterialTheme.shapes.large,
-                                    contentDescription = state.recentMedia[page].title,
-                                )
-                            }
-                        }
-                    }
-                }
             }
         }
     }

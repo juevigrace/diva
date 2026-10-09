@@ -97,7 +97,7 @@ fun AdaptiveScreen(
 @Composable
 fun adaptiveNavigationStyle(): NavStyle {
     val windowInfo = rememberWindowInfo()
-    return if (windowInfo.widthSizeClass == WindowWidthSizeClass.Expanded) {
+    return if (windowInfo.widthSizeClass == WindowWidthSizeClass.Medium) {
         NavStyle.Rail
     } else {
         NavStyle.BottomBar

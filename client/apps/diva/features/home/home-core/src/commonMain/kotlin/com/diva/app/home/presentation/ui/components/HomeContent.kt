@@ -1,30 +1,33 @@
 package com.diva.app.home.presentation.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ScaffoldDefaults.contentWindowInsets
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.diva.app.generated.resources.Res
+import com.diva.app.generated.resources.home
 import com.diva.app.home.presentation.events.HomeEvents
 import com.diva.app.home.presentation.state.HomeState
+import com.diva.app.profile.presentation.ui.components.navigation.ProfileRoute
+import com.diva.app.ui.components.CarouselCard
+import com.diva.app.ui.components.CarouselSection
 import io.github.juevigrace.diva.ui.layout.Screen
-import io.github.juevigrace.diva.ui.window.rememberWindowInfo
+import io.github.juevigrace.diva.ui.navigation.LocalNavigator
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * The home tab root. Named `HomeContent` rather than `HomeScreen` because
@@ -36,63 +39,137 @@ fun HomeContent(
     state: HomeState,
     onEvent: (HomeEvents) -> Unit,
 ) {
-    val windowInfo = rememberWindowInfo()
+    val root = LocalNavigator.current
 
     Screen(
         topBar = {
             if (!state.settings.isDesktop) {
                 TopAppBar(
                     title = {
-                        Text(text = "Home")
+                        Text(
+                            text = stringResource(Res.string.home),
+                        )
                     },
                     actions = {
-                        if (windowInfo.widthSizeClass != WindowWidthSizeClass.Expanded) {
-                            IconButton(onClick = { onEvent(HomeEvents.OnOpenSearch) }) {
-                                Icon(Icons.Filled.Search, contentDescription = "Search")
-                            }
+                        IconButton(onClick = { root.navigate(ProfileRoute) }) {
+                            Icon(
+                                imageVector = Icons.Rounded.Person,
+                                contentDescription = stringResource(ProfileRoute.title),
+                            )
                         }
                     },
                 )
             }
         },
-        contentWindowInsets = WindowInsets(0),
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier.padding(innerPadding).fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.Top),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             item {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Text(
-                        text = "All For You",
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                    Text(
-                        text = "Recommended media and playlists",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                // TODO: filter chips
+            }
+
+            if (state.showRecent) {
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.CenterStart,
+                    ) {
+                        Text(
+                            text = "Recent",
+                            style = MaterialTheme.typography.titleLarge,
+                        )
+                    }
+                }
+                item {
+                    CarouselSection(
+                        subtitle = {
+                            Text(
+                                text = "Played collections",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        },
+                        items = state.recentCollections,
+                    ) { item, modifier ->
+                        CarouselCard(
+                            alt = item.name,
+                            title = item.name,
+                            modifier = modifier,
+                        )
+                    }
+                }
+
+                item {
+                    CarouselSection(
+                        subtitle = {
+                            Text(
+                                text = "Recent media",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        },
+                        items = state.recentMedia,
+                    ) { item, modifier ->
+                        CarouselCard(
+                            alt = item.title,
+                            title = item.title,
+                            modifier = modifier,
+                        )
+                    }
                 }
             }
 
-            item {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Text(
-                        text = "Recent",
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                    Text(
-                        text = "Recently played and added items",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+            if (state.showRecommended) {
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.CenterStart,
+                    ) {
+                        Text(
+                            text = "All For You",
+                            style = MaterialTheme.typography.titleLarge,
+                        )
+                    }
+                }
+
+                item {
+                    CarouselSection(
+                        subtitle = {
+                            Text(
+                                text = "Recommended collections, albums, playlists and more",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        },
+                        items = state.recommendedCollections,
+                    ) { item, modifier ->
+                        CarouselCard(
+                            alt = item.name,
+                            title = item.name,
+                            modifier = modifier,
+                        )
+                    }
+                }
+                item {
+                    CarouselSection(
+                        subtitle = {
+                            Text(
+                                text = "Recommended collections, albums, playlists and more",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        },
+                        items = state.recommendedMedia,
+                    ) { item, modifier ->
+                        CarouselCard(
+                            alt = item.title,
+                            title = item.title,
+                            modifier = modifier,
+                        )
+                    }
                 }
             }
         }

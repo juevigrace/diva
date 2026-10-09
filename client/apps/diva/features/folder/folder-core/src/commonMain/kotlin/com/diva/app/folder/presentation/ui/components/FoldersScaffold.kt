@@ -235,7 +235,7 @@ fun FoldersScaffold(
                                         Spacer(modifier = Modifier.width(12.dp))
                                     }
                                     Artwork(
-                                        seed = entry.name,
+                                        alt = entry.name,
                                         modifier = Modifier.size(40.dp),
                                         shape = MaterialTheme.shapes.small,
                                     )
