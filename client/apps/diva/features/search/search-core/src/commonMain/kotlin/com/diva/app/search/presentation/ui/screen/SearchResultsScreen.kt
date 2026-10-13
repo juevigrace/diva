@@ -19,47 +19,46 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.diva.app.search.presentation.events.SearchEvents
 import com.diva.app.search.presentation.state.SearchState
 import com.diva.app.search.presentation.state.collectionTypeTag
 import com.diva.app.search.presentation.state.folderTag
 import com.diva.app.search.presentation.state.mediaTypeTag
 import com.diva.app.search.presentation.ui.components.IconResultRow
-import com.diva.app.search.presentation.ui.components.SearchField
 import com.diva.app.search.presentation.ui.components.SectionHeader
+import com.diva.app.search.presentation.viewmodel.SearchViewModel
 import com.diva.app.ui.components.Artwork
 import com.diva.app.ui.components.ArtworkPlaceholder
 import com.diva.app.ui.components.TypeBadge
+import io.github.juevigrace.diva.lib.ui.components.input.SearchField
 import io.github.juevigrace.diva.ui.layout.Screen
-import io.github.juevigrace.diva.ui.window.rememberWindowInfo
+import org.koin.compose.viewmodel.koinViewModel
 
 /**
- * The search results destination. Owns the query field as its top bar, so [onBack] is the
- * only way out and the field keeps the query while the user walks results.
+ * The search results destination. Owns the query field as its top bar, so back is handled
+ * by the nav host's predictive/gesture back and the field keeps the query while the user
+ * walks results.
  */
 @Composable
 fun SearchResultsScreen(
-    state: SearchState,
-    onEvent: (SearchEvents) -> Unit,
-    onBack: () -> Unit,
+    viewModel: SearchViewModel = koinViewModel(),
 ) {
+    val state: SearchState by viewModel.state.collectAsStateWithLifecycle()
     val results = state.results
-    val windowInfo = rememberWindowInfo()
-    val isExpanded = windowInfo.widthSizeClass == WindowWidthSizeClass.Expanded
 
     Screen(
         topBar = {
             SearchField(
-                state = state,
-                onEvent = onEvent,
-                requestFocus = !isExpanded,
                 modifier = Modifier.padding(top = 8.dp),
+                value = "",
+                onEvent = { e -> },
             )
         },
         contentWindowInsets = WindowInsets(0),
@@ -85,7 +84,7 @@ fun SearchResultsScreen(
                         items(state.suggestions, key = { it }) { suggestion ->
                             AssistChip(
                                 onClick = {
-                                    onEvent(SearchEvents.OnSelectSuggestion(suggestion))
+                                    viewModel.onEvent(SearchEvents.OnSelectSuggestion(suggestion))
                                 },
                                 label = { Text(suggestion) },
                             )
@@ -111,7 +110,7 @@ fun SearchResultsScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { onEvent(SearchEvents.OnOpenMedia(item)) }
+                                .clickable { viewModel.onEvent(SearchEvents.OnOpenMedia(item)) }
                                 .padding(horizontal = 20.dp, vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
@@ -163,7 +162,7 @@ fun SearchResultsScreen(
                             tag = collectionTypeTag(item.collectionType),
                             title = item.name,
                             subtitle = item.description,
-                            onClick = { onEvent(SearchEvents.OnOpenCollection(item.id)) },
+                            onClick = { viewModel.onEvent(SearchEvents.OnOpenCollection(item.id)) },
                         )
                     }
                 }
@@ -174,7 +173,7 @@ fun SearchResultsScreen(
                             tag = folderTag,
                             title = item.name,
                             subtitle = item.path,
-                            onClick = { onEvent(SearchEvents.OnOpenFolder(item.id)) },
+                            onClick = { viewModel.onEvent(SearchEvents.OnOpenFolder(item.id)) },
                         )
                     }
                 }

@@ -3,4 +3,6 @@
     <string name="search">Search</string>
     <string name="show_text">Show text</string>
     <string name="hide_text">Hide text</string>
+    <string name="profile">Profile</string>
+    <string name="notifications">Notifications</string>
 </resources>

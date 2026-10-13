@@ -1,33 +1,40 @@
 package com.diva.app.home.presentation.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.diva.app.generated.resources.Res
+import com.diva.app.generated.resources.app_name
 import com.diva.app.generated.resources.home
+import com.diva.app.generated.resources.puerro
 import com.diva.app.home.presentation.events.HomeEvents
 import com.diva.app.home.presentation.state.HomeState
 import com.diva.app.profile.presentation.ui.components.navigation.ProfileRoute
 import com.diva.app.ui.components.CarouselCard
 import com.diva.app.ui.components.CarouselSection
+import io.github.juevigrace.diva.lib.ui.components.buttons.NotificationsIconButton
+import io.github.juevigrace.diva.lib.ui.components.buttons.ProfileIconButton
 import io.github.juevigrace.diva.ui.layout.Screen
 import io.github.juevigrace.diva.ui.navigation.LocalNavigator
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -41,24 +48,36 @@ fun HomeContent(
     onEvent: (HomeEvents) -> Unit,
 ) {
     val root = LocalNavigator.current
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Screen(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             if (!state.settings.isDesktop) {
-                TopAppBar(
+                CenterAlignedTopAppBar(
                     title = {
-                        Text(
-                            text = stringResource(Res.string.home),
-                        )
-                    },
-                    actions = {
-                        IconButton(onClick = { root.navigate(ProfileRoute) }) {
-                            Icon(
-                                imageVector = Icons.Rounded.Person,
-                                contentDescription = stringResource(ProfileRoute.title),
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Image(
+                                modifier = Modifier.size(32.dp),
+                                painter = painterResource(Res.drawable.puerro),
+                                contentDescription = null
+                            )
+                            Text(
+                                text = stringResource(Res.string.app_name),
+                                style = MaterialTheme.typography.titleLarge
                             )
                         }
                     },
+                    actions = {
+                        // TODO: navigate to notifications or make a dropbox
+                        NotificationsIconButton(onClick = {})
+                        ProfileIconButton(onClick = { root.navigate(ProfileRoute) })
+                    },
+                    scrollBehavior = scrollBehavior,
                 )
             }
         },

@@ -3,4 +3,6 @@
     <string name="search">Buscar</string>
     <string name="show_text">Mostrar texto</string>
     <string name="hide_text">Ocultar texto</string>
+    <string name="profile">Perfil</string>
+    <string name="notifications">Notificaciones</string>
 </resources>
