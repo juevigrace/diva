@@ -5,7 +5,7 @@ import com.diva.app.file.domain.services.guessMimeType
 import com.diva.app.file.models.DeviceFile
 import com.diva.app.file.models.Directory
 import com.diva.app.file.models.DirectoryListing
-import io.github.juevigrace.diva.core.None
+import com.diva.app.file.models.EntryMeta
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -34,28 +34,30 @@ class JvmFileSystemService : FileSystemService {
             }
         }
         DirectoryListing(
-            directories = directories.sortedBy { it.name },
-            files = files.sortedBy { it.name },
+            entries = directories.sortedBy { it.name } + files.sortedBy { it.name },
         )
     }
 
     private fun directoryFrom(path: Path): Directory = Directory(
-        id = Uuid.random().toString(),
-        name = path.fileName?.toString() ?: path.toString(),
-        path = path.toAbsolutePath().normalize().toString(),
-        parent = None,
+        meta = EntryMeta(
+            id = Uuid.random().toString(),
+            name = path.fileName?.toString() ?: path.toString(),
+            path = path.toAbsolutePath().normalize().toString(),
+            lastModified = Files.getLastModifiedTime(path).toMillis(),
+        ),
     )
 
     private fun fileFrom(path: Path): DeviceFile {
         val fileName = path.fileName.toString()
         return DeviceFile(
-            id = Uuid.random().toString(),
-            name = fileName,
-            path = path.toAbsolutePath().normalize().toString(),
-            parent = None,
-            mimeType = Option.of(guessMimeType(fileName)),
+            meta = EntryMeta(
+                id = Uuid.random().toString(),
+                name = fileName,
+                path = path.toAbsolutePath().normalize().toString(),
+                lastModified = Files.getLastModifiedTime(path).toMillis(),
+            ),
             sizeBytes = Files.size(path),
-            lastModified = Files.getLastModifiedTime(path).toMillis(),
+            mimeType = Option.of(guessMimeType(fileName)),
         )
     }
 }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
  * [com.diva.app.file.domain.services.FileSystemService], everything the UI sees
  * comes back from the database.
  */
-interface DirectoryRepository : Repository {
+interface FileRepository : Repository {
 
     fun observe(): Flow<Result<List<Directory>>>
 

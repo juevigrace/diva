@@ -1,7 +1,7 @@
 package com.diva.app.file.data
 
-import com.diva.app.file.database.DirectoryStorage
-import com.diva.app.file.domain.DirectoryRepository
+import com.diva.app.file.database.FileStorage
+import com.diva.app.file.domain.FileRepository
 import com.diva.app.file.domain.services.FileSystemService
 import com.diva.app.file.models.DeviceFile
 import com.diva.app.file.models.Directory
@@ -12,15 +12,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlin.time.Clock
 
 /**
- * Device-global directory/file cache backed by [DirectoryStorage]. Reads are
+ * Device-global directory/file cache backed by [FileStorage]. Reads are
  * served from the database; [refresh] pulls a fresh listing for one directory
  * (or the roots) from the platform [FileSystemService] and prunes whatever the
  * scan no longer saw.
  */
-class DirectoryRepositoryImpl(
-    private val storage: DirectoryStorage,
+class FileRepositoryImpl(
+    private val storage: FileStorage,
     private val fileSystem: FileSystemService,
-) : DirectoryRepository {
+) : FileRepository {
 
     override fun observe(): Flow<Result<List<Directory>>> = storage.getAllFlow()
 
@@ -53,19 +53,22 @@ class DirectoryRepositoryImpl(
         val scanStart = Clock.System.now().toEpochMilliseconds()
         val parents: List<Directory> = if (parentId == null) {
             fileSystem.roots().onEach { root ->
-                storage.upsert(root.copy(parent = None, scannedAt = scanStart)).getOrThrow()
+                storage.upsert(root.copy(meta = root.meta.copy(parent = None, scannedAt = scanStart)))
+                    .getOrThrow()
             }
         } else {
             listOf(storage.getById(parentId).getOrThrow().getOrNull() ?: error("Directory $parentId not found"))
         }
         parents.forEach { parent ->
-            val parentStub = Directory(id = parent.id, name = parent.name, path = parent.path)
+            val parentRef = Option.of(parent.ref)
             val listing = fileSystem.listChildren(parent)
-            listing.directories.forEach { dir ->
-                storage.upsert(dir.copy(parent = Option.of(parentStub), scannedAt = scanStart)).getOrThrow()
+            listing.dirs.forEach { dir ->
+                storage.upsert(dir.copy(meta = dir.meta.copy(parent = parentRef, scannedAt = scanStart)))
+                    .getOrThrow()
             }
             listing.files.forEach { file ->
-                storage.upsertFile(file.copy(parent = Option.of(parentStub), scannedAt = scanStart)).getOrThrow()
+                storage.upsertFile(file.copy(meta = file.meta.copy(parent = parentRef, scannedAt = scanStart)))
+                    .getOrThrow()
             }
             storage.deleteStaleChildren(parent.id, scanStart).getOrThrow()
         }

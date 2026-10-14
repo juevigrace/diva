@@ -6,7 +6,7 @@ import com.diva.app.file.domain.services.guessMimeType
 import com.diva.app.file.models.DeviceFile
 import com.diva.app.file.models.Directory
 import com.diva.app.file.models.DirectoryListing
-import io.github.juevigrace.diva.core.None
+import com.diva.app.file.models.EntryMeta
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -29,26 +29,29 @@ class AndroidFileSystemService : FileSystemService {
         val base = File(parent.path)
         val children = base.listFiles().orEmpty()
         DirectoryListing(
-            directories = children.filter { it.isDirectory }.map(::directoryFrom).sortedBy { it.name },
-            files = children.filter { it.isFile }.map(::fileFrom).sortedBy { it.name },
+            entries = children.filter { it.isDirectory }.map(::directoryFrom).sortedBy { it.name } +
+                children.filter { it.isFile }.map(::fileFrom).sortedBy { it.name },
         )
     }
 
     private fun directoryFrom(file: File): Directory = Directory(
-        id = Uuid.random().toString(),
-        name = file.name,
-        path = file.absoluteFile.normalize().path,
-        parent = None,
+        meta = EntryMeta(
+            id = Uuid.random().toString(),
+            name = file.name,
+            path = file.absoluteFile.normalize().path,
+            lastModified = file.lastModified(),
+        ),
     )
 
     private fun fileFrom(file: File): DeviceFile = DeviceFile(
-        id = Uuid.random().toString(),
-        name = file.name,
-        path = file.absoluteFile.normalize().path,
-        parent = None,
-        mimeType = Option.of(guessMimeType(file.name)),
+        meta = EntryMeta(
+            id = Uuid.random().toString(),
+            name = file.name,
+            path = file.absoluteFile.normalize().path,
+            lastModified = file.lastModified(),
+        ),
         sizeBytes = file.length(),
-        lastModified = file.lastModified(),
+        mimeType = Option.of(guessMimeType(file.name)),
     )
 }
 

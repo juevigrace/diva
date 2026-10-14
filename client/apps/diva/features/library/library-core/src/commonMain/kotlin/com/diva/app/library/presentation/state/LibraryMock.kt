@@ -1,6 +1,7 @@
 package com.diva.app.library.presentation.state
 
 import com.diva.app.file.models.Directory
+import com.diva.app.file.models.EntryMeta
 import com.diva.app.media.models.Media
 import com.diva.app.media.models.MediaType
 import com.diva.app.media.tag.models.Tag
@@ -54,10 +55,10 @@ private val CATALOG = listOf(
 )
 
 private val FOLDERS = listOf(
-    Directory(id = "f-01", name = "Albums", path = "/music/albums"),
-    Directory(id = "f-02", name = "Live Sets", path = "/music/live"),
-    Directory(id = "f-03", name = "Downloads", path = "/music/downloads"),
-    Directory(id = "f-04", name = "Videos", path = "/media/videos"),
+    Directory(meta = EntryMeta(id = "f-01", name = "Albums", path = "/music/albums", lastModified = 0L)),
+    Directory(meta = EntryMeta(id = "f-02", name = "Live Sets", path = "/music/live", lastModified = 0L)),
+    Directory(meta = EntryMeta(id = "f-03", name = "Downloads", path = "/music/downloads", lastModified = 0L)),
+    Directory(meta = EntryMeta(id = "f-04", name = "Videos", path = "/media/videos", lastModified = 0L)),
 )
 
 private val DEFAULT_FAVORITES = CATALOG

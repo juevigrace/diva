@@ -5,12 +5,13 @@ import com.diva.app.file.domain.services.guessMimeType
 import com.diva.app.file.models.DeviceFile
 import com.diva.app.file.models.Directory
 import com.diva.app.file.models.DirectoryListing
-import io.github.juevigrace.diva.core.None
+import com.diva.app.file.models.EntryMeta
 import io.github.juevigrace.diva.core.Option
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import platform.Foundation.NSDate
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSNumber
@@ -56,37 +57,43 @@ class IosFileSystemService : FileSystemService {
                 files += fileFrom(
                     url = child,
                     sizeBytes = (values?.objectForKey(NSURLFileSizeKey) as? NSNumber)?.longLongValue ?: 0L,
-                    lastModifiedMs = (values?.objectForKey(NSURLContentModificationDateKey) as? platform.Foundation.NSDate)
-                        ?.timeIntervalSince1970
-                        ?.let { (it * 1000).toLong() } ?: 0L,
+                    lastModifiedMs = modificationDateMs(child),
                 )
             }
         }
         DirectoryListing(
-            directories = directories.sortedBy { it.name },
-            files = files.sortedBy { it.name },
+            entries = directories.sortedBy { it.name } + files.sortedBy { it.name },
         )
     }
 
     private fun directoryFrom(url: NSURL): Directory = Directory(
-        id = Uuid.random().toString(),
-        name = url.lastPathComponent ?: "",
-        path = url.path ?: error("NSURL has no path"),
-        parent = None,
+        meta = EntryMeta(
+            id = Uuid.random().toString(),
+            name = url.lastPathComponent ?: "",
+            path = url.path ?: error("NSURL has no path"),
+            lastModified = modificationDateMs(url),
+        ),
     )
 
     private fun fileFrom(url: NSURL, sizeBytes: Long, lastModifiedMs: Long): DeviceFile {
         val name = url.lastPathComponent ?: ""
         return DeviceFile(
-            id = Uuid.random().toString(),
-            name = name,
-            path = url.path ?: error("NSURL has no path"),
-            parent = None,
-            mimeType = Option.of(guessMimeType(name)),
+            meta = EntryMeta(
+                id = Uuid.random().toString(),
+                name = name,
+                path = url.path ?: error("NSURL has no path"),
+                lastModified = lastModifiedMs,
+            ),
             sizeBytes = sizeBytes,
-            lastModified = lastModifiedMs,
+            mimeType = Option.of(guessMimeType(name)),
         )
     }
+
+    private fun modificationDateMs(url: NSURL): Long =
+        (url.resourceValuesForKeys(listOf(NSURLContentModificationDateKey))
+            ?.objectForKey(NSURLContentModificationDateKey) as? NSDate)
+            ?.timeIntervalSince1970
+            ?.let { (it * 1000).toLong() } ?: 0L
 }
 
 actual fun platformFileSystemServiceModule(): Module = module {

@@ -3,6 +3,7 @@ package com.diva.app.search.presentation.state
 import com.diva.app.collection.models.Collection
 import com.diva.app.collection.models.CollectionType
 import com.diva.app.file.models.Directory
+import com.diva.app.file.models.EntryMeta
 import com.diva.app.media.models.Media
 import com.diva.app.media.models.MediaMetadata
 import com.diva.app.media.models.MediaType
@@ -55,9 +56,9 @@ private val ENTRIES = listOf(
 )
 
 private val FOLDERS = listOf(
-    Directory(id = "sf-01", name = "Albums", path = "/music/albums"),
-    Directory(id = "sf-02", name = "Live Sets", path = "/music/live"),
-    Directory(id = "sf-03", name = "Downloads", path = "/music/downloads"),
+    Directory(meta = EntryMeta(id = "sf-01", name = "Albums", path = "/music/albums", lastModified = 0L)),
+    Directory(meta = EntryMeta(id = "sf-02", name = "Live Sets", path = "/music/live", lastModified = 0L)),
+    Directory(meta = EntryMeta(id = "sf-03", name = "Downloads", path = "/music/downloads", lastModified = 0L)),
 )
 
 private val COLLECTIONS = listOf(

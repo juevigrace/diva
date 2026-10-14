@@ -1,0 +1,22 @@
+-- File-only columns; dir_id shares its value with the diva_entry row created in
+-- the same transaction. Existence here is what marks an entry as a file.
+
+insert:
+INSERT INTO diva_file(dir_id, size_bytes, mime_type)
+VALUES (?, ?, ?);
+
+-- Refresh of file-only columns for an already-cached entry.
+update:
+UPDATE diva_file
+SET size_bytes = ?,
+    mime_type = ?
+WHERE dir_id = ?;
+
+-- Detaches file-only columns from an entry, e.g. when a rescan finds a
+-- directory where a file used to live at the same path.
+deleteOne:
+DELETE FROM diva_file
+WHERE dir_id = ?;
+
+delete:
+DELETE FROM diva_file;

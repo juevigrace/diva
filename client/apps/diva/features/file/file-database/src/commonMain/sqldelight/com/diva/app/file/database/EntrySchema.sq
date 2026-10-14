@@ -1,0 +1,26 @@
+-- Device filesystem cache. Every entry (directory or file) is a row in
+-- diva_entry carrying the shared EntryMeta fields; a row joined to diva_file
+-- is a regular file, a row without one is a directory. `id` is an opaque UUID,
+-- `path` the absolute device path (globally unique across both kinds).
+-- Kept in sync with `migrations/1.sqm` because `deriveSchemaFromMigrations`
+-- is enabled.
+CREATE TABLE IF NOT EXISTS diva_entry(
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    path TEXT NOT NULL,
+    parent_id TEXT DEFAULT NULL,
+    last_modified INTEGER NOT NULL DEFAULT 0,
+    scanned_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    deleted_at INTEGER DEFAULT NULL,
+    FOREIGN KEY(parent_id) REFERENCES diva_entry(id) ON DELETE CASCADE,
+    UNIQUE (path)
+);
+
+CREATE TABLE IF NOT EXISTS diva_file(
+    dir_id TEXT NOT NULL PRIMARY KEY,
+    size_bytes INTEGER NOT NULL,
+    mime_type TEXT DEFAULT NULL,
+    FOREIGN KEY(dir_id) REFERENCES diva_entry(id) ON DELETE CASCADE
+);

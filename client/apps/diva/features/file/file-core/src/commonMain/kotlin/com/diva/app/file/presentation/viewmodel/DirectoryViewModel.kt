@@ -1,6 +1,6 @@
 package com.diva.app.file.presentation.viewmodel
 
-import com.diva.app.file.domain.DirectoryRepository
+import com.diva.app.file.domain.FileRepository
 import com.diva.app.file.models.Directory
 import com.diva.app.file.presentation.events.DirectoryEvents
 import com.diva.app.file.presentation.state.DirectoryState
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoroutinesApi::class)
 class DirectoryViewModel(
     private val tabNavigator: TabNavigator,
-    private val repository: DirectoryRepository,
+    private val repository: FileRepository,
 ) : DivaViewModel() {
 
     private val currentDirectoryId = MutableStateFlow<String?>(null)
