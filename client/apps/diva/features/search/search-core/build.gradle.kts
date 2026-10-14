@@ -10,7 +10,7 @@ kotlin {
             implementation(projects.features.search.searchModels)
 
             implementation(projects.features.collection.collectionCore)
-            implementation(projects.features.folder.folderCore)
+            implementation(projects.features.file.fileCore)
             implementation(projects.features.media.mediaCore)
             implementation(projects.features.player.playerCore)
 

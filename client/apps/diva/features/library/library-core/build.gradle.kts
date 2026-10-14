@@ -12,8 +12,8 @@ kotlin {
             implementation(projects.features.media.mediaCore)
             implementation(projects.features.media.mediaModels)
 
-            implementation(projects.features.folder.folderCore)
-            implementation(projects.features.folder.folderModels)
+            implementation(projects.features.file.fileCore)
+            implementation(projects.features.file.fileModels)
 
             implementation(projects.features.player.playerCore)
 

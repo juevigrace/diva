@@ -52,8 +52,8 @@ include(
     ":features:library:library-core",
     ":features:media:media-core",
     ":features:media:media-models",
-    ":features:folder:folder-core",
-    ":features:folder:folder-models",
+    ":features:file:file-core",
+    ":features:file:file-models",
     ":features:collection:collection-core",
     ":features:collection:collection-models",
     ":features:playlist:playlist-core",
@@ -72,7 +72,7 @@ include(
 
 include(":features:collection:collection-database")
 
-include(":features:folder:folder-database")
+include(":features:file:file-database")
 
 include(":features:library:library-database")
 

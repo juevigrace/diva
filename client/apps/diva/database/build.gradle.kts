@@ -13,7 +13,7 @@ kotlin {
             implementation(projects.features.player.playerModels)
 
             implementation(projects.features.collection.collectionDatabase)
-            implementation(projects.features.folder.folderDatabase)
+            implementation(projects.features.file.fileDatabase)
             implementation(projects.features.library.libraryDatabase)
             implementation(projects.features.media.mediaDatabase)
             implementation(projects.features.mix.mixDatabase)
@@ -34,7 +34,7 @@ sqldelight {
             verifyMigrations.set(true)
 
             dependency(project(":features:collection:collection-database"))
-            dependency(project(":features:folder:folder-database"))
+            dependency(project(":features:file:file-database"))
             dependency(project(":features:library:library-database"))
             dependency(project(":features:media:media-database"))
             dependency(project(":features:mix:mix-database"))

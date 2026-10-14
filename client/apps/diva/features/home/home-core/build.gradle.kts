@@ -12,7 +12,7 @@ kotlin {
             implementation(projects.features.settings.settingsModels)
 
             implementation(projects.features.library.libraryCore)
-            implementation(projects.features.folder.folderCore)
+            implementation(projects.features.file.fileCore)
             implementation(projects.features.search.searchCore)
 
             implementation(projects.features.profile.profileCore)

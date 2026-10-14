@@ -1,0 +1,90 @@
+-- Upsert emulation for the 3.18 dialect (no ON CONFLICT): the storage picks
+-- insert or updateAfterScan by path so the UUID id of an existing row survives
+-- rescans and children's parent_id references stay valid.
+insert:
+INSERT INTO diva_directory(id, name, path, parent_id, is_directory, mime_type, size_bytes, last_modified, scanned_at, created_at, updated_at, deleted_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+-- Refresh of an already-cached row; id and created_at stay untouched.
+updateAfterScan:
+UPDATE diva_directory
+SET name = ?,
+    parent_id = ?,
+    is_directory = ?,
+    mime_type = ?,
+    size_bytes = ?,
+    last_modified = ?,
+    scanned_at = ?,
+    updated_at = ?,
+    deleted_at = ?
+WHERE id = ?;
+
+findIdByPath:
+SELECT id
+FROM diva_directory
+WHERE path = ?;
+
+deleteById:
+DELETE FROM diva_directory
+WHERE id = ?;
+
+-- Clear the whole cache; used before a full rescan so removed paths vanish.
+deleteAll:
+DELETE FROM diva_directory;
+
+-- Removes cached rows of a directory (NULL parent = roots) that were not seen
+-- by the scan that stamped scanned_at = <scanStart>. Covers files and
+-- subdirectories in one pass.
+deleteStaleChildren:
+DELETE FROM diva_directory
+WHERE parent_id IS ?
+  AND scanned_at < ?;
+
+-- All non-deleted rows, alphabetically.
+findAll:
+SELECT *
+FROM diva_directory
+WHERE deleted_at IS NULL
+ORDER BY name ASC;
+
+findById:
+SELECT *
+FROM diva_directory
+WHERE id = ?
+  AND deleted_at IS NULL;
+
+-- Root directories (no parent) for the FK/breadcrumb parents.
+findRoots:
+SELECT *
+FROM diva_directory
+WHERE parent_id IS NULL
+  AND is_directory = 1
+  AND deleted_at IS NULL
+ORDER BY name ASC;
+
+-- Subdirectories inside a given directory.
+findChildren:
+SELECT *
+FROM diva_directory
+WHERE parent_id = ?
+  AND is_directory = 1
+  AND deleted_at IS NULL
+ORDER BY name ASC;
+
+-- Regular files inside a given directory.
+findFileChildren:
+SELECT *
+FROM diva_directory
+WHERE parent_id = ?
+  AND is_directory = 0
+  AND deleted_at IS NULL
+ORDER BY name ASC;
+
+-- Contents of the platform roots; what the files tab shows at its top level.
+findRootChildren:
+SELECT d.*
+FROM diva_directory AS d
+JOIN diva_directory AS r ON d.parent_id = r.id
+WHERE r.parent_id IS NULL
+  AND d.deleted_at IS NULL
+ORDER BY d.name ASC;

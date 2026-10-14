@@ -1,6 +1,6 @@
 package com.diva.app.library.presentation.state
 
-import com.diva.app.folder.models.Folder
+import com.diva.app.file.models.Directory
 import com.diva.app.media.models.Media
 import com.diva.app.media.models.MediaType
 import com.diva.app.media.tag.models.Tag
@@ -54,10 +54,10 @@ private val CATALOG = listOf(
 )
 
 private val FOLDERS = listOf(
-    Folder(id = "f-01", user = OWNER, name = "Albums", path = "/music/albums"),
-    Folder(id = "f-02", user = OWNER, name = "Live Sets", path = "/music/live"),
-    Folder(id = "f-03", user = OWNER, name = "Downloads", path = "/music/downloads"),
-    Folder(id = "f-04", user = OWNER, name = "Videos", path = "/media/videos"),
+    Directory(id = "f-01", name = "Albums", path = "/music/albums"),
+    Directory(id = "f-02", name = "Live Sets", path = "/music/live"),
+    Directory(id = "f-03", name = "Downloads", path = "/music/downloads"),
+    Directory(id = "f-04", name = "Videos", path = "/media/videos"),
 )
 
 private val DEFAULT_FAVORITES = CATALOG
@@ -84,4 +84,4 @@ internal fun librarySections(
     }.filter { it.media.isNotEmpty() }
 }
 
-internal fun libraryFolders(): List<Folder> = FOLDERS
+internal fun libraryFolders(): List<Directory> = FOLDERS

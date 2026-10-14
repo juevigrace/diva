@@ -22,7 +22,7 @@ kotlin {
         commonMain.dependencies {
             api(projects.core)
             api(projects.features.media.mediaModels)
-            api(projects.features.folder.folderModels)
+            api(projects.features.file.fileModels)
             api(projects.features.collection.collectionModels)
         }
     }

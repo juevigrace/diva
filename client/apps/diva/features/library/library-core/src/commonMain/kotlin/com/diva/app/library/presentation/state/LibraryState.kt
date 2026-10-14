@@ -1,6 +1,6 @@
 package com.diva.app.library.presentation.state
 
-import com.diva.app.folder.models.Folder
+import com.diva.app.file.models.Directory
 import com.diva.app.media.models.Media
 
 enum class LibraryFilter(val label: String) {
@@ -20,7 +20,7 @@ data class LibrarySection(
 data class LibraryState(
     val filter: LibraryFilter = LibraryFilter.ALL,
     val sections: List<LibrarySection> = emptyList(),
-    val folders: List<Folder> = emptyList(),
+    val folders: List<Directory> = emptyList(),
     val favoriteIds: Set<String> = emptySet(),
 ) {
     val isEmpty: Boolean

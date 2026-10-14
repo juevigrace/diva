@@ -22,7 +22,7 @@ kotlin {
             implementation(projects.features.home.homeCore)
             implementation(projects.features.server.serverCore)
             implementation(projects.features.media.mediaCore)
-            implementation(projects.features.folder.folderCore)
+            implementation(projects.features.file.fileCore)
             implementation(projects.features.collection.collectionCore)
             implementation(projects.features.playlist.playlistCore)
             implementation(projects.features.mix.mixCore)

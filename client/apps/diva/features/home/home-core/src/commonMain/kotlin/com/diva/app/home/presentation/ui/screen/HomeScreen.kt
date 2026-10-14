@@ -39,12 +39,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import com.diva.app.folder.presentation.ui.components.navigation.folderNav
+import com.diva.app.file.presentation.ui.components.navigation.fileNav
 import com.diva.app.generated.resources.Res
 import com.diva.app.generated.resources.app_name
 import com.diva.app.home.presentation.state.HomeState
 import com.diva.app.home.presentation.ui.components.HomeContent
 import com.diva.app.home.presentation.ui.components.navigation.HomeRoute
+import com.diva.app.home.presentation.ui.components.navigation.NavDirectionRow
 import com.diva.app.home.presentation.ui.components.navigation.homeNav
 import com.diva.app.home.presentation.viewmodel.HomeViewModel
 import com.diva.app.library.presentation.ui.components.navigation.libraryNav
@@ -105,7 +106,13 @@ fun HomeScreen(
                 CenterAlignedTopAppBar(
                     modifier = Modifier.padding(4.dp),
                     navigationIcon = {
-                        if (windowInfo.widthSizeClass != WindowWidthSizeClass.Expanded) {
+                        if (windowInfo.widthSizeClass == WindowWidthSizeClass.Expanded) {
+                            NavDirectionRow(
+                                // TODO: wire pop/forward once tab history navigation is decided
+                                onBack = {},
+                                onForward = {},
+                            )
+                        } else {
                             DrawerIconButton(onClick = { scope.launch { drawerState.open() } })
                         }
                     },
@@ -128,6 +135,12 @@ fun HomeScreen(
                                         modifier = Modifier.size(24.dp),
                                     )
                                 }
+                            } else {
+                                NavDirectionRow(
+                                    // TODO: wire pop/forward once tab history navigation is decided
+                                    onBack = {},
+                                    onForward = {},
+                                )
                             }
 
                             SearchField(
@@ -265,7 +278,7 @@ fun HomeScreen(
                 libraryNav()
                 // todo: make this show as a tab in mobile
                 searchNav()
-                folderNav()
+                fileNav()
                 // TODO: move profile out here and replace with more tab
                 profileNav()
             }
