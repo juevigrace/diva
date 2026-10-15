@@ -19,14 +19,3 @@ data object Files : NavKey, Tab {
 }
 
 typealias FilesRoute = Files
-
-/**
- * A single directory inside the files tab, pushed on top of the tab so back
- * walks up the tree. Ids are strings to match [com.diva.app.file.models.Directory.id].
- */
-@Serializable
-data class DirectoryDetail(
-    val directoryId: String,
-) : NavKey
-
-typealias DirectoryRoute = DirectoryDetail

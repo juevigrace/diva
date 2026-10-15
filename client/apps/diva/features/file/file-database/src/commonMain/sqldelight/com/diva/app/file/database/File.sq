@@ -5,18 +5,20 @@ insert:
 INSERT INTO diva_file(dir_id, size_bytes, mime_type)
 VALUES (?, ?, ?);
 
--- Refresh of file-only columns for an already-cached entry.
 update:
 UPDATE diva_file
 SET size_bytes = ?,
     mime_type = ?
 WHERE dir_id = ?;
 
--- Detaches file-only columns from an entry, e.g. when a rescan finds a
--- directory where a file used to live at the same path.
 deleteOne:
 DELETE FROM diva_file
 WHERE dir_id = ?;
 
 delete:
 DELETE FROM diva_file;
+
+findOne:
+SELECT dir_id
+FROM diva_file
+WHERE dir_id = ?;

@@ -81,7 +81,6 @@ internal fun librarySections(
         LibraryFilter.FAVORITES -> listOf(LibrarySection("fav", "Your favourites", liked))
         LibraryFilter.RECENT -> listOf(LibrarySection("recent", "Recently played", CATALOG.reversed().take(8)))
         LibraryFilter.RESUMABLE -> listOf(LibrarySection("resume", "Pick up where you left off", CATALOG.take(4)))
-        LibraryFilter.FOLDERS -> emptyList()
     }.filter { it.media.isNotEmpty() }
 }
 

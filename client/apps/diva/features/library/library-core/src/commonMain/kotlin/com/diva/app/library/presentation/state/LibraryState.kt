@@ -8,7 +8,6 @@ enum class LibraryFilter(val label: String) {
     FAVORITES("Favourites"),
     RECENT("Recent"),
     RESUMABLE("Resume"),
-    FOLDERS("Folders"),
 }
 
 data class LibrarySection(

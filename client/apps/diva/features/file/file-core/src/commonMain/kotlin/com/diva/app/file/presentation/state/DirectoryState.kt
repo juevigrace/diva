@@ -1,16 +1,13 @@
 package com.diva.app.file.presentation.state
 
 import com.diva.app.file.models.Directory
+import com.diva.app.file.models.FsEntry
+import io.github.juevigrace.diva.core.Option
 
 data class DirectoryState(
-    val currentDirectoryId: String? = null,
     val breadcrumbs: List<Directory> = emptyList(),
-    val entries: List<Directory> = emptyList(),
+    val entries: List<FsEntry> = emptyList(),
 ) {
-    val isEmpty: Boolean
-        get() = entries.isEmpty()
-
-    /** Current directory title, falling back to the tab name at the root. */
-    val title: String
-        get() = breadcrumbs.lastOrNull()?.name ?: "Files"
+    val currentEntry: Option<FsEntry>
+        get() = Option.of(entries.lastOrNull())
 }

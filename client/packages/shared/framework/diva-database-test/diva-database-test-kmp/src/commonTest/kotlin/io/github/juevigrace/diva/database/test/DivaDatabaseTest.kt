@@ -4,6 +4,7 @@ import app.cash.sqldelight.db.SqlDriver
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.database.SqliteDB
 import io.github.juevigrace.diva.database.driver.DriverProvider
+import io.github.juevigrace.diva.database.exception.UniqueConstraintViolation
 import io.github.juevigrace.diva.database.sqlite.config.SqliteConf
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -78,6 +79,21 @@ class DivaDatabaseTest {
         val db = createDatabase()
         val close = db.close()
         assertTrue(close.isSuccess, "CLOSE ERROR: ${close.exceptionOrNull()}")
+    }
+
+    @Test
+    fun test_uniqueConstraintIsMappedToCustomException() = runTest {
+        val db = createDatabase()
+        val result = db.use {
+            usersQueries.insertUser("Alice", "alice@test.com", 0)
+            usersQueries.insertUser("Alice Again", "alice@test.com", 0)
+        }
+        val exception = result.exceptionOrNull()
+        assertTrue(
+            exception is UniqueConstraintViolation,
+            "Expected UniqueConstraintViolation but was $exception",
+        )
+        db.close()
     }
 
     @Test

@@ -9,6 +9,7 @@ kotlin {
             implementation(libs.diva.lib.database)
 
             implementation(projects.features.collection.collectionModels)
+            implementation(projects.features.file.fileModels)
             implementation(projects.features.media.mediaModels)
             implementation(projects.features.player.playerModels)
 

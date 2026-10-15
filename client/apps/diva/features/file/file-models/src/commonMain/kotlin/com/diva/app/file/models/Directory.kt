@@ -6,9 +6,9 @@ import io.github.juevigrace.diva.core.DivaJsExport
 
 /**
  * A directory on the device filesystem. Its immediate children are described by
- * [children]; all shared entry info lives in [meta].
+ * [entries]; all shared entry info lives in [meta].
  */
 data class Directory(
     override val meta: EntryMeta,
-    val children: DirectoryListing = DirectoryListing(),
+    val entries: List<FsEntry> = emptyList(),
 ) : FsEntry

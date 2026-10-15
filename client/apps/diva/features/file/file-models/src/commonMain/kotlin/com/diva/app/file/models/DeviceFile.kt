@@ -13,5 +13,5 @@ import io.github.juevigrace.diva.core.Option
 data class DeviceFile(
     override val meta: EntryMeta,
     val sizeBytes: Long,
-    val mimeType: Option<String> = None,
+    val mimeType: Option<MimeType> = None,
 ) : FsEntry

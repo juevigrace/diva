@@ -22,5 +22,4 @@ data class EntryMeta(
     val scannedAt: Long = Clock.System.now().toEpochMilliseconds(),
     val createdAt: Long = Clock.System.now().toEpochMilliseconds(),
     val updatedAt: Long = Clock.System.now().toEpochMilliseconds(),
-    val deletedAt: Option<Long> = None,
 )

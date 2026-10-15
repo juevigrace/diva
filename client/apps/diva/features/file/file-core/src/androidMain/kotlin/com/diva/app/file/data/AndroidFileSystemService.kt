@@ -1,0 +1,104 @@
+package com.diva.app.file.data
+
+import android.content.Context
+import android.os.Environment
+import android.os.storage.StorageManager
+import com.diva.app.file.domain.services.FileSystemService
+import com.diva.app.file.models.DeviceFile
+import com.diva.app.file.models.Directory
+import com.diva.app.file.models.EntryMeta
+import com.diva.app.file.models.MimeType
+import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.core.permissions.PermissionRequester
+import io.github.juevigrace.diva.core.permissions.aggregate
+import io.github.juevigrace.diva.core.permissions.toException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+
+/**
+ * Reads shared external storage directly. The primary volume is always exposed;
+ * removable volumes are appended when their app-specific directory is present.
+ * A Storage-Access-Framework based reader can replace this without touching the
+ * common interfaces.
+ */
+class AndroidFileSystemService(
+    private val context: Context,
+    private val permissions: PermissionRequester,
+) : FileSystemService {
+    private val roots: List<Pair<File, String>> by lazy { resolveRoots() }
+
+    override suspend fun roots(): Result<List<Directory>> = withPermission {
+        roots.map { (file, name) -> directoryFrom(file, name) }
+    }
+
+    override suspend fun read(path: String): Result<Directory> = withPermission {
+        withContext(Dispatchers.IO) {
+            val base = File(path)
+            val canonicalPath = base.canonicalPath
+            require(isInsideRoots(canonicalPath)) { "Path $path is outside the known roots" }
+
+            val children = base.listFiles().orEmpty()
+            Directory(
+                meta = metaFrom(base),
+                entries = children.filter { it.isDirectory }.map(::directoryFrom).sortedBy { it.name } +
+                    children.filter { it.isFile }.map(::fileFrom).sortedBy { it.name },
+            )
+        }
+    }
+
+    private inline fun <T> withPermission(block: () -> T): Result<T> {
+        if (permissions.hasPermission) return runCatching(block)
+
+        return Result.failure(
+            permissions.requiredPermissions
+                .flatMap { permissions.checkPermission(it).permissions.values }
+                .aggregate()
+                .toException(),
+        )
+    }
+
+    private fun isInsideRoots(canonicalPath: String): Boolean {
+        return roots.any { (file, _) ->
+            val root = file.canonicalPath
+            canonicalPath == root || canonicalPath.startsWith(root + File.separator)
+        }
+    }
+
+    private fun resolveRoots(): List<Pair<File, String>> {
+        val storageManager = context.getSystemService(StorageManager::class.java)
+        return buildList {
+            add(Environment.getExternalStorageDirectory() to "Internal storage")
+
+            context.getExternalFilesDirs(null).orEmpty().filterNotNull().forEach { dir ->
+                val volume = dir.absolutePath.substringBefore("/Android/data/", "")
+                val file = File(volume)
+                if (volume.isNotEmpty() && none { it.first.canonicalPath == file.canonicalPath }) {
+                    val name = storageManager
+                        ?.getStorageVolume(file)
+                        ?.getDescription(context)
+                        ?: file.name
+                    add(file to name)
+                }
+            }
+        }
+    }
+
+    private fun metaFrom(file: File): EntryMeta = EntryMeta(
+        id = "",
+        name = file.name,
+        path = file.absolutePath,
+        lastModified = file.lastModified(),
+    )
+
+    private fun directoryFrom(file: File, name: String? = null): Directory {
+        val meta = metaFrom(file)
+        return Directory(meta = if (name == null) meta else meta.copy(name = name))
+    }
+
+    private fun fileFrom(file: File): DeviceFile = DeviceFile(
+        meta = metaFrom(file),
+        sizeBytes = file.length(),
+        mimeType = Option.of(MimeType.fromFileName(file.name)),
+    )
+}

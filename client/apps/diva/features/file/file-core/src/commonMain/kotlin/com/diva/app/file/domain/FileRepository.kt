@@ -1,33 +1,23 @@
 package com.diva.app.file.domain
 
-import com.diva.app.file.models.DeviceFile
 import com.diva.app.file.models.Directory
-import io.github.juevigrace.diva.core.Option
+import com.diva.app.file.models.FsEntry
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Device-global filesystem cache: reads go through the platform
- * [com.diva.app.file.domain.services.FileSystemService], everything the UI sees
- * comes back from the database.
+ * Device-global filesystem cache. The whole cached tree is exposed through
+ * [observe]; the UI filters it by parent to render a single level. Listings are
+ * pulled from the platform [com.diva.app.file.domain.services.FileSystemService]
+ * and written to the cache through [refresh].
  */
 interface FileRepository : Repository {
 
-    fun observe(): Flow<Result<List<Directory>>>
-
-    fun observe(id: String): Flow<Result<Option<Directory>>>
-
-    fun observeRoots(): Flow<Result<List<Directory>>>
-
-    /** Reactive children of [directoryId]; `null` observes the roots. */
-    fun observeChildren(directoryId: String?): Flow<Result<List<Directory>>>
-
-    suspend fun getChildren(parentId: String): Result<List<Directory>>
+    /** Every cached entry, directories and files alike. */
+    fun observe(): Flow<Result<List<FsEntry>>>
 
     /** Root-first parent trail for the breadcrumb bar; empty at the root. */
     suspend fun breadcrumbs(directoryId: String?): List<Directory>
-
-    suspend fun getFiles(parentId: String): Result<List<DeviceFile>>
 
     /**
      * Rescans [parentId] (or the roots when null) through the platform file
@@ -35,10 +25,4 @@ interface FileRepository : Repository {
      * children of that directory that no longer exist on disk.
      */
     suspend fun refresh(parentId: String?): Result<Unit>
-
-    suspend fun upsert(directory: Directory): Result<Unit>
-
-    suspend fun delete(id: String): Result<Unit>
-
-    suspend fun deleteAll(): Result<Unit>
 }

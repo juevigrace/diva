@@ -1,6 +1,5 @@
 package com.diva.app.search.presentation.viewmodel
 
-import com.diva.app.file.presentation.ui.components.navigation.DirectoryRoute
 import com.diva.app.player.presentation.ui.components.navigation.PlayerRoute
 import com.diva.app.search.domain.SearchRepository
 import com.diva.app.search.presentation.events.SearchEvents
@@ -32,7 +31,7 @@ class SearchViewModel(
             is SearchEvents.OnOpenMedia -> navigator.navigate(
                 PlayerRoute(mediaType = event.media.mediaType)
             )
-            is SearchEvents.OnOpenFolder -> tabNavigator.navigate(DirectoryRoute(event.folderId))
+            is SearchEvents.OnOpenFolder -> TODO()
             // TODO(ui-pass): navigate to the collection detail once it has a destination
             is SearchEvents.OnOpenCollection -> Unit
         }

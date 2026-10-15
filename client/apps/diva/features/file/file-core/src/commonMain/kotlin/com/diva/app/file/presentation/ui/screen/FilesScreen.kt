@@ -1,56 +1,133 @@
 package com.diva.app.file.presentation.ui.screen
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
+import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.diva.app.file.models.Directory
+import com.diva.app.file.presentation.events.DirectoryEvents
 import com.diva.app.file.presentation.state.DirectoryState
-import com.diva.app.file.presentation.ui.components.DirectoriesScaffold
-import com.diva.app.file.presentation.viewmodel.DirectoryViewModel
-import com.diva.app.generated.resources.Res
-import com.diva.app.generated.resources.files
-import org.jetbrains.compose.resources.stringResource
+import com.diva.app.file.presentation.viewmodel.FilesViewModel
+import io.github.juevigrace.diva.core.fold
+import io.github.juevigrace.diva.ui.layout.Screen
 import org.koin.compose.viewmodel.koinViewModel
 
-/**
- * The files tab root. Titled after the tab itself because at the root there is no
- * directory to name, and [DirectoryState.title] falls back to the same string.
- */
 @Composable
 fun FilesScreen(
-    viewModel: DirectoryViewModel = koinViewModel(),
+    viewModel: FilesViewModel = koinViewModel(),
 ) {
     val state: DirectoryState by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.onEnter(directoryId = null)
+    Screen(
+        contentWindowInsets = WindowInsets(0),
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
+            horizontalAlignment = Alignment.Start,
+        ) {
+            stickyHeader {
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    items(state.breadcrumbs, key = { it.id }) { directory ->
+                        Text(
+                            text = directory.name,
+                            style = MaterialTheme.typography.labelLarge,
+                            color = state.currentEntry.fold(
+                                onNone = { MaterialTheme.colorScheme.primary },
+                                onSome = { entry ->
+                                    if (entry.id == directory.id) {
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                    } else {
+                                        MaterialTheme.colorScheme.primary
+                                    }
+                                }
+                            ),
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(4.dp))
+                                .clickable { viewModel.onEvent(DirectoryEvents.OnNavigateToBreadcrumb(directory.id)) }
+                                .padding(horizontal = 8.dp, vertical = 4.dp),
+                        )
+                    }
+                }
+            }
+
+            items(state.entries, key = { it.id }) { entry ->
+                val isDirectory = entry is Directory
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(enabled = isDirectory) {
+                            viewModel.onEvent(DirectoryEvents.OnOpenDirectory(entry.id))
+                        }
+                        .padding(horizontal = 20.dp, vertical = 10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = if (isDirectory) {
+                            Icons.Filled.Folder
+                        } else {
+                            Icons.AutoMirrored.Filled.InsertDriveFile
+                        },
+                        contentDescription = null,
+                        tint = if (isDirectory) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
+                    )
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.Top),
+                        horizontalAlignment = Alignment.Start,
+                    ) {
+                        Text(
+                            text = entry.name,
+                            style = MaterialTheme.typography.bodyLarge,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        Text(
+                            text = entry.path,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+            }
+        }
     }
-
-    DirectoriesScaffold(
-        title = stringResource(Res.string.files),
-        state = state,
-        onEvent = viewModel::onEvent,
-    )
-}
-
-/**
- * A single directory pushed on top of the files tab. Titled after the directory being
- * browsed; back is handled by the nav host's predictive/gesture back.
- */
-@Composable
-fun DirectoryDetailScreen(
-    directoryId: String,
-    viewModel: DirectoryViewModel = koinViewModel(),
-) {
-    val state: DirectoryState by viewModel.state.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.onEnter(directoryId = directoryId)
-    }
-
-    DirectoriesScaffold(
-        title = state.title,
-        state = state,
-        onEvent = viewModel::onEvent,
-    )
 }

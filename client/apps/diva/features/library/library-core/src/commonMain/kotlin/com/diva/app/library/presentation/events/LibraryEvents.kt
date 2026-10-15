@@ -9,6 +9,4 @@ sealed interface LibraryEvents {
     data class OnToggleFavorite(val media: Media) : LibraryEvents
 
     data class OnOpenMedia(val media: Media) : LibraryEvents
-
-    data class OnOpenFolder(val folderId: String) : LibraryEvents
 }

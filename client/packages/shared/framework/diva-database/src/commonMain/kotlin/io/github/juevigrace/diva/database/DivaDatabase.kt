@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.cancellation.CancellationException
 
 interface DivaDatabase<S : TransacterBase> {
     val scope: CoroutineScope
@@ -90,9 +91,9 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
         block: S.() -> Query<T>,
     ): Result<Option<T>> {
         return withContext(context) {
-            runCatching {
+            runDatabaseCatching {
                 block(db).executeAsOneOrNull().toOption()
-            }.recoverCatching { throw transformer.transform(it) }
+            }
         }
     }
 
@@ -106,6 +107,7 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
                 Result.success(entity.toOption())
             }
             .catch { e ->
+                if (e is CancellationException) throw e
                 emit(Result.failure(transformer.transform(e)))
             }
     }
@@ -115,9 +117,9 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
         block: S.() -> Query<T>,
     ): Result<List<T>> {
         return withContext(context) {
-            runCatching {
+            runDatabaseCatching {
                 block(db).executeAsList()
-            }.recoverCatching { throw transformer.transform(it) }
+            }
         }
     }
 
@@ -131,6 +133,7 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
                 Result.success(list)
             }
             .catch { e ->
+                if (e is CancellationException) throw e
                 emit(Result.failure(transformer.transform(e)))
             }
     }
@@ -140,9 +143,9 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
         block: suspend S.() -> T,
     ): Result<T> {
         return withContext(context) {
-            runCatching {
+            runDatabaseCatching {
                 block(db)
-            }.recoverCatching { throw transformer.transform(it) }
+            }
         }
     }
 
@@ -151,15 +154,25 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
         block: suspend SqlDriver.() -> T,
     ): Result<T> {
         return withContext(context) {
-            runCatching {
+            runDatabaseCatching {
                 block(driver)
-            }.recoverCatching { throw transformer.transform(it) }
+            }
         }
     }
 
     override suspend fun close(): Result<Unit> {
-        return runCatching {
+        return runDatabaseCatching {
             driver.close()
-        }.recoverCatching { throw transformer.transform(it) }
+        }
+    }
+
+    private inline fun <T> runDatabaseCatching(block: () -> T): Result<T> {
+        return try {
+            Result.success(block())
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            Result.failure(transformer.transform(e))
+        }
     }
 }

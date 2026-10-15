@@ -11,6 +11,7 @@ androidx-espresso = "3.7.0"
 androidx-test = "1.7.0"
 androidx-activity = "1.13.0"
 androidx-core = "1.19.1"
+androidx-startup = "1.2.0"
 lifecycle = "2.11.0"
 material3-adaptive = "1.3.0-rc01"
 savedstate = "1.4.0"
@@ -101,8 +102,10 @@ diva-lib-verification-models = { group = "io.github.juevigrace", name = "diva-li
 
 ######### [ANDROIDX DEPENDENCIES] #########
 
+androidx-activity = { module = "androidx.activity:activity", version.ref = "androidx-activity" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
+androidx-startup-runtime = { group = "androidx.startup", name = "startup-runtime", version.ref = "androidx-startup" }
 
 ######### [KOIN DEPENDENCIES] #########
 

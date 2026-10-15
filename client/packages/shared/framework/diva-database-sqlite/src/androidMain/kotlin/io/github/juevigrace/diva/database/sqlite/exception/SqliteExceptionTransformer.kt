@@ -55,7 +55,7 @@ actual object SqliteExceptionTransformer : DatabaseExceptionTransformer {
                 NotNullConstraintViolation(message, exception)
             message.contains("CHECK", ignoreCase = true) ->
                 CheckConstraintViolation(message, exception)
-            else -> UniqueConstraintViolation(message, exception)
+            else -> UnknownDatabaseException(message, exception)
         }
     }
 }

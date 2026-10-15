@@ -1,6 +1,5 @@
 package com.diva.app.library.presentation.viewmodel
 
-import com.diva.app.file.presentation.ui.components.navigation.DirectoryRoute
 import com.diva.app.library.presentation.events.LibraryEvents
 import com.diva.app.library.presentation.state.LibraryFilter
 import com.diva.app.library.presentation.state.LibraryState
@@ -37,7 +36,6 @@ class LibraryViewModel(
             is LibraryEvents.OnFilterChange -> setFilter(event.filter)
             is LibraryEvents.OnToggleFavorite -> toggleFavorite(event)
             is LibraryEvents.OnOpenMedia -> openMedia(event)
-            is LibraryEvents.OnOpenFolder -> tabNavigator.navigate(DirectoryRoute(event.folderId))
         }
     }
 

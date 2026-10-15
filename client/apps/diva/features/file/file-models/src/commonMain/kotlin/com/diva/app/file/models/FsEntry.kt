@@ -21,7 +21,6 @@ sealed interface FsEntry {
     val scannedAt: Long get() = meta.scannedAt
     val createdAt: Long get() = meta.createdAt
     val updatedAt: Long get() = meta.updatedAt
-    val deletedAt: Option<Long> get() = meta.deletedAt
 
     val ref: EntryRef get() = EntryRef(id, path, name)
 }

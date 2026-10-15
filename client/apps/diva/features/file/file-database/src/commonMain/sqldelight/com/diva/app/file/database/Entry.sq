@@ -1,137 +1,95 @@
--- Shared entry rows (directories and files): the storage picks insert or updateEntryAfterScan
+-- Shared entry rows (directories and files): the storage picks insert or update
 -- by path so the UUID id of an existing row survives rescans and children's
 -- parent_id references stay valid. File rows additionally live in diva_file
 -- (see File.sq); deleting an entry cascades to its file row.
 --
--- Every read that yields a model also LEFT JOINs the parent row (p) so
--- parent_path/parent_name fill the EntryRef without extra lookups. Directories
--- are entries without a diva_file row (f.dir_id IS NULL).
+-- Every read LEFT JOINs the parent row (p) so parent_path/parent_name fill
+-- the EntryRef without extra lookups. The file row (f) is LEFT JOINed so
+-- size_bytes/mime_type are NULL for directories, populated for files.
+
+-- ============================ WRITES ============================
 
 insert:
 INSERT INTO diva_entry(id, name, path, parent_id, last_modified)
 VALUES (?, ?, ?, ?, ?);
 
--- Refresh of an already-cached row; id and created_at stay untouched.
 update:
 UPDATE diva_entry
 SET name = ?,
     parent_id = ?,
     last_modified = ?,
     scanned_at = ?,
-    updated_at = ?,
-    deleted_at = ?
+    updated_at = ?
 WHERE id = ?;
+
+-- ============================ DELETES ============================
+
+deleteOne:
+DELETE FROM diva_entry
+WHERE id = ?;
+
+delete:
+DELETE FROM diva_entry;
+
+deleteStaleChildren:
+DELETE FROM diva_entry
+WHERE parent_id IS ?
+  AND scanned_at < ?;
+
+-- ============================ LOOKUPS ============================
 
 findByPath:
 SELECT id
 FROM diva_entry
 WHERE path = ?;
 
-deleteOne:
-DELETE FROM diva_entry
-WHERE id = ?;
+-- ============================ READS (unified 12-col projection) ============================
 
--- Clear the whole cache; used before a full rescan so removed paths vanish.
-delete:
-DELETE FROM diva_entry;
-
--- Removes cached rows of a directory (NULL parent = roots) that were not seen
--- by the scan that stamped scanned_at = <scanStart>. Their diva_file rows are
--- removed by the FK cascade.
-deleteStaleChildren:
-DELETE FROM diva_entry
-WHERE parent_id IS ?
-  AND scanned_at < ?;
+findAll:
+SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at,
+       p.path AS parent_path, p.name AS parent_name,
+       f.size_bytes, f.mime_type
+FROM diva_entry AS e
+LEFT JOIN diva_file AS f ON f.dir_id = e.id
+LEFT JOIN diva_entry AS p ON e.parent_id = p.id
+ORDER BY e.name ASC;
 
 findById:
-SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at, e.deleted_at, p.path AS parent_path, p.name AS parent_name
+SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at,
+       p.path AS parent_path, p.name AS parent_name,
+       f.size_bytes, f.mime_type
 FROM diva_entry AS e
 LEFT JOIN diva_file AS f ON f.dir_id = e.id
 LEFT JOIN diva_entry AS p ON e.parent_id = p.id
-WHERE e.id = ?
-  AND f.dir_id IS NULL
-  AND e.deleted_at IS NULL;
+WHERE e.id = ?;
 
--- Directories only: an entry without a diva_file row.
-findAll:
-SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at, e.deleted_at, p.path AS parent_path, p.name AS parent_name
+findByParent:
+SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at,
+       p.path AS parent_path, p.name AS parent_name,
+       f.size_bytes, f.mime_type
 FROM diva_entry AS e
 LEFT JOIN diva_file AS f ON f.dir_id = e.id
 LEFT JOIN diva_entry AS p ON e.parent_id = p.id
-WHERE f.dir_id IS NULL
-  AND e.deleted_at IS NULL
+WHERE e.parent_id = ?
 ORDER BY e.name ASC;
 
--- Root directories (no parent) for the FK/breadcrumb parents. parent columns
--- are omitted: a root has no parent row by definition.
 findRoots:
-SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at, e.deleted_at
+SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at,
+       p.path AS parent_path, p.name AS parent_name,
+       f.size_bytes, f.mime_type
 FROM diva_entry AS e
 LEFT JOIN diva_file AS f ON f.dir_id = e.id
+LEFT JOIN diva_entry AS p ON e.parent_id = p.id
 WHERE e.parent_id IS NULL
-  AND f.dir_id IS NULL
-  AND e.deleted_at IS NULL
 ORDER BY e.name ASC;
 
--- Subdirectories inside a given directory.
-findChildren:
-SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at, e.deleted_at, p.path AS parent_path, p.name AS parent_name
-FROM diva_entry AS e
-LEFT JOIN diva_file AS f ON f.dir_id = e.id
-LEFT JOIN diva_entry AS p ON e.parent_id = p.id
-WHERE e.parent_id = ?
-  AND f.dir_id IS NULL
-  AND e.deleted_at IS NULL
-ORDER BY e.name ASC;
-
--- Contents of the platform roots; what the files tab shows at its top level.
-findRootChildren:
-SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at, e.deleted_at, p.path AS parent_path, p.name AS parent_name
-FROM diva_entry AS e
-LEFT JOIN diva_file AS f ON f.dir_id = e.id
-LEFT JOIN diva_entry AS p ON e.parent_id = p.id
-JOIN diva_entry AS r ON e.parent_id = r.id
-WHERE r.parent_id IS NULL
-  AND f.dir_id IS NULL
-  AND e.deleted_at IS NULL
-ORDER BY e.name ASC;
-
--- Immediate children of a directory, directories and files together, to build
--- a DirectoryListing. size_bytes/mime_type are NULL for directories.
-findChildEntries:
-SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at, e.deleted_at, p.path AS parent_path, p.name AS parent_name, f.size_bytes, f.mime_type
-FROM diva_entry AS e
-LEFT JOIN diva_file AS f ON f.dir_id = e.id
-LEFT JOIN diva_entry AS p ON e.parent_id = p.id
-WHERE e.parent_id = ?
-  AND e.deleted_at IS NULL
-ORDER BY e.name ASC;
-
--- Children of the platform roots, directories and files together.
-findRootEntries:
-SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at, e.deleted_at, p.path AS parent_path, p.name AS parent_name, f.size_bytes, f.mime_type
-FROM diva_entry AS e
-LEFT JOIN diva_file AS f ON f.dir_id = e.id
-LEFT JOIN diva_entry AS p ON e.parent_id = p.id
-JOIN diva_entry AS r ON e.parent_id = r.id
-WHERE r.parent_id IS NULL
-  AND e.deleted_at IS NULL
-ORDER BY e.name ASC;
-
--- Regular files inside a given directory.
+-- Regular files only (INNER JOIN for non-null size_bytes/mime_type)
 findFiles:
-SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at, e.deleted_at, p.path AS parent_path, p.name AS parent_name, f.size_bytes, f.mime_type
+SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at,
+       p.path AS parent_path, p.name AS parent_name,
+       f.size_bytes, f.mime_type
 FROM diva_entry AS e
 JOIN diva_file AS f ON f.dir_id = e.id
 LEFT JOIN diva_entry AS p ON e.parent_id = p.id
 WHERE e.parent_id = ?
-  AND e.deleted_at IS NULL
 ORDER BY e.name ASC;
-
-findFileById:
-SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at, e.deleted_at, p.path AS parent_path, p.name AS parent_name, f.size_bytes, f.mime_type
-FROM diva_entry AS e
-JOIN diva_file AS f ON f.dir_id = e.id
-LEFT JOIN diva_entry AS p ON e.parent_id = p.id
-WHERE e.id = ?
-  AND e.deleted_at IS NULL;
