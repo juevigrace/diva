@@ -1,23 +1,30 @@
 package com.diva.app.file.domain
 
-import com.diva.app.file.models.Directory
 import com.diva.app.file.models.FsEntry
 import io.github.juevigrace.diva.lib.core.Repository
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Device-global filesystem cache. The whole cached tree is exposed through
- * [observe]; the UI filters it by parent to render a single level. Listings are
- * pulled from the platform [com.diva.app.file.domain.services.FileSystemService]
- * and written to the cache through [refresh].
+ * Device-global filesystem cache. Listings are pulled lazily, one level at a
+ * time: collecting [observeRoot] or [observeDir] rescans just that level from
+ * the platform [com.diva.app.file.domain.services.FileSystemService] and writes
+ * it to the cache through [refresh]. [observe] exposes the whole cached tree for
+ * cross-level consumers such as search.
  */
 interface FileRepository : Repository {
 
-    /** Every cached entry, directories and files alike. */
+    /** Every cached entry, directories and files alike. Used by search. */
     fun observe(): Flow<Result<List<FsEntry>>>
 
-    /** Root-first parent trail for the breadcrumb bar; empty at the root. */
-    suspend fun breadcrumbs(directoryId: String?): List<Directory>
+    /** Rescans the roots and emits the first-level entries. */
+    fun observeRoot(): Flow<Result<List<FsEntry>>>
+
+    /**
+     * Rescans [id] and emits its immediate children (directories and files).
+     * The scan is driven by collection, so only levels the UI navigates into are
+     * read. Emits a failure and then the cached children when the rescan fails.
+     */
+    fun observeDir(id: String): Flow<Result<List<FsEntry>>>
 
     /**
      * Rescans [parentId] (or the roots when null) through the platform file

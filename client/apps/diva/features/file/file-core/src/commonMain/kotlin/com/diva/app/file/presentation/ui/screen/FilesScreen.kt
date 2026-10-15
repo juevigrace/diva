@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
 import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,6 +33,7 @@ import com.diva.app.file.presentation.state.DirectoryState
 import com.diva.app.file.presentation.viewmodel.FilesViewModel
 import io.github.juevigrace.diva.core.fold
 import io.github.juevigrace.diva.ui.layout.Screen
+import io.github.juevigrace.diva.ui.navigation.BackHandler
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -41,6 +41,10 @@ fun FilesScreen(
     viewModel: FilesViewModel = koinViewModel(),
 ) {
     val state: DirectoryState by viewModel.state.collectAsStateWithLifecycle()
+
+    BackHandler(enabled = state.breadcrumbs.isNotEmpty()) {
+        viewModel.onEvent(DirectoryEvents.OnNavigateUp)
+    }
 
     Screen(
         contentWindowInsets = WindowInsets(0),

@@ -31,9 +31,11 @@ class IosFileSystemService(
     private val permissions: PermissionRequester,
 ) : FileSystemService {
 
-    private val root: String = (NSFileManager.defaultManager
-        .URLsForDirectory(NSDocumentDirectory, NSUserDomainMask)
-        .firstOrNull() as? NSURL)?.path
+    private val root: String = (
+        NSFileManager.defaultManager
+            .URLsForDirectory(NSDocumentDirectory, NSUserDomainMask)
+            .firstOrNull() as? NSURL
+        )?.path
         ?: error("Documents directory is unavailable")
 
     override suspend fun roots(): Result<List<Directory>> = withPermission {
@@ -51,7 +53,11 @@ class IosFileSystemService(
             val parentUrl = NSURL.fileURLWithPath(path)
             val children = NSFileManager.defaultManager.contentsOfDirectoryAtURL(
                 url = parentUrl,
-                includingPropertiesForKeys = listOf(NSURLIsDirectoryKey, NSURLFileSizeKey, NSURLContentModificationDateKey),
+                includingPropertiesForKeys = listOf(
+                    NSURLIsDirectoryKey,
+                    NSURLFileSizeKey,
+                    NSURLContentModificationDateKey
+                ),
                 options = 0u,
                 error = null,
             ) ?: emptyList<Any>()
@@ -112,8 +118,10 @@ class IosFileSystemService(
 
     @OptIn(ExperimentalForeignApi::class)
     private fun modificationDateMs(url: NSURL): Long =
-        (url.resourceValuesForKeys(listOf(NSURLContentModificationDateKey), null)
-            ?.get(NSURLContentModificationDateKey) as? NSDate)
+        (
+            url.resourceValuesForKeys(listOf(NSURLContentModificationDateKey), null)
+                ?.get(NSURLContentModificationDateKey) as? NSDate
+            )
             ?.timeIntervalSince1970
             ?.let { (it * 1000).toLong() } ?: 0L
 }

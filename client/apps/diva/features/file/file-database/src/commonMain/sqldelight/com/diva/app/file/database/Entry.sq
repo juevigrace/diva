@@ -10,8 +10,8 @@
 -- ============================ WRITES ============================
 
 insert:
-INSERT INTO diva_entry(id, name, path, parent_id, last_modified)
-VALUES (?, ?, ?, ?, ?);
+INSERT INTO diva_entry(id, name, path, parent_id, last_modified, scanned_at)
+VALUES (?, ?, ?, ?, ?, ?);
 
 update:
 UPDATE diva_entry

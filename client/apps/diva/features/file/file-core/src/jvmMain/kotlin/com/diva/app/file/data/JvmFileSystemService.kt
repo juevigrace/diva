@@ -1,14 +1,12 @@
 package com.diva.app.file.data
 
-import com.diva.app.file.domain.services.FileSystemService
+import com.diva.app.file.domain.services.BaseFileSystemService
 import com.diva.app.file.models.DeviceFile
 import com.diva.app.file.models.Directory
 import com.diva.app.file.models.EntryMeta
 import com.diva.app.file.models.MimeType
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.permissions.PermissionRequester
-import io.github.juevigrace.diva.core.permissions.aggregate
-import io.github.juevigrace.diva.core.permissions.toException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -16,9 +14,8 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 class JvmFileSystemService(
-    private val permissions: PermissionRequester,
-) : FileSystemService {
-
+    override val permissions: PermissionRequester,
+) : BaseFileSystemService(permissions) {
     private val roots: List<Path> by lazy {
         buildList {
             add(Path.of(System.getProperty("user.home")))
@@ -52,17 +49,6 @@ class JvmFileSystemService(
                 entries = directories.sortedBy { it.name } + files.sortedBy { it.name },
             )
         }
-    }
-
-    private inline fun <T> withPermission(block: () -> T): Result<T> {
-        if (permissions.hasPermission) return runCatching(block)
-
-        return Result.failure(
-            permissions.requiredPermissions
-                .flatMap { permissions.checkPermission(it).permissions.values }
-                .aggregate()
-                .toException(),
-        )
     }
 
     private fun metaFrom(path: Path): EntryMeta = EntryMeta(

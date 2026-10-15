@@ -8,6 +8,6 @@ data class DirectoryState(
     val breadcrumbs: List<Directory> = emptyList(),
     val entries: List<FsEntry> = emptyList(),
 ) {
-    val currentEntry: Option<FsEntry>
-        get() = Option.of(entries.lastOrNull())
+    val currentEntry: Option<Directory>
+        get() = Option.of(breadcrumbs.lastOrNull())
 }

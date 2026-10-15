@@ -107,6 +107,7 @@ class EntryStorageImpl(
                                 path = entry.path,
                                 parent_id = entry.parent.getOrNull()?.id,
                                 last_modified = entry.lastModified,
+                                scanned_at = entry.scannedAt,
                             )
                             id
                         },

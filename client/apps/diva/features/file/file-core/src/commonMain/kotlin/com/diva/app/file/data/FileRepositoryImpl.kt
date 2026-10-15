@@ -11,63 +11,68 @@ import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Clock
 
 /**
  * Device-global directory/file cache backed by [EntryStorage]. Reads are served
- * from the database; [refresh] reads a single directory (or the root) from the
- * platform [FileSystemService], upserts it and its children, and prunes cached
- * children that no longer exist on disk.
+ * from the database; [observeRoot]/[observeDir] rescan the collected level
+ * through the platform [FileSystemService], upsert it and its children, prune
+ * cached children that no longer exist on disk, then emit the live cache.
  */
 class FileRepositoryImpl(
-    private val entries: EntryStorage,
+    private val storage: EntryStorage,
     private val fileSystem: FileSystemService,
 ) : FileRepository {
 
-    override fun observe(): Flow<Result<List<FsEntry>>> = entries.getAllFlow()
+    override fun observe(): Flow<Result<List<FsEntry>>> = storage.getAllFlow()
 
-    override suspend fun breadcrumbs(directoryId: String?): List<Directory> {
-        if (directoryId == null) return emptyList()
-        val trail = ArrayDeque<Directory>()
-        var currentId: String? = directoryId
-        while (currentId != null) {
-            val directory = entries.getById(currentId).getOrThrow().getOrNull() as? Directory ?: break
-            if (directory.parent.getOrNull() == null) break
-            trail.addFirst(directory)
-            currentId = directory.parent.getOrNull()?.id
-        }
-        return trail.toList()
+    override fun observeRoot(): Flow<Result<List<FsEntry>>> = flow {
+        refresh(null).onFailure { emit(Result.failure(it)) }
+        emitAll(storage.getRootsFlow())
     }
 
-    override suspend fun refresh(parentId: String?): Result<Unit> = runCatching {
+    override fun observeDir(id: String): Flow<Result<List<FsEntry>>> = flow {
+        refresh(id).onFailure { emit(Result.failure(it)) }
+        emitAll(storage.getChildrenFlow(id))
+    }
+
+    override suspend fun refresh(parentId: String?): Result<Unit> = try {
         val scanStart = Clock.System.now().toEpochMilliseconds()
 
         if (parentId == null) {
             fileSystem.roots().getOrThrow().forEach { root ->
-                entries.upsert(
+                storage.upsert(
                     root.copy(meta = root.meta.copy(parent = None, scannedAt = scanStart)),
                 ).getOrThrow()
             }
-            return@runCatching
-        }
+            storage.deleteStaleChildren(null, scanStart).getOrThrow()
+        } else {
+            val parent = storage.getById(parentId).getOrThrow().getOrNull() as? Directory
+                ?: error("Directory $parentId not found")
 
-        val parent = entries.getById(parentId).getOrThrow().getOrNull() as? Directory
-            ?: error("Directory $parentId not found")
+            val scanned = fileSystem.read(parent.path).getOrThrow()
+            val directoryId = storage.upsert(
+                scanned.copy(meta = scanned.meta.copy(parent = parent.parent, scannedAt = scanStart)),
+            ).getOrThrow()
 
-        val scanned = fileSystem.read(parent.path).getOrThrow()
-        val directoryId = entries.upsert(
-            scanned.copy(meta = scanned.meta.copy(parent = parent.parent, scannedAt = scanStart)),
-        ).getOrThrow()
-
-        val childParent = Option.of(EntryRef(directoryId, scanned.path, scanned.name))
-        scanned.entries.forEach { child ->
-            val updated = when (child) {
-                is Directory -> child.copy(meta = child.meta.copy(parent = childParent, scannedAt = scanStart))
-                is DeviceFile -> child.copy(meta = child.meta.copy(parent = childParent, scannedAt = scanStart))
+            val childParent = Option.of(EntryRef(directoryId, scanned.path, scanned.name))
+            scanned.entries.forEach { child ->
+                val updated = when (child) {
+                    is Directory -> child.copy(meta = child.meta.copy(parent = childParent, scannedAt = scanStart))
+                    is DeviceFile -> child.copy(meta = child.meta.copy(parent = childParent, scannedAt = scanStart))
+                }
+                storage.upsert(updated).getOrThrow()
             }
-            entries.upsert(updated).getOrThrow()
-        }
 
-        entries.deleteStaleChildren(directoryId, scanStart).getOrThrow()
+            storage.deleteStaleChildren(directoryId, scanStart).getOrThrow()
+        }
+        Result.success(Unit)
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Throwable) {
+        Result.failure(e)
     }
 }
