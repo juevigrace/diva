@@ -1,6 +1,5 @@
 package io.github.juevigrace.diva.database.test
 
-import app.cash.sqldelight.db.SqlDriver
 import io.github.juevigrace.diva.database.DivaDatabase
 import io.github.juevigrace.diva.database.SqliteDB
 import io.github.juevigrace.diva.database.driver.DriverProvider
@@ -17,8 +16,7 @@ class DivaDatabaseTest {
 
     companion object {
         private suspend fun createDatabase(): DivaDatabase<SqliteDB> {
-            val driver: SqlDriver = provider.createAsyncDriver(SqliteDB.Schema).getOrThrow()
-            return DivaDatabase.createAsync(provider, SqliteDB.Schema, db = { SqliteDB(driver) }).getOrThrow()
+            return DivaDatabase.createAsync(provider, SqliteDB.Schema, db = { SqliteDB(it) }).getOrThrow()
         }
     }
 

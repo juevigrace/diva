@@ -17,6 +17,7 @@ sealed interface FsEntry {
     val name: String get() = meta.name
     val path: String get() = meta.path
     val parent: Option<EntryRef> get() = meta.parent
+    val hidden: Boolean get() = meta.hidden
     val lastModified: Long get() = meta.lastModified
     val scannedAt: Long get() = meta.scannedAt
     val createdAt: Long get() = meta.createdAt

@@ -13,6 +13,7 @@ import io.github.juevigrace.diva.core.getOrNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Clock
 
@@ -31,12 +32,12 @@ class FileRepositoryImpl(
 
     override fun observeRoot(): Flow<Result<List<FsEntry>>> = flow {
         refresh(null).onFailure { emit(Result.failure(it)) }
-        emitAll(storage.getRootsFlow())
+        emitAll(storage.getByParentFlow().map { result -> result.map { entries -> entries.filter { !it.hidden } } })
     }
 
     override fun observeDir(id: String): Flow<Result<List<FsEntry>>> = flow {
         refresh(id).onFailure { emit(Result.failure(it)) }
-        emitAll(storage.getChildrenFlow(id))
+        emitAll(storage.getByParentFlow(id))
     }
 
     override suspend fun refresh(parentId: String?): Result<Unit> = try {

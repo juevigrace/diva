@@ -1,0 +1,8 @@
+package com.diva.app.file.domain.services.permissions
+
+import io.github.juevigrace.diva.core.permissions.JvmPermissionRequester
+
+actual object StoragePermissionRequester : JvmPermissionRequester() {
+    actual override val requiredPermissions: List<String>
+        get() = emptyList()
+}

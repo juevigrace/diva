@@ -1,8 +1,6 @@
 package io.github.juevigrace.diva.core.permissions
 
-class JvmPermissionRequester : PermissionRequester {
-    override val requiredPermissions: List<String> = emptyList()
-
+abstract class JvmPermissionRequester : PermissionRequester {
     override fun checkPermission(permission: String): PermissionState =
         PermissionState(mapOf(permission to PermissionStatus.Granted))
 

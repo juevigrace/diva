@@ -10,14 +10,15 @@
 -- ============================ WRITES ============================
 
 insert:
-INSERT INTO diva_entry(id, name, path, parent_id, last_modified, scanned_at)
-VALUES (?, ?, ?, ?, ?, ?);
+INSERT INTO diva_entry(id, name, path, parent_id, last_modified, hidden, scanned_at)
+VALUES (?, ?, ?, ?, ?, ?, ?);
 
 update:
 UPDATE diva_entry
 SET name = ?,
     parent_id = ?,
     last_modified = ?,
+    hidden = ?,
     scanned_at = ?,
     updated_at = ?
 WHERE id = ?;
@@ -43,53 +44,32 @@ SELECT id
 FROM diva_entry
 WHERE path = ?;
 
--- ============================ READS (unified 12-col projection) ============================
+-- ============================ READS (unified 14-col projection) ============================
 
 findAll:
-SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at,
+SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.hidden, e.scanned_at, e.created_at, e.updated_at,
        p.path AS parent_path, p.name AS parent_name,
-       f.size_bytes, f.mime_type
+       f.size_bytes, f.mime_type, f.category
 FROM diva_entry AS e
 LEFT JOIN diva_file AS f ON f.dir_id = e.id
 LEFT JOIN diva_entry AS p ON e.parent_id = p.id
 ORDER BY e.name ASC;
 
 findById:
-SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at,
+SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.hidden, e.scanned_at, e.created_at, e.updated_at,
        p.path AS parent_path, p.name AS parent_name,
-       f.size_bytes, f.mime_type
+       f.size_bytes, f.mime_type, f.category
 FROM diva_entry AS e
 LEFT JOIN diva_file AS f ON f.dir_id = e.id
 LEFT JOIN diva_entry AS p ON e.parent_id = p.id
 WHERE e.id = ?;
 
 findByParent:
-SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at,
+SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.hidden, e.scanned_at, e.created_at, e.updated_at,
        p.path AS parent_path, p.name AS parent_name,
-       f.size_bytes, f.mime_type
+       f.size_bytes, f.mime_type, f.category
 FROM diva_entry AS e
 LEFT JOIN diva_file AS f ON f.dir_id = e.id
 LEFT JOIN diva_entry AS p ON e.parent_id = p.id
-WHERE e.parent_id = ?
-ORDER BY e.name ASC;
-
-findRoots:
-SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at,
-       p.path AS parent_path, p.name AS parent_name,
-       f.size_bytes, f.mime_type
-FROM diva_entry AS e
-LEFT JOIN diva_file AS f ON f.dir_id = e.id
-LEFT JOIN diva_entry AS p ON e.parent_id = p.id
-WHERE e.parent_id IS NULL
-ORDER BY e.name ASC;
-
--- Regular files only (INNER JOIN for non-null size_bytes/mime_type)
-findFiles:
-SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.scanned_at, e.created_at, e.updated_at,
-       p.path AS parent_path, p.name AS parent_name,
-       f.size_bytes, f.mime_type
-FROM diva_entry AS e
-JOIN diva_file AS f ON f.dir_id = e.id
-LEFT JOIN diva_entry AS p ON e.parent_id = p.id
-WHERE e.parent_id = ?
+WHERE e.parent_id IS ?
 ORDER BY e.name ASC;

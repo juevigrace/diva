@@ -14,6 +14,13 @@ interface PermissionRequester {
 
     /** Prompts for every one of [requiredPermissions] and reports the outcome. */
     suspend fun request(): PermissionState
+
+    /**
+     * Opens the system settings screen for the app so the user can grant
+     * [requiredPermissions], suspending until they return. Only call after
+     * explicitly asking the user — special permissions have no prompt.
+     */
+    suspend fun openAppSettings() {}
 }
 
 data class PermissionState(

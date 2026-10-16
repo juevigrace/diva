@@ -1,6 +1,8 @@
 package com.diva.app.presentation.ui.screen
 
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -82,9 +84,12 @@ fun App() {
         ) {
             Screen(
                 snackBarHost = { ToasterHost() }
-            ) { _ ->
+            ) { innerPadding ->
                 NavHost(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .consumeWindowInsets(innerPadding)
+                        .fillMaxSize(),
                     navigator = rootNav,
                     entryDecorators = listOf(
                         rememberSaveableStateHolderNavEntryDecorator(),

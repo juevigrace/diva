@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -100,7 +100,6 @@ fun HomeScreen(
         } else {
             adaptiveNavigationStyle()
         },
-        contentWindowInsets = WindowInsets(0),
         topBar = {
             if (state.settings.isDesktop) {
                 CenterAlignedTopAppBar(
@@ -265,7 +264,10 @@ fun HomeScreen(
         },
     ) { innerPadding ->
         TabNavHost(
-            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+            modifier = Modifier
+                .padding(innerPadding)
+                .consumeWindowInsets(innerPadding)
+                .fillMaxSize(),
             tabNavigator = tabNavigator,
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),

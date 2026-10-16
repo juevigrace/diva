@@ -1,30 +1,20 @@
-package com.diva.app.file.data
+package com.diva.app.file.data.services
 
 import android.content.Context
 import android.os.Environment
 import android.os.storage.StorageManager
-import com.diva.app.file.domain.services.BaseFileSystemService
+import com.diva.app.file.domain.services.FileSystemService
+import com.diva.app.file.domain.services.withRequester
 import com.diva.app.file.models.DeviceFile
 import com.diva.app.file.models.Directory
 import com.diva.app.file.models.EntryMeta
 import com.diva.app.file.models.MimeType
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.core.permissions.PermissionRequester
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-/**
- * Reads shared external storage directly. The primary volume is always exposed;
- * removable volumes are appended when their app-specific directory is present.
- * A Storage-Access-Framework based reader can replace this without touching the
- * common interfaces.
- */
-class AndroidFileSystemService(
-    private val context: Context,
-    override val permissions: PermissionRequester,
-) : BaseFileSystemService(permissions) {
-
+actual class FileSystemServiceImpl(private val context: Context) : FileSystemService {
     private val storageManager: StorageManager? = context.getSystemService(StorageManager::class.java)
     private val roots: List<Pair<File, String>> by lazy {
         buildList {
@@ -43,28 +33,32 @@ class AndroidFileSystemService(
         }
     }
 
-    override suspend fun roots(): Result<List<Directory>> = withPermission {
-        roots.map { (file, name) -> directoryFrom(file, name) }
+    actual override suspend fun roots(): Result<List<Directory>> {
+        return withRequester {
+            roots.map { (file, name) -> directoryFrom(file, name) }
+        }
     }
 
-    override suspend fun read(path: String): Result<Directory> = withPermission {
-        withContext(Dispatchers.IO) {
-            val base = File(path)
-            require(isInsideRoots(base.canonicalPath)) { "Path $path is outside the known roots" }
+    actual override suspend fun read(path: String): Result<Directory> {
+        return withRequester {
+            withContext(Dispatchers.IO) {
+                val base = File(path)
+                require(isInsideRoots(base.canonicalPath)) { "Path $path is outside the known roots" }
 
-            val children = base.listFiles().orEmpty()
-            val directories = children
-                .filter { it.isDirectory }
-                .map(::directoryFrom)
-                .sortedBy { it.name }
-            val files = children
-                .filter { it.isFile }
-                .map(::fileFrom)
-                .sortedBy { it.name }
-            Directory(
-                meta = metaFrom(base),
-                entries = directories + files,
-            )
+                val children = base.listFiles().orEmpty()
+                val directories = children
+                    .filter { it.isDirectory }
+                    .map(::directoryFrom)
+                    .sortedBy { it.name }
+                val files = children
+                    .filter { it.isFile }
+                    .map(::fileFrom)
+                    .sortedBy { it.name }
+                Directory(
+                    meta = metaFrom(base),
+                    entries = directories + files,
+                )
+            }
         }
     }
 

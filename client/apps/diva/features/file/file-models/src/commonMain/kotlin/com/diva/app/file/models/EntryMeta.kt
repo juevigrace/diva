@@ -18,8 +18,21 @@ data class EntryMeta(
     val name: String,
     val path: String,
     val lastModified: Long,
+    val hidden: Boolean = false,
     val parent: Option<EntryRef> = None,
     val scannedAt: Long = Clock.System.now().toEpochMilliseconds(),
     val createdAt: Long = Clock.System.now().toEpochMilliseconds(),
     val updatedAt: Long = Clock.System.now().toEpochMilliseconds(),
 )
+
+/**
+ * Lightweight pointer to another entry, used for [EntryMeta.parent]. Holds just
+ * enough to identify and display the target without embedding it, so entry graphs
+ * can never become cyclic through parent/children links.
+ */
+data class EntryRef(
+    val id: String,
+    val path: String,
+    val name: String,
+)
+

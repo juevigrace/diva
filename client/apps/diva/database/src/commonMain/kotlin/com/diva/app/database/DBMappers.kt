@@ -12,7 +12,7 @@ fun appDivaDBMapper(driver: SqlDriver): DivaDB {
     return DivaDB(
         driver = driver,
         diva_collectionAdapter = Diva_collection.Adapter(EnumColumnAdapter(), EnumColumnAdapter()),
-        diva_fileAdapter = Diva_file.Adapter(EnumColumnAdapter()),
+        diva_fileAdapter = Diva_file.Adapter(EnumColumnAdapter(), EnumColumnAdapter()),
         diva_mediaAdapter = Diva_media.Adapter(EnumColumnAdapter(), EnumColumnAdapter()),
         diva_playlist_suggestionsAdapter = Diva_playlist_suggestions.Adapter(EnumColumnAdapter()),
         diva_player_settingAdapter = Diva_player_setting.Adapter(EnumColumnAdapter()),

@@ -1,11 +1,14 @@
 package com.diva.app.file.domain.services
 
+import com.diva.app.file.domain.services.permissions.StoragePermissionRequester
 import com.diva.app.file.models.Directory
-import io.github.juevigrace.diva.core.permissions.PermissionRequester
 import io.github.juevigrace.diva.core.permissions.aggregate
 import io.github.juevigrace.diva.core.permissions.toException
 
 interface FileSystemService {
+    val requester: StoragePermissionRequester
+        get() = StoragePermissionRequester
+
     suspend fun roots(): Result<List<Directory>>
 
     /**
@@ -17,15 +20,13 @@ interface FileSystemService {
     suspend fun read(path: String): Result<Directory>
 }
 
-abstract class BaseFileSystemService(
-    protected open val permissions: PermissionRequester
-) : FileSystemService {
-    protected inline fun <T> withPermission(block: () -> T): Result<T> {
-        if (permissions.hasPermission) return runCatching(block)
+inline fun <reified T> FileSystemService.withRequester(block: () -> T): Result<T> {
+    return with(requester) {
+        if (hasPermission) return runCatching(block)
 
-        return Result.failure(
-            permissions.requiredPermissions
-                .flatMap { permissions.checkPermission(it).permissions.values }
+        Result.failure(
+            requiredPermissions
+                .flatMap { checkPermission(it).permissions.values }
                 .aggregate()
                 .toException(),
         )

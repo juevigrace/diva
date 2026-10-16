@@ -4,6 +4,7 @@ import com.diva.app.file.models.DeviceFile
 import com.diva.app.file.models.Directory
 import com.diva.app.file.models.EntryMeta
 import com.diva.app.file.models.EntryRef
+import com.diva.app.file.models.FileCategory
 import com.diva.app.file.models.FsEntry
 import com.diva.app.file.models.MimeType
 import io.github.juevigrace.diva.core.None
@@ -13,6 +14,7 @@ import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.database.DivaDatabase
 import kotlinx.coroutines.flow.Flow
+import kotlin.getOrThrow
 import kotlin.time.Clock
 import kotlin.uuid.Uuid
 
@@ -25,15 +27,9 @@ interface EntryStorage {
 
     fun getByIdFlow(id: String): Flow<Result<Option<FsEntry>>>
 
-    suspend fun getRoots(): Result<List<FsEntry>>
+    suspend fun getByParent(parentId: String? = null): Result<List<FsEntry>>
 
-    fun getRootsFlow(): Flow<Result<List<FsEntry>>>
-
-    suspend fun getChildren(parentId: String): Result<List<FsEntry>>
-
-    fun getChildrenFlow(parentId: String): Flow<Result<List<FsEntry>>>
-
-    suspend fun getFiles(parentId: String): Result<List<DeviceFile>>
+    fun getByParentFlow(parentId: String? = null): Flow<Result<List<FsEntry>>>
 
     suspend fun upsert(entry: FsEntry): Result<String>
 
@@ -72,60 +68,48 @@ class EntryStorageImpl(
         return db.getOne { entryQueries.findByPath(path) }
     }
 
-    override suspend fun getRoots(): Result<List<FsEntry>> {
-        return db.getList { entryQueries.findRoots(::mapToEntry) }
-    }
-
-    override fun getRootsFlow(): Flow<Result<List<FsEntry>>> {
-        return db.getListAsFlow { entryQueries.findRoots(::mapToEntry) }
-    }
-
-    override suspend fun getChildren(parentId: String): Result<List<FsEntry>> {
+    override suspend fun getByParent(parentId: String?): Result<List<FsEntry>> {
         return db.getList { entryQueries.findByParent(parentId, ::mapToEntry) }
     }
 
-    override fun getChildrenFlow(parentId: String): Flow<Result<List<FsEntry>>> {
+    override fun getByParentFlow(parentId: String?): Flow<Result<List<FsEntry>>> {
         return db.getListAsFlow { entryQueries.findByParent(parentId, ::mapToEntry) }
-    }
-
-    override suspend fun getFiles(parentId: String): Result<List<DeviceFile>> {
-        return db.getList { entryQueries.findFiles(parentId, ::mapToEntry) }
-            .map { entries -> entries.filterIsInstance<DeviceFile>() }
     }
 
     override suspend fun upsert(entry: FsEntry): Result<String> {
         return db.use {
             transactionWithResult {
-                val id = getByPath(entry.path)
-                    .getOrThrow()
-                    .fold(
-                        onNone = {
-                            val id = Uuid.random().toString()
-                            entryQueries.insert(
-                                id = id,
-                                name = entry.name,
-                                path = entry.path,
-                                parent_id = entry.parent.getOrNull()?.id,
-                                last_modified = entry.lastModified,
-                                scanned_at = entry.scannedAt,
-                            )
-                            id
-                        },
-                        onSome = { id ->
-                            entryQueries.update(
-                                name = entry.name,
-                                parent_id = entry.parent.getOrNull()?.id,
-                                last_modified = entry.lastModified,
-                                scanned_at = entry.scannedAt,
-                                updated_at = Clock.System.now().toEpochMilliseconds(),
-                                id = id,
-                            )
-                            id
-                        }
-                    )
+                val id = getByPath(entry.path).getOrThrow().fold(
+                    onNone = {
+                        val id = Uuid.random().toString()
+                        entryQueries.insert(
+                            id = id,
+                            name = entry.name,
+                            path = entry.path,
+                            parent_id = entry.parent.getOrNull()?.id,
+                            last_modified = entry.lastModified,
+                            hidden = entry.hidden,
+                            scanned_at = entry.scannedAt,
+                        )
+                        id
+                    },
+                    onSome = { id ->
+                        entryQueries.update(
+                            name = entry.name,
+                            parent_id = entry.parent.getOrNull()?.id,
+                            last_modified = entry.lastModified,
+                            hidden = entry.hidden,
+                            scanned_at = entry.scannedAt,
+                            updated_at = Clock.System.now().toEpochMilliseconds(),
+                            id = id,
+                        )
+                        id
+                    }
+                )
                 when (entry) {
                     is Directory -> fileQueries.deleteOne(id)
                     is DeviceFile -> {
+                        val category = FileCategory.fromMimeType(entry.mimeType.getOrNull())
                         val existingFile = fileQueries.findOne(id).executeAsOneOrNull().toOption()
                         existingFile.fold(
                             onNone = {
@@ -133,12 +117,14 @@ class EntryStorageImpl(
                                     dir_id = id,
                                     size_bytes = entry.sizeBytes,
                                     mime_type = entry.mimeType.getOrNull(),
+                                    category = category,
                                 )
                             },
                             onSome = {
                                 fileQueries.update(
                                     size_bytes = entry.sizeBytes,
                                     mime_type = entry.mimeType.getOrNull(),
+                                    category = category,
                                     dir_id = id,
                                 )
                             },
@@ -196,6 +182,7 @@ class EntryStorageImpl(
         path: String,
         parentId: String?,
         lastModified: Long,
+        hidden: Boolean,
         scannedAt: Long,
         createdAt: Long,
         updatedAt: Long,
@@ -203,12 +190,14 @@ class EntryStorageImpl(
         parentName: String?,
         sizeBytes: Long?,
         mimeType: MimeType?,
+        category: FileCategory?,
     ): FsEntry {
         val meta = EntryMeta(
             id = id,
             name = name,
             path = path,
             lastModified = lastModified,
+            hidden = hidden,
             parent = parentId?.let {
                 Option.some(
                     EntryRef(
@@ -223,7 +212,12 @@ class EntryStorageImpl(
             updatedAt = updatedAt,
         )
         return if (sizeBytes != null) {
-            DeviceFile(meta = meta, sizeBytes = sizeBytes, mimeType = mimeType.toOption())
+            DeviceFile(
+                meta = meta,
+                sizeBytes = sizeBytes,
+                mimeType = mimeType.toOption(),
+                category = category ?: FileCategory.OTHER,
+            )
         } else {
             Directory(meta = meta)
         }

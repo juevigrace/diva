@@ -3,6 +3,8 @@ package io.github.juevigrace.diva.core.permissions
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import io.github.juevigrace.diva.core.permissions.activity.ActivityProvider
@@ -10,7 +12,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 abstract class AndroidPermissionRequester : PermissionRequester {
-    abstract override val requiredPermissions: List<String>
     private val provider: ActivityProvider get() = ActivityProvider.getInstance()
 
     private val cachedStates = mutableMapOf<String, PermissionStatus>()
@@ -53,6 +54,15 @@ abstract class AndroidPermissionRequester : PermissionRequester {
         }
 
         return PermissionState(cachedStates.toMap())
+    }
+
+    override suspend fun openAppSettings() {
+        startActivityForResult { context ->
+            Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", context.packageName, null),
+            )
+        }
     }
 
     protected suspend fun startActivityForResult(buildIntent: (Context) -> Intent) {

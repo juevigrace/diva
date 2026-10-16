@@ -1,21 +1,19 @@
-package com.diva.app.file.data
+package com.diva.app.file.data.services
 
-import com.diva.app.file.domain.services.BaseFileSystemService
+import com.diva.app.file.domain.services.FileSystemService
+import com.diva.app.file.domain.services.withRequester
 import com.diva.app.file.models.DeviceFile
 import com.diva.app.file.models.Directory
 import com.diva.app.file.models.EntryMeta
 import com.diva.app.file.models.MimeType
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.core.permissions.PermissionRequester
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 
-class JvmFileSystemService(
-    override val permissions: PermissionRequester,
-) : BaseFileSystemService(permissions) {
+actual class FileSystemServiceImpl : FileSystemService {
     private val roots: List<Path> by lazy {
         buildList {
             add(Path.of(System.getProperty("user.home")))
@@ -25,29 +23,33 @@ class JvmFileSystemService(
             .distinct()
     }
 
-    override suspend fun roots(): Result<List<Directory>> = withPermission {
-        roots.map(::directoryFrom)
+    actual override suspend fun roots(): Result<List<Directory>> {
+        return withRequester {
+            roots.map(::directoryFrom)
+        }
     }
 
-    override suspend fun read(path: String): Result<Directory> = withPermission {
-        withContext(Dispatchers.IO) {
-            val base = Path.of(path).toAbsolutePath().normalize()
-            require(roots.any { base.startsWith(it) }) { "Path $path is outside the known roots" }
+    actual override suspend fun read(path: String): Result<Directory> {
+        return withRequester {
+            withContext(Dispatchers.IO) {
+                val base = Path.of(path).toAbsolutePath().normalize()
+                require(roots.any { base.startsWith(it) }) { "Path $path is outside the known roots" }
 
-            val directories = mutableListOf<Directory>()
-            val files = mutableListOf<DeviceFile>()
-            Files.list(base).use { stream ->
-                stream.forEach { child ->
-                    when {
-                        Files.isDirectory(child) -> directories += directoryFrom(child)
-                        Files.isRegularFile(child) -> files += fileFrom(child)
+                val directories = mutableListOf<Directory>()
+                val files = mutableListOf<DeviceFile>()
+                Files.list(base).use { stream ->
+                    stream.forEach { child ->
+                        when {
+                            Files.isDirectory(child) -> directories += directoryFrom(child)
+                            Files.isRegularFile(child) -> files += fileFrom(child)
+                        }
                     }
                 }
+                Directory(
+                    meta = metaFrom(base),
+                    entries = directories.sortedBy { it.name } + files.sortedBy { it.name },
+                )
             }
-            Directory(
-                meta = metaFrom(base),
-                entries = directories.sortedBy { it.name } + files.sortedBy { it.name },
-            )
         }
     }
 

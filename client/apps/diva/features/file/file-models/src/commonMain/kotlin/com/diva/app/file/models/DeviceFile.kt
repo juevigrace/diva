@@ -14,4 +14,5 @@ data class DeviceFile(
     override val meta: EntryMeta,
     val sizeBytes: Long,
     val mimeType: Option<MimeType> = None,
+    val category: FileCategory = FileCategory.OTHER,
 ) : FsEntry
