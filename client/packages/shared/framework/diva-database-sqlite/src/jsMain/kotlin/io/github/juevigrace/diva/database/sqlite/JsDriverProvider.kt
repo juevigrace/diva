@@ -8,6 +8,7 @@ import io.github.juevigrace.diva.database.driver.DriverProvider
 import io.github.juevigrace.diva.database.exception.DatabaseExceptionTransformer
 import io.github.juevigrace.diva.database.sqlite.config.SqliteConf
 import io.github.juevigrace.diva.database.sqlite.exception.SqliteExceptionTransformer
+import kotlinx.coroutines.CancellationException
 
 class JsDriverProvider(
     override val conf: SqliteConf,
@@ -26,6 +27,6 @@ class JsDriverProvider(
                 schema.create(driver).await()
                 if (conf.foreignKeys) driver.execute(null, "PRAGMA foreign_keys = ON", 0).await()
             }
-        }
+        }.onFailure { if (it is CancellationException) throw it }
     }
 }

@@ -1,8 +1,13 @@
 package com.diva.app.file.data.services
 
 import android.content.Context
+import android.os.Build
 import android.os.Environment
 import android.os.storage.StorageManager
+import android.system.ErrnoException
+import android.system.Os
+import android.system.OsConstants
+import android.system.StructStat
 import com.diva.app.file.domain.services.FileSystemService
 import com.diva.app.file.domain.services.withRequester
 import com.diva.app.file.models.DeviceFile
@@ -10,24 +15,21 @@ import com.diva.app.file.models.Directory
 import com.diva.app.file.models.EntryMeta
 import com.diva.app.file.models.MimeType
 import io.github.juevigrace.diva.core.Option
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.File
 
 actual class FileSystemServiceImpl(private val context: Context) : FileSystemService {
     private val storageManager: StorageManager? = context.getSystemService(StorageManager::class.java)
-    private val roots: List<Pair<File, String>> by lazy {
+
+    private val roots: List<Root> by lazy {
         buildList {
-            add(Environment.getExternalStorageDirectory() to "Internal storage")
+            add(Root(Environment.getExternalStorageDirectory(), "Internal storage"))
             context.getExternalFilesDirs(null).orEmpty().filterNotNull().forEach { dir ->
                 val volume = dir.absolutePath.substringBefore("/Android/data/", "")
+                if (volume.isEmpty()) return@forEach
                 val file = File(volume)
-                if (volume.isNotEmpty() && none { it.first.canonicalPath == file.canonicalPath }) {
-                    val name = storageManager
-                        ?.getStorageVolume(file)
-                        ?.getDescription(context)
-                        ?: file.name
-                    add(file to name)
+                if (none { it.canonicalPath == file.canonicalPath }) {
+                    val name = storageManager?.getStorageVolume(file)?.getDescription(context) ?: file.name
+                    add(Root(file, name))
                 }
             }
         }
@@ -35,55 +37,94 @@ actual class FileSystemServiceImpl(private val context: Context) : FileSystemSer
 
     actual override suspend fun roots(): Result<List<Directory>> {
         return withRequester {
-            roots.map { (file, name) -> directoryFrom(file, name) }
+            roots.map { Directory(meta = it.meta()) }
         }
     }
 
     actual override suspend fun read(path: String): Result<Directory> {
         return withRequester {
-            withContext(Dispatchers.IO) {
-                val base = File(path)
-                require(isInsideRoots(base.canonicalPath)) { "Path $path is outside the known roots" }
+            val base = File(path)
+            require(!escapesRoots(base)) { "Path $path is outside the known roots" }
 
-                val children = base.listFiles().orEmpty()
-                val directories = children
-                    .filter { it.isDirectory }
-                    .map(::directoryFrom)
-                    .sortedBy { it.name }
-                val files = children
-                    .filter { it.isFile }
-                    .map(::fileFrom)
-                    .sortedBy { it.name }
-                Directory(
-                    meta = metaFrom(base),
-                    entries = directories + files,
-                )
+            val names = base.list().orEmpty()
+            val prefix = base.path.let { if (it.endsWith(File.separator)) it else it + File.separator }
+
+            val directories = ArrayList<Directory>(names.size)
+            val files = ArrayList<DeviceFile>(names.size)
+
+            names.forEach { name ->
+                val childPath = prefix + name
+                val stat = try {
+                    Os.lstat(childPath)
+                } catch (_: ErrnoException) {
+                    return@forEach
+                }
+                when {
+                    OsConstants.S_ISDIR(stat.st_mode) -> {
+                        directories += Directory(
+                            meta = metaFrom(
+                                name = name,
+                                path = childPath,
+                                lastModified = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                                    val t = stat.st_mtim
+                                    t.tv_sec * 1000 + t.tv_nsec / 1_000_000
+                                } else {
+                                    stat.st_mtime * 1000
+                                },
+                            )
+                        )
+                    }
+                    OsConstants.S_ISREG(stat.st_mode) -> {
+                        files += fileFrom(name, childPath, stat)
+                    }
+                }
             }
+
+            directories.sortBy { it.name }
+            files.sortBy { it.name }
+            Directory(
+                meta = metaFrom(base.name, base.path, base.lastModified()),
+                entries = directories + files,
+            )
         }
     }
 
-    private fun isInsideRoots(canonicalPath: String): Boolean {
-        return roots.any { (file, _) ->
-            val root = file.canonicalPath
-            canonicalPath == root || canonicalPath.startsWith(root + File.separator)
-        }
+    /** One `realpath` for the requested directory, compared against the cached canonical roots. */
+    private fun escapesRoots(file: File): Boolean {
+        val canonical = file.canonicalPath
+        return roots.none { canonical == it.canonicalPath || canonical.startsWith(it.canonicalPath + File.separator) }
     }
 
-    private fun metaFrom(file: File): EntryMeta = EntryMeta(
+    private fun metaFrom(name: String, path: String, lastModified: Long): EntryMeta = EntryMeta(
         id = "",
-        name = file.name,
-        path = file.absolutePath,
-        lastModified = file.lastModified(),
+        name = name,
+        path = path,
+        lastModified = lastModified,
     )
 
-    private fun directoryFrom(file: File, name: String? = null): Directory {
-        val meta = metaFrom(file)
-        return Directory(meta = if (name == null) meta else meta.copy(name = name))
+    private fun fileFrom(name: String, path: String, stat: StructStat): DeviceFile = DeviceFile(
+        meta = metaFrom(
+            name = name,
+            path = path,
+            lastModified = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                val t = stat.st_mtim
+                t.tv_sec * 1000 + t.tv_nsec / 1_000_000
+            } else {
+                stat.st_mtime * 1000
+            },
+        ),
+        sizeBytes = stat.st_size,
+        mimeType = Option.of(MimeType.fromFileName(name)),
+    )
+
+    private class Root(private val file: File, private val name: String) {
+        val canonicalPath: String = file.canonicalPath
+
+        fun meta(): EntryMeta = EntryMeta(
+            id = "",
+            name = name,
+            path = file.absolutePath,
+            lastModified = file.lastModified(),
+        )
     }
-
-    private fun fileFrom(file: File): DeviceFile = DeviceFile(
-        meta = metaFrom(file),
-        sizeBytes = file.length(),
-        mimeType = Option.of(MimeType.fromFileName(file.name)),
-    )
 }

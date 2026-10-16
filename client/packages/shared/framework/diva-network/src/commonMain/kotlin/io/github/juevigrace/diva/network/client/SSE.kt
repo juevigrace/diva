@@ -5,6 +5,7 @@ import io.ktor.client.plugins.sse.ClientSSESession
 import io.ktor.client.plugins.sse.sse
 import io.ktor.client.request.header
 import io.ktor.http.HttpMethod
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
@@ -29,6 +30,6 @@ suspend inline fun DivaClient.sse(
             ) {
                 block()
             }
-        }
+        }.onFailure { if (it is CancellationException) throw it }
     }
 }

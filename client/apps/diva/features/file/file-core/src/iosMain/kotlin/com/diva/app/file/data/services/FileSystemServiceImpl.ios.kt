@@ -8,8 +8,6 @@ import com.diva.app.file.models.EntryMeta
 import com.diva.app.file.models.MimeType
 import io.github.juevigrace.diva.core.Option
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import platform.Foundation.NSDate
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
@@ -38,73 +36,51 @@ actual class FileSystemServiceImpl : FileSystemService {
     @OptIn(ExperimentalForeignApi::class)
     actual override suspend fun read(path: String): Result<Directory> {
         return withRequester {
-            withContext(Dispatchers.Default) {
-                val rootPrefix = if (root.endsWith("/")) root else "$root/"
-                require(path == root || path.startsWith(rootPrefix)) {
-                    "Path $path is outside the root $root"
-                }
-
-                val parentUrl = NSURL.fileURLWithPath(path)
-                val children = NSFileManager.defaultManager.contentsOfDirectoryAtURL(
-                    url = parentUrl,
-                    includingPropertiesForKeys = listOf(
-                        NSURLIsDirectoryKey,
-                        NSURLFileSizeKey,
-                        NSURLContentModificationDateKey
-                    ),
-                    options = 0u,
-                    error = null,
-                ) ?: emptyList<Any>()
-
-                val directories = mutableListOf<Directory>()
-                val files = mutableListOf<DeviceFile>()
-                children.filterIsInstance<NSURL>().forEach { child ->
-                    val values = child.resourceValuesForKeys(
-                        listOf(
-                            NSURLIsDirectoryKey,
-                            NSURLFileSizeKey,
-                            NSURLContentModificationDateKey
-                        ),
-                        null,
-                    )
-                    val isDirectory =
-                        (values?.get(NSURLIsDirectoryKey) as? NSNumber)?.boolValue ?: false
-                    if (isDirectory) {
-                        directories += directoryFrom(child)
-                    } else {
-                        files += fileFrom(
-                            url = child,
-                            sizeBytes = (values?.get(NSURLFileSizeKey) as? NSNumber)?.longLongValue
-                                ?: 0L,
-                            lastModifiedMs = modificationDateMs(child),
-                        )
-                    }
-                }
-                Directory(
-                    meta = metaFrom(parentUrl),
-                    entries = directories.sortedBy { it.name } + files.sortedBy { it.name },
-                )
+            val rootPrefix = if (root.endsWith("/")) root else "$root/"
+            require(path == root || path.startsWith(rootPrefix)) {
+                "Path $path is outside the root $root"
             }
+
+            val parentUrl = NSURL.fileURLWithPath(path)
+            val children = NSFileManager.defaultManager.contentsOfDirectoryAtURL(
+                url = parentUrl,
+                includingPropertiesForKeys = RESOURCE_KEYS,
+                options = 0u,
+                error = null,
+            ) ?: emptyList<Any>()
+
+            val directories = ArrayList<Directory>()
+            val files = ArrayList<DeviceFile>()
+            children.filterIsInstance<NSURL>().forEach { child ->
+                val values = child.resourceValuesForKeys(RESOURCE_KEYS, null) ?: return@forEach
+                val name = child.lastPathComponent ?: ""
+                val meta = metaFrom(child, modificationDateMs(values))
+                val isDirectory = (values[NSURLIsDirectoryKey] as? NSNumber)?.boolValue ?: false
+                if (isDirectory) {
+                    directories += Directory(meta = meta)
+                } else {
+                    files += DeviceFile(
+                        meta = meta,
+                        sizeBytes = (values[NSURLFileSizeKey] as? NSNumber)?.longLongValue ?: 0L,
+                        mimeType = Option.of(MimeType.fromFileName(name)),
+                    )
+                }
+            }
+            Directory(
+                meta = metaFrom(parentUrl, modificationDateMs(parentUrl)),
+                entries = directories.sortedBy { it.name } + files.sortedBy { it.name },
+            )
         }
     }
 
-    private fun metaFrom(url: NSURL): EntryMeta = EntryMeta(
+    private fun metaFrom(url: NSURL, lastModified: Long): EntryMeta = EntryMeta(
         id = "",
         name = url.lastPathComponent ?: "",
         path = url.path ?: error("NSURL has no path"),
-        lastModified = modificationDateMs(url),
+        lastModified = lastModified,
     )
 
-    private fun directoryFrom(url: NSURL): Directory = Directory(meta = metaFrom(url))
-
-    private fun fileFrom(url: NSURL, sizeBytes: Long, lastModifiedMs: Long): DeviceFile {
-        val name = url.lastPathComponent ?: ""
-        return DeviceFile(
-            meta = metaFrom(url).copy(lastModified = lastModifiedMs),
-            sizeBytes = sizeBytes,
-            mimeType = Option.of(MimeType.fromFileName(name)),
-        )
-    }
+    private fun directoryFrom(url: NSURL): Directory = Directory(meta = metaFrom(url, modificationDateMs(url)))
 
     @OptIn(ExperimentalForeignApi::class)
     private fun modificationDateMs(url: NSURL): Long =
@@ -114,4 +90,13 @@ actual class FileSystemServiceImpl : FileSystemService {
             )
             ?.timeIntervalSince1970
             ?.let { (it * 1000).toLong() } ?: 0L
+
+    private fun modificationDateMs(values: Map<Any?, *>): Long =
+        (values[NSURLContentModificationDateKey] as? NSDate)
+            ?.timeIntervalSince1970
+            ?.let { (it * 1000).toLong() } ?: 0L
+
+    private companion object {
+        val RESOURCE_KEYS = listOf(NSURLIsDirectoryKey, NSURLFileSizeKey, NSURLContentModificationDateKey)
+    }
 }

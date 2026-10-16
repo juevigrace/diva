@@ -12,6 +12,7 @@ import io.github.juevigrace.diva.database.driver.DriverProvider
 import io.github.juevigrace.diva.database.exception.DatabaseExceptionTransformer
 import io.github.juevigrace.diva.database.sqlite.config.SqliteConf
 import io.github.juevigrace.diva.database.sqlite.exception.SqliteExceptionTransformer
+import kotlinx.coroutines.CancellationException
 
 class AndroidDriverProvider(
     private val context: Context,
@@ -38,7 +39,7 @@ class AndroidDriverProvider(
                 name = if (conf.inMemory) null else conf.name,
                 callback = callback(schema.synchronous()),
             )
-        }
+        }.onFailure { if (it is CancellationException) throw it }
     }
 
     private fun callback(schema: SqlSchema<QueryResult.Value<Unit>>): SupportSQLiteOpenHelper.Callback =

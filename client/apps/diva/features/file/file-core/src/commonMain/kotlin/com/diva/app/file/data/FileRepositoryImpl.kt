@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.map
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Clock
 
+// TODO: fix
 /**
  * Device-global directory/file cache backed by [EntryStorage]. Reads are served
  * from the database; [observeRoot]/[observeDir] rescan the collected level

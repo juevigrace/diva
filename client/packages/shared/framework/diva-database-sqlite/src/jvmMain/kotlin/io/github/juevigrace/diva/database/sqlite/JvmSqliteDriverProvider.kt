@@ -9,6 +9,7 @@ import io.github.juevigrace.diva.database.driver.DriverProvider
 import io.github.juevigrace.diva.database.exception.DatabaseExceptionTransformer
 import io.github.juevigrace.diva.database.sqlite.config.SqliteConf
 import io.github.juevigrace.diva.database.sqlite.exception.SqliteExceptionTransformer
+import kotlinx.coroutines.CancellationException
 import java.util.Properties
 
 class JvmSqliteDriverProvider(
@@ -33,7 +34,7 @@ class JvmSqliteDriverProvider(
                 properties = properties(),
                 schema = schema.synchronous(),
             )
-        }
+        }.onFailure { if (it is CancellationException) throw it }
     }
 
     private fun url(): String {

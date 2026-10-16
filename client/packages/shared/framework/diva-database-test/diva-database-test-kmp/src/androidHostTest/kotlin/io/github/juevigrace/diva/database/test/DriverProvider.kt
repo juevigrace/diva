@@ -19,6 +19,7 @@ import io.github.juevigrace.diva.database.exception.UniqueConstraintViolation
 import io.github.juevigrace.diva.database.exception.UnknownDatabaseException
 import io.github.juevigrace.diva.database.sqlite.config.SqliteConf
 import io.github.juevigrace.diva.database.sqlite.exception.SqliteExceptionTransformer
+import kotlinx.coroutines.CancellationException
 import java.sql.SQLException
 import java.util.Properties
 
@@ -78,6 +79,6 @@ actual val provider: DriverProvider<SqliteConf> = object : DriverProvider<Sqlite
                 properties = properties(),
                 schema = schema.synchronous(),
             )
-        }
+        }.onFailure { if (it is CancellationException) throw it }
     }
 }

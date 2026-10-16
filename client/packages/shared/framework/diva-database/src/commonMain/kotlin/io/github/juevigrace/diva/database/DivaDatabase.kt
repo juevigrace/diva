@@ -91,9 +91,12 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
         block: S.() -> Query<T>,
     ): Result<Option<T>> {
         return withContext(context) {
-            runDatabaseCatching {
-                block(db).executeAsOneOrNull().toOption()
-            }
+            runCatching { block(db).executeAsOneOrNull().toOption() }.fold(
+                onSuccess = { Result.success(it) },
+                onFailure = { if (it is CancellationException) throw it else Result.failure(
+                    transformer.transform(it)
+                ) },
+            )
         }
     }
 
@@ -117,9 +120,16 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
         block: S.() -> Query<T>,
     ): Result<List<T>> {
         return withContext(context) {
-            runDatabaseCatching {
-                block(db).executeAsList()
-            }
+            runCatching { block(db).executeAsList() }.fold(
+                onSuccess = { Result.success(it) },
+                onFailure = {
+                    if (it is CancellationException) {
+                        throw it
+                    } else {
+                        Result.failure(transformer.transform(it))
+                    }
+                },
+            )
         }
     }
 
@@ -143,9 +153,16 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
         block: suspend S.() -> T,
     ): Result<T> {
         return withContext(context) {
-            runDatabaseCatching {
-                block(db)
-            }
+            runCatching { block(db) }.fold(
+                onSuccess = { Result.success(it) },
+                onFailure = {
+                    if (it is CancellationException) {
+                        throw it
+                    } else {
+                        Result.failure(transformer.transform(it))
+                    }
+                },
+            )
         }
     }
 
@@ -154,25 +171,23 @@ internal class DivaDatabaseImpl<S : TransacterBase>(
         block: suspend SqlDriver.() -> T,
     ): Result<T> {
         return withContext(context) {
-            runDatabaseCatching {
-                block(driver)
-            }
+            runCatching { block(driver) }.fold(
+                onSuccess = { Result.success(it) },
+                onFailure = {
+                    if (it is CancellationException) {
+                        throw it
+                    } else {
+                        Result.failure(transformer.transform(it))
+                    }
+                },
+            )
         }
     }
 
     override suspend fun close(): Result<Unit> {
-        return runDatabaseCatching {
-            driver.close()
-        }
-    }
-
-    private inline fun <T> runDatabaseCatching(block: () -> T): Result<T> {
-        return try {
-            Result.success(block())
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Throwable) {
-            Result.failure(transformer.transform(e))
-        }
+        return runCatching { driver.close() }.fold(
+            onSuccess = { Result.success(it) },
+            onFailure = { if (it is CancellationException) throw it else Result.failure(transformer.transform(it)) },
+        )
     }
 }

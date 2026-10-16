@@ -10,6 +10,7 @@ import io.github.juevigrace.diva.database.driver.DriverProvider
 import io.github.juevigrace.diva.database.exception.DatabaseExceptionTransformer
 import io.github.juevigrace.diva.database.mysql.config.MysqlConf
 import io.github.juevigrace.diva.database.mysql.exception.MysqlExceptionTransformer
+import kotlinx.coroutines.CancellationException
 
 class JvmMySQLDriverProvider(
     override val conf: MysqlConf,
@@ -29,7 +30,7 @@ class JvmMySQLDriverProvider(
             val driver = createDataSource().asJdbcDriver()
             schema.create(driver).await()
             driver
-        }
+        }.onFailure { if (it is CancellationException) throw it }
     }
 
     private fun createDataSource(): HikariDataSource {

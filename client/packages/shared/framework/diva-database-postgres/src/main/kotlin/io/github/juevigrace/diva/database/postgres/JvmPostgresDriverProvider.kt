@@ -10,6 +10,7 @@ import io.github.juevigrace.diva.database.driver.DriverProvider
 import io.github.juevigrace.diva.database.exception.DatabaseExceptionTransformer
 import io.github.juevigrace.diva.database.postgres.config.PostgresConf
 import io.github.juevigrace.diva.database.postgres.exception.PostgresExceptionTransformer
+import kotlinx.coroutines.CancellationException
 
 class JvmPostgresDriverProvider(
     override val conf: PostgresConf
@@ -29,7 +30,7 @@ class JvmPostgresDriverProvider(
             val driver = createDataSource().asJdbcDriver()
             schema.create(driver).await()
             driver
-        }
+        }.onFailure { if (it is CancellationException) throw it }
     }
 
     private fun createDataSource(): HikariDataSource {

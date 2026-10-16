@@ -10,6 +10,7 @@ import io.github.juevigrace.diva.database.driver.DriverProvider
 import io.github.juevigrace.diva.database.exception.DatabaseExceptionTransformer
 import io.github.juevigrace.diva.database.sqlite.config.SqliteConf
 import io.github.juevigrace.diva.database.sqlite.exception.SqliteExceptionTransformer
+import kotlinx.coroutines.CancellationException
 
 class NativeDriverProvider(
     override val conf: SqliteConf,
@@ -33,7 +34,7 @@ class NativeDriverProvider(
                 name = if (conf.inMemory) "" else conf.name,
                 onConfiguration = ::onConfiguration,
             )
-        }
+        }.onFailure { if (it is CancellationException) throw it }
     }
 
     private fun onConfiguration(configuration: DatabaseConfiguration): DatabaseConfiguration {

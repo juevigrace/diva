@@ -8,6 +8,7 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -72,7 +73,7 @@ internal class DivaClientImpl(
         return withContext(context) {
             runCatching {
                 client.request(builder)
-            }
+            }.onFailure { if (it is CancellationException) throw it }
         }
     }
 }
