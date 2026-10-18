@@ -9,6 +9,7 @@ dependencies {
     implementation(libs.compose.compiler.gradle.plugin)
     implementation(libs.kotlin.serialization.gradle.plugin)
     implementation(libs.secrets.gradle)
+    implementation(libs.uniffi.gradle.plugin)
 
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }

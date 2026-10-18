@@ -36,6 +36,7 @@ mysql = "26.7.0"
 hikari = "7.1.0"
 testcontainers = "1.21.4"
 secrets = "2.0.1"
+uniffi-plugin = "1.3.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -48,6 +49,7 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 secrets-gradle = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
+uniffi = { id = "ch.ubique.uniffi.plugin", version.ref = "uniffi-plugin" }
 
 [libraries]
 ######### [TEST DEPENDENCIES] #########
@@ -68,37 +70,15 @@ jetbrains-compose-gradle-plugin = { module = "org.jetbrains.compose:compose-grad
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-serialization-gradle-plugin = { module = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
 secrets-gradle = { group = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", name = "secrets-gradle-plugin", version.ref = "secrets" }
+uniffi-gradle-plugin = { module = "ch.ubique.uniffi.plugin:ch.ubique.uniffi.plugin.gradle.plugin", version.ref = "uniffi-plugin" }
 
 ######### [DIVA DEPENDENCIES] #########
 diva-core = { group = "io.github.juevigrace", name = "diva-core", version.ref = "diva-framework" }
-diva-database = { group = "io.github.juevigrace", name = "diva-database", version.ref = "diva-framework" }
-diva-database-sqlite = { group = "io.github.juevigrace", name = "diva-database-sqlite", version.ref = "diva-framework" }
-diva-database-postgres = { group = "io.github.juevigrace", name = "diva-database-postgres", version.ref = "diva-framework" }
-diva-database-mysql = { group = "io.github.juevigrace", name = "diva-database-mysql", version.ref = "diva-framework" }
-diva-network = { group = "io.github.juevigrace", name = "diva-network", version.ref = "diva-framework" }
 diva-ui = { group = "io.github.juevigrace", name = "diva-ui", version.ref = "diva-framework" }
+diva-native = { group = "io.github.juevigrace", name = "diva-native", version.ref = "diva-framework" }
 diva-lib-core = { group = "io.github.juevigrace", name = "diva-lib-core", version.ref = "diva-lib" }
-diva-lib-database = { group = "io.github.juevigrace", name = "diva-lib-database", version.ref = "diva-lib" }
 diva-lib-ui = { group = "io.github.juevigrace", name = "diva-lib-ui", version.ref = "diva-lib" }
-diva-lib-auth-core = { group = "io.github.juevigrace", name = "diva-lib-auth-core", version.ref = "diva-lib" }
-diva-lib-auth-models = { group = "io.github.juevigrace", name = "diva-lib-auth-models", version.ref = "diva-lib" }
-diva-lib-devices-core = { group = "io.github.juevigrace", name = "diva-lib-devices-core", version.ref = "diva-lib" }
-diva-lib-devices-database = { group = "io.github.juevigrace", name = "diva-lib-devices-database", version.ref = "diva-lib" }
-diva-lib-devices-models = { group = "io.github.juevigrace", name = "diva-lib-devices-models", version.ref = "diva-lib" }
-diva-lib-onboarding-core = { group = "io.github.juevigrace", name = "diva-lib-onboarding-core", version.ref = "diva-lib" }
-diva-lib-permissions-core = { group = "io.github.juevigrace", name = "diva-lib-permissions-core", version.ref = "diva-lib" }
-diva-lib-permissions-database = { group = "io.github.juevigrace", name = "diva-lib-permissions-database", version.ref = "diva-lib" }
-diva-lib-permissions-models = { group = "io.github.juevigrace", name = "diva-lib-permissions-models", version.ref = "diva-lib" }
-diva-lib-session-core = { group = "io.github.juevigrace", name = "diva-lib-session-core", version.ref = "diva-lib" }
-diva-lib-session-database = { group = "io.github.juevigrace", name = "diva-lib-session-database", version.ref = "diva-lib" }
-diva-lib-session-models = { group = "io.github.juevigrace", name = "diva-lib-session-models", version.ref = "diva-lib" }
-diva-lib-settings-core = { group = "io.github.juevigrace", name = "diva-lib-settings-core", version.ref = "diva-lib" }
-diva-lib-settings-models = { group = "io.github.juevigrace", name = "diva-lib-settings-models", version.ref = "diva-lib" }
-diva-lib-user-core = { group = "io.github.juevigrace", name = "diva-lib-user-core", version.ref = "diva-lib" }
-diva-lib-user-database = { group = "io.github.juevigrace", name = "diva-lib-user-database", version.ref = "diva-lib" }
-diva-lib-user-models = { group = "io.github.juevigrace", name = "diva-lib-user-models", version.ref = "diva-lib" }
-diva-lib-verification-core = { group = "io.github.juevigrace", name = "diva-lib-verification-core", version.ref = "diva-lib" }
-diva-lib-verification-models = { group = "io.github.juevigrace", name = "diva-lib-verification-models", version.ref = "diva-lib" }
+diva-lib-system-core = { group = "io.github.juevigrace", name = "diva-lib-system-core", version.ref = "diva-lib" }
 
 ######### [ANDROIDX DEPENDENCIES] #########
 

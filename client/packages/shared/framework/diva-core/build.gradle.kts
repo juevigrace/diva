@@ -3,7 +3,7 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    id("divabuild.framework")
+    id("divabuild.framework-base")
 }
 
 kotlin {

@@ -52,7 +52,11 @@ DerivedData/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 
-# ===== Go (server + CLI) =====
+# ===== Rust (rust/ workspace) =====
+rust/target/
+**/*.rs.bk
+
+# ===== Go (CLI only; server replaced by rust/crates/diva-server) =====
 bin/
 vendor/
 go.work

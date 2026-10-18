@@ -1,0 +1,12 @@
+[package]
+name = "diva-server"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+diva-types = { path = "../diva-types" }
+axum = "0.8"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net"] }
+serde_json = { workspace = true }
+tracing = "0.1"
+tracing-subscriber = "0.3"
