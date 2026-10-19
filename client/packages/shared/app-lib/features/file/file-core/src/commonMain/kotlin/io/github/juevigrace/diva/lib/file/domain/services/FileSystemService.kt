@@ -16,6 +16,14 @@ interface FileSystemService {
     suspend fun roots(): Result<List<Directory>>
 
     /**
+     * Absolute path the browser should open on, or null when the platform has
+     * no preferred starting point and the roots list should be shown first.
+     * Only desktop overrides this today; Android browses its storage volumes,
+     * which are all worth listing up front.
+     */
+    suspend fun defaultPath(): Result<String?> = Result.success(null)
+
+    /**
      * Reads the directory at [path] (which must be one of the roots or a
      * descendant of one of them) and returns it with its immediate children in
      * [Directory.entries]. Never recursive. Fails when [path] escapes every root

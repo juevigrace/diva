@@ -11,6 +11,7 @@ data class DirectoryState(
     val entries: List<FsEntry> = emptyList(),
     val category: FileCategory? = null,
     val selectedIds: Set<String> = emptySet(),
+    val loadFailed: Boolean = false,
     val showPermissionDialog: Boolean = false,
     val permissionMissing: Boolean = false,
 ) {

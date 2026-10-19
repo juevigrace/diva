@@ -1,6 +1,7 @@
 package io.github.juevigrace.diva.lib.file.domain
 
 import io.github.juevigrace.diva.lib.core.Repository
+import io.github.juevigrace.diva.lib.file.models.Directory
 import io.github.juevigrace.diva.lib.file.models.FsEntry
 import kotlinx.coroutines.flow.Flow
 
@@ -33,4 +34,12 @@ interface FileRepository : Repository {
      * children of that directory that no longer exist on disk.
      */
     suspend fun refresh(parentId: String?): Result<Unit>
+
+    /**
+     * The cached chain of directories from a root down to the platform default
+     * path, so the browser can open already inside its default location (e.g.
+     * `/`, `/home`, `/home/user` on desktop). Each level is scanned and cached
+     * on the way down. Empty when the platform has no default.
+     */
+    suspend fun defaultTrail(): Result<List<Directory>>
 }

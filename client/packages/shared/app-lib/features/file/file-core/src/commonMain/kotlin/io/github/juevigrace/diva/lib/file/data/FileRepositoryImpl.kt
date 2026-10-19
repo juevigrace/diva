@@ -77,4 +77,46 @@ class FileRepositoryImpl(
     } catch (e: Throwable) {
         Result.failure(e)
     }
+
+    override suspend fun defaultTrail(): Result<List<Directory>> = try {
+        val target = fileSystem.defaultPath().getOrThrow()
+        if (target == null) {
+            Result.success(emptyList())
+        } else {
+            refresh(null).getOrThrow()
+            val root = storage.getByParent().getOrThrow()
+                .filterIsInstance<Directory>()
+                .firstOrNull { isUnder(target, it.path) }
+                ?: return Result.success(emptyList())
+
+            // Walk down one segment at a time, scanning each level so the next
+            // one resolves; the final level is left for the screen to observe
+            // so it is not scanned twice.
+            val trail = mutableListOf(root)
+            var current: Directory = root
+            var scanned = true
+            for (segment in target.removePrefix(root.path).split('/', '\\')
+                .filter { it.isNotEmpty() }) {
+                if (!scanned) refresh(current.id).getOrThrow()
+                scanned = false
+                val child = storage.getByParent(current.id).getOrThrow()
+                    .filterIsInstance<Directory>()
+                    .firstOrNull { it.name == segment } ?: break
+                trail += child
+                current = child
+            }
+            Result.success(trail.toList())
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Throwable) {
+        Result.failure(e)
+    }
+}
+
+/** True when [child] is [parent] itself or sits below it, on either separator. */
+private fun isUnder(child: String, parent: String): Boolean {
+    if (child == parent) return true
+    val prefix = parent.trimEnd('/', '\\')
+    return child.startsWith("$prefix/") || child.startsWith("$prefix\\")
 }

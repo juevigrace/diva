@@ -14,11 +14,8 @@ import java.nio.file.attribute.BasicFileAttributes
 
 actual class FileSystemServiceImpl : FileSystemService {
     private val roots: List<Path> by lazy {
-        buildList {
-            add(Path.of(System.getProperty("user.home")))
-            File.listRoots().forEach { add(it.toPath()) }
-        }
-            .map { it.toAbsolutePath().normalize() }
+        File.listRoots()
+            .map { it.toPath().toAbsolutePath().normalize() }
             .distinct()
     }
 
@@ -35,6 +32,10 @@ actual class FileSystemServiceImpl : FileSystemService {
         }
     }
 
+    /** Desktop opens in the user's home, reached through the one `/` root. */
+    override suspend fun defaultPath(): Result<String?> =
+        Result.success(System.getProperty("user.home"))
+
     actual override suspend fun read(path: String): Result<Directory> {
         return withRequester {
             val base = Path.of(path).toAbsolutePath().normalize()
@@ -44,7 +45,11 @@ actual class FileSystemServiceImpl : FileSystemService {
             val files = mutableListOf<DeviceFile>()
             Files.newDirectoryStream(base).use { stream ->
                 stream.forEach { child ->
-                    val attrs = Files.readAttributes(child, BasicFileAttributes::class.java) ?: return@forEach
+                    // Broken symlinks and entries that cannot be stat'ed are
+                    // skipped instead of failing the whole directory.
+                    val attrs = runCatching {
+                        Files.readAttributes(child, BasicFileAttributes::class.java)
+                    }.getOrNull() ?: return@forEach
                     when {
                         attrs.isDirectory -> directories += Directory(
                             meta = metaFrom(

@@ -29,29 +29,44 @@ class FilesViewModel(
 
     init {
         scope.launch {
-            combine(
-                state.map { it.breadcrumbs.lastOrNull()?.id },
-                permissionRetry,
-            ) { id, _ -> id }
-                .distinctUntilChanged()
-                .collectLatest { id ->
-                    val flow = if (id == null) repository.observeRoot() else repository.observeDir(id)
-                    flow.collect { res ->
-                        res.fold(
-                            onFailure = { error ->
-                                if (error is PermissionException) {
-                                    onPermissionFailure()
-                                }
-                            },
-                            onSuccess = { list ->
-                                state.update { state ->
-                                    state.copy(entries = list)
-                                }
-                            },
-                        )
-                    }
-                }
+            // Open inside the platform default directory (the user's home on
+            // desktop) instead of the roots list, when there is one.
+            val trail = repository.defaultTrail().getOrElse { emptyList() }
+            if (trail.isNotEmpty()) {
+                state.update { it.copy(breadcrumbs = trail) }
+            }
+            observeCurrentDirectory()
         }
+    }
+
+    private suspend fun observeCurrentDirectory() {
+        combine(
+            state.map { it.breadcrumbs.lastOrNull()?.id },
+            permissionRetry,
+        ) { id, _ -> id }
+            .distinctUntilChanged()
+            .collectLatest { id ->
+                // A failure is followed by the cached children, so the flag is
+                // reset per folder and never cleared by that cached emission.
+                state.update { it.copy(loadFailed = false) }
+                val flow = if (id == null) repository.observeRoot() else repository.observeDir(id)
+                flow.collect { res ->
+                    res.fold(
+                        onFailure = { error ->
+                            if (error is PermissionException) {
+                                onPermissionFailure()
+                            } else {
+                                state.update { it.copy(loadFailed = true) }
+                            }
+                        },
+                        onSuccess = { list ->
+                            state.update { state ->
+                                state.copy(entries = list)
+                            }
+                        },
+                    )
+                }
+            }
     }
 
     fun onEvent(event: DirectoryEvents) {
