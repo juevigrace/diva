@@ -78,6 +78,7 @@ actual class FileSystemServiceImpl : FileSystemService {
         name = url.lastPathComponent ?: "",
         path = url.path ?: error("NSURL has no path"),
         lastModified = lastModified,
+        hidden = (url.lastPathComponent ?: "").startsWith("."),
     )
 
     private fun directoryFrom(url: NSURL): Directory = Directory(meta = metaFrom(url, modificationDateMs(url)))

@@ -9,6 +9,9 @@ kotlin {
 
             implementation(projects.features.file.fileDatabase)
             implementation(projects.features.file.fileModels)
+
+            implementation(projects.features.settings.settingsCore)
+            implementation(projects.features.settings.settingsModels)
         }
     }
 }

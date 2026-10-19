@@ -12,18 +12,24 @@ data class DirectoryState(
     val category: FileCategory? = null,
     val selectedIds: Set<String> = emptySet(),
     val loadFailed: Boolean = false,
+    val showHidden: Boolean = false,
+    val isDesktop: Boolean = true,
     val showPermissionDialog: Boolean = false,
     val permissionMissing: Boolean = false,
 ) {
     val currentEntry: Option<Directory>
         get() = Option.of(breadcrumbs.lastOrNull())
 
-    /** Entries narrowed to the active [category]; directories always pass. */
+    /**
+     * Entries narrowed to the active [category] (directories always pass) and,
+     * unless [showHidden] is on, to the entries the device does not mark as
+     * hidden. This is a rendering filter only — it never feeds back into the
+     * scan, so toggling it does not rewrite the cached `hidden` column.
+     */
     val visibleEntries: List<FsEntry>
-        get() = if (category == null) {
-            entries
-        } else {
-            entries.filter { it is Directory || (it as? DeviceFile)?.category == category }
+        get() = entries.filter { entry ->
+            if (entry.hidden && !showHidden) return@filter false
+            category == null || entry is Directory || (entry as? DeviceFile)?.category == category
         }
 
     /** True while the contextual selection bar should be shown. */

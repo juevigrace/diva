@@ -73,6 +73,7 @@ actual class FileSystemServiceImpl : FileSystemService {
         name = path.fileName?.toString() ?: path.toString(),
         path = path.toString(),
         lastModified = lastModified,
+        hidden = runCatching { Files.isHidden(path) }.getOrDefault(false),
     )
 
     private fun fileFrom(path: Path, attrs: BasicFileAttributes): DeviceFile {

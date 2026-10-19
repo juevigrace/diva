@@ -11,6 +11,12 @@ sealed interface DirectoryEvents {
 
     data class OnSetCategory(val category: FileCategory?) : DirectoryEvents
 
+    /**
+     * Shows or hides entries flagged as hidden by the device. Rendering only:
+     * the cached `hidden` value is never rewritten by this.
+     */
+    data class OnSetShowHidden(val show: Boolean) : DirectoryEvents
+
     /** Adds [entryId] to the selection or removes it when already selected. */
     data class OnToggleSelect(val entryId: String) : DirectoryEvents
 

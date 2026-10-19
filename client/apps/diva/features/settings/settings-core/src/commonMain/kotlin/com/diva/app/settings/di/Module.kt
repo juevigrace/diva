@@ -7,17 +7,19 @@ import com.diva.app.settings.database.SettingsStorageImpl
 import com.diva.app.settings.domain.SettingsRepository
 import com.diva.app.settings.models.AppSettings
 import com.diva.app.settings.presentation.viewmodel.SettingsViewModel
+import io.github.juevigrace.diva.lib.settings.domain.SharedSettingsRepository
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
-import org.koin.dsl.bind
+import org.koin.dsl.binds
 import org.koin.dsl.module
 
 fun settingsModule(): Module {
     return module {
         single<SettingsStorage<AppSettings>> { SettingsStorageImpl(get(qualifier = AppDatabase)) }
 
-        singleOf(::SettingsRepositoryImpl) bind SettingsRepository::class
+        singleOf(::SettingsRepositoryImpl) binds
+            arrayOf(SettingsRepository::class, SharedSettingsRepository::class)
 
         viewModelOf(::SettingsViewModel)
     }

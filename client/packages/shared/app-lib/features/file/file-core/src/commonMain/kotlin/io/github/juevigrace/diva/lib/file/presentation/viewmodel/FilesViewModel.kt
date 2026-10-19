@@ -9,6 +9,8 @@ import io.github.juevigrace.diva.lib.file.models.Directory
 import io.github.juevigrace.diva.lib.file.models.FileCategory
 import io.github.juevigrace.diva.lib.file.presentation.events.DirectoryEvents
 import io.github.juevigrace.diva.lib.file.presentation.state.DirectoryState
+import io.github.juevigrace.diva.lib.settings.domain.SharedSettingsRepository
+import io.github.juevigrace.diva.lib.settings.models.Settings
 import io.github.juevigrace.diva.ui.viewmodel.DivaViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class FilesViewModel(
+    private val settingsRepository: SharedSettingsRepository<Settings>,
     private val repository: FileRepository,
 ) : DivaViewModel() {
     val state: StateFlow<DirectoryState>
@@ -28,6 +31,15 @@ class FilesViewModel(
     private val permissionRetry = MutableStateFlow(0)
 
     init {
+        scope.launch {
+            // The screen adapts its chrome to the form factor, so it needs the
+            // same settings the rest of the app reads (desktop flag).
+            settingsRepository.observe().collect { result ->
+                result.onSuccess { settings ->
+                    state.update { it.copy(isDesktop = settings.isDesktop) }
+                }
+            }
+        }
         scope.launch {
             // Open inside the platform default directory (the user's home on
             // desktop) instead of the roots list, when there is one.
@@ -75,6 +87,7 @@ class FilesViewModel(
             is DirectoryEvents.OnNavigateToBreadcrumb -> navigateTo(event.directoryId)
             DirectoryEvents.OnNavigateUp -> navigateUp()
             is DirectoryEvents.OnSetCategory -> setCategory(event.category)
+            is DirectoryEvents.OnSetShowHidden -> setShowHidden(event.show)
             is DirectoryEvents.OnToggleSelect -> toggleSelect(event.entryId)
             DirectoryEvents.OnSelectAll -> selectAll()
             DirectoryEvents.OnClearSelection -> clearSelection()
@@ -115,6 +128,27 @@ class FilesViewModel(
     private fun setCategory(category: FileCategory?) {
         state.update { state ->
             state.copy(category = category)
+        }
+    }
+
+    /**
+     * Flips the hidden-files rendering filter. Turning it off drops the hidden
+     * entries from the selection too, so the selection bar never counts rows the
+     * user can no longer see.
+     */
+    private fun setShowHidden(show: Boolean) {
+        state.update { state ->
+            state.copy(
+                showHidden = show,
+                selectedIds = if (show) {
+                    state.selectedIds
+                } else {
+                    state.selectedIds - state.entries.asSequence()
+                        .filter { it.hidden }
+                        .map { it.id }
+                        .toSet()
+                },
+            )
         }
     }
 

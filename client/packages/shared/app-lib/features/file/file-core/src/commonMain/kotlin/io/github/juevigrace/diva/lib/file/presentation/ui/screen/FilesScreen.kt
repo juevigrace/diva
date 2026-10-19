@@ -16,26 +16,33 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Deselect
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.SelectAll
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,7 +63,8 @@ import io.github.juevigrace.diva.lib.file.presentation.actions.FileAction
 import io.github.juevigrace.diva.lib.file.presentation.events.DirectoryEvents
 import io.github.juevigrace.diva.lib.file.presentation.state.DirectoryState
 import io.github.juevigrace.diva.lib.file.presentation.ui.components.selection.DragSelectionState
-import io.github.juevigrace.diva.lib.file.presentation.ui.components.selection.selectionEntry
+import io.github.juevigrace.diva.lib.file.presentation.ui.components.selection.dragSelectionBounds
+import io.github.juevigrace.diva.lib.file.presentation.ui.components.selection.dragSelectionContainer
 import io.github.juevigrace.diva.lib.file.presentation.viewmodel.FilesViewModel
 import io.github.juevigrace.diva.ui.layout.Screen
 import io.github.juevigrace.diva.ui.navigation.BackHandler
@@ -70,6 +78,7 @@ import org.koin.compose.viewmodel.koinViewModel
  * receive the selected entries when tapped, so no playback or playlist concept
  * ever leaks into the file feature.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilesScreen(
     actions: List<FileAction> = emptyList(),
@@ -77,6 +86,7 @@ fun FilesScreen(
 ) {
     val state: DirectoryState by viewModel.state.collectAsStateWithLifecycle()
     val dragState = remember { DragSelectionState() }
+    val listState = rememberLazyListState()
 
     val onToggleEntry: (String) -> Unit = { entryId ->
         viewModel.onEvent(DirectoryEvents.OnToggleSelect(entryId))
@@ -122,6 +132,20 @@ fun FilesScreen(
     }
 
     Screen(
+        topBar = {
+            // Desktop gets its chrome from the tab host, so the bar (and the
+            // overflow holding the hidden-files toggle) is mobile only.
+            if (!state.isDesktop) {
+                FileTopBar(
+                    title = state.currentEntry.fold(
+                        onNone = { "Files" },
+                        onSome = { it.name },
+                    ),
+                    showHidden = state.showHidden,
+                    onSetShowHidden = { show -> viewModel.onEvent(DirectoryEvents.OnSetShowHidden(show)) },
+                )
+            }
+        },
         contentWindowInsets = WindowInsets(0),
     ) { innerPadding ->
         Box(
@@ -130,7 +154,17 @@ fun FilesScreen(
                 .fillMaxSize(),
         ) {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                state = listState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .dragSelectionContainer(
+                        dragState = dragState,
+                        listState = listState,
+                        orderedIds = { viewModel.state.value.visibleEntries.map { it.id } },
+                        selectedIds = { viewModel.state.value.selectedIds },
+                        onTap = onEntryTap,
+                        onToggle = onToggleEntry,
+                    ),
                 verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
                 horizontalAlignment = Alignment.Start,
             ) {
@@ -165,24 +199,39 @@ fun FilesScreen(
                 }
 
                 stickyHeader {
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentPadding = PaddingValues(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.background),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        item(key = "all") {
-                            FilterChip(
-                                selected = state.category == null,
-                                onClick = { viewModel.onEvent(DirectoryEvents.OnSetCategory(null)) },
-                                label = { Text("All") },
-                            )
+                        LazyRow(
+                            modifier = Modifier.weight(1f),
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            item(key = "all") {
+                                FilterChip(
+                                    selected = state.category == null,
+                                    onClick = { viewModel.onEvent(DirectoryEvents.OnSetCategory(null)) },
+                                    label = { Text("All") },
+                                )
+                            }
+                            items(FileCategory.entries, key = { it.name }) { category ->
+                                FilterChip(
+                                    selected = state.category == category,
+                                    onClick = { viewModel.onEvent(DirectoryEvents.OnSetCategory(category)) },
+                                    label = { Text(category.name.lowercase().replaceFirstChar { it.uppercase() }) },
+                                )
+                            }
                         }
-                        items(FileCategory.entries, key = { it.name }) { category ->
-                            FilterChip(
-                                selected = state.category == category,
-                                onClick = { viewModel.onEvent(DirectoryEvents.OnSetCategory(category)) },
-                                label = { Text(category.name.lowercase().replaceFirstChar { it.uppercase() }) },
+                        // Desktop keeps the toggle inline with the filters; on
+                        // mobile it lives in the top bar's overflow menu.
+                        if (state.isDesktop) {
+                            HiddenFilesToggle(
+                                showHidden = state.showHidden,
+                                onSetShowHidden = { show -> viewModel.onEvent(DirectoryEvents.OnSetShowHidden(show)) },
                             )
                         }
                     }
@@ -251,13 +300,7 @@ fun FilesScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .selectionEntry(
-                                entryId = entry.id,
-                                dragState = dragState,
-                                selectedIds = { viewModel.state.value.selectedIds },
-                                onTap = onEntryTap,
-                                onToggle = onToggleEntry,
-                            )
+                            .dragSelectionBounds(entry.id, dragState)
                             .background(
                                 if (selected) {
                                     MaterialTheme.colorScheme.secondaryContainer
@@ -365,9 +408,17 @@ private fun SelectionBar(
                     .weight(1f)
                     .padding(start = 4.dp),
             )
-            if (state.visibleEntries.isNotEmpty() && !state.allVisibleSelected) {
-                IconButton(onClick = onSelectAll) {
-                    Icon(Icons.Filled.SelectAll, contentDescription = "Select all")
+            if (state.visibleEntries.isNotEmpty()) {
+                // Same slot, two faces: select everything visible, or undo it
+                // once everything is selected.
+                if (state.allVisibleSelected) {
+                    IconButton(onClick = onClearSelection) {
+                        Icon(Icons.Filled.Deselect, contentDescription = "Unselect all")
+                    }
+                } else {
+                    IconButton(onClick = onSelectAll) {
+                        Icon(Icons.Filled.SelectAll, contentDescription = "Select all")
+                    }
                 }
             }
             if (actions.isNotEmpty()) {
@@ -395,5 +446,73 @@ private fun SelectionBar(
                 }
             }
         }
+    }
+}
+
+/**
+ * Mobile top bar for the browser. The current folder names the screen and the
+ * overflow menu holds the options that do not earn their own control.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FileTopBar(
+    title: String,
+    showHidden: Boolean,
+    onSetShowHidden: (Boolean) -> Unit,
+) {
+    // Scoped to the bar, so dismissing the menu forgets it opened.
+    var menuOpen by remember { mutableStateOf(false) }
+    TopAppBar(
+        title = {
+            Text(
+                text = title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
+        actions = {
+            Box {
+                IconButton(onClick = { menuOpen = true }) {
+                    Icon(Icons.Filled.MoreVert, contentDescription = "More options")
+                }
+                DropdownMenu(
+                    expanded = menuOpen,
+                    onDismissRequest = { menuOpen = false },
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Show hidden files") },
+                        trailingIcon = {
+                            // The row handles the click; the checkbox just shows
+                            // the current state.
+                            Checkbox(checked = showHidden, onCheckedChange = null)
+                        },
+                        onClick = {
+                            menuOpen = false
+                            onSetShowHidden(!showHidden)
+                        },
+                    )
+                }
+            }
+        },
+    )
+}
+
+/**
+ * Desktop counterpart of the top bar entry: an inline visibility toggle at the
+ * trailing edge of the filter row.
+ */
+@Composable
+private fun HiddenFilesToggle(
+    showHidden: Boolean,
+    onSetShowHidden: (Boolean) -> Unit,
+) {
+    IconToggleButton(
+        checked = showHidden,
+        onCheckedChange = onSetShowHidden,
+    ) {
+        Icon(
+            imageVector = if (showHidden) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+            contentDescription = "Show hidden files",
+        )
     }
 }

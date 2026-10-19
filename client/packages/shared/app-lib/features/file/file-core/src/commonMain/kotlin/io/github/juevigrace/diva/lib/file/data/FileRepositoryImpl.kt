@@ -13,7 +13,6 @@ import io.github.juevigrace.diva.core.getOrNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Clock
 
@@ -33,7 +32,9 @@ class FileRepositoryImpl(
 
     override fun observeRoot(): Flow<Result<List<FsEntry>>> = flow {
         refresh(null).onFailure { emit(Result.failure(it)) }
-        emitAll(storage.getByParentFlow().map { result -> result.map { entries -> entries.filter { !it.hidden } } })
+        // Hidden entries are kept in the emission on purpose: the screen decides
+        // whether to render them, so the cache stays the single source of truth.
+        emitAll(storage.getByParentFlow())
     }
 
     override fun observeDir(id: String): Flow<Result<List<FsEntry>>> = flow {

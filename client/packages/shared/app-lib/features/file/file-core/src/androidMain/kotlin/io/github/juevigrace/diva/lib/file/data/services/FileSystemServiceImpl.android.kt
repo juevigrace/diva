@@ -100,6 +100,7 @@ actual class FileSystemServiceImpl(private val context: Context) : FileSystemSer
         name = name,
         path = path,
         lastModified = lastModified,
+        hidden = name.startsWith("."),
     )
 
     private fun fileFrom(name: String, path: String, stat: StructStat): DeviceFile = DeviceFile(
