@@ -11,6 +11,14 @@ sealed interface DirectoryEvents {
 
     data class OnSetCategory(val category: FileCategory?) : DirectoryEvents
 
+    /** Adds [entryId] to the selection or removes it when already selected. */
+    data class OnToggleSelect(val entryId: String) : DirectoryEvents
+
+    /** Selects every entry currently visible under the active category filter. */
+    data object OnSelectAll : DirectoryEvents
+
+    data object OnClearSelection : DirectoryEvents
+
     /** User agreed to the permission rationale dialog. */
     data object OnPermissionConfirm : DirectoryEvents
 

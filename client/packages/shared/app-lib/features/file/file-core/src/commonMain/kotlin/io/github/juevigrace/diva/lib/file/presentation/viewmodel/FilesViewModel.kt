@@ -60,6 +60,9 @@ class FilesViewModel(
             is DirectoryEvents.OnNavigateToBreadcrumb -> navigateTo(event.directoryId)
             DirectoryEvents.OnNavigateUp -> navigateUp()
             is DirectoryEvents.OnSetCategory -> setCategory(event.category)
+            is DirectoryEvents.OnToggleSelect -> toggleSelect(event.entryId)
+            DirectoryEvents.OnSelectAll -> selectAll()
+            DirectoryEvents.OnClearSelection -> clearSelection()
             DirectoryEvents.OnPermissionConfirm -> confirmPermission()
             DirectoryEvents.OnPermissionDismiss -> state.update { it.copy(showPermissionDialog = false) }
         }
@@ -100,25 +103,63 @@ class FilesViewModel(
         }
     }
 
+    private fun toggleSelect(entryId: String) {
+        state.update { state ->
+            val selected = if (entryId in state.selectedIds) {
+                state.selectedIds - entryId
+            } else {
+                state.selectedIds + entryId
+            }
+            state.copy(selectedIds = selected)
+        }
+    }
+
+    private fun selectAll() {
+        state.update { state ->
+            state.copy(selectedIds = state.visibleEntries.map { it.id }.toSet())
+        }
+    }
+
+    private fun clearSelection() {
+        state.update { it.copy(selectedIds = emptySet()) }
+    }
+
     private fun openDirectory(directoryId: String) {
         val directory = state.value.entries
             .filterIsInstance<Directory>()
             .firstOrNull { it.id == directoryId } ?: return
         state.update { state ->
-            state.copy(breadcrumbs = state.breadcrumbs + directory)
+            state.copy(
+                breadcrumbs = state.breadcrumbs + directory,
+                selectedIds = emptySet(),
+            )
         }
     }
 
     private fun navigateTo(directoryId: String) {
         state.update { state ->
             val index = state.breadcrumbs.indexOfFirst { it.id == directoryId }
-            if (index < 0) state else state.copy(breadcrumbs = state.breadcrumbs.take(index + 1))
+            if (index < 0) {
+                state
+            } else {
+                state.copy(
+                    breadcrumbs = state.breadcrumbs.take(index + 1),
+                    selectedIds = emptySet(),
+                )
+            }
         }
     }
 
     private fun navigateUp() {
         state.update { state ->
-            if (state.breadcrumbs.isEmpty()) state else state.copy(breadcrumbs = state.breadcrumbs.dropLast(1))
+            if (state.breadcrumbs.isEmpty()) {
+                state
+            } else {
+                state.copy(
+                    breadcrumbs = state.breadcrumbs.dropLast(1),
+                    selectedIds = emptySet(),
+                )
+            }
         }
     }
 }
