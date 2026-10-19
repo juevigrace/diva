@@ -1,8 +1,8 @@
 package com.diva.app.search.data
 
 import com.diva.app.collection.domain.CollectionRepository
-import com.diva.app.file.domain.FileRepository
-import com.diva.app.file.models.Directory
+import io.github.juevigrace.diva.lib.file.domain.FileRepository
+import io.github.juevigrace.diva.lib.file.models.Directory
 import com.diva.app.media.domain.MediaMetadataRepository
 import com.diva.app.media.domain.MediaRepository
 import com.diva.app.media.models.Media

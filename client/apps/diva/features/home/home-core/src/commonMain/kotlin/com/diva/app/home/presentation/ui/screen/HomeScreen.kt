@@ -39,7 +39,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import com.diva.app.file.presentation.ui.components.navigation.fileNav
 import com.diva.app.generated.resources.Res
 import com.diva.app.generated.resources.app_name
 import com.diva.app.home.presentation.state.HomeState
@@ -54,6 +53,7 @@ import com.diva.app.player.presentation.viewmodel.PlayerViewModel
 import com.diva.app.profile.presentation.ui.components.navigation.ProfileRoute
 import com.diva.app.profile.presentation.ui.components.navigation.profileNav
 import com.diva.app.search.presentation.ui.components.navigation.searchNav
+import io.github.juevigrace.diva.lib.file.presentation.ui.components.navigation.fileNav
 import io.github.juevigrace.diva.lib.ui.components.buttons.NotificationsIconButton
 import io.github.juevigrace.diva.lib.ui.components.buttons.ProfileIconButton
 import io.github.juevigrace.diva.lib.ui.components.input.SearchField

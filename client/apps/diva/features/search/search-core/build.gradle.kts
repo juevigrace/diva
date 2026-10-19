@@ -10,10 +10,10 @@ kotlin {
             implementation(projects.features.search.searchModels)
 
             implementation(projects.features.collection.collectionCore)
-            implementation(projects.features.file.fileCore)
             implementation(projects.features.media.mediaCore)
             implementation(projects.features.player.playerCore)
 
+            implementation(libs.diva.lib.file.core)
             implementation(libs.diva.lib.session.core)
             implementation(libs.diva.lib.session.models)
         }

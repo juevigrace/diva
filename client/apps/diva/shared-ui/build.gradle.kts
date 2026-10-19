@@ -22,7 +22,6 @@ kotlin {
             implementation(projects.features.home.homeCore)
             implementation(projects.features.server.serverCore)
             implementation(projects.features.media.mediaCore)
-            implementation(projects.features.file.fileCore)
             implementation(projects.features.collection.collectionCore)
             implementation(projects.features.playlist.playlistCore)
             implementation(projects.features.mix.mixCore)
@@ -35,6 +34,7 @@ kotlin {
 
             implementation(libs.diva.lib.auth.core)
             implementation(libs.diva.lib.devices.core)
+            implementation(libs.diva.lib.file.core)
             implementation(libs.diva.lib.user.core)
             implementation(libs.diva.lib.session.core)
             implementation(libs.diva.lib.session.models)

@@ -1,0 +1,24 @@
+import io.github.juevigrace.diva.lib.file.models.FileCategory;
+import io.github.juevigrace.diva.lib.file.models.MimeType;
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS diva_entry(
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    path TEXT NOT NULL UNIQUE,
+    parent_id TEXT DEFAULT NULL,
+    last_modified INTEGER NOT NULL DEFAULT 0,
+    hidden INTEGER AS Boolean NOT NULL DEFAULT 0,
+    scanned_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000),
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000),
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000),
+    FOREIGN KEY(parent_id) REFERENCES diva_entry(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS diva_file(
+    dir_id TEXT NOT NULL PRIMARY KEY,
+    size_bytes INTEGER NOT NULL,
+    mime_type TEXT AS MimeType DEFAULT NULL,
+    category TEXT AS FileCategory DEFAULT NULL,
+    FOREIGN KEY(dir_id) REFERENCES diva_entry(id) ON DELETE CASCADE
+);

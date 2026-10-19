@@ -1,0 +1,27 @@
+@file:DivaJsExport
+
+package io.github.juevigrace.diva.lib.file.models
+
+import io.github.juevigrace.diva.core.DivaJsExport
+import io.github.juevigrace.diva.core.Option
+
+/**
+ * A filesystem entry on the device. Either a [Directory] or a [DeviceFile].
+ * All shared identity, lineage and metadata lives in [meta]; implementations
+ * only declare their own unique fields.
+ */
+sealed interface FsEntry {
+    val meta: EntryMeta
+
+    val id: String get() = meta.id
+    val name: String get() = meta.name
+    val path: String get() = meta.path
+    val parent: Option<EntryRef> get() = meta.parent
+    val hidden: Boolean get() = meta.hidden
+    val lastModified: Long get() = meta.lastModified
+    val scannedAt: Long get() = meta.scannedAt
+    val createdAt: Long get() = meta.createdAt
+    val updatedAt: Long get() = meta.updatedAt
+
+    val ref: EntryRef get() = EntryRef(id, path, name)
+}

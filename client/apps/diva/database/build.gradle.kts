@@ -9,12 +9,10 @@ kotlin {
             implementation(libs.diva.lib.database)
 
             implementation(projects.features.collection.collectionModels)
-            implementation(projects.features.file.fileModels)
             implementation(projects.features.media.mediaModels)
             implementation(projects.features.player.playerModels)
 
             implementation(projects.features.collection.collectionDatabase)
-            implementation(projects.features.file.fileDatabase)
             implementation(projects.features.library.libraryDatabase)
             implementation(projects.features.media.mediaDatabase)
             implementation(projects.features.mix.mixDatabase)
@@ -35,7 +33,6 @@ sqldelight {
             verifyMigrations.set(true)
 
             dependency(project(":features:collection:collection-database"))
-            dependency(project(":features:file:file-database"))
             dependency(project(":features:library:library-database"))
             dependency(project(":features:media:media-database"))
             dependency(project(":features:mix:mix-database"))

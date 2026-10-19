@@ -20,11 +20,13 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.features.file.fileModels)
             implementation(projects.features.permissions.permissionsModels)
             implementation(projects.features.session.sessionModels)
             implementation(projects.features.user.userModels)
 
             implementation(projects.features.devices.devicesDatabase)
+            implementation(projects.features.file.fileDatabase)
             implementation(projects.features.permissions.permissionsDatabase)
             implementation(projects.features.session.sessionDatabase)
             implementation(projects.features.user.userDatabase)
@@ -40,6 +42,7 @@ sqldelight {
             deriveSchemaFromMigrations.set(true)
             verifyMigrations.set(true)
             dependency(project(":features:devices:devices-database"))
+            dependency(project(":features:file:file-database"))
             dependency(project(":features:permissions:permissions-database"))
             dependency(project(":features:session:session-database"))
             dependency(project(":features:user:user-database"))

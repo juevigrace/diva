@@ -1,0 +1,38 @@
+@file:DivaJsExport
+
+package io.github.juevigrace.diva.lib.file.models
+
+import io.github.juevigrace.diva.core.DivaJsExport
+import io.github.juevigrace.diva.core.None
+import io.github.juevigrace.diva.core.Option
+import kotlin.time.Clock
+
+/**
+ * Shared metadata for every [FsEntry]. [id] is an opaque UUID assigned when the
+ * entry enters the cache; [path] is the absolute device path (globally unique).
+ * [lastModified] is the device filesystem mtime; the remaining timestamps are
+ * cache-local.
+ */
+data class EntryMeta(
+    val id: String,
+    val name: String,
+    val path: String,
+    val lastModified: Long,
+    val hidden: Boolean = false,
+    val parent: Option<EntryRef> = None,
+    val scannedAt: Long = Clock.System.now().toEpochMilliseconds(),
+    val createdAt: Long = Clock.System.now().toEpochMilliseconds(),
+    val updatedAt: Long = Clock.System.now().toEpochMilliseconds(),
+)
+
+/**
+ * Lightweight pointer to another entry, used for [EntryMeta.parent]. Holds just
+ * enough to identify and display the target without embedding it, so entry graphs
+ * can never become cyclic through parent/children links.
+ */
+data class EntryRef(
+    val id: String,
+    val path: String,
+    val name: String,
+)
+

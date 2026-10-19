@@ -1,8 +1,8 @@
 package com.diva.app.search.models
 
 import com.diva.app.collection.models.Collection
-import com.diva.app.file.models.Directory
 import com.diva.app.media.models.Media
+import io.github.juevigrace.diva.lib.file.models.Directory
 
 data class SearchResults(
     val media: List<Media> = emptyList(),

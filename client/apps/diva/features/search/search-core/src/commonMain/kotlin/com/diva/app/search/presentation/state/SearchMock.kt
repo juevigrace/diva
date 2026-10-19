@@ -2,8 +2,8 @@ package com.diva.app.search.presentation.state
 
 import com.diva.app.collection.models.Collection
 import com.diva.app.collection.models.CollectionType
-import com.diva.app.file.models.Directory
-import com.diva.app.file.models.EntryMeta
+import io.github.juevigrace.diva.lib.file.models.Directory
+import io.github.juevigrace.diva.lib.file.models.EntryMeta
 import com.diva.app.media.models.Media
 import com.diva.app.media.models.MediaMetadata
 import com.diva.app.media.models.MediaType

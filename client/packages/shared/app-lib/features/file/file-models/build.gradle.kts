@@ -1,0 +1,25 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
+plugins {
+    id("divabuild.app-lib")
+}
+
+kotlin {
+    js {
+        browser()
+        nodejs()
+        binaries.library()
+    }
+    wasmJs {
+        browser()
+        nodejs()
+        binaries.library()
+    }
+    sourceSets {
+        commonMain.dependencies {
+            api(projects.core)
+        }
+    }
+}

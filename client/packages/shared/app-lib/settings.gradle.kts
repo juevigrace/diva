@@ -52,6 +52,12 @@ include(
     ":features:devices:devices-models"
 )
 
+include(
+    ":features:file:file-core",
+    ":features:file:file-database",
+    ":features:file:file-models"
+)
+
 include(":features:onboarding:onboarding-core")
 
 include(

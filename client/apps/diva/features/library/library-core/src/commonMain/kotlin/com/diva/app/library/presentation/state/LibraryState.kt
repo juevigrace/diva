@@ -1,6 +1,6 @@
 package com.diva.app.library.presentation.state
 
-import com.diva.app.file.models.Directory
+import io.github.juevigrace.diva.lib.file.models.Directory
 import com.diva.app.media.models.Media
 
 enum class LibraryFilter(val label: String) {

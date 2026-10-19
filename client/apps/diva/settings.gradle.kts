@@ -52,8 +52,6 @@ include(
     ":features:library:library-core",
     ":features:media:media-core",
     ":features:media:media-models",
-    ":features:file:file-core",
-    ":features:file:file-models",
     ":features:collection:collection-core",
     ":features:collection:collection-models",
     ":features:playlist:playlist-core",
@@ -71,8 +69,6 @@ include(
 )
 
 include(":features:collection:collection-database")
-
-include(":features:file:file-database")
 
 include(":features:library:library-database")
 
@@ -100,6 +96,9 @@ includeBuild("../../packages/shared/app-lib") {
                 "diva-lib-devices-core" to ":features:devices:devices-core",
                 "diva-lib-devices-database" to ":features:devices:devices-database",
                 "diva-lib-devices-models" to ":features:devices:devices-models",
+                "diva-lib-file-core" to ":features:file:file-core",
+                "diva-lib-file-database" to ":features:file:file-database",
+                "diva-lib-file-models" to ":features:file:file-models",
                 "diva-lib-onboarding-core" to ":features:onboarding:onboarding-core",
                 "diva-lib-permissions-core" to ":features:permissions:permissions-core",
                 "diva-lib-permissions-database" to ":features:permissions:permissions-database",

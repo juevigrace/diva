@@ -22,7 +22,7 @@ kotlin {
         commonMain.dependencies {
             api(projects.core)
             api(projects.features.media.mediaModels)
-            api(projects.features.file.fileModels)
+            api(libs.diva.lib.file.models)
             api(projects.features.collection.collectionModels)
         }
     }

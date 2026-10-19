@@ -1,11 +1,11 @@
 package com.diva.app.library.presentation.state
 
-import com.diva.app.file.models.Directory
-import com.diva.app.file.models.EntryMeta
 import com.diva.app.media.models.Media
 import com.diva.app.media.models.MediaType
 import com.diva.app.media.tag.models.Tag
 import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.lib.file.models.Directory
+import io.github.juevigrace.diva.lib.file.models.EntryMeta
 import io.github.juevigrace.diva.lib.user.models.User
 
 private val OWNER = User(id = "user-1", username = "juevigrace")
