@@ -20,5 +20,6 @@ CREATE TABLE IF NOT EXISTS diva_file(
     size_bytes INTEGER NOT NULL,
     mime_type TEXT AS MimeType DEFAULT NULL,
     category TEXT AS FileCategory DEFAULT NULL,
+    content_uri TEXT DEFAULT NULL,
     FOREIGN KEY(dir_id) REFERENCES diva_entry(id) ON DELETE CASCADE
 );

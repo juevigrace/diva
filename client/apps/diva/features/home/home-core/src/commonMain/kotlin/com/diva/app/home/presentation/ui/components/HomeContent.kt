@@ -27,13 +27,11 @@ import com.diva.app.generated.resources.home
 import com.diva.app.generated.resources.puerro
 import com.diva.app.home.presentation.events.HomeEvents
 import com.diva.app.home.presentation.state.HomeState
-import com.diva.app.profile.presentation.ui.components.navigation.ProfileRoute
 import com.diva.app.ui.components.CarouselCard
 import com.diva.app.ui.components.CarouselSection
 import io.github.juevigrace.diva.lib.ui.components.buttons.NotificationsIconButton
 import io.github.juevigrace.diva.lib.ui.components.buttons.ProfileIconButton
 import io.github.juevigrace.diva.ui.layout.Screen
-import io.github.juevigrace.diva.ui.navigation.LocalNavigator
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -47,37 +45,15 @@ fun HomeContent(
     state: HomeState,
     onEvent: (HomeEvents) -> Unit,
 ) {
-    val root = LocalNavigator.current
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Screen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             if (!state.settings.isDesktop) {
-                CenterAlignedTopAppBar(
-                    title = {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Image(
-                                modifier = Modifier.size(32.dp),
-                                painter = painterResource(Res.drawable.puerro),
-                                contentDescription = null
-                            )
-                            Text(
-                                text = stringResource(Res.string.app_name),
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                        }
-                    },
-                    actions = {
-                        // TODO: navigate to notifications or make a dropbox
-                        NotificationsIconButton(onClick = {})
-                        ProfileIconButton(onClick = { root.navigate(ProfileRoute) })
-                    },
+                HomeTopBar(
                     scrollBehavior = scrollBehavior,
+                    onEvent = onEvent,
                 )
             }
         },

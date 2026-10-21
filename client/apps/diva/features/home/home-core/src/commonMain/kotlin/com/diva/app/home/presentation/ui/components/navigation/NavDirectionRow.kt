@@ -50,11 +50,12 @@ fun NavDirectionRow(
     backEnabled: Boolean = true,
     forwardEnabled: Boolean = true,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceAround,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
 ) {
     Row(
         modifier = modifier,
         horizontalArrangement = horizontalArrangement,
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = verticalAlignment,
     ) {
         CompactIconButton(
             onClick = onBack,

@@ -119,6 +119,7 @@ class EntryStorageImpl(
                                     size_bytes = entry.sizeBytes,
                                     mime_type = entry.mimeType.getOrNull(),
                                     category = category,
+                                    content_uri = entry.contentUri.getOrNull(),
                                 )
                             },
                             onSome = {
@@ -126,6 +127,7 @@ class EntryStorageImpl(
                                     size_bytes = entry.sizeBytes,
                                     mime_type = entry.mimeType.getOrNull(),
                                     category = category,
+                                    content_uri = entry.contentUri.getOrNull(),
                                     dir_id = id,
                                 )
                             },
@@ -192,6 +194,7 @@ class EntryStorageImpl(
         sizeBytes: Long?,
         mimeType: MimeType?,
         category: FileCategory?,
+        contentUri: String?,
     ): FsEntry {
         val meta = EntryMeta(
             id = id,
@@ -218,6 +221,7 @@ class EntryStorageImpl(
                 sizeBytes = sizeBytes,
                 mimeType = mimeType.toOption(),
                 category = category ?: FileCategory.OTHER,
+                contentUri = contentUri.toOption(),
             )
         } else {
             Directory(meta = meta)

@@ -1,14 +1,19 @@
 package io.github.juevigrace.diva.lib.file.data.services
 
+import android.content.ContentUris
 import android.content.Context
+import android.database.Cursor
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.os.storage.StorageManager
 import android.system.ErrnoException
 import android.system.Os
 import android.system.OsConstants
 import android.system.StructStat
 import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.core.toOption
 import io.github.juevigrace.diva.lib.file.domain.services.FileSystemService
 import io.github.juevigrace.diva.lib.file.domain.services.withRequester
 import io.github.juevigrace.diva.lib.file.models.DeviceFile
@@ -103,20 +108,76 @@ actual class FileSystemServiceImpl(private val context: Context) : FileSystemSer
         hidden = name.startsWith("."),
     )
 
-    private fun fileFrom(name: String, path: String, stat: StructStat): DeviceFile = DeviceFile(
-        meta = metaFrom(
-            name = name,
-            path = path,
-            lastModified = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-                val t = stat.st_mtim
-                t.tv_sec * 1000 + t.tv_nsec / 1_000_000
+    private fun fileFrom(name: String, path: String, stat: StructStat): DeviceFile {
+        val lastModified = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            val t = stat.st_mtim
+            t.tv_sec * 1000 + t.tv_nsec / 1_000_000
+        } else {
+            stat.st_mtime * 1000
+        }
+        val contentUri = resolveContentUri(path, name)
+        return DeviceFile(
+            meta = metaFrom(name = name, path = path, lastModified = lastModified),
+            sizeBytes = stat.st_size,
+            mimeType = Option.of(MimeType.fromFileName(name)),
+            contentUri = contentUri.toOption(),
+        )
+    }
+
+    private fun resolveContentUri(path: String, name: String): String? {
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                resolveContentUriApi29(path, name)
             } else {
-                stat.st_mtime * 1000
-            },
-        ),
-        sizeBytes = stat.st_size,
-        mimeType = Option.of(MimeType.fromFileName(name)),
-    )
+                resolveContentUriLegacy(path, name)
+            }
+        } catch (_: Throwable) {
+            null
+        }
+    }
+
+    private fun resolveContentUriApi29(path: String, name: String): String? {
+        val resolver = context.contentResolver
+        val collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL)
+        val projection = arrayOf(MediaStore.Files.FileColumns._ID)
+        val selection = "${MediaStore.Files.FileColumns.RELATIVE_PATH} = ? AND ${MediaStore.Files.FileColumns.DISPLAY_NAME} = ?"
+        val relativePath = getRelativePath(path)
+        val args = arrayOf(relativePath, name)
+        resolver.query(collection, projection, selection, args, null)?.use { cursor: Cursor ->
+            if (cursor.moveToFirst()) {
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns._ID))
+                return ContentUris.withAppendedId(collection, id).toString()
+            }
+        }
+        return null
+    }
+
+    private fun resolveContentUriLegacy(path: String, name: String): String? {
+        val resolver = context.contentResolver
+        val collection = MediaStore.Files.getContentUri("external")
+        val projection = arrayOf(MediaStore.Files.FileColumns._ID)
+        val selection = "${MediaStore.MediaColumns.DATA} = ?"
+        val args = arrayOf(path)
+        resolver.query(collection, projection, selection, args, null)?.use { cursor: Cursor ->
+            if (cursor.moveToFirst()) {
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns._ID))
+                return ContentUris.withAppendedId(collection, id).toString()
+            }
+        }
+        return null
+    }
+
+    private fun getRelativePath(path: String): String {
+        val external = Environment.getExternalStorageDirectory().absolutePath
+        return if (path.startsWith(external)) {
+            val relative = path.substring(external.length)
+            val trimmed = relative.trimStart(File.separator)
+            if (trimmed.isEmpty()) "" else "$trimmed${File.separator}"
+        } else {
+            val file = File(path)
+            "${file.parentFile?.name.orEmpty()}${if (file.parentFile?.name.isNullOrEmpty()) "" else File.separator}"
+        }
+    }
 
     private class Root(private val file: File, private val name: String) {
         val canonicalPath: String = file.canonicalPath

@@ -36,6 +36,12 @@ interface FileRepository : Repository {
     suspend fun refresh(parentId: String?): Result<Unit>
 
     /**
+     * Force refreshes [parentId] (or the roots when null) regardless of staleness.
+     * Useful for pull-to-refresh.
+     */
+    suspend fun refreshCurrent(parentId: String?): Result<Unit> = refresh(parentId)
+
+    /**
      * The cached chain of directories from a root down to the platform default
      * path, so the browser can open already inside its default location (e.g.
      * `/`, `/home`, `/home/user` on desktop). Each level is scanned and cached

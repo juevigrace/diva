@@ -2,14 +2,15 @@
 -- the same transaction. Existence here is what marks an entry as a file.
 
 insert:
-INSERT INTO diva_file(dir_id, size_bytes, mime_type, category)
-VALUES (?, ?, ?, ?);
+INSERT INTO diva_file(dir_id, size_bytes, mime_type, category, content_uri)
+VALUES (?, ?, ?, ?, ?);
 
 update:
 UPDATE diva_file
 SET size_bytes = ?,
     mime_type = ?,
-    category = ?
+    category = ?,
+    content_uri = ?
 WHERE dir_id = ?;
 
 deleteOne:
@@ -20,6 +21,6 @@ delete:
 DELETE FROM diva_file;
 
 findOne:
-SELECT dir_id
+SELECT dir_id, size_bytes, mime_type, category, content_uri
 FROM diva_file
 WHERE dir_id = ?;

@@ -1,5 +1,8 @@
 package io.github.juevigrace.diva.lib.file.data
 
+import io.github.juevigrace.diva.core.None
+import io.github.juevigrace.diva.core.Option
+import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.lib.file.database.EntryStorage
 import io.github.juevigrace.diva.lib.file.domain.FileRepository
 import io.github.juevigrace.diva.lib.file.domain.services.FileSystemService
@@ -7,12 +10,13 @@ import io.github.juevigrace.diva.lib.file.models.DeviceFile
 import io.github.juevigrace.diva.lib.file.models.Directory
 import io.github.juevigrace.diva.lib.file.models.EntryRef
 import io.github.juevigrace.diva.lib.file.models.FsEntry
-import io.github.juevigrace.diva.core.None
-import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.core.getOrNull
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Clock
 
@@ -28,55 +32,88 @@ class FileRepositoryImpl(
     private val fileSystem: FileSystemService,
 ) : FileRepository {
 
+    private val refreshMutexes = mutableMapOf<String?, Mutex>()
+    private val lastRefreshAt = mutableMapOf<String?, Long>()
+
+    private fun mutexFor(parentId: String?): Mutex = synchronized(refreshMutexes) {
+        refreshMutexes.getOrPut(parentId) { Mutex() }
+    }
+
     override fun observe(): Flow<Result<List<FsEntry>>> = storage.getAllFlow()
 
-    override fun observeRoot(): Flow<Result<List<FsEntry>>> = flow {
-        refresh(null).onFailure { emit(Result.failure(it)) }
-        // Hidden entries are kept in the emission on purpose: the screen decides
-        // whether to render them, so the cache stays the single source of truth.
-        emitAll(storage.getByParentFlow())
-    }
-
-    override fun observeDir(id: String): Flow<Result<List<FsEntry>>> = flow {
-        refresh(id).onFailure { emit(Result.failure(it)) }
-        emitAll(storage.getByParentFlow(id))
-    }
-
-    override suspend fun refresh(parentId: String?): Result<Unit> = try {
-        val scanStart = Clock.System.now().toEpochMilliseconds()
-
-        if (parentId == null) {
-            fileSystem.roots().getOrThrow().forEach { root ->
-                storage.upsert(
-                    root.copy(meta = root.meta.copy(parent = None, scannedAt = scanStart)),
-                ).getOrThrow()
-            }
-            storage.deleteStaleChildren(null, scanStart).getOrThrow()
-        } else {
-            val parent = storage.getById(parentId).getOrThrow().getOrNull() as? Directory
-                ?: error("Directory $parentId not found")
-
-            val scanned = fileSystem.read(parent.path).getOrThrow()
-            val directoryId = storage.upsert(
-                scanned.copy(meta = scanned.meta.copy(parent = parent.parent, scannedAt = scanStart)),
-            ).getOrThrow()
-
-            val childParent = Option.of(EntryRef(directoryId, scanned.path, scanned.name))
-            scanned.entries.forEach { child ->
-                val updated = when (child) {
-                    is Directory -> child.copy(meta = child.meta.copy(parent = childParent, scannedAt = scanStart))
-                    is DeviceFile -> child.copy(meta = child.meta.copy(parent = childParent, scannedAt = scanStart))
+    override fun observeRoot(): Flow<Result<List<FsEntry>>> =
+        storage.getByParentFlow()
+            .onStart {
+                scope.launch {
+                    refreshIfStale(null)
                 }
-                storage.upsert(updated).getOrThrow()
             }
 
-            storage.deleteStaleChildren(directoryId, scanStart).getOrThrow()
+    override fun observeDir(id: String): Flow<Result<List<FsEntry>>> =
+        storage.getByParentFlow(id)
+            .onStart {
+                scope.launch {
+                    refreshIfStale(id)
+                }
+            }
+
+    override suspend fun refresh(parentId: String?): Result<Unit> = withContext(Dispatchers.IO) {
+        mutexFor(parentId).withLock {
+            try {
+                val scanStart = Clock.System.now().toEpochMilliseconds()
+
+                if (parentId == null) {
+                    fileSystem.roots().getOrThrow().forEach { root ->
+                        storage.upsert(
+                            root.copy(meta = root.meta.copy(parent = None, scannedAt = scanStart)),
+                        ).getOrThrow()
+                    }
+                    storage.deleteStaleChildren(null, scanStart).getOrThrow()
+                } else {
+                    val parent = storage.getById(parentId).getOrThrow().getOrNull() as? Directory
+                        ?: error("Directory $parentId not found")
+
+                    val scanned = fileSystem.read(parent.path).getOrThrow()
+                    val directoryId = storage.upsert(
+                        scanned.copy(meta = scanned.meta.copy(parent = parent.parent, scannedAt = scanStart)),
+                    ).getOrThrow()
+
+                    val childParent = Option.of(EntryRef(directoryId, scanned.path, scanned.name))
+                    scanned.entries.forEach { child ->
+                        val updated = when (child) {
+                            is Directory -> child.copy(meta = child.meta.copy(parent = childParent, scannedAt = scanStart))
+                            is DeviceFile -> child.copy(meta = child.meta.copy(parent = childParent, scannedAt = scanStart))
+                        }
+                        storage.upsert(updated).getOrThrow()
+                    }
+
+                    storage.deleteStaleChildren(directoryId, scanStart).getOrThrow()
+                }
+                synchronized(lastRefreshAt) {
+                    lastRefreshAt[parentId] = Clock.System.now().toEpochMilliseconds()
+                }
+                Result.success(Unit)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                Result.failure(e)
+            }
         }
-        Result.success(Unit)
-    } catch (e: CancellationException) {
-        throw e
-    } catch (e: Throwable) {
-        Result.failure(e)
+    }
+
+    private suspend fun refreshIfStale(parentId: String?, ttlMs: Long = 5000L, force: Boolean = false): Result<Unit> {
+        if (!force) {
+            val last = synchronized(lastRefreshAt) { lastRefreshAt[parentId] }
+            val now = Clock.System.now().toEpochMilliseconds()
+            if (last != null && now - last < ttlMs) {
+                return Result.success(Unit)
+            }
+        }
+        return refresh(parentId)
+    }
+
+    override suspend fun refreshCurrent(parentId: String?): Result<Unit> {
+        return refreshIfStale(parentId, force = true)
     }
 
     override suspend fun defaultTrail(): Result<List<Directory>> = try {

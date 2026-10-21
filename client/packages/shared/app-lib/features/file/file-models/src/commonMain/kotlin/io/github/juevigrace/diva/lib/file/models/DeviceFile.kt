@@ -15,4 +15,5 @@ data class DeviceFile(
     val sizeBytes: Long,
     val mimeType: Option<MimeType> = None,
     val category: FileCategory = FileCategory.OTHER,
+    val contentUri: Option<String> = None,
 ) : FsEntry

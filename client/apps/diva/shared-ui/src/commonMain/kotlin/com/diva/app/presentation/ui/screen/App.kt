@@ -11,25 +11,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import com.diva.app.collection.presentation.ui.components.navigation.albumNav
 import com.diva.app.home.presentation.ui.components.navigation.HomeRoute
 import com.diva.app.home.presentation.ui.components.navigation.homeNav
-import com.diva.app.media.presentation.ui.components.navigation.mediaNav
-import com.diva.app.mix.presentation.ui.components.navigation.mixNav
 import com.diva.app.player.presentation.ui.components.navigation.playerNav
-import com.diva.app.playlist.presentation.ui.components.navigation.playlistNav
 import com.diva.app.presentation.ui.theme.AppTypography
 import com.diva.app.presentation.ui.theme.darkScheme
 import com.diva.app.presentation.ui.theme.lightScheme
 import com.diva.app.presentation.viewmodel.AppViewModel
-import com.diva.app.server.presentation.ui.components.navigation.serverNav
-import com.diva.app.settings.presentation.ui.components.navigation.settingsNav
 import io.github.juevigrace.diva.lib.auth.presentation.ui.components.navigation.authNav
-import io.github.juevigrace.diva.lib.devices.presentation.ui.components.navigation.devicesNav
 import io.github.juevigrace.diva.lib.onboarding.presentation.ui.components.navigation.onboardingNav
-import io.github.juevigrace.diva.lib.permissions.presentation.ui.components.navigation.permissionsNav
-import io.github.juevigrace.diva.lib.session.presentation.ui.components.navigation.sessionNav
-import io.github.juevigrace.diva.lib.user.presentation.ui.components.navigation.userNav
 import io.github.juevigrace.diva.lib.verification.presentation.ui.components.navigation.verificationNav
 import io.github.juevigrace.diva.ui.DivaApp
 import io.github.juevigrace.diva.ui.layout.Screen
@@ -98,17 +88,7 @@ fun App() {
                     entryProvider = entryProvider {
                         homeNav()
                         playerNav()
-                        settingsNav()
-                        albumNav()
-                        mediaNav()
-                        mixNav()
-                        playlistNav()
-                        serverNav()
                         authNav()
-                        sessionNav()
-                        userNav()
-                        devicesNav()
-                        permissionsNav()
                         onboardingNav()
                         verificationNav()
                     }

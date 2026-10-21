@@ -173,6 +173,15 @@ class FilesViewModel(
         state.update { it.copy(selectedIds = emptySet()) }
     }
 
+    fun refreshCurrent() {
+        scope.launch {
+            val id = state.value.breadcrumbs.lastOrNull()?.id
+            repository.refreshCurrent(id)
+        }
+    }
+
+    private fun currentParentId(): String? = state.value.breadcrumbs.lastOrNull()?.id
+
     private fun openDirectory(directoryId: String) {
         val directory = state.value.entries
             .filterIsInstance<Directory>()

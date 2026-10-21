@@ -44,12 +44,12 @@ SELECT id
 FROM diva_entry
 WHERE path = ?;
 
--- ============================ READS (unified 14-col projection) ============================
+-- ============================ READS (unified 15-col projection) ============================
 
 findAll:
 SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.hidden, e.scanned_at, e.created_at, e.updated_at,
        p.path AS parent_path, p.name AS parent_name,
-       f.size_bytes, f.mime_type, f.category
+       f.size_bytes, f.mime_type, f.category, f.content_uri
 FROM diva_entry AS e
 LEFT JOIN diva_file AS f ON f.dir_id = e.id
 LEFT JOIN diva_entry AS p ON e.parent_id = p.id
@@ -58,7 +58,7 @@ ORDER BY e.name ASC;
 findById:
 SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.hidden, e.scanned_at, e.created_at, e.updated_at,
        p.path AS parent_path, p.name AS parent_name,
-       f.size_bytes, f.mime_type, f.category
+       f.size_bytes, f.mime_type, f.category, f.content_uri
 FROM diva_entry AS e
 LEFT JOIN diva_file AS f ON f.dir_id = e.id
 LEFT JOIN diva_entry AS p ON e.parent_id = p.id
@@ -67,7 +67,7 @@ WHERE e.id = ?;
 findByParent:
 SELECT e.id, e.name, e.path, e.parent_id, e.last_modified, e.hidden, e.scanned_at, e.created_at, e.updated_at,
        p.path AS parent_path, p.name AS parent_name,
-       f.size_bytes, f.mime_type, f.category
+       f.size_bytes, f.mime_type, f.category, f.content_uri
 FROM diva_entry AS e
 LEFT JOIN diva_file AS f ON f.dir_id = e.id
 LEFT JOIN diva_entry AS p ON e.parent_id = p.id

@@ -5,6 +5,8 @@ import io.github.juevigrace.diva.lib.file.data.FileRepositoryImpl
 import io.github.juevigrace.diva.lib.file.database.EntryStorage
 import io.github.juevigrace.diva.lib.file.database.EntryStorageImpl
 import io.github.juevigrace.diva.lib.file.domain.FileRepository
+import io.github.juevigrace.diva.lib.file.domain.services.ThumbnailService
+import io.github.juevigrace.diva.lib.file.domain.services.createThumbnailService
 import io.github.juevigrace.diva.lib.file.presentation.viewmodel.FilesViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -19,6 +21,7 @@ fun fileModule(): Module {
         single<EntryStorage> { EntryStorageImpl(get(qualifier = SharedDatabase)) }
 
         singleOf(::FileRepositoryImpl) bind FileRepository::class
+        single<ThumbnailService> { createThumbnailService() }
 
         viewModelOf(::FilesViewModel)
     }

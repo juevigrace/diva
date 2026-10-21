@@ -93,6 +93,16 @@ internal fun searchSuggestions(): List<String> = listOf(
     "Jazz",
 )
 
+/**
+ * The browse content shown before the user types: everything in the mock library,
+ * grouped the same way query results are.
+ */
+internal fun searchRecommended(): SearchResults = SearchResults(
+    media = ENTRIES.map { it.media },
+    folders = FOLDERS,
+    collections = COLLECTIONS,
+)
+
 internal fun searchMock(query: String): SearchResults {
     val term = query.trim()
     if (term.isEmpty()) return SearchResults()

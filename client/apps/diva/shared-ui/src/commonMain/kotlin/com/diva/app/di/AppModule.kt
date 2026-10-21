@@ -1,32 +1,25 @@
 package com.diva.app.di
 
-import com.diva.app.collection.di.collectionModule
 import com.diva.app.database.di.databaseModule
-import io.github.juevigrace.diva.lib.file.di.fileModule
 import com.diva.app.home.di.homeModule
-import com.diva.app.library.di.libraryModule
-import com.diva.app.media.di.mediaModule
-import com.diva.app.mix.di.mixModule
+import com.diva.app.home.presentation.ui.components.navigation.HomeRoute
 import com.diva.app.player.di.playerModule
-import com.diva.app.playlist.di.playlistModule
 import com.diva.app.presentation.viewmodel.AppViewModel
-import com.diva.app.profile.di.profileModule
-import com.diva.app.search.di.searchModule
-import com.diva.app.server.di.serverModule
-import com.diva.app.settings.di.settingsModule
 import com.diva.app.settings.models.AppSettings
 import com.diva.app.ui.di.uiModule
 import io.github.juevigrace.diva.lib.auth.di.authModule
-import io.github.juevigrace.diva.lib.devices.di.devicesModule
 import io.github.juevigrace.diva.lib.onboarding.di.onboardingModule
-import io.github.juevigrace.diva.lib.permissions.di.permissionsModule
-import io.github.juevigrace.diva.lib.session.di.sessionModule
-import io.github.juevigrace.diva.lib.user.di.userModule
 import io.github.juevigrace.diva.lib.verification.di.verificationModule
+import io.github.juevigrace.diva.ui.navigation.Navigator
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
+/**
+ * Modules for features rendered *outside* the home tab host. Everything the tab host
+ * hosts — including the [io.github.juevigrace.diva.ui.navigation.TabNavigator] — is
+ * owned by [homeModule] instead, so each feature is declared exactly once.
+ */
 fun appModule(settings: AppSettings): Module {
     return module {
         viewModel {
@@ -40,32 +33,19 @@ fun appModule(settings: AppSettings): Module {
             )
         }
 
+        single<Navigator> { Navigator.create(startDestination = HomeRoute) }
+
         includes(
             uiModule(),
-            navigationModule(),
             networkModule(),
             databaseModule(),
         )
         includes(
             homeModule(),
-            serverModule(),
-            mediaModule(),
-            fileModule(),
-            collectionModule(),
-            playlistModule(),
-            mixModule(),
             playerModule(),
-            libraryModule(),
-            searchModule(),
-            profileModule(),
-            userModule(),
-            sessionModule(),
-            devicesModule(),
             authModule(),
-            permissionsModule(),
             onboardingModule(),
             verificationModule(),
-            settingsModule(),
         )
     }
 }

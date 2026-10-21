@@ -5,6 +5,7 @@ import com.diva.app.search.domain.SearchRepository
 import com.diva.app.search.presentation.events.SearchEvents
 import com.diva.app.search.presentation.state.SearchState
 import com.diva.app.search.presentation.state.searchMock
+import com.diva.app.search.presentation.state.searchRecommended
 import com.diva.app.search.presentation.state.searchSuggestions
 import io.github.juevigrace.diva.ui.navigation.Navigator
 import io.github.juevigrace.diva.ui.navigation.TabNavigator
@@ -21,7 +22,12 @@ class SearchViewModel(
 
     // TODO(ui-pass): restore repository wiring
     val state: StateFlow<SearchState>
-        field = MutableStateFlow(SearchState(suggestions = searchSuggestions()))
+        field = MutableStateFlow(
+            SearchState(
+                defaults = searchRecommended(),
+                suggestions = searchSuggestions(),
+            )
+        )
 
     fun onEvent(event: SearchEvents) {
         when (event) {

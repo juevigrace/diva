@@ -13,16 +13,23 @@ kotlin {
 
             implementation(projects.features.library.libraryCore)
             implementation(projects.features.search.searchCore)
+            implementation(projects.features.search.searchModels)
 
             implementation(projects.features.profile.profileCore)
             implementation(projects.features.player.playerCore)
 
             implementation(projects.features.collection.collectionCore)
             implementation(projects.features.collection.collectionModels)
+            implementation(projects.features.media.mediaCore)
             implementation(projects.features.mix.mixCore)
             implementation(projects.features.playlist.playlistCore)
+            implementation(projects.features.server.serverCore)
 
+            implementation(libs.diva.lib.devices.core)
             implementation(libs.diva.lib.file.core)
+            implementation(libs.diva.lib.permissions.core)
+            implementation(libs.diva.lib.session.core)
+            implementation(libs.diva.lib.session.models)
             implementation(libs.diva.lib.user.core)
             implementation(libs.diva.lib.user.models)
         }
