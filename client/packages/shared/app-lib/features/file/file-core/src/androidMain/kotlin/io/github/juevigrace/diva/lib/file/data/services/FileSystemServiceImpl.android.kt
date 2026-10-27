@@ -171,7 +171,7 @@ actual class FileSystemServiceImpl(private val context: Context) : FileSystemSer
         val external = Environment.getExternalStorageDirectory().absolutePath
         return if (path.startsWith(external)) {
             val relative = path.substring(external.length)
-            val trimmed = relative.trimStart(File.separator)
+            val trimmed = relative.trimStart(File.separatorChar)
             if (trimmed.isEmpty()) "" else "$trimmed${File.separator}"
         } else {
             val file = File(path)

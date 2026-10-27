@@ -2,6 +2,8 @@
 
 import divabuild.internal.libs
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 
 plugins {
     id("divabuild.kmp")
@@ -30,5 +32,11 @@ kotlin {
         jsMain.dependencies {
             implementation(libs.kotlinx.coroutines.core.js)
         }
+    }
+}
+
+rootProject.plugins.withType<NodeJsRootPlugin> {
+    rootProject.extensions.configure<NodeJsRootExtension> {
+        versions.webpack.version = "5.112.2"
     }
 }

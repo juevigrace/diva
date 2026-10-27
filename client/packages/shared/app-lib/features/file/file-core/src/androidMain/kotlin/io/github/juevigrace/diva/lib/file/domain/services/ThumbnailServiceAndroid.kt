@@ -3,14 +3,14 @@ package io.github.juevigrace.diva.lib.file.domain.services
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.ExifInterface
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.util.Size
-import androidx.exifinterface.media.ExifInterface
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
-import io.github.juevigrace.diva.core.Some
+import io.github.juevigrace.diva.core.getOrNull
 import io.github.juevigrace.diva.lib.file.models.DeviceFile
 import io.github.juevigrace.diva.lib.file.models.FileCategory
 import io.github.juevigrace.diva.lib.file.models.MimeType
@@ -48,7 +48,7 @@ class ThumbnailServiceAndroid(private val context: Context) : ThumbnailService {
         mutexFor(key).withLock {
             val cached = File(cacheDir, "$key.webp")
             if (cached.exists() && cached.length() > 0) {
-                return@withLock Some(cached.readBytes())
+                return@withLock Option.some(cached.readBytes())
             }
             val bytes = tryLoadFromMediaStore(entry, sizePx) ?: tryLoadManual(entry, sizePx)
             if (bytes == null) {
@@ -58,7 +58,7 @@ class ThumbnailServiceAndroid(private val context: Context) : ThumbnailService {
                 FileOutputStream(cached).use { it.write(bytes) }
             } catch (_: Throwable) {
             }
-            Some(bytes)
+            Option.some(bytes)
         }
     }
 

@@ -3,6 +3,7 @@ package io.github.juevigrace.diva.lib.file.data
 import io.github.juevigrace.diva.core.None
 import io.github.juevigrace.diva.core.Option
 import io.github.juevigrace.diva.core.getOrNull
+import io.github.juevigrace.diva.core.ioDispatcher
 import io.github.juevigrace.diva.lib.file.database.EntryStorage
 import io.github.juevigrace.diva.lib.file.domain.FileRepository
 import io.github.juevigrace.diva.lib.file.domain.services.FileSystemService
@@ -10,7 +11,6 @@ import io.github.juevigrace.diva.lib.file.models.DeviceFile
 import io.github.juevigrace.diva.lib.file.models.Directory
 import io.github.juevigrace.diva.lib.file.models.EntryRef
 import io.github.juevigrace.diva.lib.file.models.FsEntry
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -33,9 +33,11 @@ class FileRepositoryImpl(
 ) : FileRepository {
 
     private val refreshMutexes = mutableMapOf<String?, Mutex>()
+    private val refreshMutexesGuard = Mutex()
     private val lastRefreshAt = mutableMapOf<String?, Long>()
+    private val lastRefreshGuard = Mutex()
 
-    private fun mutexFor(parentId: String?): Mutex = synchronized(refreshMutexes) {
+    private suspend fun mutexFor(parentId: String?): Mutex = refreshMutexesGuard.withLock {
         refreshMutexes.getOrPut(parentId) { Mutex() }
     }
 
@@ -57,7 +59,7 @@ class FileRepositoryImpl(
                 }
             }
 
-    override suspend fun refresh(parentId: String?): Result<Unit> = withContext(Dispatchers.IO) {
+    override suspend fun refresh(parentId: String?): Result<Unit> = withContext(ioDispatcher) {
         mutexFor(parentId).withLock {
             try {
                 val scanStart = Clock.System.now().toEpochMilliseconds()
@@ -89,7 +91,7 @@ class FileRepositoryImpl(
 
                     storage.deleteStaleChildren(directoryId, scanStart).getOrThrow()
                 }
-                synchronized(lastRefreshAt) {
+                lastRefreshGuard.withLock {
                     lastRefreshAt[parentId] = Clock.System.now().toEpochMilliseconds()
                 }
                 Result.success(Unit)
@@ -103,7 +105,7 @@ class FileRepositoryImpl(
 
     private suspend fun refreshIfStale(parentId: String?, ttlMs: Long = 5000L, force: Boolean = false): Result<Unit> {
         if (!force) {
-            val last = synchronized(lastRefreshAt) { lastRefreshAt[parentId] }
+            val last = lastRefreshGuard.withLock { lastRefreshAt[parentId] }
             val now = Clock.System.now().toEpochMilliseconds()
             if (last != null && now - last < ttlMs) {
                 return Result.success(Unit)

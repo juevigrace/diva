@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
+
 plugins {
     id("divabuild.kmp")
 }
@@ -16,6 +19,22 @@ kotlin {
     linuxArm64()
 
     mingwX64()
+
+    // Make Linux test executables find system libraries at runtime. Kotlin/Native
+    // links libcrypt dynamically, so systems without a global loader cache need an
+    // explicit runpath.
+    targets.withType<KotlinNativeTarget>().configureEach {
+        if (name.startsWith("linux")) {
+            binaries.withType<TestExecutable>().configureEach {
+                linkerOpts(
+                    "-L/usr/lib",
+                    "-L/usr/lib/x86_64-linux-gnu",
+                    "-L/run/current-system/sw/lib",
+                    "--rpath=/run/current-system/sw/lib",
+                )
+            }
+        }
+    }
 }
 
 tasks.matching {
